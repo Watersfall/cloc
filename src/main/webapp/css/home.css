@@ -1,0 +1,108 @@
+html
+{
+    height: 100%;
+}
+
+body 
+{
+    background-image: url('/images/background.svg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+h1 
+{
+    text-align: center;
+    color: white;
+}
+
+h2 
+{
+    text-align: left;
+    color: white;
+}
+
+p 
+{
+    text-align: center;
+    color: white;
+}
+
+.main 
+{
+    min-height: 100%;
+    margin: auto;
+    width: 75%;
+    background-color: rgba(10, 10, 10, 0.5);
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+    box-shadow: 0 0 10px 10px rgba(10, 10, 10, 0.5);
+}
+
+.top
+{
+    width: 100%;
+    background-color: black;
+    position: fixed;
+    left: 0px;
+    top: 0;
+    max-height: 150px;
+    min-height: 50px;
+}
+
+.login
+{
+    padding: 15px;
+    float: left;
+}
+
+.register
+{
+    padding: 15px;
+    float: right;
+}
+
+.loginForm
+{
+    padding: 15px;
+    display: inline;
+}
+
+.registerForm
+{
+    padding: 15px;
+    display: inline;
+}
+
+.loginText
+{
+    min-width: 75px;
+}
+
+.bottom
+{
+    width: 100%;
+    background-color: black;
+    position: fixed;
+    left: 0px;
+    bottom: 0;
+    max-height: 25px;
+}
+
+.settings
+{
+    margin: auto;
+}
+
+.indexflag
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 78px;
+    width: 150x;
+}
