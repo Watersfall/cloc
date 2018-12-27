@@ -22,9 +22,9 @@ public class Economic extends SimpleTagSupport
         {
             int num = Integer.parseInt(value);
             JspWriter out = getJspContext().getOut();
-            String economic = (num > 66) ? ("Command Economy") 
+            String economic = (num > 66) ? ("Free Market Economy")
                 : (num > 33) ? ("Mixed Market Economy")
-                : ("Free Market Economy");
+                : ("Communist Economy");
             out.print(economic);
          } 
     }

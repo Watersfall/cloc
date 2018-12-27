@@ -1,18 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
-<sql:setDataSource var = "database" driver = "com.mysql.jdbc.Driver" url = "jdbc:mysql://localhost/cloc" user = "root"  password = "***REMOVED***"/>
-<!DOCTYPE html>
+<%@ include file = "includes/default.jsp" %>
 <html>
-    <head>
-        <title>&ltCLOC - Online Nation Sim</title>
-        <link rel="stylesheet" type="text/css" href="css/home.css">
-        <link rel="stylesheet" type="text/css" href="css/nation.css">
-        <meta name="description" content="Bad web game">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <%@ include file = "header.jsp" %>
+    <%@ include file = "includes/head.jsp" %>
+    <body>
+        <%@ include file = "includes/header.jsp" %>
         <div class="main">
             <c:if test="${result.rowCount == 0}">
                 <p>You must be logged in to view this page!</p>
@@ -38,13 +28,13 @@
                     SELECT * FROM cloc_military WHERE sess=?
                     <sql:param value="${sess}" />
                 </sql:query>
-                <table id="nation">
+                <div class="nation">
                     <h1><c:out value="${nation.rows[0].nationTitle}"/><br><c:out value="${nation.rows[0].nation}"/></h1>
                     <img class="flag" src="<c:out value="https://imgur.com/${nation.rows[0].flag}"/>" alt="flag">
                     <p><c:out value="${nation.rows[0].description}"/></p>
                     <img class="leader" src="<c:out value="https://imgur.com/${nation.rows[0].leader}"/>" alt="flag">
                     <h1><c:out value="${nation.rows[0].leaderTitle}"/>: <c:out value="${nation.rows[0].username}"/></h1>
-                </table>
+                </div>
                 <h1>Domestic</h1>
                 <table id="nation">
                     <tr>
@@ -136,7 +126,7 @@
                     <tr>
                         <td>Manufactured Goods Stockpile</td>
                         <td><c:out value="${economy.rows[0].mg}"/> Tons</td>
-                    </tr>
+                    <tr>
                         <td>Discovered Oil Reserves</td>
                         <td><c:out value="${economy.rows[0].reserves}"/> Mmbls</td>
                     </tr>
@@ -180,16 +170,16 @@
                         <td><c:out value="${foreign.rows[0].alliance}"/></td>
                     </tr>
                     <tr>
-                        <td>Alliace Votes Recieved</td>
+                        <td>Alliance Votes Received</td>
                         <td><c:out value="${foreign.rows[0].votes}"/></td>
                     </tr>
-                    </tr>
+                    <tr>
                         <td>Voting For</td>
                         <td><c:out value="${foreign.rows[0].voting}"/></td>
                     </tr>
                     <tr>
                         <td>Reputation</td>
-                        <td><c:out value="${foreign.rows[0].repuation}"/></td>
+                        <td><c:out value="${foreign.rows[0].reputation}"/></td>
                     </tr>
                 </table>
                 <h1>Military</h1>
@@ -213,7 +203,7 @@
                         </c:set>
                         <td><c:out value="${progress}"/></td>
                     <tr>
-                    </tr>
+                    <tr>
                         <td>Training</td>
                         <td><c:out value="${military.rows[0].training}"/>/100</td>
                     </tr>

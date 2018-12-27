@@ -1,18 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
-<sql:setDataSource var = "database" driver = "com.mysql.jdbc.Driver" url = "jdbc:mysql://localhost/cloc" user = "root"  password = "***REMOVED***"/>
-<!DOCTYPE html>
+<%@ include file = "includes/default.jsp" %>
 <html>
-    <head>
-        <title>&ltCLOC - Online Nation Sim</title>
-        <link rel="stylesheet" type="text/css" href="css/home.css">
-        <meta name="description" content="Bad web game">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <%@ include file = "header.jsp" %>
+    <%@ include file = "includes/head.jsp" %>
+    <body>
+        <%@ include file = "includes/header.jsp" %>
         <div class="main">
             <c:if test="${result.rowCount == 0}">
                 <p>You must be logged in to view this page!</p>
@@ -20,20 +10,30 @@
             <c:if test="${result.rowCount > 0}">
                 <c:choose>
                     <c:when test="${not empty param['flag']}">
-                        <sql:update dataSource="${database}">
-                            UPDATE cloc_main SET flag=? WHERE sess=?
-                            <sql:param value="${param['flag']}" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
-                        <p>Updated flag</p>
+                        <c:if test="${fn:length(param['flag']) <= 12}">
+                            <sql:update dataSource="${database}">
+                                UPDATE cloc_main SET flag=? WHERE sess=?
+                                <sql:param value="${param['flag']}" />
+                                <sql:param value="${sess}" />
+                            </sql:update>
+                            <p>Updated flag</p>
+                        </c:if>
+                        <c:if test="${fn:length(param['flag']) > 12}">
+                            <p>Must be less than 12 characters!</p>
+                        </c:if>
                     </c:when>
                     <c:when test="${not empty param['leader']}">
-                        <sql:update dataSource="${database}">
-                            UPDATE cloc_main SET leader=? WHERE sess=?
-                            <sql:param value="${param['leader']}" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
-                        <p>Updated portrait</p>
+                        <c:if test="${fn:length(param['leader']) <= 12}">
+                            <sql:update dataSource="${database}">
+                                UPDATE cloc_main SET leader=? WHERE sess=?
+                                <sql:param value="${param['leader']}" />
+                                <sql:param value="${sess}" />
+                            </sql:update>
+                            <p>Updated leader portrait</p>
+                        </c:if>
+                        <c:if test="${fn:length(param['leader']) > 12}">
+                            <p>Must be less than 12 characters!</p>
+                        </c:if>
                     </c:when>
                     <c:when test="${not empty param['leadertitle']}">
                         <sql:update dataSource="${database}">

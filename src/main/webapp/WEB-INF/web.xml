@@ -54,24 +54,6 @@ version="3.0">
      </servlet-mapping>
 
      <servlet>
-          <servlet-name>header</servlet-name>
-          <jsp-file>/WEB-INF/jsp/header.jsp</jsp-file>
-     </servlet>
-     <servlet-mapping>
-          <servlet-name>header</servlet-name>
-          <url-pattern>/header</url-pattern>
-     </servlet-mapping>
-
-     <servlet>
-          <servlet-name>footer</servlet-name>
-          <jsp-file>/WEB-INF/jsp/footer.jsp</jsp-file>
-     </servlet>
-     <servlet-mapping>
-          <servlet-name>footer</servlet-name>
-          <url-pattern>/footer</url-pattern>
-     </servlet-mapping>
-
-     <servlet>
           <servlet-name>nation</servlet-name>
           <jsp-file>/WEB-INF/jsp/nation.jsp</jsp-file>
      </servlet>
@@ -87,6 +69,24 @@ version="3.0">
      <servlet-mapping>
           <servlet-name>settings</servlet-name>
           <url-pattern>/settings</url-pattern>
+     </servlet-mapping>
+
+     <servlet>
+          <servlet-name>policies</servlet-name>
+          <jsp-file>/WEB-INF/jsp/policies.jsp</jsp-file>
+     </servlet>
+     <servlet-mapping>
+          <servlet-name>policies</servlet-name>
+          <url-pattern>/policies</url-pattern>
+     </servlet-mapping>
+
+     <servlet>
+          <servlet-name>policyresults</servlet-name>
+          <jsp-file>/WEB-INF/jsp/results/policyresults.jsp</jsp-file>
+     </servlet>
+     <servlet-mapping>
+          <servlet-name>policyresults</servlet-name>
+          <url-pattern>/policyresults</url-pattern>
      </servlet-mapping>
 
 

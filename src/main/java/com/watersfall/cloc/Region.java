@@ -27,7 +27,7 @@ public class Region extends SimpleTagSupport
                 case "10":
                     region="Mesoamerica";
                 case "11":
-                    region="Carribean";
+                    region="Caribbean";
                 case "12":
                     region="Gran Colombia";
                 case "13":

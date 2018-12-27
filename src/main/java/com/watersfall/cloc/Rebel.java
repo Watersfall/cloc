@@ -24,7 +24,7 @@ public class Rebel extends SimpleTagSupport
             JspWriter out = getJspContext().getOut();
             String rebels = (num > 75) ? ("Syrian Civil War")
                 : (num > 50) ? ("Open Rebellion")
-                : (num > 25) ? ("Guerillas")
+                : (num > 25) ? ("Guerrillas")
                 : (num > 0) ? ("Scattered Terrorists")
                 : ("None");
             out.print(rebels);
