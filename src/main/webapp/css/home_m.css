@@ -40,18 +40,28 @@ p
     background-color: rgba(10, 10, 10, 0.5);
     padding-left: 5%;
     padding-right: 5%;
-    padding-top: 15%;
+    padding-top: 25%;
     box-shadow: 0 0 10px 10px rgba(10, 10, 10, 0.5);
 }
 
 .top
 {
     width: 100%;
+    height: 100%;
     background-color: black;
     position: fixed;
     left: 0;
     top: 0;
+    display: block;
+}
+
+.top-button
+{
+    width: 15%;
     height: 15%;
+    position:fixed;
+    left: 0;
+    top: 0;
 }
 
 .login

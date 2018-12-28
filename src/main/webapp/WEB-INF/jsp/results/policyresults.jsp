@@ -10,6 +10,10 @@
 
 
 
+    <%-- Economic Policies --%>
+
+
+
     <c:when test="${param['policy'] == 'freemoneycapitalist'}">
         <sql:update dataSource="${database}">
             UPDATE cloc_economy SET budget=budget+1000, economic=economic+5 WHERE sess=?;
@@ -69,7 +73,6 @@
     </c:when>
 
 
-
     <c:when test="${param['policy'] == 'industrialize'}">
         <c:set var="rm" value="${50 + (resultEconomy.rows[0].industry) * 100}"/>
         <c:set var="oil" value="${25 + (resultEconomy.rows[0].industry) * 50}"/>
@@ -92,6 +95,140 @@
             <c:redirect url="/policies?policy=Economic&result=You drill a new oil well!"/>
         </c:if>
     </c:when>
+
+
+
+    <%-- Domestic Policies --%>
+
+
+
+    <c:when test="${param['policy'] == 'crackdown'}">
+        <c:set var="cost" value="${100}"/>
+        <c:if test="${resultEconomy.rows[0].budget < cost}">
+            <c:redirect url="/policies?policy=Domestic&result=You do not have enough money!"/>
+        </c:if>
+        <c:if test="${resultDomestic.rows[0].political > 100}">
+            <c:redirect url="/policies?policy=Domestic&result=There are no more lollygaggers to arrest!"/>
+        </c:if>
+        <c:if test="${resultDomestic.rows[0].approval < 3}">
+            <c:redirect url="/policies?policy=Domestic&result=You are not popular enough to do this!"/>
+        </c:if>
+        <c:if test="${resultEconomy.rows[0].budget >= cost}">
+            <sql:update dataSource="${database}">
+                UPDATE cloc_domestic SET stability=stability+5, approval=approval-3, political=political+5 WHERE sess=?;
+                <sql:param value="${sess}"/>
+            </sql:update>
+            <sql:update dataSource="${database}">
+                UPDATE cloc_domestic SET stability=100 WHERE stability>100;
+            </sql:update>
+            <sql:update dataSource="${database}">
+                UPDATE cloc_economy SET budget=budget-? WHERE sess=?;
+                <sql:param value="${cost}"/>
+                <sql:param value="${sess}"/>
+            </sql:update>
+            <c:redirect url="/policies?policy=Domestic&result=Your police force arrests every petty criminal they could find!"/>
+        </c:if>
+    </c:when>
+
+
+
+    <c:when test="${param['policy'] == 'free'}">
+        <c:set var="cost" value="${100}"/>
+        <c:if test="${resultEconomy.rows[0].budget < cost}">
+            <c:redirect url="/policies?policy=Domestic&result=You do not have enough money!"/>
+        </c:if>
+        <c:if test="${resultDomestic.rows[0].stability < 5}">
+            <c:redirect url="/policies?policy=Domestic&result=You are not stable enough!"/>
+        </c:if>
+        <c:if test="${resultDomestic.rows[0].political < 5}">
+            <c:redirect url="/policies?policy=Domestic&result=You have no more prisoners to free!"/>
+        </c:if>
+        <sql:update dataSource="${database}">
+            UPDATE cloc_domestic SET stability=stability-5, approval=approval+3, political=political-5 WHERE sess=?;
+            <sql:param value="${sess}"/>
+        </sql:update>
+        <sql:update dataSource="${database}">
+            UPDATE cloc_domestic SET approval=100 WHERE approval>100;
+        </sql:update>
+        <sql:update dataSource="${database}">
+            UPDATE cloc_economy SET budget=budget-? WHERE sess=?;
+            <sql:param value="${cost}"/>
+            <sql:param value="${sess}"/>
+        </sql:update>
+        <c:redirect url="/policies?policy=Domestic&result=Your people enjoy their freedoms!"/>
+    </c:when>
+
+
+
+    <%-- Foreign Policies --%>
+
+
+
+    <c:when test="${param['policy'] == 'aligncentral'}">
+        <c:set var="cost" value="${100}"/>
+        <c:if test="${resultEconomy.rows[0].budget < cost}">
+            <c:redirect url="/policies?policy=Foreign&result=You do not have enough money!"/>
+        </c:if>
+        <c:if test="${resultEconomy.rows[0].budget >= cost}">
+            <sql:update dataSource="${database}">
+                UPDATE cloc_foreign SET alignment=1 WHERE sess=?;
+                <sql:param value="${sess}"/>
+            </sql:update>
+            <c:redirect url="/policies?policy=Foreign&result=You align yourself with the Central Powers!"/>
+        </c:if>
+    </c:when>
+
+
+
+    <c:when test="${param['policy'] == 'alignentente'}">
+        <c:set var="cost" value="${100}"/>
+        <c:if test="${resultEconomy.rows[0].budget < cost}">
+            <c:redirect url="/policies?policy=Foreign&result=You do not have enough money!"/>
+        </c:if>
+        <c:if test="${resultEconomy.rows[0].budget >= cost}">
+            <sql:update dataSource="${database}">
+                UPDATE cloc_foreign SET alignment=-1 WHERE sess=?;
+                <sql:param value="${sess}"/>
+            </sql:update>
+            <c:redirect url="/policies?policy=Foreign&result=You align yourself with the Entente!"/>
+        </c:if>
+    </c:when>
+
+
+
+    <c:when test="${param['policy'] == 'alignneutral'}">
+        <c:set var="cost" value="${100}"/>
+        <c:if test="${resultEconomy.rows[0].budget < cost}">
+            <c:redirect url="/policies?policy=Foreign&result=You do not have enough money!"/>
+        </c:if>
+        <c:if test="${resultEconomy.rows[0].budget >= cost}">
+            <sql:update dataSource="${database}">
+                UPDATE cloc_foreign SET alignment=0 WHERE sess=?;
+                <sql:param value="${sess}"/>
+            </sql:update>
+            <c:redirect url="/policies?policy=Foreign&result=Your people cheer as you declare your neutrality!"/>
+        </c:if>
+    </c:when>
+
+
+
+    <c:when test="${param['policy'] == 'alignsoviet'}">
+        <c:set var="cost" value="${100}"/>
+        <c:if test="${resultEconomy.rows[0].budget < cost}">
+            <c:redirect url="/policies?policy=Economic&result=You do not have enough money!"/>
+        </c:if>
+        <c:if test="${resultEconomy.rows[0].budget >= cost}">
+            <sql:update dataSource="${database}">
+                UPDATE cloc_foreign SET alignment=2 WHERE sess=?;
+                <sql:param value="${sess}"/>
+            </sql:update>
+            <c:redirect url="/policies?policy=Foreign&result=You align yourself with the newly formed Soviet Union!"/>
+        </c:if>
+    </c:when>
+
+
+
+    <%-- Military Policies --%>
 
 
 

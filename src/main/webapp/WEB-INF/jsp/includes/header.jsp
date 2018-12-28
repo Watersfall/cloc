@@ -35,8 +35,8 @@
         <c:when test="${result.rowCount == 0}">
             <div class="login">
                 <form class="loginForm" action="login" method="POST">
-                    <input class="loginText" type="text" name="username" placeholder="Username">
-                    <input class="loginText" type="password" name="password" placeholder="Password">
+                    <input class="loginText" type="text" name="username" placeholder="Username"><br>
+                    <input class="loginText" type="password" name="password" placeholder="Password"><br>
                     <input class="loginText" type="submit" value="Login">
                 </form>
                 <form class="loginForm" action="index" method="GET">

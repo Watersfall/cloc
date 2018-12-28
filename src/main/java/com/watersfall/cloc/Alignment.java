@@ -22,9 +22,11 @@ public class Alignment extends SimpleTagSupport
         {
             int num = Integer.parseInt(value);
             JspWriter out = getJspContext().getOut();
-            String economic = (num > 66) ? ("Soviet Union") 
-                : (num > 33) ? ("Neutral")
-                : ("United States");
+            String economic = (num == 1) ? ("Central Powers")
+                : (num == 0) ? ("Neutral")
+                : (num == -1) ? ("Entente")
+                : (num == 2) ? ("Soviet Union")
+                : ("What did you do?");
             out.print(economic);
          } 
     }

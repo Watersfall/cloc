@@ -116,6 +116,98 @@
                             </td>
                         </tr>
                     </c:when>
+                    <c:when test="${param['policy'] == 'Domestic'}">
+                        <tr>
+                            <td>
+                                Increase Arrest Quotas
+                            </td>
+                            <td>
+                                Tell your police force they need to arrest more criminals! Increases stability, but lowers approval and moves your government to the right.
+                            </td>
+                            <td>
+                                $100k
+                            </td>
+                            <td>
+                                <form action="policyresults" method="post">
+                                    <input type="hidden" name="policy" value="crackdown">
+                                    <button class="policyButton" type="submit">Crackdown</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Parden Petty Criminals
+                            </td>
+                            <td>
+                                Release the jaywalkers from their cells! Decreases stability, but increases approval and moves your government to the left.
+                            </td>
+                            <td>
+                                $100k
+                            </td>
+                            <td>
+                                <form action="policyresults" method="post">
+                                    <input type="hidden" name="policy" value="free">
+                                    <button class="policyButton" type="submit">Free</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${param['policy'] == 'Foreign'}">
+                        <tr>
+                            <td>
+                                Align With The Entente
+                            </td>
+                            <td>
+                                Praise France's Democracy, hoping to make them like you.
+                            </td>
+                            <td>
+                                $100k
+                            </td>
+                            <td>
+                                <form action="policyresults" method="post">
+                                    <input type="hidden" name="policy" value="alignentente">
+                                    <button class="policyButton" type="submit">Praise</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Align With The Central Powers
+                            </td>
+                            <td>
+                                Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
+                            </td>
+                            <td>
+                                $100k
+                            </td>
+                            <td>
+                                <form action="policyresults" method="post">
+                                    <input type="hidden" name="policy" value="aligncentral">
+                                    <button class="policyButton" type="submit">Admire</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Declare Neutrality
+                            </td>
+                            <td>
+                                Go out on stage and celebrate your people's strength!
+                            </td>
+                            <td>
+                                $100k
+                            </td>
+                            <td>
+                                <form action="policyresults" method="post">
+                                    <input type="hidden" name="policy" value="alignneutral">
+                                    <button class="policyButton" type="submit">Celebrate</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${param['policy'] == 'Military'}">
+
+                    </c:when>
                 </c:choose>
             </table>
         </div>

@@ -22,11 +22,11 @@ public class Government extends SimpleTagSupport
         {
             int num = Integer.parseInt(value);
             JspWriter out = getJspContext().getOut();
-            String government = (num > 80) ? ("Liberal Democracy")
-                : (num > 60) ? ("Authoritarian Democracy")
+            String government = (num > 80) ? ("Dictatorship")
+                : (num > 60) ? ("Military Junta")
                 : (num > 40) ? ("One Party State")
-                : (num > 20) ? ("Military Junta")
-                : ("Dictatorship");
+                : (num > 20) ? ("Authoritarian Democracy")
+                : ("Liberal Democracy");
             out.print(government);
          } 
     }
