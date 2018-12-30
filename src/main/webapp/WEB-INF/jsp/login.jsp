@@ -22,22 +22,7 @@
                         <sql:param value="${pass}" />
                     </sql:update>
                     <sql:update dataSource="${database}">
-                        UPDATE cloc_domestic SET sess=? WHERE id=?
-                        <sql:param value="${sess}" />
-                        <sql:param value="${result.rows[0].id}" />
-                    </sql:update>
-                    <sql:update dataSource="${database}">
-                        UPDATE cloc_economy SET sess=? WHERE id=?
-                        <sql:param value="${sess}" />
-                        <sql:param value="${result.rows[0].id}" />
-                    </sql:update>
-                    <sql:update dataSource="${database}">
-                        UPDATE cloc_foreign SET sess=? WHERE id=?
-                        <sql:param value="${sess}" />
-                        <sql:param value="${result.rows[0].id}" />
-                    </sql:update>
-                    <sql:update dataSource="${database}">
-                        UPDATE cloc_military SET sess=? WHERE id=?
+                        UPDATE cloc SET sess=? WHERE id=?
                         <sql:param value="${sess}" />
                         <sql:param value="${result.rows[0].id}" />
                     </sql:update>

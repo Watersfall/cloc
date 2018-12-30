@@ -41,73 +41,14 @@
                     <c:otherwise>
                         <p>Registered!</p>
                         <sql:update dataSource="${database}">
-                            INSERT INTO cloc_main (username, nation, password, leader, flag, leaderTitle, nationTitle, description, sess) VALUES (?,?,?,?,?,?,?,?,?)
+                            INSERT INTO cloc_main (username, nation, password, sess) VALUES (?,?,?,?,?,?,?,?,?)
                             <sql:param value="${user}" />
                             <sql:param value="${nation}" />
                             <sql:param value="${pass}" />
-                            <sql:param value="phcFTw1.png" />
-                            <sql:param value="zb2vDeE.jpg" />
-                            <sql:param value="President" />
-                            <sql:param value="Republic of" />
-                            <sql:param value=" " />
                             <sql:param value="${sess}" />
                         </sql:update>
                         <sql:update dataSource="${database}">
-                            INSERT INTO cloc_domestic (approval, political, stability, land, rebel, population, qol, literacy, healthcare, universities, sess) VALUES (?,?,?,?,?,?,?,?,?,?,?)
-                            <sql:param value="50" />
-                            <sql:param value="50" />
-                            <sql:param value="50" />
-                            <sql:param value="20000" />
-                            <sql:param value="0" />
-                            <sql:param value="50" />
-                            <sql:param value="50" />
-                            <sql:param value="50" />
-                            <sql:param value="50" />
-                            <sql:param value="0" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
-                        <sql:update dataSource="${database}">
-                            INSERT INTO cloc_economy (economic, budget, gdp, growth, fi, mg, rm, oil, reserves, industry, mines, wells, food, uranium, umines, sess) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                            <sql:param value="50" />
-                            <sql:param value="1000" />
-                            <sql:param value="300" />
-                            <sql:param value="5" />
-                            <sql:param value="0" />
-                            <sql:param value="1" />
-                            <sql:param value="25" />
-                            <sql:param value="20" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="2" />
-                            <sql:param value="0" />
-                            <sql:param value="100" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
-                        <sql:update dataSource="${database}">
-                            INSERT INTO cloc_foreign(alignment, soviet, us, region, alliance, votes, voting, reputation, sess) VALUES (?,?,?,?,?,?,?,?,?) 
-                            <sql:param value="50" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="50" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
-                        <sql:update dataSource="${database}">
-                            INSERT INTO cloc_military (army, manpower, training, tech, airforce, navy, chems, nukes, godrods, sess) VALUES (?,?,?,?,?,?,?,?,?,?);
-                            <sql:param value="20" />
-                            <sql:param value="100" />
-                            <sql:param value="50" />
-                            <sql:param value="10" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
-                            <sql:param value="0" />
+                            INSERT INTO cloc (sess) VALUES (?);
                             <sql:param value="${sess}" />
                         </sql:update>
                     </c:otherwise>

@@ -4,33 +4,10 @@
 <c:set var="nation">
     ${param['nation']}
 </c:set>
-<c:set var="sess">
-    ${pageContext.session.id}
-</c:set>
 <c:set var="pass">
     <cloc:password value="${param['password']}"/>
 </c:set>
 <div class="top">
-    <sql:query dataSource="${database}" var="result">
-        SELECT * FROM cloc_main WHERE sess=?
-        <sql:param value="${sess}" />
-    </sql:query>
-    <sql:query dataSource="${database}" var="resultEconomy">
-        SELECT * FROM cloc_economy WHERE sess=?
-        <sql:param value="${sess}" />
-    </sql:query>
-    <sql:query dataSource="${database}" var="resultDomestic">
-        SELECT * FROM cloc_domestic WHERE sess=?
-        <sql:param value="${sess}" />
-    </sql:query>
-    <sql:query dataSource="${database}" var="resultForeign">
-        SELECT * FROM cloc_foreign WHERE sess=?
-        <sql:param value="${sess}" />
-    </sql:query>
-    <sql:query dataSource="${database}" var="resultMilitary">
-        SELECT * FROM cloc_military WHERE sess=?
-        <sql:param value="${sess}" />
-    </sql:query>
     <c:choose>
         <c:when test="${result.rowCount == 0}">
             <div class="login">
@@ -86,7 +63,7 @@
                             <p class="left">Budget: </p>
                         </td>
                         <td>
-                            <p class="right"><i>$<c:out value="${resultEconomy.rows[0].budget}"/>k</i></p>
+                            <p class="right"><i>$<c:out value="${resultMain.rows[0].budget}"/>k</i></p>
                         </td>
                     </tr>
                     <tr>
@@ -96,11 +73,11 @@
                         <td>
                             <div class="resourceDropDown">
                                 <span class="resourceDropDown-span">
-                                    <p class="right"><i><c:out value="${resultEconomy.rows[0].rm}"/> Htons</i></p>
+                                    <p class="right"><i><c:out value="${resultMain.rows[0].rm}"/> Htons</i></p>
                                 </span>
                                 <div class="resourceDropDown-content">
-                                    <p class="positive">+<c:out value="${resultEconomy.rows[0].mines}"/> Htons from Mines</p>
-                                    <p class="negative">-<c:out value="${resultEconomy.rows[0].industry}"/> Htons from Factories</p>
+                                    <p class="positive">+<c:out value="${resultMain.rows[0].mines}"/> Htons from Mines</p>
+                                    <p class="negative">-<c:out value="${resultMain.rows[0].industry}"/> Htons from Factories</p>
                                 </div>
                             </div>
                         </td>
@@ -112,11 +89,11 @@
                         <td>
                             <div class="resourceDropDown">
                                 <span class="resourceDropDown-span">
-                                    <p class="right"><i><c:out value="${resultEconomy.rows[0].oil}"/> Mmbls</i></p>
+                                    <p class="right"><i><c:out value="${resultMain.rows[0].oil}"/> Mmbls</i></p>
                                 </span>
                                 <div class="resourceDropDown-content">
-                                    <p class="positive">+<c:out value="${resultEconomy.rows[0].wells}"/> Htons from Wells</p>
-                                    <p class="negative">-<c:out value="${resultEconomy.rows[0].industry}"/> Htons from Factories</p>
+                                    <p class="positive">+<c:out value="${resultMain.rows[0].wells}"/> Htons from Wells</p>
+                                    <p class="negative">-<c:out value="${resultMain.rows[0].industry}"/> Htons from Factories</p>
                                 </div>
                             </div>
                         </td>
@@ -127,10 +104,10 @@
                         <td>
                             <div class="resourceDropDown">
                                 <span class="resourceDropDown-span">
-                                    <p class="right"><i><c:out value="${resultEconomy.rows[0].mg}"/> Tons</i></p>
+                                    <p class="right"><i><c:out value="${resultMain.rows[0].mg}"/> Tons</i></p>
                                 </span>
                                 <div class="resourceDropDown-content">
-                                    <p class="positive">+<c:out value="${resultEconomy.rows[0].industry}"/> Tons from Factories</p>
+                                    <p class="positive">+<c:out value="${resultMain.rows[0].industry}"/> Tons from Factories</p>
                                 </div>
                             </div>
                         </td>

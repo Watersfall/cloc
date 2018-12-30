@@ -3,12 +3,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
-<sql:setDataSource var = "database" driver = "com.mysql.cj.jdbc.Driver" url = "jdbc:mysql://localhost/cloc" user = "root"  password = "***REMOVED***"/>
+<sql:setDataSource var = "database" url = "jdbc:mysql://localhost/cloc" user = "root"  password = "***REMOVED***" scope="application"/>
 <c:set var="sess" scope="session">
     ${pageContext.session.id}
 </c:set>
-<sql:query dataSource="${database}" var="result" scope="session">
+<sql:query dataSource="${database}" var="result" scope="page">
     SELECT * FROM cloc_main WHERE sess=?
+    <sql:param value="${sess}" />
+</sql:query>
+<sql:query dataSource="${database}" var="resultMain" scope="page">
+    SELECT * FROM cloc WHERE sess=?
     <sql:param value="${sess}" />
 </sql:query>
 <c:set var="mobile" scope="session">

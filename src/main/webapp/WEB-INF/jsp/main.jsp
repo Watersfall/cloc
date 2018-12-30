@@ -13,19 +13,19 @@
                     <sql:param value="${sess}" />
                 </sql:query>
                 <sql:query dataSource="${database}" var="domestic">
-                    SELECT * FROM cloc_domestic WHERE sess=?
+                    SELECT * FROM cloc WHERE sess=?
                     <sql:param value="${sess}" />
                 </sql:query>
                 <sql:query dataSource="${database}" var="economy">
-                    SELECT * FROM cloc_economy WHERE sess=?
+                    SELECT * FROM cloc WHERE sess=?
                     <sql:param value="${sess}" />
                 </sql:query>
                 <sql:query dataSource="${database}" var="foreign">
-                    SELECT * FROM cloc_foreign WHERE sess=?
+                    SELECT * FROM cloc WHERE sess=?
                     <sql:param value="${sess}" />
                 </sql:query>
                 <sql:query dataSource="${database}" var="military">
-                    SELECT * FROM cloc_military WHERE sess=?
+                    SELECT * FROM cloc WHERE sess=?
                     <sql:param value="${sess}" />
                 </sql:query>
                 <div class="nation">

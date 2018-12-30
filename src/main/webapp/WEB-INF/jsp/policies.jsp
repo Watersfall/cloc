@@ -70,7 +70,7 @@
                                 Dig a new mine, increasing raw material output by 1 Hton per turn
                             </td>
                             <td>
-                                $<c:out value="${500 + (resultEconomy.rows[0].mines - 1) * 50}"/>k
+                                $<c:out value="${500 + (resultMain.rows[0].mines - 1) * 50}"/>k
                             </td>
                             <td>
                                 <form action="policyresults" method="post">
@@ -87,7 +87,7 @@
                                 Drill a new oil well, increasing oil output by 1 Mmbl per turn
                             </td>
                             <td>
-                                $<c:out value="${500 + (resultEconomy.rows[0].wells - 1) * 100}"/>k
+                                $<c:out value="${500 + (resultMain.rows[0].wells - 1) * 100}"/>k
                             </td>
                             <td>
                                 <form action="policyresults" method="post">
@@ -104,9 +104,9 @@
                                 Build a new factory for your growing population, Consumes 1 Oil and Raw Material to produce 1 Manufactured good
                             </td>
                             <td>
-                                <c:out  value="${50 + (resultEconomy.rows[0].industry) * 100}"/> Htons of Raw Material,
-                                <c:out  value="${25 + (resultEconomy.rows[0].industry) * 50}"/> Mmbls of Oil,
-                                <c:out  value="${5 + (resultEconomy.rows[0].industry) * 5}"/> Tons of Manufactures Goods
+                                <c:out  value="${50 + (resultMain.rows[0].industry) * 100}"/> Htons of Raw Material,
+                                <c:out  value="${25 + (resultMain.rows[0].industry) * 50}"/> Mmbls of Oil,
+                                <c:out  value="${5 + (resultMain.rows[0].industry) * 5}"/> Tons of Manufactures Goods
                             </td>
                             <td>
                                 <form action="policyresults" method="post">
@@ -206,7 +206,40 @@
                         </tr>
                     </c:when>
                     <c:when test="${param['policy'] == 'Military'}">
-
+                        <tr>
+                            <td>
+                                Conscript
+                            </td>
+                            <td>
+                                Throw more men into your army at the cost of manpower and overall training.
+                            </td>
+                            <td>
+                                Reduction in Manpower, Training
+                            </td>
+                            <td>
+                                <form action="policyresults" method="post">
+                                    <input type="hidden" name="policy" value="conscript">
+                                    <button class="policyButton" type="submit">Conscript</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Train
+                            </td>
+                            <td>
+                                Train your army
+                            </td>
+                            <td>
+                                <c:out value="${resultMain.rows[0].army * (resultMain.rows[0].training * resultMain.rows[0].training) / 100}"/>
+                            </td>
+                            <td>
+                                <form action="policyresults" method="post">
+                                    <input type="hidden" name="policy" value="train">
+                                    <button class="policyButton" type="submit">Train</button>
+                                </form>
+                            </td>
+                        </tr>
                     </c:when>
                 </c:choose>
             </table>
