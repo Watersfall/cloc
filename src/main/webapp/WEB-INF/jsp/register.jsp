@@ -41,7 +41,7 @@
                     <c:otherwise>
                         <p>Registered!</p>
                         <sql:update dataSource="${database}">
-                            INSERT INTO cloc_main (username, nation, password, sess) VALUES (?,?,?,?,?,?,?,?,?)
+                            INSERT INTO cloc_main (username, nation, password, sess) VALUES (?,?,?,?)
                             <sql:param value="${user}" />
                             <sql:param value="${nation}" />
                             <sql:param value="${pass}" />
