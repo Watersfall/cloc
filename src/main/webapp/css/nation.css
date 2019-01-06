@@ -14,19 +14,19 @@
 
 #nation tr:nth-child(even)
 {
-    background-color: rgba(65,65,65,0.95);
+    background-color: rgba(30,30,30,0.5);
     color: white;
 }
 
 #nation tr:nth-child(odd)
 {
-    background-color: rgba(80,80,80,0.95);
+    background-color: rgba(40,40,40,0.5);
     color: white;
 }
 
 #nation tr:hover
 {
-    background-color: rgba(40,40,40,0.95);
+    background-color: rgba(20,20,20,0.5);
 }
 
 .flag

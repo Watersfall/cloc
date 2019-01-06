@@ -3,11 +3,21 @@
     <%@ include file = "includes/head.jsp" %>
     <body>
         <%@ include file = "includes/header.jsp" %>
+
+
+        <%-- RESULTS --%>
+        <%@ include file = "results/policyresults.jsp" %>
+
+
+        <%-- POLICIES --%>
         <div class="main">
-            <h1><c:out value="${param['policy']}"/> Policy</h1>
-            <c:if test="${not empty param['result']}">
+            <h1><c:out value="${param['policies']}"/> Policy</h1>
+            <c:if test="${not empty policyResult}">
                 <div class="result">
-                    <p><c:out value="${param['result']}"/></p>
+                    <c:if test="${not empty image}">
+                        <img class="policyImage" src="/images/policies/<c:out value="${image}"/>" alt="Policy">
+                    </c:if>
+                    <p><c:out value="${policyResult}"/></p>
                 </div>
             </c:if>
             <table id="policy">
@@ -27,7 +37,7 @@
                     <c:when test="${result.rowCount == 0}">
                         <p>You must be logged in to view this page!</p>
                     </c:when>
-                    <c:when test="${param['policy'] == 'Economic'}">
+                    <c:when test="${param['policies'] == 'Economic'}">
                         <tr>
                             <td>
                                 Free Money
@@ -39,7 +49,7 @@
                                 Free!
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Economic" method="post">
                                     <input type="hidden" name="policy" value="freemoneycapitalist">
                                     <button class="policyButton" type="submit">Get Rich</button>
                                 </form>
@@ -56,7 +66,7 @@
                                 Free!
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Economic" method="post">
                                     <input type="hidden" name="policy" value="freemoneycommunist">
                                     <button class="policyButton" type="submit">Get Rich</button>
                                 </form>
@@ -73,7 +83,7 @@
                                 $<c:out value="${500 + (resultMain.rows[0].mines - 1) * 50}"/>k
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Economic" method="post">
                                     <input type="hidden" name="policy" value="mine">
                                     <button class="policyButton" type="submit">Mine</button>
                                 </form>
@@ -90,7 +100,7 @@
                                 $<c:out value="${500 + (resultMain.rows[0].wells - 1) * 100}"/>k
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Economic" method="post">
                                     <input type="hidden" name="policy" value="drill">
                                     <button class="policyButton" type="submit">Drill</button>
                                 </form>
@@ -104,19 +114,38 @@
                                 Build a new factory for your growing population, Consumes 1 Oil and Raw Material to produce 1 Manufactured good
                             </td>
                             <td>
-                                <c:out  value="${50 + (resultMain.rows[0].industry) * 100}"/> Htons of Raw Material,
-                                <c:out  value="${25 + (resultMain.rows[0].industry) * 50}"/> Mmbls of Oil,
-                                <c:out  value="${5 + (resultMain.rows[0].industry) * 5}"/> Tons of Manufactures Goods
+                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
+                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
+                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 5)}"/> Tons of Manufactures Goods
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Economic" method="post">
                                     <input type="hidden" name="policy" value="industrialize">
                                     <button class="policyButton" type="submit">Industrialize</button>
                                 </form>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                Build Nitrogen Plant
+                            </td>
+                            <td>
+                                Build a new Nitrogen Fixation plant to blow up other people's populations, consumes 2 Oil and 1 MG to produce 1 Nitrogen. Same cost as factories
+                            </td>
+                            <td>
+                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
+                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
+                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 5)}"/> Tons of Manufactures Goods
+                            </td>
+                            <td>
+                                <form action="policies?policies=Economic" method="post">
+                                    <input type="hidden" name="policy" value="nitrogenplant">
+                                    <button class="policyButton" type="submit">Progress</button>
+                                </form>
+                            </td>
+                        </tr>
                     </c:when>
-                    <c:when test="${param['policy'] == 'Domestic'}">
+                    <c:when test="${param['policies'] == 'Domestic'}">
                         <tr>
                             <td>
                                 Increase Arrest Quotas
@@ -128,7 +157,7 @@
                                 $100k
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Domestic" method="post">
                                     <input type="hidden" name="policy" value="crackdown">
                                     <button class="policyButton" type="submit">Crackdown</button>
                                 </form>
@@ -145,14 +174,33 @@
                                 $100k
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Domestic" method="post">
                                     <input type="hidden" name="policy" value="free">
                                     <button class="policyButton" type="submit">Free</button>
                                 </form>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                Build University
+                            </td>
+                            <td>
+                                Build a university to further your research! Consumes 2 MG. Same cost as factories.
+                            </td>
+                            <td>
+                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
+                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
+                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 5)}"/> Tons of Manufactures Goods
+                            </td>
+                            <td>
+                                <form action="policies?policies=Domestic" method="post">
+                                    <input type="hidden" name="policy" value="university">
+                                    <button class="policyButton" type="submit">Advance</button>
+                                </form>
+                            </td>
+                        </tr>
                     </c:when>
-                    <c:when test="${param['policy'] == 'Foreign'}">
+                    <c:when test="${param['policies'] == 'Foreign'}">
                         <tr>
                             <td>
                                 Align With The Entente
@@ -164,7 +212,7 @@
                                 $100k
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Foreign" method="post">
                                     <input type="hidden" name="policy" value="alignentente">
                                     <button class="policyButton" type="submit">Praise</button>
                                 </form>
@@ -181,7 +229,7 @@
                                 $100k
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Foreign" method="post">
                                     <input type="hidden" name="policy" value="aligncentral">
                                     <button class="policyButton" type="submit">Admire</button>
                                 </form>
@@ -198,14 +246,14 @@
                                 $100k
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Foreign" method="post">
                                     <input type="hidden" name="policy" value="alignneutral">
                                     <button class="policyButton" type="submit">Celebrate</button>
                                 </form>
                             </td>
                         </tr>
                     </c:when>
-                    <c:when test="${param['policy'] == 'Military'}">
+                    <c:when test="${param['policies'] == 'Military'}">
                         <tr>
                             <td>
                                 Conscript
@@ -217,7 +265,7 @@
                                 Reduction in Manpower, Training
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Military" method="post">
                                     <input type="hidden" name="policy" value="conscript">
                                     <button class="policyButton" type="submit">Conscript</button>
                                 </form>
@@ -234,7 +282,7 @@
                                 <c:out value="${resultMain.rows[0].army * (resultMain.rows[0].training * resultMain.rows[0].training) / 100}"/>
                             </td>
                             <td>
-                                <form action="policyresults" method="post">
+                                <form action="policies?policies=Military" method="post">
                                     <input type="hidden" name="policy" value="train">
                                     <button class="policyButton" type="submit">Train</button>
                                 </form>

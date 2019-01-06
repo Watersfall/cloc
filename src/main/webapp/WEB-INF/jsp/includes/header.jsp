@@ -34,25 +34,43 @@
                 <h1 style="margin-top: 2%; margin-bottom:2%;">
                     <c:out value="${result.rows[0].nation}"/>
                 </h1>
+                <table style="width: 100%;">
+                    <tr style="width: 100%;">
+                        <td style="width: 50%;">
+                            <a href="index">
+                                <div class="world">
+                                    <p>Communiques</p>
+                                </div>
+                            </a>
+                        </td>
+                        <td style="width: 50%;">
+                            <a href="#">
+                                <div class="world">
+                                    <p>News</p>
+                                </div>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
                 <h3 style="margin-top: 2%; margin-bottom:2%;">
                     Policies
                 </h3>
-                <a href="policies?policy=Domestic">
+                <a href="policies?policies=Domestic">
                     <div class="policy">
                         Domestic
                     </div>
                 </a>
-                <a href="policies?policy=Economic">
+                <a href="policies?policies=Economic">
                     <div class="policy">
                         Economic
                     </div>
                 </a>
-                <a href="policies?policy=Foreign">
+                <a href="policies?policies=Foreign">
                     <div class="policy">
                         Foreign
                     </div>
                 </a>
-                <a href="policies?policy=Military">
+                <a href="policies?policies=Military">
                     <div class="policy">
                         Military
                     </div>
@@ -113,6 +131,45 @@
                         </td>
                     </tr>
                 </table>
+                <h3>
+                    The World
+                </h3>
+                <a href="index">
+                    <div class="world">
+                        <p>World Rankings</p>
+                    </div>
+                </a>
+                <a href="index">
+                    <div class="world">
+                        <p>Your Region</p>
+                    </div>
+                </a>
+                <a href="index">
+                    <div class="world">
+                        <p>World Map</p>
+                    </div>
+                </a>
+                <a href="index">
+                    <div class="world">
+                        <p>News and Statistics</p>
+                    </div>
+                </a>
+                <h3>The Alliances</h3>
+                <a href="index">
+                    <div class="alliance">
+                        <p>Alliance Rankings</p>
+                    </div>
+                </a>
+                <a href="index">
+                    <div class="alliance">
+                        <p>Your Alliance</p>
+                    </div>
+                </a>
+                <a href="index">
+                    <div class="alliance">
+                        <p>Alliance Chat</p>
+                    </div>
+                </a>
                 <form class="registerForm" action="settings">
                     <input type="submit" value="Settings">
                 </form>

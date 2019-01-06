@@ -154,12 +154,12 @@
                         <td><cloc:alignment value="${foreign.rows[0].alignment}"/></td>
                     </tr>
                     <tr>
-                        <td>Soviet Relations</td>
-                        <td><c:out value="${foreign.rows[0].soviet}"/></td>
+                        <td>Central Powers Relations</td>
+                        <td><c:out value="${foreign.rows[0].central}"/></td>
                     </tr>
                     <tr>
-                        <td>American Relations</td>
-                        <td><c:out value="${foreign.rows[0].us}"/></td>
+                        <td>Entente Relations</td>
+                        <td><c:out value="${foreign.rows[0].entente}"/></td>
                     </tr>
                     <tr>
                         <td>Region</td>
