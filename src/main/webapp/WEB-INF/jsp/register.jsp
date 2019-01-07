@@ -20,9 +20,6 @@
             </sql:query>
             <c:if test="${pageContext.request.method== 'POST'}">
                 <c:choose>
-                    <c:when test="${empty user && empty pass}">
-                        <p>Please enter a Username and Password</p>
-                    </c:when>
                     <c:when test="${empty user || empty pass}">
                         <p>Please enter a Username and Password</p>
                     </c:when>
@@ -51,6 +48,7 @@
                             INSERT INTO cloc (sess) VALUES (?);
                             <sql:param value="${sess}" />
                         </sql:update>
+                        <c:redirect url="main"/>
                     </c:otherwise>
                 </c:choose>
             </c:if>
