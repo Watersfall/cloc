@@ -80,13 +80,4 @@
         <url-pattern>/policies</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>policyresults</servlet-name>
-        <jsp-file>/WEB-INF/jsp/results/policyresults.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>policyresults</servlet-name>
-        <url-pattern>/policyresults</url-pattern>
-    </servlet-mapping>
-
 </web-app>
