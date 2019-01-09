@@ -1,1 +1,5 @@
 .idea/
+target/
+clocTurns/target/
+clocTurns/nbactions.xml
+clocTurns/src/test/
