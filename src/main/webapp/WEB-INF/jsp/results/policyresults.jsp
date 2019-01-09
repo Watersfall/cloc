@@ -93,7 +93,7 @@
         <c:if test="${resultMain.rows[0].mg < mg}">
             <c:set var="policyResult" value="You do not have enough Manufactured Goods!" scope="page"/>
         </c:if>
-        <c:if test="${resultMain.rows[0].budget >= cost}">
+        <c:if test="${resultMain.rows[0].mg >= mg && resultMain.rows[0].rm >= rm && resultMain.rows[0].oil >= oil}">
             <sql:update dataSource="${database}">
                 UPDATE cloc SET industry=industry+1, rm=rm-?, oil=oil-?, mg=mg-?
                 WHERE sess=? && rm>=? && oil>=? && mg>=?;
@@ -124,7 +124,7 @@
         <c:if test="${resultMain.rows[0].mg < mg}">
             <c:set var="policyResult" value="You do not have enough Manufactured Goods!" scope="page"/>
         </c:if>
-        <c:if test="${resultMain.rows[0].budget >= cost}">
+        <c:if test="${resultMain.rows[0].mg >= mg && resultMain.rows[0].rm >= rm && resultMain.rows[0].oil >= oil}">
             <sql:update dataSource="${database}">
                 UPDATE cloc SET nitrogenplant=nitrogenplant+1, rm=rm-?, oil=oil-?, mg=mg-?
                 WHERE sess=? && rm>=? && oil>=? && mg>=?;
@@ -215,7 +215,7 @@
         <c:if test="${resultMain.rows[0].mg < mg}">
             <c:set var="policyResult" value="You do not have enough Manufactured Goods!" scope="page"/>
         </c:if>
-        <c:if test="${resultMain.rows[0].budget >= cost}">
+        <c:if test="${resultMain.rows[0].mg >= mg && resultMain.rows[0].rm >= rm && resultMain.rows[0].oil >= oil}">
             <sql:update dataSource="${database}">
                 UPDATE cloc SET universities=universities+1, rm=rm-?, oil=oil-?, mg=mg-?
                 WHERE sess=? && rm>=? && oil>=? && mg>=?;
