@@ -1,4 +1,4 @@
-package com.watersfall.cloc;
+package com.watersfall.cloc.tags;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -6,7 +6,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
-public class Rebel extends SimpleTagSupport
+public class Economic extends SimpleTagSupport
 {
     private String value;
     StringWriter sw = new StringWriter();
@@ -22,12 +22,10 @@ public class Rebel extends SimpleTagSupport
         {
             int num = Integer.parseInt(value);
             JspWriter out = getJspContext().getOut();
-            String rebels = (num > 75) ? ("Syrian Civil War")
-                : (num > 50) ? ("Open Rebellion")
-                : (num > 25) ? ("Guerrillas")
-                : (num > 0) ? ("Scattered Terrorists")
-                : ("None");
-            out.print(rebels);
+            String economic = (num > 66) ? ("Free Market Economy")
+                : (num > 33) ? ("Mixed Market Economy")
+                : ("Communist Economy");
+            out.print(economic);
          } 
     }
 }

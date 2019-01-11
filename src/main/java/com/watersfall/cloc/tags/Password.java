@@ -1,4 +1,4 @@
-package com.watersfall.cloc;
+package com.watersfall.cloc.tags;
 
 import java.io.IOException;
 import java.io.StringWriter;
