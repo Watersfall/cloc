@@ -15,8 +15,12 @@
                     <img class="leader" src="<c:out value="https://imgur.com/${result.rows[0].leader}"/>" alt="flag">
                     <h1><c:out value="${result.rows[0].leaderTitle}"/>: <c:out value="${result.rows[0].username}"/></h1>
                 </div>
-                <h1>Domestic</h1>
+                <h1>Government</h1>
                 <table id="nation">
+                    <tr>
+                        <td>Government</td>
+                        <td><cloc:government value="${resultMain.rows[0].political}"/></td>
+                    </tr>
                     <tr>
                         <td>Approval</td>
                         <td>
@@ -29,10 +33,6 @@
                                 </div>
                             </div>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>Government</td>
-                        <td><cloc:government value="${resultMain.rows[0].political}"/></td>
                     </tr>
                     <tr>
                         <td>Stability</td>
@@ -64,6 +64,9 @@
                             </div>
                         </td>
                     </tr>
+                </table>
+                <h1>Domestic</h1>
+                <table id="nation">
                     <tr>
                         <td>Population</td>
                         <td><c:out value="${resultMain.rows[0].population}"/> People</td>
@@ -92,7 +95,7 @@
                         <td><cloc:economic value="${resultMain.rows[0].economic}"/></td>
                     </tr>
                     <tr>
-                        <td>Gross resultMain Product</td>
+                        <td>Gross Domestic Product</td>
                         <td>$<c:out value="${resultMain.rows[0].gdp}"/> Million</td>
                     </tr>
                     <tr>
@@ -125,6 +128,14 @@
                     <tr>
                         <td>Raw Material Stockpile</td>
                         <td><c:out value="${resultMain.rows[0].rm}"/> Hundred Tons</td>
+                    </tr>
+                    <tr>
+                        <td>Nitrogen Plants</td>
+                        <td><c:out value="${resultMain.rows[0].nitrogenplants}"/> Plants</td>
+                    </tr>
+                    <tr>
+                        <td>Ammonia Stockpile</td>
+                        <td><c:out value="${resultMain.rows[0].nitrogen}"/> Tons</td>
                     </tr>
                 </table>
                 <h1>Foreign</h1>

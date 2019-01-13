@@ -2,7 +2,6 @@
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
-<sql:setDataSource var = "database" driver = "com.mysql.cj.jdbc.Driver" url = "jdbc:mysql://localhost/cloc" user = "root"  password = "***REMOVED***"/>
 <% session.invalidate(); %>
 <!DOCTYPE html>
 <html>

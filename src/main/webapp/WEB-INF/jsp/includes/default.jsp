@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
-<sql:setDataSource var = "database" url = "jdbc:mysql://localhost/cloc" user = "root"  password = "***REMOVED***" scope="application"/>
+<cloc:database var="database"/>
 <c:set var="sess" scope="session">
     ${pageContext.session.id}
 </c:set>

@@ -15,7 +15,8 @@ public class Database
         database.setUsername("root");
         database.setPassword("***REMOVED***");
         database.setMinIdle(5);
-        database.setMaxIdle(10);
+        database.setMaxIdle(25);
+        database.setMaxTotal(100);
         database.setMaxOpenPreparedStatements(100);
         return database;
     }

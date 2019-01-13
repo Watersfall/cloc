@@ -37,16 +37,7 @@
                     <table id="nation">
                         <tr>
                             <td>Approval</td>
-                            <td>
-                                <div class="dropdown">
-                                    <span>
-                                        <cloc:approval value="${nation2.rows[0].approval}"/>
-                                    </span>
-                                    <div class="dropdown-content">
-                                        <i><c:out value="${nation2.rows[0].approval}"/>%</i>
-                                    </div>
-                                </div>
-                            </td>
+                            <td><cloc:approval value="${nation2.rows[0].approval}"/></td>
                         </tr>
                         <tr>
                             <td>Government</td>
@@ -54,16 +45,7 @@
                         </tr>
                         <tr>
                             <td>Stability</td>
-                            <td>
-                                <div class="dropdown">
-                                    <span>
-                                        <cloc:stability value="${nation2.rows[0].stability}"/>
-                                    </span>
-                                    <div class="dropdown-content">
-                                        <i><c:out value="${nation2.rows[0].stability}"/>%</i>
-                                    </div>
-                                </div>
-                            </td>
+                            <td><cloc:stability value="${nation2.rows[0].stability}"/></td>
                         </tr>
                         <tr>
                             <td>Land</td>
@@ -71,16 +53,7 @@
                         </tr>
                         <tr>
                             <td>Rebel Threat</td>
-                            <td>
-                                <div class="dropdown">
-                                    <span>
-                                        <cloc:rebels value="${nation2.rows[0].rebel}"/>
-                                    </span>
-                                    <div class="dropdown-content">
-                                        <i><c:out value="${nation2.rows[0].rebel}"/>%</i>
-                                    </div>
-                                </div>
-                            </td>
+                            <td><cloc:rebels value="${nation2.rows[0].rebel}"/></td>
                         </tr>
                     </table>
                     <h1>Domestic</h1>
@@ -134,6 +107,10 @@
                         <tr>
                             <td>Raw Material Production</td>
                             <td><c:out value="${nation2.rows[0].mines}"/> Hundred Tons per Month</td>
+                        </tr>
+                        <tr>
+                            <td>Nitrogen Plants</td>
+                            <td><c:out value="${nation2.rows[0].nitrogenplants}"/> Plants</td>
                         </tr>
                     </table>
                     <h1>Foreign</h1>
