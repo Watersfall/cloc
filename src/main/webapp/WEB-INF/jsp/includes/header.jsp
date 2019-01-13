@@ -131,9 +131,8 @@
                         </td>
                     </tr>
                 </table>
-                <h3>
-                    The World
-                </h3>
+                <h3>The World</h3>
+                <h3>The Alliances</h3>
                 <a href="index">
                     <div class="world">
                         <p>World Rankings</p>

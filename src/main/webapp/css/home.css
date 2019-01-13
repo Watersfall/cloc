@@ -65,6 +65,13 @@ p
     z-index: 2;
     overflow-x: visible;
     overflow-y: auto;
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
+
+.top::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
 }
 
 .login
