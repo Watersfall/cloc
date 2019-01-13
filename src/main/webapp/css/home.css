@@ -80,12 +80,20 @@ p
 .registerForm
 {
     padding: 15px;
+    display: inline;
 }
 
 .loginText
 {
     min-width: 75px;
+}
 
+.RegisterText
+{
+    min-width: 150px;
+    padding: 10px 10px;
+    margin: 10px 10px;
+    display: inline;
 }
 
 .settings

@@ -7,7 +7,7 @@ Current Bugs:
   
 Todo List: (In no particular order)
 
-  - Register page with options for region region, government, and economy
+  - ~~Register page with options for region region, government, and economy~~
   
   - Events
     

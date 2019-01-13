@@ -154,7 +154,7 @@
                     </tr>
                     <tr>
                         <td>Region</td>
-                        <td><cloc:region value="${resultMain.rows[0].region}"/></td>
+                        <td><c:out value="${resultMain.rows[0].region}"/></td>
                     </tr>
                     <tr>
                         <td>Alliance</td>

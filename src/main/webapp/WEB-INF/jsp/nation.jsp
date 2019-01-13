@@ -121,7 +121,7 @@
                         </tr>
                         <tr>
                             <td>Region</td>
-                            <td><cloc:region value="${nation2.rows[0].region}"/></td>
+                            <td><c:out value="${nation2.rows[0].region}"/></td>
                         </tr>
                         <tr>
                             <td>Alliance</td>
