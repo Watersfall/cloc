@@ -25,6 +25,9 @@
                     <input class="loginText" type="submit" value="Register">
                 </form>
             </div>
+            <div class="login">
+                <a href="https://discord.gg/x2VwYkS">Discord Server</a>
+            </div>
         </c:when>
         <c:otherwise>
             <div class="login">
@@ -44,7 +47,7 @@
                             </a>
                         </td>
                         <td style="width: 50%;">
-                            <a href="#">
+                            <a href="news">
                                 <div class="world">
                                     <p>News</p>
                                 </div>

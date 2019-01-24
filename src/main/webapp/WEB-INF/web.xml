@@ -80,4 +80,13 @@
         <url-pattern>/policies</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>news</servlet-name>
+        <jsp-file>/WEB-INF/jsp/news.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>news</servlet-name>
+        <url-pattern>/news</url-pattern>
+    </servlet-mapping>
+
 </web-app>

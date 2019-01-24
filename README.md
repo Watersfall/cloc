@@ -1,4 +1,8 @@
 # cloc
+
+Discord Link: https://discord.gg/x2VwYkS
+
+
 Current Bugs:
 
   - ~~"Too many connections" on spam click~~

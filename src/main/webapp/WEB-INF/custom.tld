@@ -93,4 +93,14 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <name>eventText</name>
+        <tag-class>com.watersfall.cloc.tags.event.EventText</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>
