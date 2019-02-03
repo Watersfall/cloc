@@ -3,9 +3,7 @@
     <%@ include file = "includes/head.jsp" %>
     <body>
         <%@ include file = "includes/header.jsp" %>
-        <c:set var="id">
-            ${param['id']}
-        </c:set>
+        <c:set var="id" value="${param['id']}"/>
         <sql:query dataSource="${database}" var="nation">
             SELECT * FROM cloc_main WHERE id=?
             <sql:param value="${id}" />
@@ -26,6 +24,9 @@
                     <c:redirect url="/main"/>
                 </c:when>
                 <c:otherwise>
+                    <c:if test="${not empty send}">
+                        <p><c:out value="${send}"/></p>
+                    </c:if>
                     <div class="nation">
                         <h1><c:out value="${nation.rows[0].nationTitle}"/><br><c:out value="${nation.rows[0].nation}"/></h1>
                         <img class="flag" src="https://imgur.com/<c:out value="${nation.rows[0].flag}"/>" alt="flag">
@@ -172,6 +173,49 @@
                         <tr>
                             <td>Navy</td>
                             <td><c:out value="${nation2.rows[0].navy}"/> Ships</td>
+                        </tr>
+                    </table>
+                    <h1>Diplomacy</h1>
+                    <table id="nation">
+                        <tr>
+                            <td>Send Money</td>
+                            <td>
+                                <form method="POST" action="nationresults">
+                                    <input type="number" name="sendcash">
+                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
+                                    <button type="submit">Send</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Send Raw Material</td>
+                            <td>
+                                <form method="POST" action="nationresults">
+                                    <input type="number" name="sendrm">
+                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
+                                    <button type="submit">Send</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Send Oil</td>
+                            <td>
+                                <form method="POST" action="nationresults">
+                                    <input type="number" name="sendoil">
+                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
+                                    <button type="submit">Send</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Send Manufactured Goods</td>
+                            <td>
+                                <form method="POST" action="nationresults">
+                                    <input type="number" name="sendmg">
+                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
+                                    <button type="submit">Send</button>
+                                </form>
+                            </td>
                         </tr>
                     </table>
                 </c:otherwise>

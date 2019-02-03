@@ -88,5 +88,4 @@
         <servlet-name>news</servlet-name>
         <url-pattern>/news</url-pattern>
     </servlet-mapping>
-
 </web-app>
