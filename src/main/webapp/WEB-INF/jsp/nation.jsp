@@ -3,6 +3,7 @@
     <%@ include file = "includes/head.jsp" %>
     <body>
         <%@ include file = "includes/header.jsp" %>
+        <script src="/js/nation.js"></script>
         <c:set var="id" value="${param['id']}"/>
         <sql:query dataSource="${database}" var="nation">
             SELECT * FROM cloc_main WHERE id=?
@@ -13,6 +14,7 @@
             <sql:param value="${id}" />
         </sql:query>
         <div class="main">
+            <%@ include file = "includes/results.jsp" %>
             <c:choose>
                 <c:when test="${empty id}">
                     <p>You have visited this page incorrectly!</p>
@@ -180,41 +182,29 @@
                         <tr>
                             <td>Send Money</td>
                             <td>
-                                <form method="POST" action="nationresults">
-                                    <input type="number" name="sendcash">
-                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
-                                    <button type="submit">Send</button>
-                                </form>
+                                <input type="number" id="amountCash" name="sendcash">
+                                <button type="submit" onclick="sendCash(document.getElementById('amountCash').value, <c:out value="${id}"/>);">Send</button>
                             </td>
                         </tr>
                         <tr>
                             <td>Send Raw Material</td>
                             <td>
-                                <form method="POST" action="nationresults">
-                                    <input type="number" name="sendrm">
-                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
-                                    <button type="submit">Send</button>
-                                </form>
+                                <input type="number" id="amountRm" name="sendrm">
+                                <button type="submit" onclick="sendRm(document.getElementById('amountRm').value, <c:out value="${id}"/>);">Send</button>
                             </td>
                         </tr>
                         <tr>
                             <td>Send Oil</td>
                             <td>
-                                <form method="POST" action="nationresults">
-                                    <input type="number" name="sendoil">
-                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
-                                    <button type="submit">Send</button>
-                                </form>
+                                <input type="number" id="amountOil" name="sendoil">
+                                <button type="submit" onclick="sendOil(document.getElementById('amountOil').value, <c:out value="${id}"/>);">Send</button>
                             </td>
                         </tr>
                         <tr>
                             <td>Send Manufactured Goods</td>
                             <td>
-                                <form method="POST" action="nationresults">
-                                    <input type="number" name="sendmg">
-                                    <input type="hidden" name="id" value="<c:out value="${id}"/>">
-                                    <button type="submit">Send</button>
-                                </form>
+                                <input type="number" id="amountMg" name="sendmg">
+                                <button type="submit" onclick="sendMg(document.getElementById('amountMg').value, <c:out value="${id}"/>);">Send</button>
                             </td>
                         </tr>
                     </table>

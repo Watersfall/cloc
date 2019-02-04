@@ -355,3 +355,20 @@ a:active
     background-color: black;
     z-index: 10;
 }
+
+.resultsContainer
+{
+    visibility: hidden;
+    position: fixed;
+    background-color: rgba(75,75,75,0.5);
+    width: 80%;
+    top: 0;
+    left: 20%;
+    box-shadow: 0px 0px 50px rgba(75,75,75,1);
+}
+
+.results
+{
+    margin: auto;
+    width: 75%;
+}

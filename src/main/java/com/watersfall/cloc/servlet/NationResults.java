@@ -85,6 +85,7 @@ public class NationResults extends HttpServlet
         catch(NumberFormatException | NullPointerException e)
         {
             writer.append("Don't do that");
+            e.printStackTrace();
         }
     }
 }
