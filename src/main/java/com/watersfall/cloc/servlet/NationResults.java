@@ -17,26 +17,27 @@ import javax.servlet.annotation.WebServlet;
 @WebServlet("/nationresults")
 public class NationResults extends HttpServlet
 {
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String param, type;
         String sess, id = null;
         BasicDataSource database = Database.getDataSource();
-        ResultSet sender = null, reciever;
+        ResultSet sender = null, reciever = null;
         PrintWriter writer = response.getWriter();
-        PreparedStatement statement, send, recieve;
+        PreparedStatement readSend = null, readRecieve = null, send = null, recieve = null;
 
         try
-        {   
+        {
             if((sess = request.getSession().getId()) != null && (id = request.getParameter("id")) != null)
             {
-                statement = database.getConnection().prepareStatement("SELECT * FROM cloc WHERE sess=?");
-                statement.setString(1, sess);
-                sender = statement.executeQuery();
-                statement = database.getConnection().prepareStatement("SELECT * FROM cloc WHERE id=?");
-                statement.setInt(1, Integer.parseInt(id));
-                reciever = statement.executeQuery();
+                readSend = database.getConnection().prepareStatement("SELECT * FROM cloc WHERE sess=?");
+                readSend.setString(1, sess);
+                sender = readSend.executeQuery();
+                readRecieve = database.getConnection().prepareStatement("SELECT * FROM cloc WHERE id=?");
+                readRecieve.setInt(1, Integer.parseInt(id));
+                reciever = readRecieve.executeQuery();
                 if(!sender.first())
                 {
                     writer.append("You are not logged in!");
@@ -48,13 +49,13 @@ public class NationResults extends HttpServlet
                     return;
                 }
             }
-            
-            type =  ((param = request.getParameter("sendoil")) != null) ? "oil"   :
-                    ((param = request.getParameter("sendrm"))  != null) ? "rm"    :
-                    ((param = request.getParameter("sendmg"))  != null) ? "mg"    :
-                    ((param = request.getParameter("sendcash"))!= null) ? "budget":
-                    null;
-                    
+
+            type = ((param = request.getParameter("sendoil")) != null) ? "oil"
+                    : ((param = request.getParameter("sendrm")) != null) ? "rm"
+                    : ((param = request.getParameter("sendmg")) != null) ? "mg"
+                    : ((param = request.getParameter("sendcash")) != null) ? "budget"
+                    : null;
+
             int amount = Integer.parseInt(param);
             if(amount > sender.getInt(type))
             {
@@ -86,6 +87,79 @@ public class NationResults extends HttpServlet
         {
             writer.append("Don't do that");
             e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                sender.close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                reciever.close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                send.getConnection().close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                readSend.getConnection().close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                recieve.getConnection().close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                readRecieve.getConnection().close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                send.close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                readSend.close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                recieve.close();
+            }
+            catch(Exception ex)
+            {
+            }
+            try
+            {
+                readRecieve.close();
+            }
+            catch(Exception ex)
+            {
+            }
         }
     }
 }

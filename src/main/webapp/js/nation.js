@@ -1,5 +1,3 @@
-/* global xhttp */
-
 function sendOil(amount, id)
 {
     document.getElementById('resultsContainer').style.visibility = "visible";
@@ -8,7 +6,6 @@ function sendOil(amount, id)
     var params = "sendoil=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.setRequestHeader("Content-length", params.length);
     xhttp.send(params);
     xhttp.onreadystatechange=function()
     {
@@ -27,7 +24,6 @@ function sendRm(amount, id)
     var params = "sendrm=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.setRequestHeader("Content-length", params.length);
     xhttp.send(params);
     xhttp.onreadystatechange=function()
     {
@@ -46,7 +42,6 @@ function sendMg(amount, id)
     var params = "sendmg=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.setRequestHeader("Content-length", params.length);
     xhttp.send(params);
     xhttp.onreadystatechange=function()
     {
@@ -65,7 +60,6 @@ function sendCash(amount, id)
     var params = "sendcash=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.setRequestHeader("Content-length", params.length);
     xhttp.send(params);
     xhttp.onreadystatechange=function()
     {
