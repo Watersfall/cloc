@@ -97,7 +97,7 @@ public class PolicyResults extends HttpServlet
                     }
                     case "mine":
                     {
-                        int cost = 500 + results.getInt("mine") * 50;
+                        int cost = 500 + results.getInt("mines") * 50;
                         if(results.getInt("budget") < cost)
                         {
                             writer.append("You do not have enough money");
