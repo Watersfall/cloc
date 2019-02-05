@@ -98,9 +98,9 @@
                                 Build a new factory for your growing population, Consumes 1 Oil and Raw Material to produce 1 Manufactured good
                             </td>
                             <td>
-                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
-                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
-                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 5)}"/> Tons of Manufactures Goods
+                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].milindustry) * 50)}"/> Htons of Raw Material,
+                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].milindustry) * 25)}"/> Mmbls of Oil,
+                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].milindustry) * 5)}"/> Tons of Manufactures Goods
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('industrialize')">Industrialize</button>
@@ -114,9 +114,9 @@
                                 Build a new Nitrogen Fixation plant to blow up other people's populations, consumes 2 Oil and 1 MG to produce 1 Nitrogen. Same cost as factories
                             </td>
                             <td>
-                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
-                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
-                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 5)}"/> Tons of Manufactures Goods
+                                <c:out  value="${100 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
+                                <c:out  value="${50 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
+                                <c:out  value="${10 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 10)}"/> Tons of Manufactures Goods
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('nitrogenplant')">Progress</button>
@@ -160,9 +160,9 @@
                                 Build a university to further your research! Consumes 2 MG. Same cost as factories.
                             </td>
                             <td>
-                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
-                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
-                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 5)}"/> Tons of Manufactures Goods
+                                <c:out  value="${100 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
+                                <c:out  value="${50 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
+                                <c:out  value="${10 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 10)}"/> Tons of Manufactures Goods
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('university')">Advance</button>

@@ -120,21 +120,21 @@ public class PolicyResults extends HttpServlet
                         int costRm = 50 + (results.getInt("industry") * results.getInt("milindustry")) * 50;
                         int costOil = 25 + (results.getInt("industry") * results.getInt("milindustry")) * 25;
                         int costMg = 0 + (results.getInt("industry") * results.getInt("milindustry")) * 5;
-                        if(costRm < results.getInt("rm"))
+                        if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
                         }
-                        else if(costOil < results.getInt("oil"))
+                        else if(results.getInt("oil") < costOil)
                         {
                             writer.append("You do not have enough oil!");
                         }
-                        else if(costMg < results.getInt("mg"))
+                        else if(results.getInt("mg") < costMg)
                         {
                             writer.append("You do not have enough manufactured goods!");
                         }
                         else
                         {
-                            statement = database.getConnection().prepareStatement("UPDATE cloc SET industry=industry+1, rm=rm=?, oil=oil-?, mg=mg-? "
+                            statement = database.getConnection().prepareStatement("UPDATE cloc SET industry=industry+1, rm=rm-?, oil=oil-?, mg=mg-? "
                                     + "WHERE sess=?");
                             statement.setInt(1, costRm);
                             statement.setInt(2, costOil);
@@ -152,21 +152,21 @@ public class PolicyResults extends HttpServlet
                         int costRm = 50 + (results.getInt("industry") * results.getInt("milindustry")) * 50;
                         int costOil = 25 + (results.getInt("industry") * results.getInt("milindustry")) * 25;
                         int costMg = 0 + (results.getInt("industry") * results.getInt("milindustry")) * 5;
-                        if(costRm < results.getInt("rm"))
+                        if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
                         }
-                        else if(costOil < results.getInt("oil"))
+                        else if(results.getInt("oil") < costOil)
                         {
                             writer.append("You do not have enough oil!");
                         }
-                        else if(costMg < results.getInt("mg"))
+                        else if(results.getInt("mg") < costMg)
                         {
                             writer.append("You do not have enough manufactured goods!");
                         }
                         else
                         {
-                            statement = database.getConnection().prepareStatement("UPDATE cloc SET milindustry=milindustry+1, rm=rm=?, oil=oil-?, mg=mg-? "
+                            statement = database.getConnection().prepareStatement("UPDATE cloc SET milindustry=milindustry+1, rm=rm-?, oil=oil-?, mg=mg-? "
                                     + "WHERE sess=?");
                             statement.setInt(1, costRm);
                             statement.setInt(2, costOil);
@@ -184,21 +184,21 @@ public class PolicyResults extends HttpServlet
                         int costRm = 100 + (results.getInt("nitrogenplant") * results.getInt("university")) * 100;
                         int costOil = 50 + (results.getInt("nitrogenplant") * results.getInt("university")) * 50;
                         int costMg = 10 + (results.getInt("nitrogenplant") * results.getInt("university")) * 10;
-                        if(costRm < results.getInt("rm"))
+                        if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
                         }
-                        else if(costOil < results.getInt("oil"))
+                        else if(results.getInt("oil") < costOil)
                         {
                             writer.append("You do not have enough oil!");
                         }
-                        else if(costMg < results.getInt("mg"))
+                        else if(results.getInt("mg") < costMg)
                         {
                             writer.append("You do not have enough manufactured goods!");
                         }
                         else
                         {
-                            statement = database.getConnection().prepareStatement("UPDATE cloc SET nitrogenplant=nitrogenplant+1, rm=rm=?, oil=oil-?, mg=mg-? "
+                            statement = database.getConnection().prepareStatement("UPDATE cloc SET nitrogenplant=nitrogenplant+1, rm=rm-?, oil=oil-?, mg=mg-? "
                                     + "WHERE sess=?");
                             statement.setInt(1, costRm);
                             statement.setInt(2, costOil);
@@ -285,21 +285,21 @@ public class PolicyResults extends HttpServlet
                         int costRm = 100 + (results.getInt("nitrogenplant") * results.getInt("university")) * 100;
                         int costOil = 50 + (results.getInt("nitrogenplant") * results.getInt("university")) * 50;
                         int costMg = 10 + (results.getInt("nitrogenplant") * results.getInt("university")) * 10;
-                        if(costRm < results.getInt("rm"))
+                        if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
                         }
-                        else if(costOil < results.getInt("oil"))
+                        else if(results.getInt("oil") < costOil)
                         {
                             writer.append("You do not have enough oil!");
                         }
-                        else if(costMg < results.getInt("mg"))
+                        else if(results.getInt("mg") < costMg)
                         {
                             writer.append("You do not have enough manufactured goods!");
                         }
                         else
                         {
-                            statement = database.getConnection().prepareStatement("UPDATE cloc SET university=university+1, rm=rm=?, oil=oil-?, mg=mg-? "
+                            statement = database.getConnection().prepareStatement("UPDATE cloc SET university=university+1, rm=rm-?, oil=oil-?, mg=mg-? "
                                     + "WHERE sess=?");
                             statement.setInt(1, costRm);
                             statement.setInt(2, costOil);
