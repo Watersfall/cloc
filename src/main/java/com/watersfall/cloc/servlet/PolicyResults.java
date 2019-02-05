@@ -117,9 +117,9 @@ public class PolicyResults extends HttpServlet
                     }
                     case "industrialize":
                     {
-                        int costRm = 50 + (results.getInt("industry") * results.getInt("milindustry")) * 50;
-                        int costOil = 25 + (results.getInt("industry") * results.getInt("milindustry")) * 25;
-                        int costMg = 0 + (results.getInt("industry") * results.getInt("milindustry")) * 5;
+                        int costRm = 50 + (results.getInt("industry") + results.getInt("milindustry")) * 50;
+                        int costOil = 25 + (results.getInt("industry") + results.getInt("milindustry")) * 25;
+                        int costMg = 0 + (results.getInt("industry") + results.getInt("milindustry")) * 5;
                         if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
@@ -149,9 +149,9 @@ public class PolicyResults extends HttpServlet
                     }
                     case "militarize":
                     {
-                        int costRm = 50 + (results.getInt("industry") * results.getInt("milindustry")) * 50;
-                        int costOil = 25 + (results.getInt("industry") * results.getInt("milindustry")) * 25;
-                        int costMg = 0 + (results.getInt("industry") * results.getInt("milindustry")) * 5;
+                        int costRm = 50 + (results.getInt("industry") + results.getInt("milindustry")) * 50;
+                        int costOil = 25 + (results.getInt("industry") + results.getInt("milindustry")) * 25;
+                        int costMg = 0 + (results.getInt("industry") + results.getInt("milindustry")) * 5;
                         if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
@@ -181,9 +181,9 @@ public class PolicyResults extends HttpServlet
                     }
                     case "nitrogenplant":
                     {
-                        int costRm = 100 + (results.getInt("nitrogenplant") * results.getInt("university")) * 100;
-                        int costOil = 50 + (results.getInt("nitrogenplant") * results.getInt("university")) * 50;
-                        int costMg = 10 + (results.getInt("nitrogenplant") * results.getInt("university")) * 10;
+                        int costRm = 100 + (results.getInt("nitrogenplant") + results.getInt("university")) * 100;
+                        int costOil = 50 + (results.getInt("nitrogenplant") + results.getInt("university")) * 50;
+                        int costMg = 10 + (results.getInt("nitrogenplant") + results.getInt("university")) * 10;
                         if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
@@ -282,9 +282,9 @@ public class PolicyResults extends HttpServlet
                     }
                     case "university":
                     {
-                        int costRm = 100 + (results.getInt("nitrogenplant") * results.getInt("university")) * 100;
-                        int costOil = 50 + (results.getInt("nitrogenplant") * results.getInt("university")) * 50;
-                        int costMg = 10 + (results.getInt("nitrogenplant") * results.getInt("university")) * 10;
+                        int costRm = 100 + (results.getInt("nitrogenplant") + results.getInt("university")) * 100;
+                        int costOil = 50 + (results.getInt("nitrogenplant") + results.getInt("university")) * 50;
+                        int costMg = 10 + (results.getInt("nitrogenplant") + results.getInt("university")) * 10;
                         if(results.getInt("rm") < costRm)
                         {
                             writer.append("You do not have enough raw material!");
