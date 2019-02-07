@@ -8,66 +8,67 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class Region extends SimpleTagSupport
 {
+
     private String value;
     StringWriter sw = new StringWriter();
 
-    public void setValue(String value) 
+    public void setValue(String value)
     {
         this.value = value;
     }
 
     public void doTag() throws JspException, IOException
     {
-        if (value != null) 
+        if(value != null)
         {
             JspWriter out = getJspContext().getOut();
             String region = "";
-            switch (value)
+            switch(value)
             {
                 case "10":
-                    region="Mesoamerica";
+                    region = "Mesoamerica";
                 case "11":
-                    region="Caribbean";
+                    region = "Caribbean";
                 case "12":
-                    region="Gran Colombia";
+                    region = "Gran Colombia";
                 case "13":
-                    region="Amazonia";
+                    region = "Amazonia";
                 case "14":
-                    region="Southern Cone";
+                    region = "Southern Cone";
                 case "20":
-                    region="Atlas";
+                    region = "Atlas";
                 case "21":
-                    region="West Africa";
+                    region = "West Africa";
                 case "22":
-                    region="Guinea";
+                    region = "Guinea";
                 case "23":
-                    region="East Africa";
+                    region = "East Africa";
                 case "24":
-                    region="Congo";
+                    region = "Congo";
                 case "25":
-                    region="Southern Africa";
+                    region = "Southern Africa";
                 case "30":
-                    region="Egypt";
+                    region = "Egypt";
                 case "31":
-                    region="Mesopotamia";
+                    region = "Mesopotamia";
                 case "32":
-                    region="Arabia";
+                    region = "Arabia";
                 case "33":
-                    region="Persia";
+                    region = "Persia";
                 case "40":
-                    region="Subcontinent";
+                    region = "Subcontinent";
                 case "41":
-                    region="Indochina";
+                    region = "Indochina";
                 case "42":
-                    region="China";
+                    region = "China";
                 case "43":
-                    region="East Indies";
+                    region = "East Indies";
                 case "44":
-                    region="Pacific Rim";
+                    region = "Pacific Rim";
                 default:
-                    region="Test";
+                    region = "Test";
             }
             out.print(region);
-         } 
+        }
     }
 }

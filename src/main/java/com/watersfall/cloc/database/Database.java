@@ -2,10 +2,9 @@ package com.watersfall.cloc.database;
 
 import org.apache.commons.dbcp2.*;
 
-import javax.sql.DataSource;
-
 public class Database
 {
+
     private static BasicDataSource database;
 
     private static BasicDataSource createDatabase()
@@ -18,6 +17,7 @@ public class Database
         database.setMaxIdle(25);
         database.setMaxTotal(100);
         database.setMaxOpenPreparedStatements(100);
+        database.setDefaultAutoCommit(false);
         return database;
     }
 

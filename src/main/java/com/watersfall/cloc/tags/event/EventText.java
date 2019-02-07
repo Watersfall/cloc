@@ -8,6 +8,7 @@ import java.io.StringWriter;
 
 public class EventText extends SimpleTagSupport
 {
+
     private int value;
     StringWriter sw = new StringWriter();
     private String text;
@@ -18,7 +19,8 @@ public class EventText extends SimpleTagSupport
     }
 
     @Override
-    public void doTag() throws JspException, IOException {
+    public void doTag() throws JspException, IOException
+    {
         JspWriter out = getJspContext().getOut();
         switch(value)
         {

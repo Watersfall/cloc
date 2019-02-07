@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 public class DatabaseConnection extends TagSupport
 {
+
     private String var;
     private int scope;
     private DataSource ds;

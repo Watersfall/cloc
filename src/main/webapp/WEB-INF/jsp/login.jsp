@@ -15,17 +15,19 @@
                 </c:when>
                 <c:otherwise>
                     <p><c:out value="Logged in!"/></p>
-                    <sql:update dataSource="${database}">
-                        UPDATE cloc_main SET sess=? WHERE username=? AND password=?
-                        <sql:param value="${sess}" />
-                        <sql:param value="${user}" />
-                        <sql:param value="${pass}" />
-                    </sql:update>
-                    <sql:update dataSource="${database}">
-                        UPDATE cloc SET sess=? WHERE id=?
-                        <sql:param value="${sess}" />
-                        <sql:param value="${result.rows[0].id}" />
-                    </sql:update>
+                    <sql:transaction dataSource="${database}">
+                        <sql:update>
+                            UPDATE cloc_main SET sess=? WHERE username=? AND password=?
+                            <sql:param value="${sess}" />
+                            <sql:param value="${user}" />
+                            <sql:param value="${pass}" />
+                        </sql:update>
+                        <sql:update>
+                            UPDATE cloc SET sess=? WHERE id=?
+                            <sql:param value="${sess}" />
+                            <sql:param value="${result.rows[0].id}" />
+                        </sql:update>
+                    </sql:transaction>
                     <c:redirect url="/main"/>
                 </c:otherwise>
             </c:choose>
