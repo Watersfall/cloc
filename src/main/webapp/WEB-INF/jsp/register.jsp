@@ -87,20 +87,22 @@
                     </c:when>
                     <c:otherwise>
                         <p>Registered!</p>
-                        <sql:update dataSource="${database}">
-                            INSERT INTO cloc_main (username, nation, password, sess) VALUES (?,?,?,?)
-                            <sql:param value="${user}" />
-                            <sql:param value="${nation}" />
-                            <sql:param value="${pass}" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
-                        <sql:update dataSource="${database}">
-                            INSERT INTO cloc (sess, political, economic, region) VALUES (?,?,?,?);
-                            <sql:param value="${sess}" />
-                            <sql:param value="${government}" />
-                            <sql:param value="${economy}" />
-                            <sql:param value="${region}" />
-                        </sql:update>
+                        <sql:transaction dataSource="${database}">
+                            <sql:update>
+                                INSERT INTO cloc_main (username, nation, password, sess) VALUES (?,?,?,?)
+                                <sql:param value="${user}" />
+                                <sql:param value="${nation}" />
+                                <sql:param value="${pass}" />
+                                <sql:param value="${sess}" />
+                            </sql:update>
+                            <sql:update>
+                                INSERT INTO cloc (sess, political, economic, region) VALUES (?,?,?,?);
+                                <sql:param value="${sess}" />
+                                <sql:param value="${government}" />
+                                <sql:param value="${economy}" />
+                                <sql:param value="${region}" />
+                            </sql:update>
+                        </sql:transaction>
                         <c:redirect url="main"/>
                     </c:otherwise>
                 </c:choose>
