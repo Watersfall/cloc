@@ -1,7 +1,6 @@
 package com.watersfall.cloc.servlet;
 
 import com.watersfall.cloc.database.Database;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +12,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.annotation.WebServlet;
 
 @WebServlet("/nationresults")
@@ -45,23 +42,23 @@ public class NationResults extends HttpServlet
             ResultSet resultsReciever = reciever.executeQuery();
             if(!resultsSender.first())
             {
-                writer.print("You must be logged in to do this!");
+                writer.print("<p>You must be logged in to do this!</p>");
             }
             else if(!resultsReciever.first())
             {
-                writer.print("Nation with that id does not exist!");
+                writer.print("<p>Nation with that id does not exist!</p>");
             }
             else if(resultsSender.getInt("id") == resultsReciever.getInt("id"))
             {
-                writer.print("You appreciate the gift to yourself!");
+                writer.print("<p>You appreciate the gift to yourself!</p>");
             }
             else if(Integer.parseInt(param) <= 0)
             {
-                writer.print("Cannot send 0 or less!");
+                writer.print("<p>Cannot send 0 or less!</p>");
             }
             else if(resultsSender.getInt(type) < Integer.parseInt(param))
             {
-                writer.print("You do not have enough to send!");
+                writer.print("<p>You do not have enough to send!</p>");
             }
             else
             {
@@ -90,11 +87,11 @@ public class NationResults extends HttpServlet
         }
         catch(NumberFormatException | NullPointerException e)
         {
-            writer.append("Don't do that");
+            writer.append("<p>Don't do that</p>");
         }
         catch(Exception e)
         {
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "</p>");
         }
         finally
         {

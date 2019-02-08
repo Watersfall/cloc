@@ -40,14 +40,14 @@ public class PolicyMine extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p><p>You must be logged in to do this!</p>");
             }
             else
             {
                 int cost = 500 + results.getInt("mines") * 50;
                 if(cost > results.getInt("budget"))
                 {
-                    writer.append("You do not have enough money!");
+                    writer.append("<p><p>You do not have enough money!</p>");
                 }
                 else
                 {
@@ -57,7 +57,7 @@ public class PolicyMine extends HttpServlet
                     update.setString(2, sess);
                     update.execute();
                     conn.commit();
-                    writer.append("You dig a new iron mine!");
+                    writer.append("<p><p>You dig a new iron mine!</p>");
                 }
             }
         }
@@ -71,7 +71,7 @@ public class PolicyMine extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

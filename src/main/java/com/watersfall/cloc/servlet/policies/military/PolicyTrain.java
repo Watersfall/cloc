@@ -40,18 +40,18 @@ public class PolicyTrain extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p><p>You must be logged in to do this!</p>");
             }
             else
             {
                 int cost = (int) Math.floor(results.getInt("army") * Math.pow(results.getInt("training"), 2) / 100);
                 if(cost> results.getInt("budget"))
                 {
-                    writer.append("You do not have enough money!");
+                    writer.append("<p><p>You do not have enough money!</p>");
                 }
                 else if(results.getInt("training") >= 100)
                 {
-                    writer.append("Your men are already fully trained");
+                    writer.append("<p><p>Your men are already fully trained!</p>");
                 }
                 else
                 {
@@ -61,7 +61,7 @@ public class PolicyTrain extends HttpServlet
                     update.setString(2, sess);
                     update.execute();
                     conn.commit();
-                    writer.print("You train your men into a fine killing machine!");
+                    writer.append("<p>You train your men into a fine killing machine!</p>");
                 }
             }
         }
@@ -75,7 +75,7 @@ public class PolicyTrain extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p><p>Error: " + e.getLocalizedMessage());
         }
         finally
         {

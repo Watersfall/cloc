@@ -40,7 +40,7 @@ public class PolicyConscript extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p><p>You must be logged in to do this!</p>");
             }
             else
             {
@@ -48,7 +48,7 @@ public class PolicyConscript extends HttpServlet
                 int costTraining = (int)((results.getInt("training") / 100) * (4 / results.getInt("army")));
                 if(costManpower > results.getInt("manpower"))
                 {
-                    writer.append("You do not have enough manpower!");
+                    writer.append("<p><p>You do not have enough manpower!</p>");
                 }
                 else
                 {
@@ -60,7 +60,7 @@ public class PolicyConscript extends HttpServlet
                     update.setString(3, sess);
                     update.execute();
                     conn.commit();
-                    writer.print("You conscript thousands of men into your army!");
+                    writer.append("<p>You conscript thousands of men into your army!</p>");
                 }
             }
         }
@@ -74,7 +74,7 @@ public class PolicyConscript extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

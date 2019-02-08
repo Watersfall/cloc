@@ -40,20 +40,20 @@ public class PolicyFree extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             int cost = 100;
             if(results.getInt("budget") < cost)
             {
-                writer.print("You do not have enough money!");
+                writer.append("<p>You do not have enough money!</p>");
             }
             else if(results.getInt("political") <= 4)
             {
-                writer.print("You have no more prisoners to free!");
+                writer.append("<p>You have no more prisoners to free!</p>");
             }
             else if(results.getInt("stability") <= 4)
             {
-                writer.print("You are not stable enough!");
+                writer.append("<p>You are not stable enough!</p>");
             }
             else
             {
@@ -68,7 +68,7 @@ public class PolicyFree extends HttpServlet
                 update.execute();
                 update2.execute();
                 conn.commit();
-                writer.print("Your convicts enjoy their freedom!");
+                writer.append("<p>Your convicts enjoy their freedom!</p>");
             }
         }
         catch(SQLException e)
@@ -81,7 +81,7 @@ public class PolicyFree extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

@@ -40,18 +40,18 @@ public class PolicyAlignNeutral extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p><p>You must be logged in to do this!</p>");
             }
             else
             {
                 int cost = 100;
                 if(cost > results.getInt("budget"))
                 {
-                    writer.append("You do not have enough money!");
+                    writer.append("<p><p>You do not have enough money!</p>");
                 }
                 else if(results.getInt("alignment") == 0)
                 {
-                    writer.append("You are already Neutral!");
+                    writer.append("<p><p>You are already Neutral!</p>");
                 }
                 else
                 {
@@ -61,7 +61,7 @@ public class PolicyAlignNeutral extends HttpServlet
                     update.setString(2, sess);
                     update.execute();
                     conn.commit();
-                    writer.print("Your people cheer as you declare your neutrality!");
+                    writer.append("<p>Your people cheer as you declare your neutrality!</p>");
                 }
             }
         }
@@ -75,7 +75,7 @@ public class PolicyAlignNeutral extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

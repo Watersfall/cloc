@@ -1,7 +1,7 @@
 function policy(policy)
 {
     document.getElementById('resultsContainer').style.visibility = "visible";
-    document.getElementById("result").innerHTML = "Loading...";
+    document.getElementById("result").innerHTML = "<p>Loading...<p>";
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "/policies/" + policy, true);
     xhttp.send();

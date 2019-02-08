@@ -40,7 +40,7 @@ public class PolicyMilitarize extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p><p>You must be logged in to do this!</p>");
             }
             else
             {
@@ -49,15 +49,15 @@ public class PolicyMilitarize extends HttpServlet
                 int costMg = 0 + (results.getInt("industry") + results.getInt("milindustry")) * 5;
                 if(results.getInt("rm") < costRm)
                 {
-                    writer.append("You do not have enough raw material!");
+                    writer.append("<p><p>You do not have enough raw material!</p>");
                 }
                 else if(results.getInt("oil") < costOil)
                 {
-                    writer.append("You do not have enough oil!");
+                    writer.append("<p><p>You do not have enough oil!</p>");
                 }
                 else if(results.getInt("mg") < costMg)
                 {
-                    writer.append("You do not have enough manufactured goods!");
+                    writer.append("<p><p>You do not have enough manufactured goods!</p>");
                 }
                 else
                 {
@@ -70,7 +70,7 @@ public class PolicyMilitarize extends HttpServlet
                     update.setString(4, sess);
                     update.execute();
                     conn.commit();
-                    writer.append("Your farmers flock to the city for a new life!");
+                    writer.append("<p><p>Your farmers flock to the city for a new life!</p>");
                 }
             }
         }
@@ -84,7 +84,7 @@ public class PolicyMilitarize extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

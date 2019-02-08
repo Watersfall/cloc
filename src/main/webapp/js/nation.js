@@ -1,7 +1,7 @@
 function sendOil(amount, id)
 {
     document.getElementById('resultsContainer').style.visibility = "visible";
-    document.getElementById("result").innerHTML = "Loading...";
+    document.getElementById("result").innerHTML = "<p>Loading...</p>";
     var xhttp = new XMLHttpRequest();
     var params = "sendoil=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);
@@ -19,7 +19,7 @@ function sendOil(amount, id)
 function sendRm(amount, id)
 {
     document.getElementById('resultsContainer').style.visibility = "visible";
-    document.getElementById("result").innerHTML = "Loading...";
+    document.getElementById("result").innerHTML = "<p>Loading...</p>";
     var xhttp = new XMLHttpRequest();
     var params = "sendrm=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);
@@ -37,7 +37,7 @@ function sendRm(amount, id)
 function sendMg(amount, id)
 {
     document.getElementById('resultsContainer').style.visibility = "visible";
-    document.getElementById("result").innerHTML = "Loading...";
+    document.getElementById("result").innerHTML = "<p>Loading...</p>";
     var xhttp = new XMLHttpRequest();
     var params = "sendmg=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);
@@ -55,7 +55,7 @@ function sendMg(amount, id)
 function sendCash(amount, id)
 {
     document.getElementById('resultsContainer').style.visibility = "visible";
-    document.getElementById("result").innerHTML = "Loading...";
+    document.getElementById("result").innerHTML = "<p>Loading...</p>";
     var xhttp = new XMLHttpRequest();
     var params = "sendcash=" + amount + "&id=" + id;
     xhttp.open("POST", "/nationresults", true);

@@ -40,7 +40,7 @@ public class PolicyUniversity extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p><p>You must be logged in to do this!</p>");
             }
             else
             {
@@ -49,15 +49,15 @@ public class PolicyUniversity extends HttpServlet
                 int costMg = 10 + (results.getInt("nitrogenplant") + results.getInt("university")) * 10;
                 if(results.getInt("rm") < costRm)
                 {
-                    writer.append("You do not have enough raw material!");
+                    writer.append("<p><p>You do not have enough raw material!</p>");
                 }
                 else if(results.getInt("oil") < costOil)
                 {
-                    writer.append("You do not have enough oil!");
+                    writer.append("<p><p>You do not have enough oil!</p>");
                 }
                 else if(results.getInt("mg") < costMg)
                 {
-                    writer.append("You do not have enough manufactured goods!");
+                    writer.append("<p><p>You do not have enough manufactured goods!</p>");
                 }
                 else
                 {
@@ -70,7 +70,7 @@ public class PolicyUniversity extends HttpServlet
                     update.setString(4, sess);
                     update.execute();
                     conn.commit();
-                    writer.append("You build a new University!");
+                    writer.append("<p><p>You build a new University!</p>");
                 }
             }
         }
@@ -84,7 +84,7 @@ public class PolicyUniversity extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

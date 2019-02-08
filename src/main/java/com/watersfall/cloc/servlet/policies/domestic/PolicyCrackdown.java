@@ -41,21 +41,21 @@ public class PolicyCrackdown extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             else 
             {
                 if(results.getInt("budget") < cost)
                 {
-                    writer.print("You do not have enough money!");
+                    writer.append("<p>You do not have enough money!</p>");
                 }
                 else if(results.getInt("political") >= 96)
                 {
-                    writer.print("There are no more lollygaggers to arrest!");
+                    writer.append("<p>There are no more lollygaggers to arrest!</p>");
                 }
                 else if(results.getInt("approval") < 3)
                 {
-                    writer.print("You are not popular enough to do this!");
+                    writer.append("<p>You are not popular enough to do this!</p>");
                 }
                 else
                 {
@@ -70,7 +70,7 @@ public class PolicyCrackdown extends HttpServlet
                     update.execute();
                     update2.execute();
                     conn.commit();
-                    writer.print("Your police force arrests every petty criminal they could find!");
+                    writer.append("<p>Your police force arrests every petty criminal they could find!</p>");
                 }
             }
         }
@@ -84,7 +84,7 @@ public class PolicyCrackdown extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

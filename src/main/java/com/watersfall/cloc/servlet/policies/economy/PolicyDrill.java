@@ -40,14 +40,14 @@ public class PolicyDrill extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("You must be logged in to do this!");
+                writer.append("<p><p>You must be logged in to do this!</p>");
             }
             else
             {
                 int cost = 500 + results.getInt("wells") * 100;
                 if(cost > results.getInt("budget"))
                 {
-                    writer.append("You do not have enough money!");
+                    writer.append("<p><p>You do not have enough money!</p>");
                 }
                 else
                 {
@@ -57,7 +57,7 @@ public class PolicyDrill extends HttpServlet
                     update.setString(2, sess);
                     update.execute();
                     conn.commit();
-                    writer.append("You drill a new oil well!");
+                    writer.append("<p><p>You drill a new oil well!</p>");
                 }
             }
         }
@@ -71,7 +71,7 @@ public class PolicyDrill extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("Error: " + e.getLocalizedMessage());
+            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {
