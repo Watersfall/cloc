@@ -11,11 +11,13 @@
                 <c:choose>
                     <c:when test="${not empty param['flag']}">
                         <c:if test="${fn:length(param['flag']) <= 12}">
-                            <sql:update dataSource="${database}">
-                                UPDATE cloc_main SET flag=? WHERE sess=?
-                                <sql:param value="${param['flag']}" />
-                                <sql:param value="${sess}" />
-                            </sql:update>
+                            <sql:transaction dataSource="${database}>"
+                                <sql:update>
+                                    UPDATE cloc_main SET flag=? WHERE sess=?
+                                    <sql:param value="${param['flag']}" />
+                                    <sql:param value="${sess}" />
+                                </sql:update>
+                            </sql:transaction>
                             <p>Updated flag</p>
                         </c:if>
                         <c:if test="${fn:length(param['flag']) > 12}">
@@ -24,11 +26,13 @@
                     </c:when>
                     <c:when test="${not empty param['leader']}">
                         <c:if test="${fn:length(param['leader']) <= 12}">
-                            <sql:update dataSource="${database}">
-                                UPDATE cloc_main SET leader=? WHERE sess=?
-                                <sql:param value="${param['leader']}" />
-                                <sql:param value="${sess}" />
-                            </sql:update>
+                            <sql:transaction dataSource="${database}>"
+                                <sql:update>
+                                    UPDATE cloc_main SET leader=? WHERE sess=?
+                                    <sql:param value="${param['leader']}" />
+                                    <sql:param value="${sess}" />
+                                </sql:update>
+                            </sql:transaction>
                             <p>Updated leader portrait</p>
                         </c:if>
                         <c:if test="${fn:length(param['leader']) > 12}">
@@ -36,27 +40,33 @@
                         </c:if>
                     </c:when>
                     <c:when test="${not empty param['leadertitle']}">
-                        <sql:update dataSource="${database}">
-                            UPDATE cloc_main SET leaderTitle=? WHERE sess=?
-                            <sql:param value="${param['leadertitle']}" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
+                        <sql:transaction dataSource="${database}">
+                            <sql:update>
+                                UPDATE cloc_main SET leaderTitle=? WHERE sess=?
+                                <sql:param value="${param['leadertitle']}" />
+                                <sql:param value="${sess}" />
+                            </sql:update>
+                        </sql:transaction>
                         <p>Updated leader title</p>
                     </c:when>
                     <c:when test="${not empty param['nationtitle']}">
-                        <sql:update dataSource="${database}">
-                            UPDATE cloc_main SET nationTitle=? WHERE sess=?
-                            <sql:param value="${param['nationtitle']}" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
+                        <sql:transaction dataSource="${database}">
+                            <sql:update>
+                                UPDATE cloc_main SET nationTitle=? WHERE sess=?
+                                <sql:param value="${param['nationtitle']}" />
+                                <sql:param value="${sess}" />
+                            </sql:update>
+                        </sql:transaction>
                         <p>Updated nation title</p>
                     </c:when>
                     <c:when test="${not empty param['description']}">
-                        <sql:update dataSource="${database}">
-                            UPDATE cloc_main SET description=? WHERE sess=?
-                            <sql:param value="${param['description']}" />
-                            <sql:param value="${sess}" />
-                        </sql:update>
+                        <sql:transaction dataSource="${database}">
+                            <sql:update>
+                                UPDATE cloc_main SET description=? WHERE sess=?
+                                <sql:param value="${param['description']}" />
+                                <sql:param value="${sess}" />
+                            </sql:update>
+                        </sql:transaction>
                         <p>Updated description</p>
                     </c:when>
                 </c:choose>
