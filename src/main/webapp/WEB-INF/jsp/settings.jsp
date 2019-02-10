@@ -11,7 +11,7 @@
                 <c:choose>
                     <c:when test="${not empty param['flag']}">
                         <c:if test="${fn:length(param['flag']) <= 12}">
-                            <sql:transaction dataSource="${database}>"
+                            <sql:transaction dataSource="${database}>">
                                 <sql:update>
                                     UPDATE cloc_main SET flag=? WHERE sess=?
                                     <sql:param value="${param['flag']}" />
@@ -27,7 +27,7 @@
                     <c:when test="${not empty param['leader']}">
                         <c:if test="${fn:length(param['leader']) <= 12}">
                             <sql:transaction dataSource="${database}>"
-                                <sql:update>
+                                             <sql:update>
                                     UPDATE cloc_main SET leader=? WHERE sess=?
                                     <sql:param value="${param['leader']}" />
                                     <sql:param value="${sess}" />
