@@ -26,7 +26,7 @@
                     </c:when>
                     <c:when test="${not empty param['leader']}">
                         <c:if test="${fn:length(param['leader']) <= 12}">
-                            <sql:transaction dataSource="${database}>"
+                            <sql:transaction dataSource="${database}>">
                                              <sql:update>
                                     UPDATE cloc_main SET leader=? WHERE sess=?
                                     <sql:param value="${param['leader']}" />
