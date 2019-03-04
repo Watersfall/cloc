@@ -103,4 +103,24 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <name>food</name>
+        <tag-class>com.watersfall.cloc.tags.Food</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>popGrowth</name>
+        <tag-class>com.watersfall.cloc.tags.PopGrowth</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>

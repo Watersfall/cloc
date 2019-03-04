@@ -69,7 +69,7 @@
                 <table id="nation">
                     <tr>
                         <td>Population</td>
-                        <td><c:out value="${resultMain.rows[0].population}"/> People</td>
+                        <td><cloc:popGrowth value="${resultMain}"/></td>
                     </tr>
                     <tr>
                         <td>Quality of Life</td>
@@ -136,6 +136,10 @@
                     <tr>
                         <td>Ammonia Stockpile</td>
                         <td><c:out value="${resultMain.rows[0].nitrogen}"/> Tons</td>
+                    </tr>
+                    <tr>
+                        <td>Food</td>
+                        <td><cloc:food value="${resultMain}"/></td>
                     </tr>
                 </table>
                 <h1>Foreign</h1>

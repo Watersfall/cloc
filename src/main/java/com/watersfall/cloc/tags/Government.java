@@ -17,17 +17,18 @@ public class Government extends SimpleTagSupport
         this.value = value;
     }
 
+    @Override
     public void doTag() throws JspException, IOException
     {
         if(value != null)
         {
             int num = Integer.parseInt(value);
             JspWriter out = getJspContext().getOut();
-            String government = (num > 80) ? ("Dictatorship")
-                    : (num > 60) ? ("Military Junta")
+            String government = (num > 80) ? ("Absolute Monarch")
+                    : (num > 60) ? ("Military Dictatorship")
                             : (num > 40) ? ("One Party State")
-                                    : (num > 20) ? ("Authoritarian Democracy")
-                                            : ("Liberal Democracy");
+                                    : (num > 20) ? ("Constitutional Monarchy")
+                                            : ("Direct Democracy");
             out.print(government);
         }
     }
