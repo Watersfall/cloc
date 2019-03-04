@@ -54,6 +54,8 @@ public class PopGrowthCalc
     public static double getPopGrowthFromFoodProduction(SortedMap results) throws SQLException
     {
         int netFood = (int)(Integer.parseInt(results.get("land").toString()) * FoodCalc.FOOD_PER_LAND) - FoodCalc.getStandardFoodCost(results);
-        return Math.log(netFood) / 10;
+        return (netFood > 0) ? Math.log(netFood) / 10 : 
+                (netFood == 0) ? 0d : 
+                -1d * Math.log(Math.abs(netFood));
     }
 }
