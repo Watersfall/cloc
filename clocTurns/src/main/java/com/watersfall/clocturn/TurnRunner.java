@@ -8,14 +8,14 @@ public class TurnRunner
 
     public TurnRunner()
     {
-        list = new ArrayList<Turn>();
+        list = new ArrayList<>();
 
         list.add(new TurnEconomy(0));
     }
     
     public void run()
     {
-        for(Turn turn : list)
+        list.forEach((turn) ->
         {
             new Thread(() ->
             {
@@ -23,12 +23,12 @@ public class TurnRunner
                 {
                     Thread.sleep(turn.offset * 1000);
                     turn.doTurn();
-                } 
+                }
                 catch (InterruptedException ex) 
                 {
                     ex.printStackTrace();
                 }
             }).start();
-        }
+        });
     }
 }

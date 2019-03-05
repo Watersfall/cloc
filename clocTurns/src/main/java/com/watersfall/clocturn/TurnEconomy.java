@@ -27,7 +27,8 @@ public class TurnEconomy extends Turn
                 resources.setInt(2, results.getInt("wells") > 0 ? results.getInt("wells") : 0);
                 resources.setInt(3, results.getInt("industry") > 0 ? results.getInt("industry") : 0);
                 resources.setInt(4, results.getInt("id"));
-                population.setInt(1, (int)Math.floor(results.getInt("population") * PopGrowthCalc.getPopGrowth(results)));
+                population.setInt(1, (int)Math.floor(results.getInt("population") * (PopGrowthCalc.getPopGrowth(results) / 100)));
+		population.setInt(2, results.getInt("id"));
                 resources.execute();
                 population.execute();
             }
