@@ -15,6 +15,10 @@
     SELECT * FROM cloc WHERE sess=?
     <sql:param value="${sess}" />
 </sql:query>
+<sql:query dataSource="${database}" var="resultPopulation" scope="page">
+    SELECT * FROM cloc_population WHERE sess=?
+    <sql:param value="${sess}" />
+</sql:query>
 <c:set var="mobile" scope="session">
     ${fn:containsIgnoreCase(header['User-Agent'],'iphone')
         || fn:containsIgnoreCase(header['User-Agent'], 'android')

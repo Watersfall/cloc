@@ -1,6 +1,6 @@
 package com.watersfall.cloc.tags;
 
-import com.watersfall.cloc.math.FoodCalc;
+import com.watersfall.clocmath.FoodCalc;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -12,13 +12,17 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class Food extends SimpleTagSupport
 {
-    
-    private Result value;
+    private Result main, population;
     StringWriter sw = new StringWriter();
 
-    public void setValue(Result value)
+    public void setMain(Result main)
     {
-        this.value = value;
+        this.main = main;
+    }
+
+    public void setPopulation(Result population)
+    {
+        this.population = population;
     }
     
     @Override
@@ -27,16 +31,17 @@ public class Food extends SimpleTagSupport
         JspWriter out = getJspContext().getOut();
         try
         {
-            if(value.getRowCount() <= 0)
+            if(main.getRowCount() <= 0 || population.getRowCount() <= 0)
             {
                 throw new SQLException();
             }
             else
             {
-                SortedMap results = value.getRows()[0];
-                int food = Integer.parseInt(results.get("food").toString());
-                int foodProduction = FoodCalc.getFoodProduction(results);
-                int foodConsumption = FoodCalc.getStandardFoodCost(results);
+                SortedMap resultsMain = main.getRows()[0];
+                SortedMap resultsPopulation = population.getRows()[0];
+                int food = Integer.parseInt(resultsMain.get("food").toString());
+                int foodProduction = FoodCalc.getFoodProduction(resultsMain);
+                int foodConsumption = FoodCalc.getStandardFoodCost(resultsPopulation);
                 out.println("<div class=\"dropdown\">");
                 out.println("<span>");
                 out.println(food + " Tons");

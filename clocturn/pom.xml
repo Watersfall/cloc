@@ -10,13 +10,25 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
-        <dependencies>
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.13</version>
-            </dependency>
-        </dependencies>
+	<repositories>
+		<repository>
+			<id>data-local</id>
+			<name>local</name>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.13</version>
+		</dependency>
+		<dependency>
+			<groupId>com.watersfall</groupId>
+			<artifactId>clocmath</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -32,14 +44,13 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>
-								com.watersfall.clocturn.Main
-							</mainClass>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.watersfall.clocturn.Main</mainClass>
 						</manifest>
 					</archive>
-                                        <descriptorRefs>
-                                            <descriptorRef>jar-with-dependencies</descriptorRef>
-                                        </descriptorRefs>
+                         <descriptorRefs>
+							 <descriptorRef>jar-with-dependencies</descriptorRef>
+                         </descriptorRefs>
 				</configuration>
 			</plugin>
 		</plugins>

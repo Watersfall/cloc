@@ -27,6 +27,11 @@
                             <sql:param value="${sess}" />
                             <sql:param value="${result.rows[0].id}" />
                         </sql:update>
+                        <sql:update>
+                            UPDATE cloc_population SET sess=? WHERE id=?
+                            <sql:param value="${sess}" />
+                            <sql:param value="${result.rows[0].id}" />
+                        </sql:update>
                     </sql:transaction>
                     <c:redirect url="/main"/>
                 </c:otherwise>

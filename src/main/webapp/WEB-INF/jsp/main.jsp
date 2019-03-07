@@ -69,7 +69,7 @@
                 <table id="nation">
                     <tr>
                         <td>Population</td>
-                        <td><cloc:popGrowth value="${resultMain}"/></td>
+                        <td><cloc:popGrowth main="${resultMain}" population="${resultPopulation}"/></td>
                     </tr>
                     <tr>
                         <td>Quality of Life</td>
@@ -139,7 +139,7 @@
                     </tr>
                     <tr>
                         <td>Food</td>
-                        <td><cloc:food value="${resultMain}"/></td>
+                        <td><cloc:food main="${resultMain}" population="${resultPopulation}"/></td>
                     </tr>
                 </table>
                 <h1>Foreign</h1>

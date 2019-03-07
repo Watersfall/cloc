@@ -12,7 +12,7 @@ public class Database
         database = new BasicDataSource();
         database.setUrl("jdbc:mysql://localhost/cloc");
         database.setUsername("root");
-        database.setPassword("***REMOVED***");
+        database.setPassword(System.getenv("CLOC_PASS"));
         database.setMinIdle(5);
         database.setMaxIdle(25);
         database.setMaxTotal(100);

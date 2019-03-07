@@ -108,7 +108,12 @@
         <tag-class>com.watersfall.cloc.tags.Food</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
-            <name>value</name>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>population</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -118,7 +123,12 @@
         <tag-class>com.watersfall.cloc.tags.PopGrowth</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
-            <name>value</name>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>population</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

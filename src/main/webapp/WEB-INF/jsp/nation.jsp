@@ -13,6 +13,10 @@
             SELECT * FROM cloc WHERE id=?
             <sql:param value="${id}" />
         </sql:query>
+        <sql:query dataSource="${database}" var="nation3">
+            SELECT * FROM cloc_population WHERE id=?
+            <sql:param value="${id}" />
+        </sql:query>
         <div class="main">
             <%@ include file = "includes/results.jsp" %>
             <c:choose>
@@ -63,7 +67,7 @@
                     <table id="nation">
                         <tr>
                             <td>Population</td>
-                            <td><c:out value="${nation2.rows[0].population}"/> People</td>
+                            <td><c:out value="${nation3.rows[0].asian}"/> People</td>
                         </tr>
                         <tr>
                             <td>Quality of Life</td>

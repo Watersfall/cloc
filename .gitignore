@@ -4,3 +4,5 @@ clocTurns/target/
 clocTurns/nbactions.xml
 clocTurns/src/test/
 nb-configuration.xml
+clocturn/nbactions.xml
+*.jar

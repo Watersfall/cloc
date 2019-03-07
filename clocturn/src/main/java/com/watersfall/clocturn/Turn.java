@@ -16,7 +16,7 @@ public abstract class Turn
         {
             Properties connectionProps = new Properties();
             connectionProps.setProperty("user", "root");
-            connectionProps.setProperty("password", "***REMOVED***");
+            connectionProps.setProperty("password", System.getenv("CLOC_PASS"));
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/cloc", connectionProps);
         }
         catch (SQLException e)
