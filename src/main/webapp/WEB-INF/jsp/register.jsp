@@ -102,6 +102,11 @@
                                 <sql:param value="${economy}" />
                                 <sql:param value="${region}" />
                             </sql:update>
+                            <sql:update>
+                                INSERT INTO cloc_population (sess, asian) VALUES (?,?);
+                                <sql:param value="${sess}" />
+                                <sql:param value="100000" />
+                            </sql:update>
                         </sql:transaction>
                         <c:redirect url="main"/>
                     </c:otherwise>
