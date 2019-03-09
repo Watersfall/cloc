@@ -50,7 +50,7 @@ public class PopGrowth extends SimpleTagSupport
                 out.println("<div class=\"dropdown-content\">");
                 if(migrationGrowth < 0)
                 {
-                    out.println("<p class=\"negative\"> -" + migrationGrowth + "% per month from emigration</p>");
+                    out.println("<p class=\"negative\"> " + migrationGrowth + "% per month from emigration</p>");
                 }
                 else
                 {
@@ -58,7 +58,7 @@ public class PopGrowth extends SimpleTagSupport
                 }
                 if(foodGrowth < 0)
                 {
-                    out.println("<p class=\"negative\"> -" + foodGrowth + "% per month from famine</p>");
+                    out.println("<p class=\"negative\"> " + foodGrowth + "% per month from famine</p>");
                 }
                 else
                 {

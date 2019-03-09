@@ -65,7 +65,7 @@ public class PopGrowthCalc
     
     public static double getPopGrowthFromFoodProduction(int netFood)
     {
-        return Math.log(java.lang.Math.pow(netFood, 2)) / 10 / 100;
+        return Math.log(Math.pow(netFood, 2)) / 10 / 100;
     }
     
     public static double getPopGrowthFromEmployment(int jobs, int population)
