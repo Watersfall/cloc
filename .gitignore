@@ -1,8 +1,8 @@
 .idea/
 target/
-clocTurns/target/
-clocTurns/nbactions.xml
-clocTurns/src/test/
+clocturn/target/
+clocturn/src/test/
 nb-configuration.xml
 clocturn/nbactions.xml
 *.jar
+*/target/

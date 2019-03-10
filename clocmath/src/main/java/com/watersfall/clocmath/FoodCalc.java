@@ -18,13 +18,7 @@ public class FoodCalc
     
     public static int getStandardFoodCost(ResultSet resultsPopulation) throws SQLException
     {
-        int population = resultsPopulation.getInt("northAmerican") + 
-                        resultsPopulation.getInt("southAmerican") + 
-                        resultsPopulation.getInt("african") + 
-                        resultsPopulation.getInt("european") + 
-                        resultsPopulation.getInt("asian") + 
-                        resultsPopulation.getInt("middleEastern") + 
-                        resultsPopulation.getInt("oceanian");
+        int population = PopulationCalc.getPopulation(resultsPopulation);
         return (int)(population * Constants.POP_FOOD_COST);
     }
     
@@ -40,13 +34,7 @@ public class FoodCalc
     
     public static int getStandardFoodCost(SortedMap resultsPopulation) throws SQLException
     {
-        int population = Integer.parseInt(resultsPopulation.get("northAmerican").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("southAmerican").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("african").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("european").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("asian").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("middleEastern").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("oceanian").toString());
+        int population = PopulationCalc.getPopulation(resultsPopulation);
         return (int)(population * Constants.POP_FOOD_COST);
     }
 }

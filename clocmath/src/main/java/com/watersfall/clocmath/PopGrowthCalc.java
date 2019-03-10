@@ -42,13 +42,7 @@ public class PopGrowthCalc
     
     public static double getPopGrowthFromEmployment(SortedMap resultsMain, SortedMap resultsPopulation) throws SQLException
     {
-        int population = Integer.parseInt(resultsPopulation.get("northAmerican").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("southAmerican").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("african").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("european").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("asian").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("middleEastern").toString()) + 
-                        Integer.parseInt(resultsPopulation.get("oceanian").toString());
+        int population = PopulationCalc.getPopulation(resultsPopulation);
         int jobs = Integer.parseInt(resultsMain.get("mines").toString()) * Constants.MINE_POPULATION +
                    Integer.parseInt(resultsMain.get("wells").toString()) * Constants.WELL_POPULATION +
                    Integer.parseInt(resultsMain.get("industry").toString()) * Constants.FACTORY_POPULATION +
