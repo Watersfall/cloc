@@ -19,13 +19,13 @@ public class TurnEconomy extends Turn
     {
         try 
         {
-            ResultSet results = connection.createStatement().executeQuery("SELECT * FROM clocgame");
+            ResultSet results = connection.createStatement().executeQuery("SELECT * FROM cloc");
             ResultSet resultsPopulation = connection.createStatement().executeQuery("SELECT * FROM cloc_population");
 
             while(results.next())
             {
                 resultsPopulation.next();
-                PreparedStatement resources = connection.prepareStatement("UPDATE clocgame SET rm=rm+?, oil=oil+?, mg=mg+? WHERE id=?");
+                PreparedStatement resources = connection.prepareStatement("UPDATE cloc SET rm=rm+?, oil=oil+?, mg=mg+? WHERE id=?");
                 PreparedStatement population = connection.prepareStatement("UPDATE cloc_population SET asian=? WHERE id=?");
                 resources.setInt(1, results.getInt("mines") > 0 ? results.getInt("mines") : 0);
                 resources.setInt(2, results.getInt("wells") > 0 ? results.getInt("wells") : 0);
@@ -40,6 +40,17 @@ public class TurnEconomy extends Turn
         catch (SQLException ex) 
         {
             ex.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+            catch(SQLException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }
