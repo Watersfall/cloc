@@ -133,4 +133,54 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <name>factory</name>
+        <tag-class>com.watersfall.clocgame.tags.costs.Factory</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>mine</name>
+        <tag-class>com.watersfall.clocgame.tags.costs.Mine</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>well</name>
+        <tag-class>com.watersfall.clocgame.tags.costs.Well</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>nitrogen</name>
+        <tag-class>com.watersfall.clocgame.tags.costs.Nitrogen</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>training</name>
+        <tag-class>com.watersfall.clocgame.tags.costs.Training</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>

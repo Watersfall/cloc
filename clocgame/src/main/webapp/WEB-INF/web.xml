@@ -4,6 +4,11 @@
     <session-config>
         <session-timeout>0</session-timeout>
     </session-config>
+    <listener>
+        <listener-class>
+            com.watersfall.clocgame.listeners.Startup
+        </listener-class>
+    </listener>
     <display-name>To do List</display-name>
     <welcome-file-list>
         <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file>

@@ -131,7 +131,7 @@
                     </tr>
                     <tr>
                         <td>Nitrogen Plants</td>
-                        <td><c:out value="${resultMain.rows[0].nitrogenplants}"/> Plants</td>
+                        <td><c:out value="${resultMain.rows[0].nitrogenplant}"/> Plants</td>
                     </tr>
                     <tr>
                         <td>Ammonia Stockpile</td>

@@ -1,8 +1,8 @@
 package com.watersfall.clocgame.tags;
 
-import com.watersfall.clocmath.Constants;
-import com.watersfall.clocmath.PopGrowthCalc;
-import com.watersfall.clocmath.PopulationCalc;
+import com.watersfall.clocmath.PopulationConstants;
+import com.watersfall.clocmath.PopGrowthMath;
+import com.watersfall.clocmath.PopulationMath;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -41,9 +41,9 @@ public class PopGrowth extends SimpleTagSupport
             {
                 SortedMap resultsMain = main.getRows()[0];
                 SortedMap resultsPopulation = population.getRows()[0];
-                int population = PopulationCalc.getPopulation(resultsPopulation);
-                double migrationGrowth = PopGrowthCalc.getPopGrowthFromEmployment(resultsMain, resultsPopulation) * 100;
-                double foodGrowth = PopGrowthCalc.getPopGrowthFromFoodProduction(resultsMain, resultsPopulation) * 100;
+                int population = PopulationMath.getPopulation(resultsPopulation);
+                double migrationGrowth = PopGrowthMath.getPopGrowthFromEmployment(resultsMain, resultsPopulation) * 100;
+                double foodGrowth = PopGrowthMath.getPopGrowthFromFoodProduction(resultsMain, resultsPopulation) * 100;
                 out.println("<div class=\"dropdown\">");
                 out.println("<span>");
                 out.println(population + " People");
@@ -64,7 +64,7 @@ public class PopGrowth extends SimpleTagSupport
                 {
                     out.println("<p class=\"positive\"> +" + String.format("%.2f", foodGrowth) + "% per month from surplus food</p>");
                 }
-                out.println("<p class=\"positive\"> +" + Constants.BASE_GROWTH * 100 + "% base population growth</p>");
+                out.println("<p class=\"positive\"> +" + PopulationConstants.BASE_GROWTH * 100 + "% base population growth</p>");
                 out.println("</div>");
                 out.println("</div>");
             }

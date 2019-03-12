@@ -70,7 +70,7 @@
                                 Dig a new mine, increasing raw material output by 1 Hton per turn
                             </td>
                             <td>
-                                $<c:out value="${500 + (resultMain.rows[0].mines - 1) * 50}"/>k
+                                $<cloc:mine main="${resultMain}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('mine')">Mine</button>
@@ -84,7 +84,7 @@
                                 Drill a new oil well, increasing oil output by 1 Mmbl per turn
                             </td>
                             <td>
-                                $<c:out value="${500 + (resultMain.rows[0].wells - 1) * 100}"/>k
+                                $<cloc:well main="${resultMain}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('drill')">Drill</button>
@@ -98,9 +98,7 @@
                                 Build a new factory for your growing population, Consumes 1 Oil and Raw Material to produce 1 Manufactured good
                             </td>
                             <td>
-                                <c:out  value="${50 + ((resultMain.rows[0].industry + resultMain.rows[0].milindustry) * 50)}"/> Htons of Raw Material,
-                                <c:out  value="${25 + ((resultMain.rows[0].industry + resultMain.rows[0].milindustry) * 25)}"/> Mmbls of Oil,
-                                <c:out  value="${0 + ((resultMain.rows[0].industry + resultMain.rows[0].milindustry) * 5)}"/> Tons of Manufactures Goods
+                                <cloc:factory main="${resultMain}"/>
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('industrialize')">Industrialize</button>
@@ -114,9 +112,7 @@
                                 Build a new Nitrogen Fixation plant to blow up other people's populations, consumes 2 Oil and 1 MG to produce 1 Nitrogen. Same cost as factories
                             </td>
                             <td>
-                                <c:out  value="${100 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
-                                <c:out  value="${50 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
-                                <c:out  value="${10 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 10)}"/> Tons of Manufactures Goods
+                                <cloc:nitrogen main="${resultMain}"/>
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('nitrogenplant')">Progress</button>
@@ -132,7 +128,7 @@
                                 Tell your police force they need to arrest more criminals! Increases stability, but lowers approval and moves your government to the right.
                             </td>
                             <td>
-                                $100k
+                                $<c:out value="${policyConstants.COST_CRACKDOWN}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('crackdown')">Crackdown</button>
@@ -146,7 +142,7 @@
                                 Release the jaywalkers from their cells! Decreases stability, but increases approval and moves your government to the left.
                             </td>
                             <td>
-                                $100k
+                                $<c:out value="${policyConstants.COST_FREE}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('free')">Free</button>
@@ -160,9 +156,7 @@
                                 Build a university to further your research! Consumes 2 MG. Same cost as factories.
                             </td>
                             <td>
-                                <c:out  value="${100 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 100)}"/> Htons of Raw Material,
-                                <c:out  value="${50 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 50)}"/> Mmbls of Oil,
-                                <c:out  value="${10 + ((resultMain.rows[0].nitrogenplant + resultMain.rows[0].universities) * 10)}"/> Tons of Manufactures Goods
+                                <cloc:nitrogen main="${resultMain}"/>
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('university')">Advance</button>
@@ -178,7 +172,7 @@
                                 Praise France's Democracy, hoping to make them like you.
                             </td>
                             <td>
-                                $100k
+                                $<c:out value="${policyConstants.COST_ALIGN_ENTENTE}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('alignentente')">Praise</button>
@@ -192,7 +186,7 @@
                                 Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
                             </td>
                             <td>
-                                $100k
+                                $<c:out value="${policyConstants.COST_ALIGN_CENTRAL_POWERS}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('aligncentral')">Admire</button>
@@ -206,7 +200,7 @@
                                 Go out on stage and celebrate your people's strength!
                             </td>
                             <td>
-                                $100k
+                                $<c:out value="${policyConstants.COST_ALIGN_NEUTRAL}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('alignneutral')">Celebrate</button>
@@ -236,7 +230,7 @@
                                 Train your army
                             </td>
                             <td>
-                                <c:out value="${resultMain.rows[0].army * (resultMain.rows[0].training * resultMain.rows[0].training) / 100}"/>
+                                $<cloc:training main="${resultMain}"/>k
                             </td>
                             <td>
                                 <button class="policyButton" type="submit" onclick="policy('train')">Train</button>

@@ -11,6 +11,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.watersfall.clocmath.PolicyConstants;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -33,7 +35,6 @@ public class PolicyCrackdown extends HttpServlet
         {
             conn = database.getConnection();
             ResultSet results;
-            int cost = 100;
             PreparedStatement read = conn.prepareStatement("SELECT budget, approval, stability, political FROM cloc "
                     + "WHERE sess=? FOR UPDATE");
             read.setString(1, sess);
@@ -44,7 +45,7 @@ public class PolicyCrackdown extends HttpServlet
             }
             else 
             {
-                if(results.getInt("budget") < cost)
+                if(results.getInt("budget") < PolicyConstants.COST_CRACKDOWN)
                 {
                     writer.append("<p>You do not have enough money!</p>");
                 }
@@ -59,10 +60,13 @@ public class PolicyCrackdown extends HttpServlet
                 else
                 {
                     PreparedStatement update = conn.prepareStatement("UPDATE cloc "
-                            + "SET stability=stability+5, approval=approval-3, political=political+5, budget=budget-? "
+                            + "SET stability=stability+?, approval=approval+?, political=political+?, budget=budget-? "
                             + "WHERE sess=?");
-                    update.setInt(1, cost);
-                    update.setString(2, sess);
+                    update.setInt(1, PolicyConstants.GAIN_STABILITY_CRACKDOWN);
+                    update.setInt(2, PolicyConstants.GAIN_APPROVAL_CRACKDOWN);
+                    update.setInt(3, PolicyConstants.GAIN_GOVERNMENT_CRACKDOWN);
+                    update.setInt(4, PolicyConstants.COST_CRACKDOWN);
+                    update.setString(5, sess);
                     PreparedStatement update2 = conn.prepareStatement("UPDATE cloc SET stability=100 "
                             + "WHERE stability>100 && sess=?");
                     update2.setString(1, sess);

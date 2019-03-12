@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.watersfall.clocmath.PolicyMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -40,24 +42,24 @@ public class PolicyUniversity extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("<p><p>You must be logged in to do this!</p>");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             else
             {
-                int costRm = 100 + (results.getInt("nitrogenplant") + results.getInt("university")) * 100;
-                int costOil = 50 + (results.getInt("nitrogenplant") + results.getInt("university")) * 50;
-                int costMg = 10 + (results.getInt("nitrogenplant") + results.getInt("university")) * 10;
+                int costRm = PolicyMath.getNitrogenRmCost(results);
+                int costOil = PolicyMath.getNitrogenOilCost(results);
+                int costMg = PolicyMath.getNitrogenMgCost(results);
                 if(results.getInt("rm") < costRm)
                 {
-                    writer.append("<p><p>You do not have enough raw material!</p>");
+                    writer.append("<p>You do not have enough raw material!</p>");
                 }
                 else if(results.getInt("oil") < costOil)
                 {
-                    writer.append("<p><p>You do not have enough oil!</p>");
+                    writer.append("<p>You do not have enough oil!</p>");
                 }
                 else if(results.getInt("mg") < costMg)
                 {
-                    writer.append("<p><p>You do not have enough manufactured goods!</p>");
+                    writer.append("<p>You do not have enough manufactured goods!</p>");
                 }
                 else
                 {
@@ -70,7 +72,7 @@ public class PolicyUniversity extends HttpServlet
                     update.setString(4, sess);
                     update.execute();
                     conn.commit();
-                    writer.append("<p><p>You build a new University!</p>");
+                    writer.append("<p>You build a new University!</p>");
                 }
             }
         }
@@ -84,7 +86,7 @@ public class PolicyUniversity extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.watersfall.clocmath.PolicyConstants;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -40,24 +42,25 @@ public class PolicyConscript extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("<p><p>You must be logged in to do this!</p>");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             else
             {
-                int costManpower = 2;
+                int costManpower = PolicyConstants.COST_CONSCRIPT_MANPOWER;
                 int costTraining = (int)((results.getInt("training") / 100) * (4 / results.getInt("army")));
                 if(costManpower > results.getInt("manpower"))
                 {
-                    writer.append("<p><p>You do not have enough manpower!</p>");
+                    writer.append("<p>You do not have enough manpower!</p>");
                 }
                 else
                 {
                     PreparedStatement update = conn.prepareStatement("UPDATE cloc "
-                            + "SET army=army+2, manpower=manpower-?, training=training-? "
+                            + "SET army=army+?, manpower=manpower-?, training=training-? "
                             + "WHERE sess=?");
-                    update.setInt(1, costManpower);
-                    update.setInt(2, costTraining);
-                    update.setString(3, sess);
+                    update.setInt(1, PolicyConstants.GAIN_CONSCRIPT);
+                    update.setInt(2, costManpower);
+                    update.setInt(3, costTraining);
+                    update.setString(4, sess);
                     update.execute();
                     conn.commit();
                     writer.append("<p>You conscript thousands of men into your army!</p>");
@@ -74,7 +77,7 @@ public class PolicyConscript extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

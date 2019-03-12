@@ -40,7 +40,7 @@ public class PolicyFreeMoneyCommunist extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("<p><p>You must be logged in to do this!</p>");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             else
             {
@@ -53,7 +53,7 @@ public class PolicyFreeMoneyCommunist extends HttpServlet
                 update.execute();
                 update2.execute();
                 conn.commit();
-                writer.append("<p><p>You raise taxes by 1% to fund your newest projects!</p>");
+                writer.append("<p>You raise taxes by 1% to fund your newest projects!</p>");
             }
         }
         catch(SQLException e)
@@ -66,7 +66,7 @@ public class PolicyFreeMoneyCommunist extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

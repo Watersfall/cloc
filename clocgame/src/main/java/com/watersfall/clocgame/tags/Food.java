@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.tags;
 
-import com.watersfall.clocmath.FoodCalc;
+import com.watersfall.clocmath.FoodMath;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -40,8 +40,8 @@ public class Food extends SimpleTagSupport
                 SortedMap resultsMain = main.getRows()[0];
                 SortedMap resultsPopulation = population.getRows()[0];
                 int food = Integer.parseInt(resultsMain.get("food").toString());
-                int foodProduction = FoodCalc.getFoodProduction(resultsMain);
-                int foodConsumption = FoodCalc.getStandardFoodCost(resultsPopulation);
+                int foodProduction = FoodMath.getFoodProduction(resultsMain);
+                int foodConsumption = FoodMath.getStandardFoodCost(resultsPopulation);
                 out.println("<div class=\"dropdown\">");
                 out.println("<span>");
                 out.println(food + " Tons");

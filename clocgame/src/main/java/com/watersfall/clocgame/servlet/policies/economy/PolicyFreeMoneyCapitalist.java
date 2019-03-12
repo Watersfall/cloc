@@ -40,7 +40,7 @@ public class PolicyFreeMoneyCapitalist extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("<p><p>You must be logged in to do this!</p>");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             else
             {
@@ -53,7 +53,7 @@ public class PolicyFreeMoneyCapitalist extends HttpServlet
                 update.execute();
                 update2.execute();
                 conn.commit();
-                writer.append("<p><p>You cut the pay and benefits for government employees to fund your newest projects!</p>");
+                writer.append("<p>You cut the pay and benefits for government employees to fund your newest projects!</p>");
             }
         }
         catch(SQLException e)
@@ -66,7 +66,7 @@ public class PolicyFreeMoneyCapitalist extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

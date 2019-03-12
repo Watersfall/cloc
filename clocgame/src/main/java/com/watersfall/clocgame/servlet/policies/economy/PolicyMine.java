@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.watersfall.clocmath.PolicyMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -40,14 +42,14 @@ public class PolicyMine extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("<p><p>You must be logged in to do this!</p>");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             else
             {
-                int cost = 500 + results.getInt("mines") * 50;
+                int cost = PolicyMath.getMineCost(results);
                 if(cost > results.getInt("budget"))
                 {
-                    writer.append("<p><p>You do not have enough money!</p>");
+                    writer.append("<p>You do not have enough money!</p>");
                 }
                 else
                 {
@@ -57,7 +59,7 @@ public class PolicyMine extends HttpServlet
                     update.setString(2, sess);
                     update.execute();
                     conn.commit();
-                    writer.append("<p><p>You dig a new iron mine!</p>");
+                    writer.append("<p>You dig a new iron mine!</p>");
                 }
             }
         }
@@ -71,7 +73,7 @@ public class PolicyMine extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

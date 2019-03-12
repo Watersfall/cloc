@@ -1,6 +1,6 @@
 package com.watersfall.clocturn;
 
-import com.watersfall.clocmath.PopGrowthCalc;
+import com.watersfall.clocmath.PopGrowthMath;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +31,7 @@ public class TurnEconomy extends Turn
                 resources.setInt(2, results.getInt("wells") > 0 ? results.getInt("wells") : 0);
                 resources.setInt(3, results.getInt("industry") > 0 ? results.getInt("industry") : 0);
                 resources.setInt(4, results.getInt("id"));
-                population.setInt(1, (int)(resultsPopulation.getInt("asian") * java.lang.Math.pow(java.lang.Math.E, PopGrowthCalc.getPopGrowth(results, resultsPopulation))));
+                population.setInt(1, (int)(resultsPopulation.getInt("asian") * java.lang.Math.pow(java.lang.Math.E, PopGrowthMath.getPopGrowth(results, resultsPopulation))));
                 population.setInt(2, results.getInt("id"));
                 resources.execute();
                 population.execute();

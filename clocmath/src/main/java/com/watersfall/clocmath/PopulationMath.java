@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.SortedMap;
 
-public class PopulationCalc
+public class PopulationMath
 {
 
     public static int getPopulation(ResultSet resultsPopulation) throws SQLException

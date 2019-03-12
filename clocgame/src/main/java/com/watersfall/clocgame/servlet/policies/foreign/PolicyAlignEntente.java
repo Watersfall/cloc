@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.watersfall.clocmath.PolicyConstants;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -40,18 +42,18 @@ public class PolicyAlignEntente extends HttpServlet
             results = read.executeQuery();
             if(!results.first())
             {
-                writer.append("<p><p>You must be logged in to do this!</p>");
+                writer.append("<p>You must be logged in to do this!</p>");
             }
             else
             {
-                int cost = 100;
+                int cost = PolicyConstants.COST_ALIGN_ENTENTE;
                 if(cost > results.getInt("budget"))
                 {
-                    writer.append("<p><p>You do not have enough money!</p>");
+                    writer.append("<p>You do not have enough money!</p>");
                 }
                 else if(results.getInt("alignment") == -1)
                 {
-                    writer.append("<p><p>You are already aligned with the Entente!</p>");
+                    writer.append("<p>You are already aligned with the Entente!</p>");
                 }
                 else
                 {
@@ -75,7 +77,7 @@ public class PolicyAlignEntente extends HttpServlet
             {
                 //Ignore
             }
-            writer.append("<p><p>Error: " + e.getLocalizedMessage() + "!</p>");
+            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
         }
         finally
         {

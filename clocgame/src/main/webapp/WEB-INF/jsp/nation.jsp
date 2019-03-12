@@ -117,7 +117,7 @@
                         </tr>
                         <tr>
                             <td>Nitrogen Plants</td>
-                            <td><c:out value="${nation2.rows[0].nitrogenplants}"/> Plants</td>
+                            <td><c:out value="${nation2.rows[0].nitrogenplant}"/> Plants</td>
                         </tr>
                     </table>
                     <h1>Foreign</h1>
