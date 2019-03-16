@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+	<head>
+		<script>
+			function calculate()
+			{
+				var A;
+				var B;
+				var C;
+				var D;
+				var E;
+				var F;
+				var G;
+				var H;
+				var I;
+				var J;
+				var K;
+				var Y;
+				var Z;
+				A = document.getElementById("aArmy").value;
+				B = document.getElementById("aWeapons").value;
+				C = document.getElementById("aTraining").value;
+				D = document.getElementById("aAirforce").value;
+				E = document.getElementById("dArmy").value;
+				F = document.getElementById("dWeapons").value;
+				G = document.getElementById("dTraining").value;
+				H = document.getElementById("dAirforce").value;
+				I = Math.sqrt(A) * Math.sqrt(Math.sqrt(B + 1) * Math.sqrt(C + 1) * Math.sqrt(D + 1));
+				J = Math.sqrt(E) * Math.sqrt(Math.sqrt(F + 1) * Math.sqrt(G + 1) * Math.sqrt(H + 1));
+				if(I > J)
+				{
+					K = (I - J) / I;
+					Z = Math.floor(((K*E)+2)*0.75);
+					Y = Math.floor((A*5)/(K*A));
+					if(Y >= Z - 2)
+					{
+						Y = Z - 10;
+					}
+					if(Y > A)
+					{
+						Y = A;
+					}
+					if(Z > E)
+					{
+						Z = E;
+					}
+					if(Y<0)
+					{
+						Y = 0;
+					}
+					if(Z < 0)
+					{
+						Z = 0;
+					}
+				}
+				else
+				{
+					K = (J - I) / J;
+					Y = Math.floor((K * E + 2) * 0.75);
+					Z = (A/(K * A));
+					if(Z >= Y - 2)
+					{
+						Z = Y - 10;
+					}
+					if(Y > A)
+					{
+						Y = A;
+					}
+					if(Z > E)
+					{
+						Z = E;
+					}
+				}
+				
+				document.getElementById("result").innerHTML = "Attacker Losses: " + Y + "<br>Defender Losses: " + Z;
+			}
+		</script>
+	</head>
+	<body>
+		<form>
+			<input type="number" id="aArmy">Attacking Army</input>
+			<br>
+			<input type="number" id="aWeapons">Attacking Weapons</input>
+			<br>
+			<input type="number" id="aTraining">Attacking Training</input>
+			<br>
+			<input type="number" id="aAirforce">Attacking Airforce</input>
+			<br>
+			<input type="number" id="dArmy">Defending Army</input>
+			<br>
+			<input type="number" id="dWeapons">Defending Weapons</input>
+			<br>
+			<input type="number" id="dTraining">Defending Training</input>
+			<br>
+			<input type="number" id="dAirforce">Defending Airforce</input>
+			<br>
+		</form>
+		<button onclick="calculate();">Calculate!</button>
+		<p id="result">Results</p>
+	</body>
+</html>
