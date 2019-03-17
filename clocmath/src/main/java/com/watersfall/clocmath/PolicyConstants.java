@@ -11,7 +11,7 @@ public class PolicyConstants
     public static final int COST_ALIGN_ENTENTE = 100;
     public static final int COST_ALIGN_CENTRAL_POWERS = 100;
     public static final int COST_ALIGN_NEUTRAL = 100;
-    public static final int COST_CONSCRIPT_MANPOWER = 2;
+    public static final int COST_CONSCRIPT_MANPOWER = 2000;
     public static final int COST_MINE_BASE = 500;
     public static final int COST_MINE_MULT = 50;
     public static final int COST_OIL_BASE = 500;
