@@ -118,6 +118,62 @@
                                 <button class="policyButton" type="submit" onclick="policy('nitrogenplant')">Progress</button>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                Close Mine
+                            </td>
+                            <td>
+                                Close down a mine. Reduces max employment, don't know why you'd wanna do that.
+                            </td>
+                            <td>
+                                Some Families' Income
+                            </td>
+                            <td>
+                                <button class="policyButton" type="submit" onclick="policy('unmine')">Close</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Close Well
+                            </td>
+                            <td>
+                                Close down an oil well. Reduces max employment, don't know why you'd wanna do that.
+                            </td>
+                            <td>
+                                Some Families' Income
+                            </td>
+                            <td>
+                                <button class="policyButton" type="submit" onclick="policy('undrill')">Burn</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Shutter Factory
+                            </td>
+                            <td>
+                                Close down a factory. Significantly reduces max employment, don't know why you'd wanna do that.
+                            </td>
+                            <td>
+                                A Lot of Families' Income
+                            </td>
+                            <td>
+                                <button class="policyButton" type="submit" onclick="policy('unindustrialize')">Shutter</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Shutter Nitrogen Plant
+                            </td>
+                            <td>
+                                Shut down a plant. Massively reduces max employment, don't know why you'd wanna do that.
+                            </td>
+                            <td>
+                                A Lot More Families' Income
+                            </td>
+                            <td>
+                                <button class="policyButton" type="submit" onclick="policy('unnitrogenplant')">Delete</button>
+                            </td>
+                        </tr>
                     </c:when>
                     <c:when test="${param['policies'] == 'Domestic'}">
                         <tr>
