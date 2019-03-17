@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.watersfall.clocmath.PolicyConstants;
+import com.watersfall.clocmath.PopulationMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -35,32 +36,37 @@ public class PolicyConscript extends HttpServlet
         try
         {
             conn = database.getConnection();
-            ResultSet results;
-            PreparedStatement read = conn.prepareStatement("SELECT manpower, army, training FROM cloc "
+            ResultSet resultsMain;
+            ResultSet resultsPopulation;
+            PreparedStatement read = conn.prepareStatement("SELECT army, training FROM cloc "
+                    + "WHERE sess=? FOR UPDATE");
+            PreparedStatement readPop = conn.prepareStatement("SELECT * FROM cloc_population "
                     + "WHERE sess=? FOR UPDATE");
             read.setString(1, sess);
-            results = read.executeQuery();
-            if(!results.first())
+            readPop.setString(1, sess);
+            resultsMain = read.executeQuery();
+            resultsPopulation = readPop.executeQuery();
+            if(!resultsMain.first() || !resultsPopulation.first())
             {
                 writer.append("<p>You must be logged in to do this!</p>");
             }
             else
             {
                 int costManpower = PolicyConstants.COST_CONSCRIPT_MANPOWER;
-                int costTraining = (int)((results.getInt("training") / 100) * (4 / results.getInt("army")));
-                if(costManpower > results.getInt("manpower"))
+                int costTraining = (int)((resultsMain.getInt("training") / 100) * (4 / resultsMain.getInt("army")));
+                int availableManpower = PopulationMath.getAvailableManpower(resultsMain, resultsPopulation);
+                if(costManpower > availableManpower)
                 {
                     writer.append("<p>You do not have enough manpower!</p>");
                 }
                 else
                 {
                     PreparedStatement update = conn.prepareStatement("UPDATE cloc "
-                            + "SET army=army+?, manpower=manpower-?, training=training-? "
+                            + "SET army=army+?, training=training-? "
                             + "WHERE sess=?");
                     update.setInt(1, PolicyConstants.GAIN_CONSCRIPT);
-                    update.setInt(2, costManpower);
-                    update.setInt(3, costTraining);
-                    update.setString(4, sess);
+                    update.setInt(2, costTraining);
+                    update.setString(3, sess);
                     update.execute();
                     conn.commit();
                     writer.append("<p>You conscript thousands of men into your army!</p>");

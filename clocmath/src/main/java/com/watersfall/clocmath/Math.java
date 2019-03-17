@@ -42,7 +42,7 @@ public class Math
 
     public static double pow(double e, double x)
     {
-        if(e < 0)
+        if(e < 0 && x % 2 == 0)
             return -java.lang.Math.pow(e, x);
         else
             return java.lang.Math.pow(e, x);

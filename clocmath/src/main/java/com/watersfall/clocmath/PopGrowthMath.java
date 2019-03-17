@@ -14,13 +14,7 @@ public class PopGrowthMath
     
     public static double getPopGrowthFromEmployment(ResultSet resultsMain, ResultSet resultsPopulation) throws SQLException
     {
-        int population = resultsPopulation.getInt("northAmerican") + 
-                        resultsPopulation.getInt("southAmerican") + 
-                        resultsPopulation.getInt("african") + 
-                        resultsPopulation.getInt("european") + 
-                        resultsPopulation.getInt("asian") + 
-                        resultsPopulation.getInt("middleEastern") + 
-                        resultsPopulation.getInt("oceanian");
+        int population = PopulationMath.getPopulation(resultsPopulation);
         int jobs = resultsMain.getInt("mines") * PopulationConstants.MINE_POPULATION +
                    resultsMain.getInt("wells") * PopulationConstants.WELL_POPULATION +
                    resultsMain.getInt("industry") * PopulationConstants.FACTORY_POPULATION +
@@ -59,11 +53,14 @@ public class PopGrowthMath
     
     public static double getPopGrowthFromFoodProduction(int netFood)
     {
-        return Math.log(Math.pow(netFood, 2)) / 10 / 100;
+        if(netFood > 0)
+            return Math.log(Math.pow(netFood, 3)) / 10 / 100;
+        else
+            return Math.log(netFood) / 100d;
     }
     
     public static double getPopGrowthFromEmployment(int jobs, int population)
     {
-        return Math.log(Math.sqrt(jobs - population)) / 100;
+        return Math.sqrt(Math.log(jobs - population)) / 100;
     }
 }

@@ -183,4 +183,19 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <name>manpower</name>
+        <tag-class>com.watersfall.clocgame.tags.Manpower</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>population</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>

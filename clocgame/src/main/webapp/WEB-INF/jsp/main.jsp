@@ -185,7 +185,7 @@
                     </tr>
                     <tr>
                         <td>Manpower</td>
-                        <td><c:out value="${resultMain.rows[0].manpower}"/>k/100k Manpower</td>
+                        <td><cloc:manpower main="${resultMain}" population="${resultPopulation}"/></td>
                     </tr>
                     <tr>
                         <td>Equipment</td>

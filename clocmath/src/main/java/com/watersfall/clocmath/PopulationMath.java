@@ -18,6 +18,16 @@ public class PopulationMath
                 + resultsPopulation.getInt("oceanian");
     }
 
+    public static int getTotalManpower(ResultSet resultsPopulation) throws SQLException
+    {
+        return (int)(getPopulation(resultsPopulation) * PopulationConstants.BASE_MANPOWER);
+    }
+
+    public static int getAvailableManpower(ResultSet resultsMain, ResultSet resultsPopulation) throws SQLException
+    {
+        return getTotalManpower(resultsPopulation) - resultsMain.getInt("army") * 1000;
+    }
+
     public static int getPopulation(SortedMap resultsPopulation)
     {
         return Integer.parseInt(resultsPopulation.get("northAmerican").toString())
@@ -27,5 +37,15 @@ public class PopulationMath
                 + Integer.parseInt(resultsPopulation.get("asian").toString())
                 + Integer.parseInt(resultsPopulation.get("middleEastern").toString())
                 + Integer.parseInt(resultsPopulation.get("oceanian").toString());
+    }
+
+    public static int getTotalManpower(SortedMap resultsPopulation)
+    {
+        return (int)(getPopulation(resultsPopulation) * PopulationConstants.BASE_MANPOWER);
+    }
+
+    public static int getAvailableManpower(SortedMap resultsMain, SortedMap resultsPopulation) throws SQLException
+    {
+        return getTotalManpower(resultsPopulation) - (Integer.parseInt(resultsMain.get("army").toString()) * 1000);
     }
 }
