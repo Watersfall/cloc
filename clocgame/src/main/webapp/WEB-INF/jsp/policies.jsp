@@ -192,7 +192,7 @@
                         </tr>
                         <tr>
                             <td>
-                                Parden Petty Criminals
+                                Pardon Petty Criminals
                             </td>
                             <td>
                                 Release the jaywalkers from their cells! Decreases stability, but increases approval and moves your government to the left.
