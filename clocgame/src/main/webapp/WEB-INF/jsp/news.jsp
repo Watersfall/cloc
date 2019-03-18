@@ -10,11 +10,11 @@
                 </c:when>
                 <c:otherwise>
                     <sql:query dataSource="${database}" var="news">
-                        SELECT * FROM news WHERE nationid=?
+                        SELECT * FROM news WHERE receiver=?
                         <sql:param value="${result.rows[0].id}"/>
                     </sql:query>
                     <c:forEach var="i" items="${news.rows}">
-                        <p><cloc:eventText value="${i.eventid}"/></p>
+                        <tr><cloc:eventText value="${i}"/></tr>
                     </c:forEach>
                 </c:otherwise>
             </c:choose>
