@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.servlet.policies.military;
 
 import com.watersfall.clocgame.database.Database;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -18,7 +19,6 @@ import com.watersfall.clocmath.PopulationMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
- *
  * @author Chris
  */
 @WebServlet(urlPatterns = "/policies/conscript")
@@ -53,7 +53,7 @@ public class PolicyConscript extends HttpServlet
 			else
 			{
 				int costManpower = PolicyConstants.COST_CONSCRIPT_MANPOWER;
-				int costTraining = (int)(((double)resultsMain.getInt("training") / 100d) * (4d / (double)resultsMain.getInt("army")));
+				int costTraining = (int) (((double) resultsMain.getInt("training") / 100d) * (4d / (double) resultsMain.getInt("army")));
 				int availableManpower = PopulationMath.getAvailableManpower(resultsMain, resultsPopulation);
 				if(costManpower > availableManpower)
 				{

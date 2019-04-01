@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.servlet.policies.economy;
 
 import com.watersfall.clocgame.database.Database;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -17,7 +18,6 @@ import com.watersfall.clocmath.PolicyMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
- *
  * @author Chris
  */
 @WebServlet(urlPatterns = "/policies/unmine")

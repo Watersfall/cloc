@@ -7,15 +7,15 @@ import javax.servlet.ServletContextListener;
 
 public class Startup implements ServletContextListener
 {
-    @Override
-    public void contextDestroyed(ServletContextEvent event)
-    {
+	@Override
+	public void contextDestroyed(ServletContextEvent event)
+	{
 
-    }
+	}
 
-    @Override
-    public void contextInitialized(ServletContextEvent event)
-    {
-        event.getServletContext().setAttribute("policyConstants", new PolicyConstants());
-    }
+	@Override
+	public void contextInitialized(ServletContextEvent event)
+	{
+		event.getServletContext().setAttribute("policyConstants", new PolicyConstants());
+	}
 }

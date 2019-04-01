@@ -10,23 +10,23 @@ import java.util.SortedMap;
 public class EventText extends SimpleTagSupport
 {
 
-    private SortedMap value;
-    StringWriter sw = new StringWriter();
+	private SortedMap value;
+	StringWriter sw = new StringWriter();
 
-    public void setValue(SortedMap value)
-    {
-        this.value = value;
-    }
+	public void setValue(SortedMap value)
+	{
+		this.value = value;
+	}
 
-    @Override
-    public void doTag() throws JspException, IOException
-    {
-        JspWriter out = getJspContext().getOut();
-        out.println("<td>");
-        out.println(value.get("content").toString().replace("{sender}", value.get("sender").toString()).replace("{receiver}", value.get("receiver").toString()));
-        out.println("<br>");
-        out.println(value.get("time"));
-        out.println("<br>");
-        out.println("</td>");
-    }
+	@Override
+	public void doTag() throws JspException, IOException
+	{
+		JspWriter out = getJspContext().getOut();
+		out.println("<td>");
+		out.println(value.get("content").toString().replace("{sender}", value.get("sender").toString()).replace("{receiver}", value.get("receiver").toString()));
+		out.println("<br>");
+		out.println(value.get("time"));
+		out.println("<br>");
+		out.println("</td>");
+	}
 }

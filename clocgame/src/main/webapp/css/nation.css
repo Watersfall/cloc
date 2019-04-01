@@ -1,44 +1,37 @@
-#nation
-{
+#nation {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-#nation td, #nation th
-{
+#nation td, #nation th {
     border: 1px solid black;
     padding: 8px;
     width: 33%;
 }
 
-#nation tr:nth-child(even)
-{
-    background-color: rgba(30,30,30,0.5);
+#nation tr:nth-child(even) {
+    background-color: rgba(30, 30, 30, 0.5);
     color: white;
 }
 
-#nation tr:nth-child(odd)
-{
-    background-color: rgba(40,40,40,0.5);
+#nation tr:nth-child(odd) {
+    background-color: rgba(40, 40, 40, 0.5);
     color: white;
 }
 
-#nation tr:hover
-{
-    background-color: rgba(20,20,20,0.5);
+#nation tr:hover {
+    background-color: rgba(20, 20, 20, 0.5);
 }
 
-.flag
-{
+.flag {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 300px;
 }
 
-.leader
-{
+.leader {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -50,8 +43,7 @@
     display: inline-block;
 }
 
-.dropdown-content
-{
+.dropdown-content {
     display: none;
     position: absolute;
     background-color: black;
@@ -59,7 +51,6 @@
     z-index: 1;
 }
 
-.dropdown:hover .dropdown-content
-{
+.dropdown:hover .dropdown-content {
     display: block;
 }

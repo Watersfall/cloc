@@ -42,6 +42,7 @@ Todo List: (In no particular order)
     - Expandable policies tab
     - Do something with "Settings" and "Logout"
     - Do something with the login
+    - Setting tab as a gear icon
    
   - Policies Page
     - Do policies without reloading the entire page for each click

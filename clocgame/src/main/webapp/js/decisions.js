@@ -1,8 +1,8 @@
-function policy(policy) {
+function decision(policy) {
     document.getElementById('resultsContainer').style.visibility = "visible";
     document.getElementById("result").innerHTML = "<p>Loading...<p>";
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/policies/" + policy, true);
+    xhttp.open("POST", "/decisions/" + policy, true);
     xhttp.send();
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {

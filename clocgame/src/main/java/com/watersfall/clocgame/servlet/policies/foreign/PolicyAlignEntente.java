@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.servlet.policies.foreign;
 
 import com.watersfall.clocgame.database.Database;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -17,78 +18,77 @@ import com.watersfall.clocmath.PolicyConstants;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
- *
  * @author Chris
  */
 @WebServlet(urlPatterns = "/policies/alignentente")
 public class PolicyAlignEntente extends HttpServlet
 {
 
-    static BasicDataSource database = Database.getDataSource();
+	static BasicDataSource database = Database.getDataSource();
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        String sess = request.getSession().getId();
-        PrintWriter writer = response.getWriter();
-        Connection conn = null;
-        try
-        {
-            conn = database.getConnection();
-            ResultSet results;
-            PreparedStatement read = conn.prepareStatement("SELECT budget, alignment FROM cloc "
-                    + "WHERE sess=? FOR UPDATE");
-            read.setString(1, sess);
-            results = read.executeQuery();
-            if(!results.first())
-            {
-                writer.append("<p>You must be logged in to do this!</p>");
-            }
-            else
-            {
-                int cost = PolicyConstants.COST_ALIGN_ENTENTE;
-                if(cost > results.getInt("budget"))
-                {
-                    writer.append("<p>You do not have enough money!</p>");
-                }
-                else if(results.getInt("alignment") == -1)
-                {
-                    writer.append("<p>You are already aligned with the Entente!</p>");
-                }
-                else
-                {
-                    PreparedStatement update = conn.prepareStatement("UPDATE cloc SET alignment=-1, budget=budget-? "
-                            + "WHERE sess=?");
-                    update.setInt(1, cost);
-                    update.setString(2, sess);
-                    update.execute();
-                    conn.commit();
-                    writer.append("<p>You align yourself with the Entente!</p>");
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-            try
-            {
-                conn.rollback();
-            }
-            catch(Exception ex)
-            {
-                //Ignore
-            }
-            writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
-        }
-        finally
-        {
-            try
-            {
-                conn.close();
-            }
-            catch(Exception ex)
-            {
-                //Ignore
-            }
-        }
-    }
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		String sess = request.getSession().getId();
+		PrintWriter writer = response.getWriter();
+		Connection conn = null;
+		try
+		{
+			conn = database.getConnection();
+			ResultSet results;
+			PreparedStatement read = conn.prepareStatement("SELECT budget, alignment FROM cloc "
+					+ "WHERE sess=? FOR UPDATE");
+			read.setString(1, sess);
+			results = read.executeQuery();
+			if(!results.first())
+			{
+				writer.append("<p>You must be logged in to do this!</p>");
+			}
+			else
+			{
+				int cost = PolicyConstants.COST_ALIGN_ENTENTE;
+				if(cost > results.getInt("budget"))
+				{
+					writer.append("<p>You do not have enough money!</p>");
+				}
+				else if(results.getInt("alignment") == -1)
+				{
+					writer.append("<p>You are already aligned with the Entente!</p>");
+				}
+				else
+				{
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET alignment=-1, budget=budget-? "
+							+ "WHERE sess=?");
+					update.setInt(1, cost);
+					update.setString(2, sess);
+					update.execute();
+					conn.commit();
+					writer.append("<p>You align yourself with the Entente!</p>");
+				}
+			}
+		}
+		catch(SQLException e)
+		{
+			try
+			{
+				conn.rollback();
+			}
+			catch(Exception ex)
+			{
+				//Ignore
+			}
+			writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
+		}
+		finally
+		{
+			try
+			{
+				conn.close();
+			}
+			catch(Exception ex)
+			{
+				//Ignore
+			}
+		}
+	}
 }

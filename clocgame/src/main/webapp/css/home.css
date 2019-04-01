@@ -1,10 +1,8 @@
-html
-{
+html {
     height: 100%;
 }
 
-body
-{
+body {
     height: 100%;
     text-align: center;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 80%, rgba(0, 0, 0, 0.8) 100%), url(/images/background.jpg) no-repeat center fixed;
@@ -14,33 +12,28 @@ body
     background-size: cover;
 }
 
-h1
-{
+h1 {
     text-align: center;
     color: white;
 }
 
-h2
-{
+h2 {
     text-align: left;
     color: white;
 }
 
-h3
-{
+h3 {
     text-align: center;
     color: white;
     padding-bottom: 0;
 }
 
-p
-{
+p {
     text-align: center;
     color: white;
 }
 
-.main
-{
+.main {
     min-height: 100%;
     margin: auto;
     width: 60%;
@@ -54,8 +47,7 @@ p
     z-index: 1;
 }
 
-.top
-{
+.top {
     width: 20%;
     background-color: black;
     position: fixed;
@@ -74,42 +66,35 @@ p
     background: transparent;
 }
 
-.login
-{
+.login {
     padding: 15px;
 }
 
-.loginForm
-{
+.loginForm {
     padding: 15px;
 }
 
-.registerForm
-{
+.registerForm {
     padding: 15px;
     display: inline;
 }
 
-.loginText
-{
+.loginText {
     min-width: 75px;
 }
 
-.RegisterText
-{
+.RegisterText {
     min-width: 150px;
     padding: 10px 10px;
     margin: 10px 10px;
     display: inline;
 }
 
-.settings
-{
+.settings {
     margin: auto;
 }
 
-.indexflag
-{
+.indexflag {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -117,85 +102,73 @@ p
     width: 150px;
 }
 
-.headerFlag
-{
+.headerFlag {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 75%;
 }
 
-.logout
-{
+.logout {
     min-width: 75px;
     margin-left: auto;
     margin-right: auto;
     bottom: 10%;
 }
 
-.policy
-{
+.policy {
     width: 100%;
     padding-top: 5%;
     padding-bottom: 5%;
-    background-color: rgb(7,7,7);
-    border: 2px solid rgb(21,21,21);
+    background-color: rgb(7, 7, 7);
+    border: 2px solid rgb(21, 21, 21);
 }
 
-.policy:hover
-{
-    background-color: rgb(14,14,14);
+.policy:hover {
+    background-color: rgb(14, 14, 14);
 }
 
-a:link
-{
+a:link {
     color: white;
     text-decoration: none;
 }
 
-a:visited
-{
+a:visited {
     color: white;
     text-decoration: none;
 }
 
-a:hover
-{
+a:hover {
     color: white;
     text-decoration: underline;
 }
 
-a:active
-{
+a:active {
     color: white;
     text-decoration: none;
 }
 
-#policy
-{
+#policy {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
-    border-top: 2px solid rgb(21,21,21);
-    border-bottom: 2px solid rgb(21,21,21);
+    border-top: 2px solid rgb(21, 21, 21);
+    border-bottom: 2px solid rgb(21, 21, 21);
 }
 
-#policy td, #policy th
-{
-    background-color: rgb(7,7,7);
-    border: 1px solid rgb(21,21,21);
+#policy td, #policy th {
+    background-color: rgb(7, 7, 7);
+    border: 1px solid rgb(21, 21, 21);
     padding: 8px;
     color: white;
 }
 
-#policy tr:hover
-{
-    background-color: rgb(14,14,14);
+#policy tr:hover {
+    background-color: rgb(14, 14, 14);
 }
 
-.policyButton
-{
-    background-color: rgb(42,42,42);
+.policyButton {
+    background-color: rgb(42, 42, 42);
     border: none;
     color: white;
     padding: 15px 32px;
@@ -207,15 +180,13 @@ a:active
     border-radius: 5px;
 }
 
-.policyButton:hover
-{
-    background-color: rgb(49,49,49);
+.policyButton:hover {
+    background-color: rgb(49, 49, 49);
 }
 
-.result
-{
-    background-color: rgba(255,0,0,.5);
-    border: 1px solid rgb(255,0,0);
+.result {
+    background-color: rgba(255, 0, 0, .5);
+    border: 1px solid rgb(255, 0, 0);
     width: 50%;
     padding: 12px;
     color: black;
@@ -223,58 +194,50 @@ a:active
     border-radius: 10px;
 }
 
-#resources
-{
+#resources {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
-    border-top: 2px solid rgb(21,21,21);
-    border-bottom: 2px solid rgb(21,21,21);
+    border-top: 2px solid rgb(21, 21, 21);
+    border-bottom: 2px solid rgb(21, 21, 21);
 }
 
-#resources td, #resources th
-{
+#resources td, #resources th {
     background-color: transparent;
     border: transparent;
     color: white;
 }
 
-.left
-{
+.left {
     text-align: left;
     margin-top: 4%;
     margin-bottom: 4%;
 }
 
-.positive
-{
+.positive {
     text-align: right;
-    color: rgb(0,255,0);
-    background-color: rgba(0,0,0,0.5);
+    color: rgb(0, 255, 0);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.negative
-{
+.negative {
     text-align: right;
-    color: rgb(255,0,0);
-    background-color: rgba(0,0,0,0.5);
+    color: rgb(255, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.right
-{
+.right {
     text-align: right;
 }
 
-.resourceDropDown
-{
+.resourceDropDown {
     position: relative;
     display: inline-block;
     text-align: right;
     width: 100%;
 }
 
-.resourceDropDown-span
-{
+.resourceDropDown-span {
     position: inherit;
     display: inherit;
     text-align: inherit;
@@ -282,8 +245,7 @@ a:active
     z-index: 1;
 }
 
-.resourceDropDown-content
-{
+.resourceDropDown-content {
     text-align: right;
     display: none;
     position: absolute;
@@ -295,56 +257,47 @@ a:active
     z-index: 2;
 }
 
-.resourceDropDown-span:hover + .resourceDropDown-content
-{
+.resourceDropDown-span:hover + .resourceDropDown-content {
     display: block;
 }
 
-#news
-{
+#news {
     width: 100%;
 }
 
-#news td
-{
+#news td {
     width: 50%;
 }
 
-.world
-{
+.world {
     padding: 0 0 0 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(7,7,7);
-    border: 2px solid rgb(21,21,21);
+    background-color: rgb(7, 7, 7);
+    border: 2px solid rgb(21, 21, 21);
 }
 
-.world:hover
-{
-    background-color: rgb(14,14,14);
+.world:hover {
+    background-color: rgb(14, 14, 14);
 }
 
-.alliance
-{
+.alliance {
     padding: 0 0 0 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(7,7,7);
-    border: 2px solid rgb(21,21,21);
+    background-color: rgb(7, 7, 7);
+    border: 2px solid rgb(21, 21, 21);
 }
 
-.alliance:hover
-{
-    background-color: rgb(14,14,14);
+.alliance:hover {
+    background-color: rgb(14, 14, 14);
 }
 
-.policyImage
-{
+.policyImage {
     width: 256px;
 }
 
-.news
-{
+.news {
     position: fixed;
     display: none;
     left: 20%;
@@ -356,19 +309,17 @@ a:active
     z-index: 10;
 }
 
-.resultsContainer
-{
+.resultsContainer {
     visibility: hidden;
     position: fixed;
-    background-color: rgba(75,75,75,0.5);
+    background-color: rgba(75, 75, 75, 0.5);
     width: 80%;
     top: 0;
     left: 20%;
-    box-shadow: 0px 0px 50px rgba(75,75,75,1);
+    box-shadow: 0px 0px 50px rgba(75, 75, 75, 1);
 }
 
-.results
-{
+.results {
     margin: auto;
     width: 75%;
 }

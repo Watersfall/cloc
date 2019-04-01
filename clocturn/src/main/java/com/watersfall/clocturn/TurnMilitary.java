@@ -6,20 +6,20 @@
 package com.watersfall.clocturn;
 
 /**
- *
  * @author Christopher
  */
-public class TurnMilitary extends Turn {
+public class TurnMilitary extends Turn
+{
 
-    public TurnMilitary(int offset) 
-    {
-        super(offset);
-    }
+	public TurnMilitary(int offset)
+	{
+		super(offset);
+	}
 
-    @Override
-    public void doTurn() 
-    {
-        
-    }
-    
+	@Override
+	public void doTurn()
+	{
+
+	}
+
 }
