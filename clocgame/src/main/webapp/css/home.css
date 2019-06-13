@@ -48,8 +48,8 @@ p {
 }
 
 .top {
-    width: 20%;
-    background-color: black;
+    width: 25%;
+    background-color: transparent;
     position: fixed;
     left: 0;
     top: 0;
@@ -106,7 +106,31 @@ p {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    width: 85%;
+    padding-left: 15%;
+    float: right;
+    text-align: right;
+}
+.headerTab {
+    background-color: rgba(65, 65, 65, 0.85);
+    display: block;
+    margin-right: auto;
     width: 75%;
+    border-radius: 15px 0 0 15px;
+    float: right;
+    box-shadow: inset 0 0 2px white, -2px 0 3px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+}
+
+.headerTabSmall {
+    background-color: rgba(65, 65, 65, 0.85);
+    display: block;
+    margin-right: auto;
+    width: 60%;
+    border-radius: 15px 0 0 15px;
+    float: right;
+    box-shadow: inset 0 0 2px white, -2px 0 3px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
 }
 
 .logout {

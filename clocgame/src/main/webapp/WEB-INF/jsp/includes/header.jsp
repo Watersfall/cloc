@@ -1,15 +1,6 @@
-<c:set var="user">
-    ${param['username']}
-</c:set>
-<c:set var="nation">
-    ${param['nation']}
-</c:set>
-<c:set var="pass">
-    <cloc:password value="${param['password']}"/>
-</c:set>
 <div class="top">
     <c:choose>
-        <c:when test="${result.rowCount == 0}">
+        <c:when test="${check.rowCount == 0}">
             <div class="login">
                 <form class="loginForm" action="login" method="POST">
                     <input class="loginText" type="text" name="username" placeholder="Username"><br>
@@ -30,12 +21,47 @@
             </div>
         </c:when>
         <c:otherwise>
+            <sql:query dataSource="${database}" var="result_cosmetic" scope="page">
+                SELECT * FROM cloc_cosmetic WHERE id=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <sql:query dataSource="${database}" var="result_economy" scope="page">
+                SELECT * FROM cloc_economy WHERE id=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <sql:query dataSource="${database}" var="result_domestic" scope="page">
+                SELECT * FROM cloc_domestic WHERE id=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <sql:query dataSource="${database}" var="result_military" scope="page">
+                SELECT * FROM cloc_military WHERE id=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <sql:query dataSource="${database}" var="result_armies" scope="page">
+                SELECT * FROM cloc_armies WHERE owner=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <sql:query dataSource="${database}" var="result_foreign" scope="page">
+                SELECT * FROM cloc_foreign WHERE id=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <sql:query dataSource="${database}" var="result_tech" scope="page">
+                SELECT * FROM cloc_tech WHERE id=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <sql:query dataSource="${database}" var="result_policy" scope="page">
+                SELECT * FROM cloc_policy WHERE id=?
+                <sql:param value="${id}"/>
+            </sql:query>
+            <c:set var="result_map" value="${result_economy.rows[0]}"/>
+            ${result_map.putAll(result_domestic.rows[0])}
+            ${result_map.putAll(result_military.rows[0])}
             <div class="login">
-                <a href="main">
-                    <img class="headerFlag" src="https://imgur.com/<c:out value="${result.rows[0].flag}"/>" alt="Flag">
+                <% /* <a href="main">
+                    <img class="headerFlag" src="https://imgur.com/<c:out value="${result_cosmetic.rows[0].flag}"/>" alt="Flag">
                 </a>
                 <h1 style="margin-top: 2%; margin-bottom:2%;">
-                    <c:out value="${result.rows[0].nation}"/>
+                    <c:out value="${result_cosmetic.rows[0].nation_name}"/>
                 </h1>
                 <table style="width: 100%;">
                     <tr style="width: 100%;">
@@ -84,7 +110,7 @@
                             <p class="left">Budget: </p>
                         </td>
                         <td>
-                            <p class="right"><i>$<c:out value="${resultMain.rows[0].budget}"/>k</i></p>
+                            <p class="right"><i>$<c:out value="${result_economy.rows[0].budget}"/>k</i></p>
                         </td>
                     </tr>
                     <tr>
@@ -94,12 +120,12 @@
                         <td>
                             <div class="resourceDropDown">
                                 <span class="resourceDropDown-span">
-                                    <p class="right"><i><c:out value="${resultMain.rows[0].rm}"/> Htons</i></p>
+                                    <p class="right"><i><c:out value="${result_economy.rows[0].rm}"/> Htons</i></p>
                                 </span>
                                 <div class="resourceDropDown-content">
-                                    <p class="positive">+<c:out value="${resultMain.rows[0].mines}"/> Htons from
+                                    <p class="positive">+<c:out value="${result_economy.rows[0].mines}"/> Htons from
                                         Mines</p>
-                                    <p class="negative">-<c:out value="${resultMain.rows[0].industry}"/> Htons from
+                                    <p class="negative">-<c:out value="${result_economy.rows[0].industry}"/> Htons from
                                         Factories</p>
                                 </div>
                             </div>
@@ -112,12 +138,12 @@
                         <td>
                             <div class="resourceDropDown">
                                 <span class="resourceDropDown-span">
-                                    <p class="right"><i><c:out value="${resultMain.rows[0].oil}"/> Mmbls</i></p>
+                                    <p class="right"><i><c:out value="${result_economy.rows[0].oil}"/> Mmbls</i></p>
                                 </span>
                                 <div class="resourceDropDown-content">
-                                    <p class="positive">+<c:out value="${resultMain.rows[0].wells}"/> Htons from
+                                    <p class="positive">+<c:out value="${result_economy.rows[0].wells}"/> Htons from
                                         Wells</p>
-                                    <p class="negative">-<c:out value="${resultMain.rows[0].industry}"/> Htons from
+                                    <p class="negative">-<c:out value="${result_economy.rows[0].industry}"/> Htons from
                                         Factories</p>
                                 </div>
                             </div>
@@ -129,10 +155,10 @@
                         <td>
                             <div class="resourceDropDown">
                                 <span class="resourceDropDown-span">
-                                    <p class="right"><i><c:out value="${resultMain.rows[0].mg}"/> Tons</i></p>
+                                    <p class="right"><i><c:out value="${result_economy.rows[0].mg}"/> Tons</i></p>
                                 </span>
                                 <div class="resourceDropDown-content">
-                                    <p class="positive">+<c:out value="${resultMain.rows[0].industry}"/> Tons from
+                                    <p class="positive">+<c:out value="${result_economy.rows[0].industry}"/> Tons from
                                         Factories</p>
                                 </div>
                             </div>
@@ -183,6 +209,89 @@
                 <form class="logout" action="logout" method="GET">
                     <input type="submit" value="Logout">
                 </form>
+                */ %>
+                <div class="headerFlag">
+                    <a href="main">
+                        <img class="headerFlag" src="https://imgur.com/<c:out value="${result_cosmetic.rows[0].flag}"/>" alt="Flag">
+                    </a>
+                    <h1 style="text-align: right;"><c:out value="${result_cosmetic.rows[0].nation_title}"/> of<br><c:out value="${result_cosmetic.rows[0].nation_name}"/></h1>
+                </div>
+                <ul>
+                    <li>
+                        <a href="#" onclick="showHidePolicies()">
+                            <div class="headerTab">
+                                <p>Policies</p>
+                            </div>
+                        </a>
+                        <ul id="policies" style="display: none">
+                            <li>
+                                <a href="policies?policies=Economic">
+                                    <div class="headerTab">
+                                        <p>Economy</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="policies?policies=Domestic">
+                                    <div class="headerTab">
+                                        <p>Domestic</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="policies?policies=Foreign">
+                                    <div class="headerTab">
+                                        <p>Foreign</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="policies?policies=Military">
+                                    <div class="headerTab">
+                                        <p>Military</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" onclick="showHideWorld()">
+                            <div class="headerTab">
+                                <p>Realpolitik</p>
+                            </div>
+                        </a>
+                        <ul id="world" style="display: none">
+                            <li>
+                                <a href="index">
+                                    <div class="headerTab">
+                                        <p>World Rankings</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="map">
+                                    <div class="headerTab">
+                                        <p>Regions</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="policies">
+                            <div class="headerTab">
+                                <p>Treaties</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings">
+                            <div class="headerTab">
+                                <p>Settings</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </c:otherwise>
     </c:choose>

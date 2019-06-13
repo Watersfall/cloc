@@ -1,4 +1,4 @@
-package com.watersfall.clocmath;
+package com.watersfall.clocmath.math;
 
 public class Math
 {

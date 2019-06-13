@@ -6,8 +6,8 @@
 <div class="main">
     <h1 title="Title" id="top">Test</h1>
     <hr>
-    <sql:query dataSource="${database}" var="results">
-        SELECT * FROM cloc_main
+    <sql:query dataSource="${database}" var="rankings_cosmetic">
+        SELECT * FROM cloc_cosmetic
     </sql:query>
     <table id="nation">
         <tr>
@@ -15,10 +15,10 @@
             <th>Nation Name</th>
             <th>Leader Name</th>
         </tr>
-        <c:forEach items="${results.rows}" var="row">
+        <c:forEach items="${rankings_cosmetic.rows}" var="row">
             <tr>
                 <td><img class="indexflag" src="https://imgur.com/<c:out value="${row.flag}"/>" alt="flag"></td>
-                <td><a href="nation?id=<c:out value="${row.id}"/>"><c:out value="${row.nation}"/></a></td>
+                <td><a href="nation?id=<c:out value="${row.id}"/>"><c:out value="${row.nation_name}"/></a></td>
                 <td><c:out value="${row.username}"/></td>
             </tr>
         </c:forEach>

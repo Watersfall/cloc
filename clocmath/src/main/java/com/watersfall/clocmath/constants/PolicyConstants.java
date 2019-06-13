@@ -1,4 +1,4 @@
-package com.watersfall.clocmath;
+package com.watersfall.clocmath.constants;
 
 public class PolicyConstants
 {

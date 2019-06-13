@@ -1,12 +1,12 @@
 package com.watersfall.clocgame.tags;
 
-import com.watersfall.clocmath.PopulationConstants;
-import com.watersfall.clocmath.PopGrowthMath;
-import com.watersfall.clocmath.PopulationMath;
+import com.watersfall.clocmath.constants.PopulationConstants;
+import com.watersfall.clocmath.math.PopGrowthMath;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.SortedMap;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -15,17 +15,12 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class PopGrowth extends SimpleTagSupport
 {
-	private Result main, population;
+	private Map data;
 	StringWriter sw = new StringWriter();
 
-	public void setMain(Result main)
+	public void setData(Map data)
 	{
-		this.main = main;
-	}
-
-	public void setPopulation(Result population)
-	{
-		this.population = population;
+		this.data = data;
 	}
 
 	@Override
@@ -34,21 +29,15 @@ public class PopGrowth extends SimpleTagSupport
 		JspWriter out = getJspContext().getOut();
 		try
 		{
-			if(main.getRowCount() <= 0 || population.getRowCount() <= 0)
+			if(data.isEmpty())
 			{
 				throw new SQLException();
 			}
 			else
 			{
-				SortedMap resultsMain = main.getRows()[0];
-				SortedMap resultsPopulation = population.getRows()[0];
-				int population = PopulationMath.getPopulation(resultsPopulation);
-				double migrationGrowth = PopGrowthMath.getPopGrowthFromEmployment(resultsMain, resultsPopulation) * 100;
-				if(migrationGrowth > 0)
-				{
-
-				}
-				double foodGrowth = PopGrowthMath.getPopGrowthFromFoodProduction(resultsMain, resultsPopulation) * 100;
+				int population = Integer.parseInt(data.get("population").toString());
+				double migrationGrowth = PopGrowthMath.getPopGrowthFromEmployment(data) * 100;
+				double foodGrowth = PopGrowthMath.getPopGrowthFromFoodProduction(data) * 100;
 				out.println("<div class=\"dropdown\">");
 				out.println("<span>");
 				out.println(population + " People");

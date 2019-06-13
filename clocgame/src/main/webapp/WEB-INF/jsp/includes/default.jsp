@@ -7,18 +7,14 @@
 <c:set var="sess" scope="session">
     ${pageContext.session.id}
 </c:set>
-<sql:query dataSource="${database}" var="result" scope="page">
-    SELECT * FROM cloc_main WHERE sess=?
+<c:set var="id" value="-1"/>
+<sql:query dataSource="${database}" var="check" scope="page">
+    SELECT * FROM cloc_login WHERE sess=?
     <sql:param value="${sess}"/>
 </sql:query>
-<sql:query dataSource="${database}" var="resultMain" scope="page">
-    SELECT * FROM cloc WHERE sess=?
-    <sql:param value="${sess}"/>
-</sql:query>
-<sql:query dataSource="${database}" var="resultPopulation" scope="page">
-    SELECT * FROM cloc_population WHERE sess=?
-    <sql:param value="${sess}"/>
-</sql:query>
+<c:if test="${check.rowCount >= 0}">
+    <c:set var="id" value="${check.rows[0].id}"/>
+</c:if>
 <c:set var="mobile" scope="session">
     ${fn:containsIgnoreCase(header['User-Agent'],'iphone')
         || fn:containsIgnoreCase(header['User-Agent'], 'android')

@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.tags.costs;
 
-import com.watersfall.clocmath.PolicyMath;
+import com.watersfall.clocmath.math.PolicyMath;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -11,7 +11,7 @@ import javax.servlet.jsp.jstl.sql.Result;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class Nitrogen extends SimpleTagSupport
-{
+{/*
 	private Result main;
 	StringWriter sw = new StringWriter();
 
@@ -50,5 +50,5 @@ public class Nitrogen extends SimpleTagSupport
 		{
 			out.print("Error");
 		}
-	}
+	}*/
 }

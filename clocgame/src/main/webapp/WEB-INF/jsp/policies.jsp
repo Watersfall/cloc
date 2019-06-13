@@ -30,7 +30,7 @@
             <th style="width: 20%"></th>
         </tr>
         <c:choose>
-            <c:when test="${result.rowCount == 0}">
+            <c:when test="${check.rowCount == 0}">
                 <p>You must be logged in to view this page!</p>
             </c:when>
             <c:when test="${param['policies'] == 'Economic'}">
@@ -72,7 +72,7 @@
                         Dig a new mine, increasing raw material output by 1 Hton per turn
                     </td>
                     <td>
-                        $<cloc:mine main="${resultMain}"/>k
+                        $<cloc:mine main="${result_economy}"/>k
                     </td>
                     <td>
                         <button class="policyButton" type="submit" onclick="policy('mine')">Mine</button>
@@ -86,7 +86,7 @@
                         Drill a new oil well, increasing oil output by 1 Mmbl per turn
                     </td>
                     <td>
-                        $<cloc:well main="${resultMain}"/>k
+                        $<cloc:well main="${result_economy}"/>k
                     </td>
                     <td>
                         <button class="policyButton" type="submit" onclick="policy('drill')">Drill</button>
@@ -101,7 +101,7 @@
                         Manufactured good
                     </td>
                     <td>
-                        <cloc:factory main="${resultMain}"/>
+                        <cloc:factory main="${result_economy}"/>
                     </td>
                     <td>
                         <button class="policyButton" type="submit" onclick="policy('industrialize')">Industrialize
@@ -117,7 +117,7 @@
                         MG to produce 1 Nitrogen. Same cost as factories
                     </td>
                     <td>
-                        <cloc:nitrogen main="${resultMain}"/>
+                        Nope
                     </td>
                     <td>
                         <button class="policyButton" type="submit" onclick="policy('nitrogenplant')">Progress</button>
@@ -219,7 +219,7 @@
                         Build a university to further your research! Consumes 2 MG. Same cost as factories.
                     </td>
                     <td>
-                        <cloc:nitrogen main="${resultMain}"/>
+                        nada
                     </td>
                     <td>
                         <button class="policyButton" type="submit" onclick="policy('university')">Advance</button>
@@ -293,7 +293,7 @@
                         Train your army
                     </td>
                     <td>
-                        $<cloc:training main="${resultMain}"/>k
+                        $<cloc:training main="${result_military}"/>k
                     </td>
                     <td>
                         <button class="policyButton" type="submit" onclick="policy('train')">Train</button>

@@ -102,4 +102,12 @@
         <servlet-name>decisions</servlet-name>
         <url-pattern>/decisions</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>map</servlet-name>
+        <jsp-file>/WEB-INF/jsp/map.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>map</servlet-name>
+        <url-pattern>/map</url-pattern>
+    </servlet-mapping>
 </web-app>

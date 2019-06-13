@@ -24,6 +24,18 @@
     background-color: rgba(20, 20, 20, 0.5);
 }
 
+#nation caption {
+    border: 1px solid black;
+    border-bottom: 0;
+    padding: 8px;
+    background-color: rgba(30, 30, 30, 0.5);
+    color: white;
+}
+
+#nation caption:hover {
+    background-color: rgba(20, 20, 20, 0.5);
+}
+
 .flag {
     display: block;
     margin-left: auto;

@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.tags.costs;
 
-import com.watersfall.clocmath.PolicyMath;
+import com.watersfall.clocmath.math.PolicyMath;
 
 import java.io.IOException;
 import java.io.StringWriter;
