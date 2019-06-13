@@ -5,7 +5,7 @@
 <%@ include file="includes/header.jsp" %>
 <div class="main">
     <c:set var="regions" value="North America, South America, Africa, Middle East, Europe, Asia, Oceania, Siberia"/>
-    <svg id="world-map" width="100%" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
+    <svg id="world-map" width="85%" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
         <g id="g4774">
             <path id="cy" d="m484.56 437.79 1.062 0.771-3.294 3.119-1.573-0.052-1.167-0.821 0.156-1.529 2.386-0.155z"></path>
             <path id="path4402" d="m374.26 458.44-1.513 0.873 0.7 0.709z"></path>
@@ -149,9 +149,15 @@
                     </tr>
                 </c:forEach>
             </table>
+            <form action="map" method="GET">
+                <button class="policyButton">Return</button>
+            </form>
         </c:when>
         <c:otherwise>
             <p>Error</p>
+            <form action="map" method="GET">
+                <button class="policyButton">Return</button>
+            </form>
         </c:otherwise>
     </c:choose>
 
