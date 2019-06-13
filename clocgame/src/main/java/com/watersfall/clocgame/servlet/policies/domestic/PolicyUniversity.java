@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.watersfall.clocmath.PolicyMath;
+import com.watersfall.clocmath.math.PolicyMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -29,7 +29,7 @@ public class PolicyUniversity extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		String sess = request.getSession().getId();
+		/*String sess = request.getSession().getId();
 		PrintWriter writer = response.getWriter();
 		Connection conn = null;
 		try
@@ -98,6 +98,6 @@ public class PolicyUniversity extends HttpServlet
 			{
 				//Ignore
 			}
-		}
+		}*/
 	}
 }

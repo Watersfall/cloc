@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.listeners;
 
-import com.watersfall.clocmath.PolicyConstants;
+import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocmath.constants.PolicyConstants;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -17,5 +18,6 @@ public class Startup implements ServletContextListener
 	public void contextInitialized(ServletContextEvent event)
 	{
 		event.getServletContext().setAttribute("policyConstants", new PolicyConstants());
+		event.getServletContext().setAttribute("dataSource", Database.getDataSource());
 	}
 }

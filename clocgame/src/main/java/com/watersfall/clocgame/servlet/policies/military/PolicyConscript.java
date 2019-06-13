@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.watersfall.clocmath.PolicyConstants;
-import com.watersfall.clocmath.PopulationMath;
+import com.watersfall.clocmath.constants.PolicyConstants;
+import com.watersfall.clocmath.math.PopulationMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
@@ -37,16 +37,11 @@ public class PolicyConscript extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet resultsMain;
-			ResultSet resultsPopulation;
 			PreparedStatement read = conn.prepareStatement("SELECT army, training FROM cloc "
 					+ "WHERE sess=? FOR UPDATE");
-			PreparedStatement readPop = conn.prepareStatement("SELECT * FROM cloc_population "
-					+ "WHERE sess=? FOR UPDATE");
 			read.setString(1, sess);
-			readPop.setString(1, sess);
 			resultsMain = read.executeQuery();
-			resultsPopulation = readPop.executeQuery();
-			if(!resultsMain.first() || !resultsPopulation.first())
+			if(!resultsMain.first())
 			{
 				writer.append("<p>You must be logged in to do this!</p>");
 			}
@@ -54,7 +49,7 @@ public class PolicyConscript extends HttpServlet
 			{
 				int costManpower = PolicyConstants.COST_CONSCRIPT_MANPOWER;
 				int costTraining = (int) (((double) resultsMain.getInt("training") / 100d) * (4d / (double) resultsMain.getInt("army")));
-				int availableManpower = PopulationMath.getAvailableManpower(resultsMain, resultsPopulation);
+				int availableManpower = PopulationMath.getAvailableManpower(resultsMain);
 				if(costManpower > availableManpower)
 				{
 					writer.append("<p>You do not have enough manpower!</p>");
