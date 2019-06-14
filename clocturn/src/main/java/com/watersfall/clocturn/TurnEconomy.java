@@ -23,16 +23,7 @@ public class TurnEconomy extends Turn
 
 			while(results.next())
 			{
-				PreparedStatement resources = connection.prepareStatement("UPDATE cloc SET rm=rm+?, oil=oil+?, mg=mg+? WHERE id=?");
-				PreparedStatement population = connection.prepareStatement("UPDATE cloc SET population=? WHERE id=?");
-				resources.setInt(1, results.getInt("mines") > 0 ? results.getInt("mines") : 0);
-				resources.setInt(2, results.getInt("wells") > 0 ? results.getInt("wells") : 0);
-				resources.setInt(3, results.getInt("industry") > 0 ? results.getInt("industry") : 0);
-				resources.setInt(4, results.getInt("id"));
-				population.setInt(1, (int) (results.getInt("population") * java.lang.Math.pow(java.lang.Math.E, PopGrowthMath.getPopGrowth(results))));
-				population.setInt(2, results.getInt("id"));
-				resources.execute();
-				population.execute();
+
 			}
 		}
 		catch(SQLException ex)
