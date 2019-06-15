@@ -1,4 +1,5 @@
 USE cloc;
+DROP TABLE cloc_main,cloc_login, cloc_cosmetic, cloc_economy, cloc_domestic, cloc_military, cloc_armies, cloc_foreign, cloc_tech, cloc_policy, cloc_war, cloc_war_logs, cloc_news;
 
 CREATE TABLE cloc_main(
 	turn INT UNSIGNED DEFAULT 0
@@ -24,6 +25,7 @@ CREATE TABLE cloc_cosmetic(
 
 CREATE TABLE cloc_economy (
 	id INT PRIMARY KEY AUTO_INCREMENT,
+	economic TINYINT DEFAULT 50,
     gdp DECIMAL(14, 2) UNSIGNED DEFAULT 300,
     growth DECIMAL(14, 2) DEFAULT 5,
     budget DECIMAL(14, 2) DEFAULT 1000, 
