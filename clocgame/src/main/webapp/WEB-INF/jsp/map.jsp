@@ -4,7 +4,7 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <div class="main">
-    <c:set var="regions" value="North America, South America, Africa, Middle East, Europe, Asia, Oceania, Siberia"/>
+    <c:set var="regions" value="North America,South America,Africa,Middle East,Europe,Asia,Oceania,Siberia"/>
     <svg id="world-map" width="85%" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
         <g id="g4774">
             <path id="cy" d="m484.56 437.79 1.062 0.771-3.294 3.119-1.573-0.052-1.167-0.821 0.156-1.529 2.386-0.155z"></path>
