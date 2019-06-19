@@ -301,6 +301,34 @@
             <c:when test="${param['policies'] == 'Military'}">
                 <tr>
                     <td>
+                        Conscript
+                    </td>
+                    <td>
+                        Throw more men into your army at the cost of manpower and overall training.
+                    </td>
+                    <td>
+                        Reduction in Manpower, Training
+                    </td>
+                    <td>
+                        <button class="policyButton" type="submit" onclick="policy('conscript')">Conscript</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Train
+                    </td>
+                    <td>
+                        Train your army
+                    </td>
+                    <td>
+                        $<cloc:training main="${result_military}"/>k
+                    </td>
+                    <td>
+                        <button class="policyButton" type="submit" onclick="policy('train')">Train</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         Build Submarine
                     </td>
                     <td>

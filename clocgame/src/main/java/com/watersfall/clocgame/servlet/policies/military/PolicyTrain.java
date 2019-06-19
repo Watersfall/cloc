@@ -36,8 +36,8 @@ public class PolicyTrain extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget, army, training FROM cloc "
-					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT budget, army_home, training_home FROM cloc_military, cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id AND cloc_login.id = cloc_military.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -57,12 +57,12 @@ public class PolicyTrain extends HttpServlet
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET training=training+5, budget=budget-? "
-							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_military, cloc_login SET training_home=training_home+5, budget=budget-? "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id AND cloc_login.id = cloc_military.id");
 					update.setInt(1, cost);
 					update.setString(2, sess);
-					PreparedStatement update2 = conn.prepareStatement("UPDATE cloc SET training=100 "
-							+ "WHERE training>100 && sess=?");
+					PreparedStatement update2 = conn.prepareStatement("UPDATE cloc_military, cloc_login SET training_home=100 "
+							+ "WHERE training_home>100 AND sess=? AND cloc_login.id = cloc_military.id");
 					update2.setString(1, sess);
 					update.execute();
 					update2.execute();
