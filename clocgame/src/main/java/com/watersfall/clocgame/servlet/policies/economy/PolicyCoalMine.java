@@ -58,7 +58,7 @@ public class PolicyCoalMine extends HttpServlet
 					update.setString(2, sess);
 					update.execute();
 					conn.commit();
-					writer.append("<p>You dig a new iron mine!</p>");
+					writer.append("<p>You dig a new coal mine!</p>");
 				}
 			}
 		}

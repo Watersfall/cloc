@@ -49,7 +49,7 @@ public class PolicyFree extends HttpServlet
 			{
 				writer.append("<p>You do not have enough money!</p>");
 			}
-			else if(results.getInt("political") <= 4)
+			else if(results.getInt("government") >= 96)
 			{
 				writer.append("<p>You have no more prisoners to free!</p>");
 			}
@@ -61,7 +61,7 @@ public class PolicyFree extends HttpServlet
 			{
 				PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_domestic "
 						+ "SET stability=stability+?, approval=approval+?, government=government+?, budget=budget-? "
-						+ "WHERE cloc_economy.id=?");
+						+ "WHERE cloc_economy.id=? AND cloc_domestic.id = cloc_economy.id");
 				update.setInt(1, PolicyConstants.GAIN_STABILITY_FREE);
 				update.setInt(2, PolicyConstants.GAIN_APPROVAL_FREE);
 				update.setInt(3, PolicyConstants.GAIN_GOVERNMENT_FREE);
@@ -70,8 +70,12 @@ public class PolicyFree extends HttpServlet
 				PreparedStatement update2 = conn.prepareStatement("UPDATE cloc_domestic SET approval=100 "
 						+ "WHERE approval>100 && id=?");
 				update2.setInt(1, results.getInt("cloc_login.id"));
+				PreparedStatement update3 = conn.prepareStatement("UPDATE cloc_domestic SET government=100 "
+						+ "WHERE government>100 && id=?");
+				update3.setInt(1, results.getInt("cloc_login.id"));
 				update.execute();
 				update2.execute();
+				update3.execute();
 				conn.commit();
 				writer.append("<p>Your convicts enjoy their freedom!</p>");
 			}

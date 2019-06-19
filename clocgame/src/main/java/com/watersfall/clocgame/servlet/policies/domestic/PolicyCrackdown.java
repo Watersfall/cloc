@@ -62,7 +62,7 @@ public class PolicyCrackdown extends HttpServlet
 				{
 					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_domestic "
 						+ "SET stability=stability+?, approval=approval+?, government=government+?, budget=budget-? "
-						+ "WHERE cloc_economy.id=?");
+						+ "WHERE cloc_economy.id=? AND cloc_domestic.id = cloc_economy.id");
 					update.setInt(1, PolicyConstants.GAIN_STABILITY_CRACKDOWN);
 					update.setInt(2, PolicyConstants.GAIN_APPROVAL_CRACKDOWN);
 					update.setInt(3, PolicyConstants.GAIN_GOVERNMENT_CRACKDOWN);
@@ -89,6 +89,7 @@ public class PolicyCrackdown extends HttpServlet
 				//Ignore
 			}
 			writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
+			e.printStackTrace();
 		}
 		finally
 		{
