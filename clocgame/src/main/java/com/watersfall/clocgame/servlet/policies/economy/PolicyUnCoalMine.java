@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.servlet.policies.military;
+package com.watersfall.clocgame.servlet.policies.economy;
 
 import com.watersfall.clocgame.database.Database;
 
@@ -14,14 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.watersfall.clocmath.math.PolicyMath;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * @author Chris
  */
-@WebServlet(urlPatterns = "/policies/train")
-public class PolicyTrain extends HttpServlet
+@WebServlet(urlPatterns = "/policies/uncoalmine")
+public class PolicyUnCoalMine extends HttpServlet
 {
 
 	static BasicDataSource database = Database.getDataSource();
@@ -36,7 +35,7 @@ public class PolicyTrain extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget, army, training FROM cloc "
+			PreparedStatement read = conn.prepareStatement("SELECT coal_mines FROM cloc_economy, cloc_login "
 					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
@@ -46,28 +45,18 @@ public class PolicyTrain extends HttpServlet
 			}
 			else
 			{
-				int cost = PolicyMath.getTrainingCost(results);
-				if(cost > results.getInt("budget"))
+				if(results.getInt("coal_mines") < 1)
 				{
-					writer.append("<p>You do not have enough money!</p>");
-				}
-				else if(results.getInt("training") >= 100)
-				{
-					writer.append("<p>Your men are already fully trained!</p>");
+					writer.append("<p>You don't have any mines to close!</p>");
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET training=training+5, budget=budget-? "
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET coal_mines=coal_mines-1 "
 							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
-					update.setInt(1, cost);
-					update.setString(2, sess);
-					PreparedStatement update2 = conn.prepareStatement("UPDATE cloc SET training=100 "
-							+ "WHERE training>100 && sess=?");
-					update2.setString(1, sess);
+					update.setString(1, sess);
 					update.execute();
-					update2.execute();
 					conn.commit();
-					writer.append("<p>You train your men into a fine killing machine!</p>");
+					writer.append("<p>You close down a mine, forcing thousands of workers into unemployment. You monster</p>");
 				}
 			}
 		}
@@ -81,7 +70,7 @@ public class PolicyTrain extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append("<p>Error: " + e.getLocalizedMessage());
+			writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
 		}
 		finally
 		{

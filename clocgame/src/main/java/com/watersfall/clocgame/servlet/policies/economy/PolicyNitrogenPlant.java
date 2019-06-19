@@ -37,7 +37,7 @@ public class PolicyNitrogenPlant extends HttpServlet
 			conn = database.getConnection();
 			ResultSet results;
 			PreparedStatement read = conn.prepareStatement("SELECT university, nitrogenplant, rm, oil, mg FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -65,7 +65,7 @@ public class PolicyNitrogenPlant extends HttpServlet
 				{
 					PreparedStatement update = conn.prepareStatement("UPDATE cloc "
 							+ "SET rm=rm-?, oil=oil-?, mg=mg-?, nitrogenplant=nitrogenplant+1 "
-							+ "WHERE sess=?");
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setInt(1, costRm);
 					update.setInt(2, costOil);
 					update.setInt(3, costMg);

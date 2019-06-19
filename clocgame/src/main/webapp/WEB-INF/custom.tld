@@ -183,4 +183,19 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <name>ship</name>
+        <tag-class>com.watersfall.clocgame.tags.costs.Ship</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>main</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>type</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>

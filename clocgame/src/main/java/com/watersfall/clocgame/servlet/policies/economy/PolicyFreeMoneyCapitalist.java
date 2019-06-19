@@ -35,8 +35,8 @@ public class PolicyFreeMoneyCapitalist extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT budget FROM cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -45,11 +45,11 @@ public class PolicyFreeMoneyCapitalist extends HttpServlet
 			}
 			else
 			{
-				PreparedStatement update = conn.prepareStatement("UPDATE cloc SET budget=budget+1000, economic=economic+5 "
-						+ "WHERE sess=?");
+				PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET budget=budget+1000, economic=economic+5 "
+						+ "WHERE sess=? AND cloc_login.id=cloc_economy.id");
 				update.setString(1, sess);
-				PreparedStatement update2 = conn.prepareStatement("UPDATE cloc SET economic=100 "
-						+ "WHERE sess=? && economic>100");
+				PreparedStatement update2 = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET economic=100 "
+						+ "WHERE sess=? AND cloc_login.id=cloc_economy.id && economic>100");
 				update2.setString(1, sess);
 				update.execute();
 				update2.execute();

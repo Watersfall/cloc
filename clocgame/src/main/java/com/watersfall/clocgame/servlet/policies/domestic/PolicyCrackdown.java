@@ -35,8 +35,9 @@ public class PolicyCrackdown extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget, approval, stability, political FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT budget, approval, stability, government, cloc_login.id "
+					+ "FROM cloc_economy, cloc_domestic, cloc_login "
+					+ "WHERE cloc_login.sess=? AND cloc_login.id = cloc_economy.id AND cloc_login.id = cloc_domestic.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -49,7 +50,7 @@ public class PolicyCrackdown extends HttpServlet
 				{
 					writer.append("<p>You do not have enough money!</p>");
 				}
-				else if(results.getInt("political") >= 96)
+				else if(results.getInt("government") <= 4)
 				{
 					writer.append("<p>There are no more lollygaggers to arrest!</p>");
 				}
@@ -59,17 +60,17 @@ public class PolicyCrackdown extends HttpServlet
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc "
-							+ "SET stability=stability+?, approval=approval+?, political=political+?, budget=budget-? "
-							+ "WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_domestic "
+						+ "SET stability=stability+?, approval=approval+?, government=government+?, budget=budget-? "
+						+ "WHERE cloc_economy.id=?");
 					update.setInt(1, PolicyConstants.GAIN_STABILITY_CRACKDOWN);
 					update.setInt(2, PolicyConstants.GAIN_APPROVAL_CRACKDOWN);
 					update.setInt(3, PolicyConstants.GAIN_GOVERNMENT_CRACKDOWN);
 					update.setInt(4, PolicyConstants.COST_CRACKDOWN);
-					update.setString(5, sess);
-					PreparedStatement update2 = conn.prepareStatement("UPDATE cloc SET stability=100 "
-							+ "WHERE stability>100 && sess=?");
-					update2.setString(1, sess);
+					update.setInt(5, results.getInt("cloc_login.id"));
+					PreparedStatement update2 = conn.prepareStatement("UPDATE cloc_domestic SET stability=100 "
+							+ "WHERE stability>100 && id=?");
+					update2.setInt(1, results.getInt("cloc_login.id"));
 					update.execute();
 					update2.execute();
 					conn.commit();

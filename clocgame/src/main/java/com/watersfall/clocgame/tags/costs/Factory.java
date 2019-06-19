@@ -32,7 +32,7 @@ public class Factory extends SimpleTagSupport
 			}
 			else
 			{
-				int costRm = PolicyMath.getFactoryRmCost(main.getRows()[0]);
+				int costRm = PolicyMath.getFactoryCoalCost(main.getRows()[0]);
 				int costOil = PolicyMath.getFactoryOilCost(main.getRows()[0]);
 				int costMg = PolicyMath.getFactoryMgCost(main.getRows()[0]);
 				out.print(costRm + " HTons of Raw Materials");

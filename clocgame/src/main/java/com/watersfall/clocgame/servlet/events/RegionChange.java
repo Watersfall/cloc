@@ -46,7 +46,7 @@ public class RegionChange extends HttpServlet
 			conn = database.getConnection();
 			ResultSet hasEvent, results;
 			PreparedStatement read = conn.prepareStatement("SELECT id FROM cloc_main "
-					+ "WHERE sess=? FOR UPDATE");
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -70,7 +70,7 @@ public class RegionChange extends HttpServlet
 					{
 						region = "Siberia";
 					}
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET region=? WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET region=? WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setString(1, region);
 					update.setString(2, sess);
 					PreparedStatement delete = conn.prepareStatement("DELETE FROM news WHERE eventId=? && receiver=? ORDER BY time DESC LIMIT 1");

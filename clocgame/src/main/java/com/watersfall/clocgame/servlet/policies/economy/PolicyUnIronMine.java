@@ -1,26 +1,25 @@
 package com.watersfall.clocgame.servlet.policies.economy;
 
 import com.watersfall.clocgame.database.Database;
+import org.apache.commons.dbcp2.BasicDataSource;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * @author Chris
  */
-@WebServlet(urlPatterns = "/policies/freemoneycommunist")
-public class PolicyFreeMoneyCommunist extends HttpServlet
+@WebServlet(urlPatterns = "/policies/unironmine")
+public class PolicyUnIronMine extends HttpServlet
 {
 
 	static BasicDataSource database = Database.getDataSource();
@@ -35,7 +34,7 @@ public class PolicyFreeMoneyCommunist extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget FROM cloc_economy, cloc_login "
+			PreparedStatement read = conn.prepareStatement("SELECT iron_mines FROM cloc_economy, cloc_login "
 					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
@@ -45,16 +44,19 @@ public class PolicyFreeMoneyCommunist extends HttpServlet
 			}
 			else
 			{
-				PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET budget=budget+1000, economic=economic-5 "
-						+ "WHERE sess=? AND cloc_login.id=cloc_economy.id");
-				update.setString(1, sess);
-				PreparedStatement update2 = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET economic=0 "
-						+ "WHERE sess=? AND cloc_login.id=cloc_economy.id && economic<0");
-				update2.setString(1, sess);
-				update.execute();
-				update2.execute();
-				conn.commit();
-				writer.append("<p>You raise taxes by 1% to fund your newest projects!</p>");
+				if(results.getInt("iron_mines") < 1)
+				{
+					writer.append("<p>You don't have any mines to close!</p>");
+				}
+				else
+				{
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET iron_mines=iron_mines-1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
+					update.setString(1, sess);
+					update.execute();
+					conn.commit();
+					writer.append("<p>You close down a mine, forcing thousands of workers into unemployment. You monster</p>");
+				}
 			}
 		}
 		catch(SQLException e)

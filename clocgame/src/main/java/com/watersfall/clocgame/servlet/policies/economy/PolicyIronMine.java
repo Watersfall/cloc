@@ -1,27 +1,26 @@
 package com.watersfall.clocgame.servlet.policies.economy;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocmath.math.PolicyMath;
+import org.apache.commons.dbcp2.BasicDataSource;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.watersfall.clocmath.math.PolicyMath;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * @author Chris
  */
-@WebServlet(urlPatterns = "/policies/mine")
-public class PolicyMine extends HttpServlet
+@WebServlet(urlPatterns = "/policies/ironmine")
+public class PolicyIronMine extends HttpServlet
 {
 
 	static BasicDataSource database = Database.getDataSource();
@@ -36,8 +35,8 @@ public class PolicyMine extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget, mines FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT budget, iron_mines, coal_mines FROM cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -53,8 +52,8 @@ public class PolicyMine extends HttpServlet
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET budget=budget-?, mines=mines+1 "
-							+ "WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET budget=budget-?, iron_mines=iron_mines+1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setInt(1, cost);
 					update.setString(2, sess);
 					update.execute();

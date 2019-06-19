@@ -1,26 +1,26 @@
 package com.watersfall.clocgame.servlet.policies.economy;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocmath.math.PolicyMath;
+import org.apache.commons.dbcp2.BasicDataSource;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * @author Chris
  */
-@WebServlet(urlPatterns = "/policies/unmine")
-public class PolicyUnmine extends HttpServlet
+@WebServlet(urlPatterns = "/policies/coalmine")
+public class PolicyCoalMine extends HttpServlet
 {
 
 	static BasicDataSource database = Database.getDataSource();
@@ -35,8 +35,8 @@ public class PolicyUnmine extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT mines FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT budget, iron_mines, coal_mines FROM cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -45,18 +45,20 @@ public class PolicyUnmine extends HttpServlet
 			}
 			else
 			{
-				if(1 > results.getInt("mines"))
+				int cost = PolicyMath.getMineCost(results);
+				if(cost > results.getInt("budget"))
 				{
-					writer.append("<p>You don't have any mines to close!</p>");
+					writer.append("<p>You do not have enough money!</p>");
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET mines=mines-1 "
-							+ "WHERE sess=?");
-					update.setString(1, sess);
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET budget=budget-?, coal_mines=coal_mines+1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
+					update.setInt(1, cost);
+					update.setString(2, sess);
 					update.execute();
 					conn.commit();
-					writer.append("<p>You close down a mine, forcing thousands of workers into unemployment. You monster</p>");
+					writer.append("<p>You dig a new iron mine!</p>");
 				}
 			}
 		}

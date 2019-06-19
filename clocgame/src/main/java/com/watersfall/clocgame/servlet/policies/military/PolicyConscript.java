@@ -38,7 +38,7 @@ public class PolicyConscript extends HttpServlet
 			conn = database.getConnection();
 			ResultSet resultsMain;
 			PreparedStatement read = conn.prepareStatement("SELECT army, training FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			resultsMain = read.executeQuery();
 			if(!resultsMain.first())
@@ -58,7 +58,7 @@ public class PolicyConscript extends HttpServlet
 				{
 					PreparedStatement update = conn.prepareStatement("UPDATE cloc "
 							+ "SET army=army+?, training=training-? "
-							+ "WHERE sess=?");
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setInt(1, PolicyConstants.GAIN_CONSCRIPT);
 					update.setInt(2, costTraining);
 					update.setString(3, sess);

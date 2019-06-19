@@ -35,8 +35,8 @@ public class PolicyUnindustrialize extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT industry FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT civilian_industry FROM cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -45,14 +45,14 @@ public class PolicyUnindustrialize extends HttpServlet
 			}
 			else
 			{
-				if(1 > results.getInt("industry"))
+				if(1 > results.getInt("civilian_industry"))
 				{
 					writer.append("<p>You don't have any factories to close!</p>");
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET industry=industry-1 "
-							+ "WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET civilian_industry=civilian_industry-1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setString(1, sess);
 					update.execute();
 					conn.commit();

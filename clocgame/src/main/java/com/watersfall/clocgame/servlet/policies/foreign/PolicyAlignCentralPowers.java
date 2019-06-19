@@ -36,8 +36,8 @@ public class PolicyAlignCentralPowers extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget, alignment FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT budget, alignment FROM cloc_economy, cloc_foreign, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id AND cloc_login.id = cloc_foreign.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -51,14 +51,15 @@ public class PolicyAlignCentralPowers extends HttpServlet
 				{
 					writer.append("<p>You do not have enough money!</p>");
 				}
-				else if(results.getInt("alignment") == 1)
+				else if(results.getInt("alignment") == 0)
 				{
 					writer.append("<p>You are already aligned with the Central Powers!</p>");
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET alignment=1, budget=budget-? "
-							+ "WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_foreign, cloc_economy, cloc_login " +
+							"SET alignment=0, budget=budget-? "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id AND cloc_login.id = cloc_foreign.id");
 					update.setInt(1, cost);
 					update.setString(2, sess);
 					update.execute();

@@ -28,7 +28,7 @@ public class PolicyUnNitrogenPlant extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		String sess = request.getSession().getId();
+		/*String sess = request.getSession().getId();
 		PrintWriter writer = response.getWriter();
 		Connection conn = null;
 		try
@@ -36,7 +36,7 @@ public class PolicyUnNitrogenPlant extends HttpServlet
 			conn = database.getConnection();
 			ResultSet results;
 			PreparedStatement read = conn.prepareStatement("SELECT nitrogenplant FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -51,8 +51,8 @@ public class PolicyUnNitrogenPlant extends HttpServlet
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET nitrogenplant=nitrogenplant-1 "
-							+ "WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET nitrogenplant=nitrogenplant-1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setString(1, sess);
 					update.execute();
 					conn.commit();
@@ -82,6 +82,6 @@ public class PolicyUnNitrogenPlant extends HttpServlet
 			{
 				//Ignore
 			}
-		}
+		}*/
 	}
 }

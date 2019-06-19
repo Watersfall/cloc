@@ -14,7 +14,7 @@ public class Util
 		for(int o = 0; o < resultSet.length; o++)
 		{
 			ResultSetMetaData md = resultSet[o].getMetaData();
-			for(int i = 0; i < md.getColumnCount(); i++)
+			for(int i = 1; i <= md.getColumnCount(); i++)
 			{
 				map.put(md.getColumnName(i), resultSet[o].getObject(i));
 			}

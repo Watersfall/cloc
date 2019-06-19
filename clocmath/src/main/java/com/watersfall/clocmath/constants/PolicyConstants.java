@@ -29,12 +29,128 @@ public class PolicyConstants
 	public static final int COST_NITROGEN_MULT_OIL = 75;
 	public static final int COST_NITROGEN_MULT_MG = 5;
 
+	public int getCOST_SHIP_SUBMARINE_MG()
+	{
+		return COST_SHIP_SUBMARINE_MG;
+	}
+
+	public int getCOST_MULT_SHIP_SUBMARINE_MG()
+	{
+		return COST_MULT_SHIP_SUBMARINE_MG;
+	}
+
+	public int getCOST_SHIP_SUBMARINE_OIL()
+	{
+		return COST_SHIP_SUBMARINE_OIL;
+	}
+
+	public int getCOST_MULT_SHIP_SUBMARINE_OIL()
+	{
+		return COST_MULT_SHIP_SUBMARINE_OIL;
+	}
+
+	public int getCOST_SHIP_DESTROYER_MG()
+	{
+		return COST_SHIP_DESTROYER_MG;
+	}
+
+	public int getCOST_MULT_SHIP_DESTROYER_MG()
+	{
+		return COST_MULT_SHIP_DESTROYER_MG;
+	}
+
+	public int getCOST_SHIP_DESTROYER_OIL()
+	{
+		return COST_SHIP_DESTROYER_OIL;
+	}
+
+	public int getCOST_MULT_SHIP_DESTROYER_OIL()
+	{
+		return COST_MULT_SHIP_DESTROYER_OIL;
+	}
+
+	public int getCOST_SHIP_CRUISER_MG()
+	{
+		return COST_SHIP_CRUISER_MG;
+	}
+
+	public int getCOST_MULT_SHIP_CRUISER_MG()
+	{
+		return COST_MULT_SHIP_CRUISER_MG;
+	}
+
+	public int getCOST_SHIP_CRUISER_OIL()
+	{
+		return COST_SHIP_CRUISER_OIL;
+	}
+
+	public int getCOST_MULT_SHIP_CRUISER_OIL()
+	{
+		return COST_MULT_SHIP_CRUISER_OIL;
+	}
+
+	public int getCOST_SHIP_BATTLESHIP_MG()
+	{
+		return COST_SHIP_BATTLESHIP_MG;
+	}
+
+	public int getCOST_MULT_SHIP_BATTLESHIP_MG()
+	{
+		return COST_MULT_SHIP_BATTLESHIP_MG;
+	}
+
+	public int getCOST_SHIP_BATTLESHIP_OIL()
+	{
+		return COST_SHIP_BATTLESHIP_OIL;
+	}
+
+	public int getCOST_MULT_SHIP_BATTLESHIP_OIL()
+	{
+		return COST_MULT_SHIP_BATTLESHIP_OIL;
+	}
+
+	public int getCOST_SHIP_TRANSPORT_MG()
+	{
+		return COST_SHIP_TRANSPORT_MG;
+	}
+
+	public int getCOST_MULT_SHIP_TRANSPORT_MG()
+	{
+		return COST_MULT_SHIP_TRANSPORT_MG;
+	}
+
+	public int getCOST_SHIP_TRANSPORT_OIL()
+	{
+		return COST_SHIP_TRANSPORT_OIL;
+	}
+
+	public static final int COST_SHIP_SUBMARINE_MG = 10;
+	public static final int COST_MULT_SHIP_SUBMARINE_MG = 1;
+	public static final int COST_SHIP_SUBMARINE_OIL = 10;
+	public static final int COST_MULT_SHIP_SUBMARINE_OIL = 1;
+	public static final int COST_SHIP_DESTROYER_MG = 10;
+	public static final int COST_MULT_SHIP_DESTROYER_MG = 1;
+	public static final int COST_SHIP_DESTROYER_OIL = 10;
+	public static final int COST_MULT_SHIP_DESTROYER_OIL = 1;
+	public static final int COST_SHIP_CRUISER_MG = 10;
+	public static final int COST_MULT_SHIP_CRUISER_MG = 1;
+	public static final int COST_SHIP_CRUISER_OIL = 10;
+	public static final int COST_MULT_SHIP_CRUISER_OIL = 1;
+	public static final int COST_SHIP_BATTLESHIP_MG = 10;
+	public static final int COST_MULT_SHIP_BATTLESHIP_MG = 1;
+	public static final int COST_SHIP_BATTLESHIP_OIL = 10;
+	public static final int COST_MULT_SHIP_BATTLESHIP_OIL = 1;
+	public static final int COST_SHIP_TRANSPORT_MG = 10;
+	public static final int COST_MULT_SHIP_TRANSPORT_MG = 1;
+	public static final int COST_SHIP_TRANSPORT_OIL = 10;
+	public static final int COST_MULT_SHIP_TRANSPORT_OIL = 1;
+
 	public static final int GAIN_STABILITY_CRACKDOWN = 5;
 	public static final int GAIN_APPROVAL_CRACKDOWN = -5;
-	public static final int GAIN_GOVERNMENT_CRACKDOWN = 5;
+	public static final int GAIN_GOVERNMENT_CRACKDOWN = -5;
 	public static final int GAIN_STABILITY_FREE = -5;
 	public static final int GAIN_APPROVAL_FREE = 5;
-	public static final int GAIN_GOVERNMENT_FREE = -5;
+	public static final int GAIN_GOVERNMENT_FREE = 5;
 	public static final int GAIN_CONSCRIPT = 2;
 	public static final int GAIN_TRAIN = 5;
 

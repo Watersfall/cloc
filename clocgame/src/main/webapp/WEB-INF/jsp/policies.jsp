@@ -66,16 +66,30 @@
                 </tr>
                 <tr>
                     <td>
-                        Dig Mine
+                        Dig Iron Mine
                     </td>
                     <td>
-                        Dig a new mine, increasing raw material output by 1 Hton per turn
+                        Dig a new mine, increasing iron output by 1 Hton per turn
                     </td>
                     <td>
                         $<cloc:mine main="${result_economy}"/>k
                     </td>
                     <td>
-                        <button class="policyButton" type="submit" onclick="policy('mine')">Mine</button>
+                        <button class="policyButton" type="submit" onclick="policy('ironmine')">Mine</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Excavate Coal Mine
+                    </td>
+                    <td>
+                        Dig a new mine, increasing coal output by 1 Hton per turn
+                    </td>
+                    <td>
+                        $<cloc:mine main="${result_economy}"/>k
+                    </td>
+                    <td>
+                        <button class="policyButton" type="submit" onclick="policy('coalmine')">Mine</button>
                     </td>
                 </tr>
                 <tr>
@@ -125,7 +139,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Close Mine
+                        Close Iron Mine
                     </td>
                     <td>
                         Close down a mine. Reduces max employment, don't know why you'd wanna do that.
@@ -134,7 +148,21 @@
                         Some Families' Income
                     </td>
                     <td>
-                        <button class="policyButton" type="submit" onclick="policy('unmine')">Close</button>
+                        <button class="policyButton" type="submit" onclick="policy('unironmine')">Close</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Close Coal Mine
+                    </td>
+                    <td>
+                        Close down a mine. Reduces max employment, don't know why you'd wanna do that.
+                    </td>
+                    <td>
+                        Some Families' Income
+                    </td>
+                    <td>
+                        <button class="policyButton" type="submit" onclick="policy('uncoalmine')">Close</button>
                     </td>
                 </tr>
                 <tr>
@@ -273,30 +301,58 @@
             <c:when test="${param['policies'] == 'Military'}">
                 <tr>
                     <td>
-                        Conscript
+                        Build Submarine
                     </td>
                     <td>
-                        Throw more men into your army at the cost of manpower and overall training.
+                        Build a submarine to augment your glorious navy!
                     </td>
                     <td>
-                        Reduction in Manpower, Training
+                        <cloc:ship main="${result_military}" type="ss"/>
                     </td>
                     <td>
-                        <button class="policyButton" type="submit" onclick="policy('conscript')">Conscript</button>
+                        <button class="policyButton" type="submit" onclick="policy('buildship?ship=ss')">Celebrate</button>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Train
+                        Build Destroyer
                     </td>
                     <td>
-                        Train your army
+                        Build a destroyer to augment your glorious navy!
                     </td>
                     <td>
-                        $<cloc:training main="${result_military}"/>k
+                        <cloc:ship main="${result_military}" type="dd"/>
                     </td>
                     <td>
-                        <button class="policyButton" type="submit" onclick="policy('train')">Train</button>
+                        <button class="policyButton" type="submit" onclick="policy('buildship?ship=dd')">Celebrate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Build Cruiser
+                    </td>
+                    <td>
+                        Build a cruiser to augment your glorious navy!
+                    </td>
+                    <td>
+                        <cloc:ship main="${result_military}" type="cl"/>
+                    </td>
+                    <td>
+                        <button class="policyButton" type="submit" onclick="policy('buildship?ship=cl')">Celebrate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Build Battleship
+                    </td>
+                    <td>
+                        Build a battleship to augment your glorious navy!
+                    </td>
+                    <td>
+                        <cloc:ship main="${result_military}" type="bb"/>
+                    </td>
+                    <td>
+                        <button class="policyButton" type="submit" onclick="policy('buildship?ship=bb')">Celebrate</button>
                     </td>
                 </tr>
             </c:when>

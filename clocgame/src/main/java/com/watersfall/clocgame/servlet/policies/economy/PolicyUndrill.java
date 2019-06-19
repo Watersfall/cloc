@@ -35,8 +35,8 @@ public class PolicyUndrill extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT wells FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT oil_wells FROM cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -45,14 +45,14 @@ public class PolicyUndrill extends HttpServlet
 			}
 			else
 			{
-				if(1 > results.getInt("wells"))
+				if(1 > results.getInt("oil_wells"))
 				{
 					writer.append("<p>You don't have any wells to close!</p>");
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET wells=wells-1 "
-							+ "WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET oil_wells=oil_wells-1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setString(1, sess);
 					update.execute();
 					conn.commit();

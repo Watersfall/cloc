@@ -218,7 +218,7 @@
                 </div>
                 <ul>
                     <li>
-                        <a href="#" onclick="showHidePolicies()">
+                        <a style="cursor: pointer;" onclick="showHidePolicies()">
                             <div class="headerTab">
                                 <p>Policies</p>
                             </div>
@@ -255,7 +255,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#" onclick="showHideWorld()">
+                        <a style="cursor: pointer;" onclick="showHideWorld()">
                             <div class="headerTab">
                                 <p>Realpolitik</p>
                             </div>

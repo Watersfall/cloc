@@ -4,21 +4,32 @@ import com.watersfall.clocmath.constants.PolicyConstants;
 import com.watersfall.clocmath.util.Util;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map;
 
 public class PolicyMath
 {
 	
-	public static int getFactoryRmCost(ResultSet results)
+	public static int getFactoryCoalCost(ResultSet results)
 	{
 		try
 		{
 			Map<String, Object> map = Util.createMap(results);
-			return getFactoryRmCost(map);
+			return getFactoryCoalCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getFactoryIronCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getFactoryIronCost(map);
 		}
 		catch(SQLException e)
 		{
@@ -97,7 +108,125 @@ public class PolicyMath
 		}
 	}
 
-	public static int getFactoryRmCost(Map results)
+	public static int getSubmarineOilCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getSubmarineOilCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getSubmarineMgCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getSubmarineMgCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getDestroyerOilCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getDestroyerOilCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getDestroyerMgCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getDestroyerMgCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getCruiserOilCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getCruiserOilCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getCruiserMgCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getCruiserMgCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getBattleshipOilCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getBattleshipOilCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getBattleshipMgCost(ResultSet results)
+	{
+		try
+		{
+			Map<String, Object> map = Util.createMap(results);
+			return getBattleshipMgCost(map);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getFactoryCoalCost(Map results)
+	{
+		int mult = Integer.parseInt(results.get("civilian_industry").toString()) + Integer.parseInt(results.get("military_industry").toString());
+		return PolicyConstants.COST_FACTORY_BASE_RM + (PolicyConstants.COST_FACTORY_MULT_RM * mult);
+	}
+
+	public static int getFactoryIronCost(Map results)
 	{
 		int mult = Integer.parseInt(results.get("civilian_industry").toString()) + Integer.parseInt(results.get("military_industry").toString());
 		return PolicyConstants.COST_FACTORY_BASE_RM + (PolicyConstants.COST_FACTORY_MULT_RM * mult);
@@ -130,5 +259,53 @@ public class PolicyMath
 	{
 		int mult = PolicyConstants.COST_OIL_MULT * Integer.parseInt(results.get("oil_wells").toString());
 		return mult + PolicyConstants.COST_OIL_BASE;
+	}
+
+	public static int getSubmarineOilCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_SUBMARINE_OIL * Integer.parseInt(results.get("submarines").toString());
+		return mult + PolicyConstants.COST_SHIP_SUBMARINE_OIL;
+	}
+
+	public static int getSubmarineMgCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_SUBMARINE_MG * Integer.parseInt(results.get("submarines").toString());
+		return mult + PolicyConstants.COST_SHIP_SUBMARINE_MG;
+	}
+
+	public static int getDestroyerOilCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_DESTROYER_OIL * Integer.parseInt(results.get("destroyers").toString());
+		return mult + PolicyConstants.COST_SHIP_DESTROYER_OIL;
+	}
+
+	public static int getDestroyerMgCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_DESTROYER_MG * Integer.parseInt(results.get("destroyers").toString());
+		return mult + PolicyConstants.COST_SHIP_DESTROYER_MG;
+	}
+
+	public static int getCruiserOilCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_CRUISER_OIL * Integer.parseInt(results.get("cruisers").toString());
+		return mult + PolicyConstants.COST_SHIP_CRUISER_OIL;
+	}
+
+	public static int getCruiserMgCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_CRUISER_MG * Integer.parseInt(results.get("cruisers").toString());
+		return mult + PolicyConstants.COST_SHIP_CRUISER_MG;
+	}
+
+	public static int getBattleshipOilCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_BATTLESHIP_OIL * Integer.parseInt(results.get("battleships").toString());
+		return mult + PolicyConstants.COST_SHIP_BATTLESHIP_OIL;
+	}
+
+	public static int getBattleshipMgCost(Map results)
+	{
+		int mult = PolicyConstants.COST_MULT_SHIP_BATTLESHIP_MG * Integer.parseInt(results.get("battleships").toString());
+		return mult + PolicyConstants.COST_SHIP_BATTLESHIP_MG;
 	}
 }

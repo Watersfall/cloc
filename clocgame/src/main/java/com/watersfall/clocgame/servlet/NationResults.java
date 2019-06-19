@@ -34,7 +34,7 @@ public class NationResults extends HttpServlet
 					: ((param = request.getParameter("sendmg")) != null) ? "mg"
 					: ((param = request.getParameter("sendcash")) != null) ? "budget"
 					: null;
-			PreparedStatement sender = conn.prepareStatement("SELECT " + type + ", id FROM cloc WHERE sess=? FOR UPDATE");
+			PreparedStatement sender = conn.prepareStatement("SELECT " + type + ", id FROM cloc WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			sender.setString(1, sess);
 			PreparedStatement reciever = conn.prepareStatement("SELECT " + type + ", id FROM cloc WHERE id=? FOR UPDATE");
 			reciever.setInt(1, id);
@@ -62,7 +62,7 @@ public class NationResults extends HttpServlet
 			}
 			else
 			{
-				PreparedStatement send = conn.prepareStatement("UPDATE cloc SET " + type + "=" + type + "-? WHERE sess=?");
+				PreparedStatement send = conn.prepareStatement("UPDATE cloc SET " + type + "=" + type + "-? WHERE sess=? AND cloc_login.id = cloc_economy.id");
 				send.setInt(1, Integer.parseInt(param));
 				send.setString(2, sess);
 				PreparedStatement recieve = conn.prepareStatement("UPDATE cloc SET " + type + "=" + type + "+? WHERE id=?");

@@ -36,8 +36,8 @@ public class PolicyDrill extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT budget, wells FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT budget, oil_wells FROM cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id = cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -53,8 +53,8 @@ public class PolicyDrill extends HttpServlet
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc SET budget=budget-?, wells=wells+1 "
-							+ "WHERE sess=?");
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET budget=budget-?, oil_wells=oil_wells+1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
 					update.setInt(1, cost);
 					update.setString(2, sess);
 					update.execute();

@@ -36,8 +36,8 @@ public class PolicyIndustrialize extends HttpServlet
 		{
 			conn = database.getConnection();
 			ResultSet results;
-			PreparedStatement read = conn.prepareStatement("SELECT industry, milindustry, rm, oil, mg FROM cloc "
-					+ "WHERE sess=? FOR UPDATE");
+			PreparedStatement read = conn.prepareStatement("SELECT civilian_industry, military_industry, coal, iron, oil, manufactured FROM cloc_economy, cloc_login "
+					+ "WHERE sess=? AND cloc_login.id = cloc_economy.id FOR UPDATE");
 			read.setString(1, sess);
 			results = read.executeQuery();
 			if(!results.first())
@@ -46,30 +46,36 @@ public class PolicyIndustrialize extends HttpServlet
 			}
 			else
 			{
-				int costRm = PolicyMath.getFactoryRmCost(results);
+				int costCoal = PolicyMath.getFactoryCoalCost(results);
+				int costIron = PolicyMath.getFactoryIronCost(results);
 				int costOil = PolicyMath.getFactoryOilCost(results);
 				int costMg = PolicyMath.getFactoryMgCost(results);
-				if(results.getInt("rm") < costRm)
+				if(results.getInt("coal") < costCoal)
 				{
-					writer.append("<p>You do not have enough raw material!</p>");
+					writer.append("<p>You do not have enough coal!</p>");
+				}
+				else if(results.getInt("iron") < costOil)
+				{
+					writer.append("<p>You do not have enough iron!</p>");
 				}
 				else if(results.getInt("oil") < costOil)
 				{
 					writer.append("<p>You do not have enough oil!</p>");
 				}
-				else if(results.getInt("mg") < costMg)
+				else if(results.getInt("manufactured") < costMg)
 				{
 					writer.append("<p>You do not have enough manufactured goods!</p>");
 				}
 				else
 				{
-					PreparedStatement update = conn.prepareStatement("UPDATE cloc "
-							+ "SET rm=rm-?, oil=oil-?, mg=mg-?, industry=industry+1 "
-							+ "WHERE sess=?");
-					update.setInt(1, costRm);
-					update.setInt(2, costOil);
-					update.setInt(3, costMg);
-					update.setString(4, sess);
+					PreparedStatement update = conn.prepareStatement("UPDATE cloc_economy, cloc_login "
+							+ "SET coal=coal-?, iron=iron-?, oil=oil-?, manufactured=manufactured-?, civilian_industry=civilian_industry+1 "
+							+ "WHERE sess=? AND cloc_login.id = cloc_economy.id");
+					update.setInt(1, costCoal);
+					update.setInt(2, costIron);
+					update.setInt(3, costOil);
+					update.setInt(4, costMg);
+					update.setString(5, sess);
 					update.execute();
 					conn.commit();
 					writer.append("<p>Your farmers flock to the city for a new life!</p>");
