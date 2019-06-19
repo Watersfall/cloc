@@ -57,13 +57,13 @@ ${nation_map.putAll(nation_military.rows[0])}
                 <p><c:out value="${send}"/></p>
             </c:if>
             <div class="nation">
-                <h1><c:out value="${nation_cosmetic.rows[0].nationTitle}"/><br><c:out value="${nation_cosmetic.rows[0].nation}"/></h1>
+                <h1><c:out value="${nation_cosmetic.rows[0].nation_title}"/> <br> of <br><c:out value="${nation_cosmetic.rows[0].nation_name}"/></h1>
                 <img class="flag" src="https://imgur.com/<c:out value="${nation_cosmetic.rows[0].flag}"/>" alt="flag">
                 <p><c:out value="${nation_cosmetic.rows[0].description}"/></p>
-                <img class="leader" src="https://imgur.com/<c:out value="${nation_cosmetic.rows[0].leader}"/>" alt="flag">
-                <h1><c:out value="${nation_cosmetic.rows[0].leaderTitle}"/>: <c:out value="${nation_cosmetic.rows[0].username}"/></h1>
+                <img class="leader" src="https://imgur.com/<c:out value="${nation_cosmetic.rows[0].portrait}"/>" alt="flag">
+                <h1><c:out value="${nation_cosmetic.rows[0].leader_title}"/>: <c:out value="${nation_cosmetic.rows[0].username}"/></h1>
             </div>
-            <h1>Government</h1>
+            <h1>Domestic</h1>
             <table id="nation">
                 <tr>
                     <td>Approval</td>
@@ -79,30 +79,15 @@ ${nation_map.putAll(nation_military.rows[0])}
                 </tr>
                 <tr>
                     <td>Land</td>
-                    <td><c:out value="${nation_domestic.rows[0].land}"/> km<sup>2</sup></td>
+                    <td><c:out value="${nation_domestic.rows[0].land}"/>km<sup>2</sup></td>
                 </tr>
                 <tr>
                     <td>Rebel Threat</td>
                     <td><cloc:rebels value="${nation_domestic.rows[0].rebels}"/></td>
                 </tr>
-            </table>
-            <h1>Domestic</h1>
-            <table id="nation">
                 <tr>
                     <td>Population</td>
-                    <td><c:out value="${nation_domestic.rows[0].asian}"/> People</td>
-                </tr>
-                <tr>
-                    <td>Quality of Life</td>
-                    <td><c:out value="${nation_domestic.rows[0].qol}"/>%</td>
-                </tr>
-                <tr>
-                    <td>Healthcare</td>
-                    <td><c:out value="${nation_domestic.rows[0].healthcare}"/>%</td>
-                </tr>
-                <tr>
-                    <td>Literacy</td>
-                    <td><c:out value="${nation_domestic.rows[0].literacy}"/>%</td>
+                    <td><c:out value="${nation_domestic.rows[0].population}"/> People</td>
                 </tr>
                 <tr>
                     <td>Universities</td>
@@ -124,19 +109,19 @@ ${nation_map.putAll(nation_military.rows[0])}
                     <td>$<c:out value="${nation_economy.rows[0].growth}"/> Million per Month</td>
                 </tr>
                 <tr>
-                    <td>Industry</td>
-                    <td><c:out value="${nation_economy.rows[0].industry}"/> Factories</td>
-                <tr>
-                    <td>Discovered Oil Reserves</td>
-                    <td><c:out value="${nation_economy.rows[0].reserves}"/> Mmbls</td>
-                </tr>
+                    <td>Civilian Industry</td>
+                    <td><c:out value="${nation_economy.rows[0].civilian_industry}"/> Factories</td>
                 <tr>
                     <td>Oil Production</td>
-                    <td><c:out value="${nation_economy.rows[0].wells}"/> Mmbls per Month</td>
+                    <td><c:out value="${nation_economy.rows[0].oil_wells}"/> Mmbls per Month</td>
                 </tr>
                 <tr>
-                    <td>Raw Material Production</td>
-                    <td><c:out value="${nation_economy.rows[0].mines}"/> Hundred Tons per Month</td>
+                    <td>Iron Production</td>
+                    <td><c:out value="${nation_economy.rows[0].iron_mines}"/> Hundred Tons per Month</td>
+                </tr>
+                <tr>
+                    <td>Coal Production</td>
+                    <td><c:out value="${nation_economy.rows[0].coal_mines}"/> Hundred Tons per Month</td>
                 </tr>
             </table>
             <h1>Foreign</h1>
@@ -146,35 +131,75 @@ ${nation_map.putAll(nation_military.rows[0])}
                     <td><c:out value="${nation_foreign.rows[0].region}"/></td>
                 </tr>
                 <tr>
-                    <td>Alliance</td>
+                    <td>Official Alignment</td>
+                    <td><cloc:alignment value="${nation_foreign.rows[0].alignment}"/></td>
+                </tr>
+                <tr>
+                    <td>Treaty Membership</td>
                     <td><c:out value="${nation_foreign.rows[0].alliance}"/></td>
                 </tr>
             </table>
             <h1>Military</h1>
             <table id="nation">
+                <caption>Army</caption>
                 <tr>
-                    <td>Army Size</td>
-                    <td><c:out value="${nation_military.rows[0].army}"/>k Troops</td>
+                    <th>Region</th>
+                    <th>Size</th>
+                    <th>Training</th>
+                    <th>Equipment</th>
+                    <th>Reinforce</th>
                 </tr>
                 <tr>
-                    <td>Manpower</td>
-                    <td><cloc:manpower main="${nation_map}"/></td>
+                    <td>Home</td>
+                    <td><c:out value="${nation_military.rows[0].army_home}"/>k Active Personnel</td>
+                    <td><c:out value="${nation_military.rows[0].training_home}"/></td>
+                    <td><c:out value="${nation_military.rows[0].weapons_home}"/></td>
+                    <td><c:out value="${nation_military.rows[0].war_protection}"/></td>
+                </tr>
+                <c:forEach var="i" items="${nation_armies.rows}">
+                    <tr>
+                        <td>${i.region}</td>
+                        <td>${i.army}</td>
+                        <td>${i.training}</td>
+                        <td>${i.weapons}</td>
+                        <td>${i.id}</td>
+                    </tr>
+                </c:forEach>
+            </table>
+            <br>
+            <table id="nation">
+                <caption>Navy</caption>
+                <tr>
+                    <td>Destroyers</td>
+                    <td><c:out value="${nation_military.rows[0].destroyers}"/></td>
                 </tr>
                 <tr>
-                    <td>Equipment</td>
-                    <td><c:out value="${nation_military.rows[0].tech}"/> Guns</td>
+                    <td>Cruisers</td>
+                    <td><c:out value="${nation_military.rows[0].cruisers}"/></td>
                 </tr>
                 <tr>
-                    <td>Training</td>
-                    <td><c:out value="${nation_military.rows[0].training}"/>/100</td>
+                    <td>Battleships</td>
+                    <td><c:out value="${nation_military.rows[0].battleships}"/></td>
                 </tr>
                 <tr>
-                    <td>Airforce</td>
-                    <td><c:out value="${nation_military.rows[0].airforce}"/> Planes</td>
+                    <td>Submarines</td>
+                    <td><c:out value="${nation_military.rows[0].submarines}"/></td>
                 </tr>
                 <tr>
-                    <td>Navy</td>
-                    <td><c:out value="${nation_military.rows[0].navy}"/> Ships</td>
+                    <td>Troop Transports</td>
+                    <td><c:out value="${nation_military.rows[0].transports}"/></td>
+                </tr>
+            </table>
+            <br>
+            <table id="nation">
+                <caption>Airforce</caption>
+                <tr>
+                    <td>Fighters</td>
+                    <td><i>Unknown</i></td>
+                </tr>
+                <tr>
+                    <td>Zeppelins</td>
+                    <td><i>Unknown</i></td>
                 </tr>
             </table>
             <h1>Diplomacy</h1>

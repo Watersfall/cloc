@@ -15,7 +15,7 @@
             <img class="leader" src="<c:out value="https://imgur.com/${result_cosmetic.rows[0].portrait}"/>" alt="flag">
             <h1><c:out value="${result_cosmetic.rows[0].leader_title}"/>: <c:out value="${result_cosmetic.rows[0].username}"/></h1>
         </div>
-        <h1>Government</h1>
+        <h1>Domestic</h1>
         <table id="nation">
             <tr>
                 <td>Government</td>
@@ -49,7 +49,7 @@
             </tr>
             <tr>
                 <td>Land</td>
-                <td><c:out value="${result_domestic.rows[0].land}"/> km<sup>2</sup></td>
+                <td><c:out value="${result_domestic.rows[0].land}"/>km<sup>2</sup></td>
             </tr>
             <tr>
                 <td>Rebel Threat</td>
@@ -64,20 +64,9 @@
                     </div>
                 </td>
             </tr>
-        </table>
-        <h1>Domestic</h1>
-        <table id="nation">
             <tr>
                 <td>Population</td>
                 <td><cloc:popGrowth data="${result_map}"/></td>
-            </tr>
-            <tr>
-                <td>Healthcare</td>
-                <td><c:out value="${result_domestic.rows[0].healthcare}"/>%</td>
-            </tr>
-            <tr>
-                <td>Literacy</td>
-                <td><c:out value="${result_domestic.rows[0].literacy}"/>%</td>
             </tr>
             <tr>
                 <td>Universities</td>
@@ -99,39 +88,39 @@
                 <td>$<c:out value="${result_economy.rows[0].growth}"/> Million per Month</td>
             </tr>
             <tr>
-                <td>Industry</td>
-                <td><c:out value="${result_economy.rows[0].industry}"/> Factories</td>
+                <td>Civilian Industry</td>
+                <td><c:out value="${result_economy.rows[0].civilian_industry}"/> Factories</td>
+            </tr>
+            <tr>
+                <td>Military Industry</td>
+                <td><c:out value="${result_economy.rows[0].military_industry}"/> Factories</td>
             </tr>
             <tr>
                 <td>Manufactured Goods Stockpile</td>
-                <td><c:out value="${result_economy.rows[0].mg}"/> Tons</td>
-            <tr>
-                <td>Discovered Oil Reserves</td>
-                <td><c:out value="${result_economy.rows[0].reserves}"/> Mmbls</td>
-            </tr>
+                <td><c:out value="${result_economy.rows[0].manufactured}"/> Tons</td>
             <tr>
                 <td>Oil Production</td>
-                <td><c:out value="${result_economy.rows[0].wells}"/> Mmbls per Month</td>
+                <td><c:out value="${result_economy.rows[0].oil_wells}"/> Mmbls per Month</td>
             </tr>
             <tr>
                 <td>Oil Stockpile</td>
                 <td><c:out value="${result_economy.rows[0].oil}"/> Mmbls</td>
             </tr>
             <tr>
-                <td>Raw Material Production</td>
-                <td><c:out value="${result_economy.rows[0].mines}"/> Hundred Tons per Month</td>
+                <td>Iron Production</td>
+                <td><c:out value="${result_economy.rows[0].iron_mines}"/> Hundred Tons per Month</td>
             </tr>
             <tr>
-                <td>Raw Material Stockpile</td>
-                <td><c:out value="${result_economy.rows[0].rm}"/> Hundred Tons</td>
+                <td>Iron Stockpile</td>
+                <td><c:out value="${result_economy.rows[0].iron}"/> Hundred Tons</td>
             </tr>
             <tr>
-                <td>Nitrogen Plants</td>
-                <td><c:out value="${result_economy.rows[0].nitrogenplant}"/> Plants</td>
+                <td>Coal Production</td>
+                <td><c:out value="${result_economy.rows[0].coal_mines}"/> Hundred Tons per Month</td>
             </tr>
             <tr>
-                <td>Ammonia Stockpile</td>
-                <td><c:out value="${result_economy.rows[0].nitrogen}"/> Tons</td>
+                <td>Coal Stockpile</td>
+                <td><c:out value="${result_economy.rows[0].coal}"/> Hundred Tons</td>
             </tr>
             <tr>
                 <td>Food</td>
@@ -145,7 +134,11 @@
                 <td><c:out value="${result_foreign.rows[0].region}"/></td>
             </tr>
             <tr>
-                <td>Alliance</td>
+                <td>Official Alignment</td>
+                <td><cloc:alignment value="${result_foreign.rows[0].alignment}"/></td>
+            </tr>
+            <tr>
+                <td>Treaty Membership</td>
                 <td><c:out value="${result_foreign.rows[0].alliance}"/></td>
             </tr>
         </table>
