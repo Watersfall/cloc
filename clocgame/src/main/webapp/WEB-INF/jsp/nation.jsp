@@ -214,11 +214,21 @@ ${nation_map.putAll(nation_military.rows[0])}
                     </td>
                 </tr>
                 <tr>
-                    <td>Send Raw Material</td>
+                    <td>Send Iron</td>
                     <td>
-                        <input type="number" id="amountRm" name="sendrm">
+                        <input type="number" id="amountIron" name="sendiron">
                         <button type="submit"
-                                onclick="sendRm(document.getElementById('amountRm').value, <c:out value="${nation}"/>);">
+                                onclick="sendIron(document.getElementById('amountIron').value, <c:out value="${nation}"/>);">
+                            Send
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Send Coal</td>
+                    <td>
+                        <input type="number" id="amountCoal" name="sendcoal">
+                        <button type="submit"
+                                onclick="sendCoal(document.getElementById('amountCoal').value, <c:out value="${nation}"/>);">
                             Send
                         </button>
                     </td>

@@ -30,42 +30,43 @@ public class NationResults extends HttpServlet
 			conn = Database.getDataSource().getConnection();
 			int id = Integer.parseInt(request.getParameter("id"));
 			type = ((param = request.getParameter("sendoil")) != null) ? "oil"
-					: ((param = request.getParameter("sendrm")) != null) ? "rm"
-					: ((param = request.getParameter("sendmg")) != null) ? "mg"
+					: ((param = request.getParameter("sendiron")) != null) ? "iron"
+					: ((param = request.getParameter("sendcoal")) != null) ? "coal"
+					: ((param = request.getParameter("sendmg")) != null) ? "manufactured"
 					: ((param = request.getParameter("sendcash")) != null) ? "budget"
 					: null;
-			PreparedStatement sender = conn.prepareStatement("SELECT " + type + ", id FROM cloc WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
+			PreparedStatement sender = conn.prepareStatement("SELECT " + type + ", cloc_economy.id FROM cloc_economy, cloc_login WHERE sess=? AND cloc_login.id=cloc_economy.id FOR UPDATE");
 			sender.setString(1, sess);
-			PreparedStatement reciever = conn.prepareStatement("SELECT " + type + ", id FROM cloc WHERE id=? FOR UPDATE");
+			PreparedStatement reciever = conn.prepareStatement("SELECT " + type + ", id FROM cloc_economy WHERE id=? FOR UPDATE");
 			reciever.setInt(1, id);
 			ResultSet resultsSender = sender.executeQuery();
 			ResultSet resultsReciever = reciever.executeQuery();
 			if(!resultsSender.first())
 			{
-				writer.print("<p>You must be logged in to do this!</p>");
+				writer.append("<p>You must be logged in to do this!</p>");
 			}
 			else if(!resultsReciever.first())
 			{
-				writer.print("<p>Nation with that id does not exist!</p>");
+				writer.append("<p>Nation with that id does not exist!</p>");
 			}
 			else if(resultsSender.getInt("id") == resultsReciever.getInt("id"))
 			{
-				writer.print("<p>You appreciate the gift to yourself!</p>");
+				writer.append("<p>You appreciate the gift to yourself!</p>");
 			}
 			else if(Integer.parseInt(param) <= 0)
 			{
-				writer.print("<p>Cannot send 0 or less!</p>");
+				writer.append("<p>Cannot send 0 or less!</p>");
 			}
 			else if(resultsSender.getInt(type) < Integer.parseInt(param))
 			{
-				writer.print("<p>You do not have enough to send!</p>");
+				writer.append("<p>You do not have enough to send!</p>");
 			}
 			else
 			{
-				PreparedStatement send = conn.prepareStatement("UPDATE cloc SET " + type + "=" + type + "-? WHERE sess=? AND cloc_login.id = cloc_economy.id");
+				PreparedStatement send = conn.prepareStatement("UPDATE cloc_economy, cloc_login SET " + type + "=" + type + "-? WHERE sess=? AND cloc_login.id = cloc_economy.id");
 				send.setInt(1, Integer.parseInt(param));
 				send.setString(2, sess);
-				PreparedStatement recieve = conn.prepareStatement("UPDATE cloc SET " + type + "=" + type + "+? WHERE id=?");
+				PreparedStatement recieve = conn.prepareStatement("UPDATE cloc_economy SET " + type + "=" + type + "+? WHERE id=?");
 				recieve.setInt(1, Integer.parseInt(param));
 				recieve.setInt(2, id);
 				send.execute();
