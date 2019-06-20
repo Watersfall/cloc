@@ -43,6 +43,7 @@ function sendIron(amount, id) {
     };
 }
 
+
 function sendMg(amount, id) {
     document.getElementById('resultsContainer').style.visibility = "visible";
     document.getElementById("result").innerHTML = "<p>Loading...</p>";
