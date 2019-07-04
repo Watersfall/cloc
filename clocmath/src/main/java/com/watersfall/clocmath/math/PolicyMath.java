@@ -10,7 +10,7 @@ import java.util.Map;
 public class PolicyMath
 {
 	
-	public static int getFactoryCoalCost(ResultSet results)
+	public static int getFactoryCoalCost(ResultSet... results)
 	{
 		try
 		{
@@ -24,7 +24,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getFactoryIronCost(ResultSet results)
+	public static int getFactoryIronCost(ResultSet... results)
 	{
 		try
 		{
@@ -38,7 +38,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getFactoryOilCost(ResultSet results)
+	public static int getFactoryOilCost(ResultSet... results)
 	{
 		try
 		{
@@ -52,7 +52,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getFactoryMgCost(ResultSet results)
+	public static int getFactoryMgCost(ResultSet... results)
 	{
 		try
 		{
@@ -66,7 +66,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getTrainingCost(ResultSet results)
+	public static int getTrainingCost(ResultSet... results)
 	{
 		try
 		{
@@ -80,7 +80,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getMineCost(ResultSet results)
+	public static int getMineCost(ResultSet... results)
 	{
 		try
 		{
@@ -94,7 +94,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getWellCost(ResultSet results)
+	public static int getWellCost(ResultSet... results)
 	{
 		try
 		{
@@ -108,7 +108,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getSubmarineOilCost(ResultSet results)
+	public static int getSubmarineOilCost(ResultSet... results)
 	{
 		try
 		{
@@ -122,7 +122,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getSubmarineMgCost(ResultSet results)
+	public static int getSubmarineMgCost(ResultSet... results)
 	{
 		try
 		{
@@ -136,7 +136,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getDestroyerOilCost(ResultSet results)
+	public static int getDestroyerOilCost(ResultSet... results)
 	{
 		try
 		{
@@ -150,7 +150,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getDestroyerMgCost(ResultSet results)
+	public static int getDestroyerMgCost(ResultSet... results)
 	{
 		try
 		{
@@ -164,7 +164,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getCruiserOilCost(ResultSet results)
+	public static int getCruiserOilCost(ResultSet... results)
 	{
 		try
 		{
@@ -178,7 +178,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getCruiserMgCost(ResultSet results)
+	public static int getCruiserMgCost(ResultSet... results)
 	{
 		try
 		{
@@ -192,7 +192,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getBattleshipOilCost(ResultSet results)
+	public static int getBattleshipOilCost(ResultSet... results)
 	{
 		try
 		{
@@ -206,7 +206,7 @@ public class PolicyMath
 		}
 	}
 
-	public static int getBattleshipMgCost(ResultSet results)
+	public static int getBattleshipMgCost(ResultSet... results)
 	{
 		try
 		{
