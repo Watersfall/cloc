@@ -7,13 +7,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NationCities extends NationBase
 {
 
-	private @Getter
-	ArrayList<City> cities;
+	private @Getter HashMap<Integer, City> cities;
 
 	public NationCities(Connection connection, int id, boolean safe) throws SQLException
 	{
@@ -36,24 +35,14 @@ public class NationCities extends NationBase
 		else
 		{
 			results.beforeFirst();
-			this.cities = new ArrayList<>();
+			this.cities = new HashMap<>();
 			this.connection = connection;
 			this.safe = safe;
 			this.id = id;
 			while(results.next())
 			{
-				cities.add(new City(connection, results.getInt(2), safe));
+				cities.put(results.getInt(2), new City(connection, results.getInt(2), safe));
 			}
 		}
 	}
-
-	public void updateAll() throws SQLException
-	{
-		results.beforeFirst();
-		while(results.next())
-		{
-			results.updateRow();
-		}
-	}
-
 }

@@ -19,8 +19,8 @@
         <table id="nation">
             <c:forEach var="i" items="${home.cities.cities}">
                 <tr>
-                    <td>${i.name}</td>
-                    <td><a href="cities?id=${i.id}">View</a></td>
+                    <td>${i.value.name}</td>
+                    <td><a href="${pageContext.request.contextPath}/cities.jsp?id=${i.key}">View</a></td>
                 </tr>
             </c:forEach>
         </table>

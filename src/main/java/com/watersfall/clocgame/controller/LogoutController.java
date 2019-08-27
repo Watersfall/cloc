@@ -7,12 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/main.jsp")
-public class MainController extends HttpServlet
+@WebServlet(urlPatterns = "/logout.jsp")
+public class LogoutController extends HttpServlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);
+		req.getSession().invalidate();
+		req.getSession(true);
+		req.getServletContext().getRequestDispatcher("/WEB-INF/view/logout.jsp").forward(req, resp);
 	}
 }

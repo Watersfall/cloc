@@ -18,7 +18,7 @@
                         <ul>
                             <li class="cityElements">
                                 <h3>Coal Mines</h3>
-                                <img src="/images/city/coalmine.png" alt="coal mine"/>
+                                <img src="${pageContext.request.contextPath}/images/city/coalmine.png" alt="coal mine"/>
                                 <p>
                                     ${city.rows[0].coal_mines} coal mines producing ${city.rows[0].coal_mines / 4 } tons of coal per week
                                     <br>
@@ -29,7 +29,7 @@
                             </li>
                             <li class="cityElements">
                                 <h3>Iron Mines</h3>
-                                <img src="/images/city/ironmine.png" alt="iron mine"/>
+                                <img src="${pageContext.request.contextPath}/images/city/ironmine.png" alt="iron mine"/>
                                 <p>
                                     ${city.rows[0].iron_mines} iron mines producing ${city.rows[0].iron_mines / 4 } tons of coal per week
                                     <br>
@@ -40,7 +40,7 @@
                             </li>
                             <li class="cityElements">
                                 <h3>Oil Wells</h3>
-                                <img src="/images/city/oilwell.png" alt="iron mine"/>
+                                <img src="${pageContext.request.contextPath}/images/city/oilwell.png" alt="iron mine"/>
                                 <p>
                                         ${city.rows[0].oil_wells} oil wells producing ${city.rows[0].oil_wells / 4 } tons of oil per week
                                     <br>
@@ -53,7 +53,7 @@
                         <ul>
                             <li class="cityElements">
                                 <h3>Civilian Factories</h3>
-                                <img src="/images/city/civ.png" alt="civilian factory"/>
+                                <img src="${pageContext.request.contextPath}/images/city/civ.png" alt="civilian factory"/>
                                 <p>
                                     ${city.rows[0].civilian_industry} civilian factories producing ${city.rows[0].civilian_industry / 4 } tons of steel per week
                                     <br>
@@ -64,7 +64,7 @@
                             </li>
                             <li class="cityElements">
                                 <h3>Military Factories</h3>
-                                <img src="/images/city/mil.png" alt="military factory"/>
+                                <img src="${pageContext.request.contextPath}/images/city/mil.png" alt="military factory"/>
                                 <p>
                                     ${city.rows[0].military_industry} military factories producing ${city.rows[0].military_industry * 10 } weapons per week
                                     <br>
@@ -75,7 +75,7 @@
                             </li>
                             <li class="cityElements">
                                 <h3>Nitrogen Plants</h3>
-                                <img src="/images/city/civ.png" alt="nitrogen factory"/>
+                                <img src="${pageContext.request.contextPath}/images/city/civ.png" alt="nitrogen factory"/>
                                 <p>
                                         ${city.rows[0].military_industry} military factories producing ${city.rows[0].military_industry * 10 } weapons per week
                                     <br>
@@ -88,7 +88,7 @@
                         <ul>
                             <li class="cityElements">
                                 <h3>Universities</h3>
-                                <img src="/images/city/uni.png" alt="university"/>
+                                <img src="${pageContext.request.contextPath}/images/city/uni.png" alt="university"/>
                                 <p>
                                         ${city.rows[0].military_industry} universities producing ${city.rows[0].military_industry * 10 } research per week
                                     <br>
@@ -101,17 +101,17 @@
                         <ul>
                             <li class="cityElements">
                                 <h3>Railroads</h3>
-                                <img src="/images/city/railroad.png" alt="railroad"/>
+                                <img src="${pageContext.request.contextPath}/images/city/railroad.png" alt="railroad"/>
                                 <p>test</p>
                             </li>
                             <li class="cityElements">
                                 <h3>Military Barracks</h3>
-                                <img src="/images/city/barrack.png" alt="barrack"/>
+                                <img src="${pageContext.request.contextPath}/images/city/barrack.png" alt="barrack"/>
                                 <p>test</p>
                             </li>
                             <li class="cityElements">
                                 <h3>Ports</h3>
-                                <img src="/images/city/port.png" alt="port"/>
+                                <img src="${pageContext.request.contextPath}/images/city/port.png" alt="port"/>
                                 <p>test</p>
                             </li>
                         </ul>

@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/login")
+@WebServlet(urlPatterns = "/login.do")
 public class LoginController extends HttpServlet
 {
 	@Override
@@ -56,7 +56,7 @@ public class LoginController extends HttpServlet
 					req.getSession().setAttribute("user", results.getInt(1));
 					if(url == null)
 					{
-						url = "main";
+						url = "main.jsp";
 					}
 					resp.sendRedirect(url);
 				}

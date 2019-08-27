@@ -3,7 +3,7 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
-<script src="/js/policies.js"></script>
+<script src="${pageContext.request.contextPath}/js/policies.js"></script>
 <%-- POLICIES --%>
 <div class="main">
     <%@ include file="includes/results.jsp" %>
@@ -11,7 +11,7 @@
     <c:if test="${not empty policyResult}">
         <div class="result">
             <c:if test="${not empty image}">
-                <img class="policyImage" src="/images/policies/<c:out value="${image}"/>" alt="Policy">
+                <img class="policyImage" src="${pageContext.request.contextPath}/images/policies/<c:out value="${image}"/>" alt="Policy">
             </c:if>
             <p><c:out value="${policyResult}"/></p>
         </div>

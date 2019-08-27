@@ -18,7 +18,7 @@
         <c:forEach items="${rankings_cosmetic.rows}" var="row">
             <tr>
                 <td><img class="indexflag" src="https://imgur.com/<c:out value="${row.flag}"/>" alt="flag"></td>
-                <td><a href="nation?id=<c:out value="${row.id}"/>"><c:out value="${row.nation_name}"/></a></td>
+                <td><a href="${pageContext.request.contextPath}/nation?id=<c:out value="${row.id}"/>"><c:out value="${row.nation_name}"/></a></td>
                 <td><c:out value="${row.username}"/></td>
             </tr>
         </c:forEach>

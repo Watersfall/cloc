@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
 
-@WebServlet(urlPatterns = "/nation")
+@WebServlet(urlPatterns = "/nation.jsp")
 public class NationController extends HttpServlet
 {
 	@Override
@@ -26,9 +27,18 @@ public class NationController extends HttpServlet
 			}
 			else
 			{
-				try{req.setAttribute("nation", new Nation(Database.getDataSource().getConnection(), id, false));}catch(Exception e){}
+				try
+				{
+					Connection connection = Database.getDataSource().getConnection();
+					req.setAttribute("nation", new Nation(connection, id, false));
+					connection.close();
+				}
+				catch(Exception e)
+				{
+					//Ignore
+				}
 			}
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/jsp/nation.jsp").forward(req, resp);
+		req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
 	}
 }

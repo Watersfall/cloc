@@ -3,7 +3,7 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
-<script src="js/nation.js"></script>
+<script src="${pageContext.request.contextPath}/js/nation.js"></script>
 <div class="main">
     <%@ include file="includes/results.jsp" %>
     <c:choose>

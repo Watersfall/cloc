@@ -50,10 +50,6 @@ public class Nation
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;
-		if(!safe)
-		{
-			connection.close();
-		}
 	}
 
 	/**

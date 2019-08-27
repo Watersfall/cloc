@@ -49,12 +49,12 @@ public class PolicyCreateTreaty extends HttpServlet
 					Treaty treaty= Treaty.createTreaty(conn, name);
 					nation.joinTreaty(treaty, true);
 					conn.commit();
-					request.getServletContext().getRequestDispatcher("/WEB-INF/jsp/treaty.jsp?id=" + treaty.getId()).forward(request, response);
+					request.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp?id=" + treaty.getId()).forward(request, response);
 				}
 			}
 			else
 			{
-				request.getServletContext().getRequestDispatcher("/WEB-INF/jsp/createtreaty.jsp").forward(request, response);
+				request.getServletContext().getRequestDispatcher("/WEB-INF/view/createtreaty.jsp").forward(request, response);
 			}
 		}
 		catch(SQLException e)

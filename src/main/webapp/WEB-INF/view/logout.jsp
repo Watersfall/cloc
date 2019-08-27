@@ -2,12 +2,11 @@
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
-<% session.invalidate(); %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>&ltCLOC - Online Nation Sim</title>
-    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css">
     <meta name="description" content="Bad web game">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -16,6 +15,6 @@
 <div class="main">
     <p>Logged out!</p>
 </div>
-<c:redirect url="/index"/>
+<c:redirect url="/index.jsp"/>
 </body>
 </html>

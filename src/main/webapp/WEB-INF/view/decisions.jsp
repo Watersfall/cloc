@@ -3,7 +3,7 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
-<script src="/js/decisions.js"></script>
+<script src="${pageContext.request.contextPath}/js/decisions.js"></script>
 <div class="main">
     <%@ include file="includes/results.jsp" %>
     <table id="policy">

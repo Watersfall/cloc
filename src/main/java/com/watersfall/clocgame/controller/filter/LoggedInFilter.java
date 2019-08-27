@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebFilter(urlPatterns = "/*")
+@WebFilter(urlPatterns = "*.jsp")
 public class LoggedInFilter implements Filter
 {
 	private ServletContext context;
@@ -29,7 +29,6 @@ public class LoggedInFilter implements Filter
 	{
 		try
 		{
-			long time = System.currentTimeMillis();
 			HttpServletRequest req = (HttpServletRequest) request;
 			HttpServletResponse res = (HttpServletResponse) response;
 			HttpSession sess = req.getSession(false);
@@ -48,7 +47,6 @@ public class LoggedInFilter implements Filter
 					req.setAttribute("home", nation);
 				}
 			}
-			System.out.println(System.currentTimeMillis() - time);
 		}
 		catch(SQLException e)
 		{
