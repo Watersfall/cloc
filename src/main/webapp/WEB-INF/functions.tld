@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <display-name>CLOC Functions</display-name>
+    <tlib-version>1.0</tlib-version>
+    <short-name>Functions</short-name>
+    <uri>https://github.com/Watersfall/cloc</uri>
+    <function>
+        <name>coalProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getCoalProduction(com.watersfall.clocgame.types.nation.City)
+        </function-signature>
+    </function>
+    <function>
+        <name>ironProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getIronProduction(com.watersfall.clocgame.types.nation.City)
+        </function-signature>
+    </function>
+    <function>
+        <name>oilProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getOilProduction(com.watersfall.clocgame.types.nation.City)
+        </function-signature>
+    </function>
+    <function>
+        <name>steelProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getSteelProduction(com.watersfall.clocgame.types.nation.City)
+        </function-signature>
+    </function>
+    <function>
+        <name>nitrogenProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getNitrogenProduction(com.watersfall.clocgame.types.nation.City)
+        </function-signature>
+    </function>
+    <function>
+        <name>weaponsProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getWeaponsProduction(com.watersfall.clocgame.types.nation.City)
+        </function-signature>
+    </function>
+    <function>
+        <name>researchProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getResearchProduction(com.watersfall.clocgame.types.nation.City)
+        </function-signature>
+    </function>
+    <function>
+        <name>totalCoalProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getTotalCoalProduction(com.watersfall.clocgame.types.nation.NationCities)
+        </function-signature>
+    </function>
+    <function>
+        <name>totalIronProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getTotalIronProduction(com.watersfall.clocgame.types.nation.NationCities)
+        </function-signature>
+    </function>
+    <function>
+        <name>totalOilProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getTotalOilProduction(com.watersfall.clocgame.types.nation.NationCities)
+        </function-signature>
+    </function>
+    <function>
+        <name>totalSteelProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getTotalSteelProduction(com.watersfall.clocgame.types.nation.NationCities)
+        </function-signature>
+    </function>
+    <function>
+        <name>totalNitrogenProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getTotalNitrogenProduction(com.watersfall.clocgame.types.nation.NationCities)
+        </function-signature>
+    </function>
+    <function>
+        <name>totalWeaponsProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getTotalWeaponsProduction(com.watersfall.clocgame.types.nation.NationCities)
+        </function-signature>
+    </function>
+    <function>
+        <name>totalResearchProduction</name>
+        <function-class>com.watersfall.clocgame.math.Production</function-class>
+        <function-signature>java.util.HashMap getTotalResearchProduction(com.watersfall.clocgame.types.nation.NationCities)
+        </function-signature>
+    </function>
+
+
+    <!-- Invoke 'Generate' action to add tags or functions -->
+
+</taglib>

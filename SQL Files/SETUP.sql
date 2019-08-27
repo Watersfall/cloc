@@ -1,6 +1,4 @@
 USE cloc;
-DROP TABLE cloc_main,cloc_login, cloc_cosmetic, cloc_economy, cloc_domestic, cloc_military, cloc_armies, cloc_foreign, cloc_tech, cloc_policy, cloc_war, cloc_war_logs, cloc_news;
-
 CREATE TABLE cloc_main(
 	turn INT UNSIGNED DEFAULT 0
 );
@@ -8,7 +6,10 @@ CREATE TABLE cloc_main(
 CREATE TABLE cloc_login(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(32),
+    email TEXT,
     password CHAR(32),
+    register_ip VARCHAR(15),
+    last_ip VARCHAR(15),
     sess CHAR(32)
 );
 
@@ -20,7 +21,8 @@ CREATE TABLE cloc_cosmetic(
     leader_title VARCHAR(128) DEFAULT 'President',
     portrait VARCHAR(128) DEFAULT 'JUWOEe0.png',
     flag VARCHAR(128) DEFAULT 'X3zWAyF.png',
-    description TEXT
+    description TEXT,
+    FOREIGN KEY fk_cosmetic (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_economy (
@@ -33,71 +35,100 @@ CREATE TABLE cloc_economy (
     coal DECIMAL(14, 2) UNSIGNED DEFAULT 50,
     oil DECIMAL(14, 2) UNSIGNED DEFAULT 25,
     food DECIMAL(14, 2) UNSIGNED DEFAULT 100,
-    manufactured DECIMAL(14, 2) UNSIGNED DEFAULT 0,
-    research DECIMAL(14, 2) UNSIGNED DEFAULT 0,  
+    steel DECIMAL(14, 2) UNSIGNED DEFAULT 0,
+    nitrogen DECIMAL(14, 2) UNSIGNED DEFAULT 0,
+    research DECIMAL(14, 2) UNSIGNED DEFAULT 0,
+    FOREIGN KEY fk_economy (id) REFERENCES cloc_login(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cloc_domestic(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	land INT UNSIGNED DEFAULT 25000,
+    government TINYINT UNSIGNED,
+    approval TINYINT UNSIGNED DEFAULT 50,
+    stability TINYINT UNSIGNED DEFAULT 50,
+    population BIGINT UNSIGNED DEFAULT 100000,
+    rebels INT UNSIGNED DEFAULT 0,
+    FOREIGN KEY fk_domestic (id) REFERENCES cloc_login(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cloc_cities(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    owner INT,
+    coastal BIT,
+    railroads INT DEFAULT 1,
+    ports INT DEFAULT 0,
+    barracks INT DEFAULT 0,
     iron_mines INT UNSIGNED DEFAULT 2,
     coal_mines INT UNSIGNED DEFAULT 2,
     oil_wells INT UNSIGNED DEFAULT 0,
     civilian_industry INT UNSIGNED DEFAULT 0,
     military_industry INT UNSIGNED DEFAULT 0,
-    universities INT UNSIGNED DEFAULT 0
-);
-
-CREATE TABLE cloc_domestic(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	land INT UNSIGNED DEFAULT 20000,
-    government TINYINT UNSIGNED,
-    approval TINYINT UNSIGNED DEFAULT 50,
-    stability TINYINT UNSIGNED DEFAULT 50,
-    population BIGINT UNSIGNED DEFAULT 100000,
-    rebels INT UNSIGNED DEFAULT 0
+    nitrogen_industry INT UNSIGNED DEFAULT 0,
+    universities INT UNSIGNED DEFAULT 0,
+    FOREIGN KEY fk_cities (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_military(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	fighters INT UNSIGNED DEFAULT 0,
     zeppelins INT UNSIGNED DEFAULT 0,
+    bombers INT UNSIGNED DEFAULT 0,
     submarines INT UNSIGNED DEFAULT 0,
     destroyers INT UNSIGNED DEFAULT 0,
     cruisers INT UNSIGNED DEFAULT 0,
+    pre_battleships INT UNSIGNED DEFAULT 0,
     battleships INT UNSIGNED DEFAULT 0,
     transports INT UNSIGNED DEFAULT 0,
-    army_home INT UNSIGNED DEFAULT 25,
-    training_home INT UNSIGNED DEFAULT 50,
-    weapons_home INT UNSIGNED DEFAULT 25000,
-    war_protection TINYINT DEFAULT 4
+    artillery_stockpile INT UNSIGNED DEFAULT 0,
+    weapon_stockpile INT UNSIGNED DEFAULT 0,
+    war_protection TINYINT DEFAULT 4,
+    FOREIGN KEY fk_military (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_armies(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     owner INT,
     region ENUM('North America', 'South America', 'Africa', 'Middle East', 'Europe', 'Asia', 'Oceania', 'Siberia'),
+    city INT,
     army INT UNSIGNED,
     training INT UNSIGNED,
-    weapons INT UNSIGNED
+    weapons INT UNSIGNED,
+    artillery INT UNSIGNED,
+    FOREIGN KEY fk_armies (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_foreign(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	region ENUM('North America', 'South America', 'Africa', 'Middle East', 'Europe', 'Asia', 'Oceania', 'Siberia'),
-    alliance INT UNSIGNED DEFAULT 0
+    alliance INT UNSIGNED DEFAULT 0,
+    alignment TINYINT DEFAULT 1,
+    FOREIGN KEY fk_foreign (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_tech(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	chemical_weapons_tech TINYINT UNSIGNED DEFAULT 0,
-    tanks_tech TINYINT UNSIGNED DEFAULT 0,
-    submarine_tech TINYINT UNSIGNED DEFAULT 0,
-    logistics_tech TINYINT UNSIGNED DEFAULT 0,
-    offensive_tech TINYINT UNSIGNED DEFAULT 0,
-    defensive_tech TINYINT UNSIGNED DEFAULT 0,
-    food_tech TINYINT UNSIGNED DEFAULT 0
+    chem_tech TINYINT UNSIGNED DEFAULT 0,
+    advanced_chem_tech TINYINT UNSIGNED DEFAULT 0,
+    bomber_tech TINYINT UNSIGNED DEFAULT 0,
+    strategic_bombing_tech TINYINT UNSIGNED DEFAULT 0,
+    tank_tech TINYINT UNSIGNED DEFAULT 0,
+    ship_oil_tech TINYINT UNSIGNED DEFAULT 0,
+    bolt_action_tech TINYINT UNSIGNED DEFAULT 0,
+    semi_automatic_tech TINYINT UNSIGNED DEFAULT 0,
+    machine_gun_tech TINYINT UNSIGNED DEFAULT 0,
+    FOREIGN KEY fk_tech (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_policy(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-    manpower TINYINT UNSIGNED DEFAULT 10,
-    manpower_change INT DEFAULT 0
+    manpower TINYINT UNSIGNED DEFAULT 2,
+    manpower_change INT DEFAULT 0,
+    food TINYINT DEFAULT 1,
+    food_change INT DEFAULT 0,
+    economy TINYINT DEFAULT 0,
+    economy_change TINYINT DEFAULT 0,
+    FOREIGN KEY fk_policy (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_war(
@@ -113,13 +144,34 @@ CREATE TABLE cloc_war_logs(
     attacker INT,
     region ENUM('North America', 'South America', 'Africa', 'Middle East', 'Europe', 'Asia', 'Oceania', 'Siberia') DEFAULT 'Siberia',
     type ENUM('land', 'navy', 'air', 'chemical', 'transport'),
-    amount INT -- for transports
+    amount INT, -- for transports
+    FOREIGN KEY fk_logs (attacker) REFERENCES cloc_login (id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_news(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     sender INT,
-    reciever INT,
+    receiver INT,
     content TEXT,
-    image TEXT DEFAULT NULL
+    image TEXT DEFAULT NULL,
+    FOREIGN KEY fk_news (receiver) REFERENCES cloc_login (id) ON DELETE CASCADE
+);
+
+CREATE TABLE cloc_treaties(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(32),
+    flag VARCHAR(32) DEFAULT '',
+    description TEXT
+);
+
+CREATE TABLE cloc_treaties_members(
+	alliance_id INT,
+    nation_id INT,
+    founder BIT DEFAULT 0,
+    manage BIT DEFAULT 0,
+    kick BIT DEFAULT 0,
+    invite BIT DEFAULT 0,
+    edit BIT DEFAULT 0,
+    FOREIGN KEY fk_alliance (alliance_id) REFERENCES cloc_treaties (id),
+    FOREIGN KEY fk_member (nation_id) REFERENCES cloc_login (id) ON DELETE CASCADE
 );
