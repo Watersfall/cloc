@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class Util
 {
+	public static int turn = 0;
+
 	public static Map<String, Object> createMap(ResultSet... resultSet) throws SQLException
 	{
 		Map<String, Object> map = new HashMap<>();
@@ -60,13 +62,4 @@ public class Util
 		}
 		return map;
 	}
-
-	public static int getTurn() throws SQLException
-	{
-		ResultSet results = Database.getDataSource().getConnection().prepareStatement("SELECT turn FROM cloc_main").executeQuery();
-		results.first();
-		return results.getInt(1);
-	}
-
-
 }

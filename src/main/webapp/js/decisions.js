@@ -2,8 +2,8 @@ function decision(policy) {
     document.getElementById('resultsContainer').style.visibility = "visible";
     document.getElementById("result").innerHTML = "<p>Loading...<p>";
     let xhttp = new XMLHttpRequest();
-    let params = 'selection=' + document.getElementById(policy).selectedIndex;
-    xhttp.open('POST', '/decisions/' + policy, true);
+    let params = 'selection=' + document.getElementById(policy).selectedIndex + '&decision=' + policy;
+    xhttp.open('POST', '/decisions.do', true);
     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhttp.send(params);
     xhttp.onreadystatechange = function () {

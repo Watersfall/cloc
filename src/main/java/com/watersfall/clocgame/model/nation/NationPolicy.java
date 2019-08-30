@@ -61,18 +61,18 @@ public class NationPolicy extends NationBase
 	public void setManpower(int manpower) throws SQLException
 	{
 		results.updateInt(1, manpower);
-		results.updateInt(2, Util.getTurn());
+		results.updateInt(2, Util.turn);
 	}
 
 	public void setFood(int food) throws SQLException
 	{
 		results.updateInt(3, food);
-		results.updateInt(4, Util.getTurn());
+		results.updateInt(4, Util.turn);
 	}
 
 	public void setEconomy(int economy) throws SQLException
 	{
 		results.updateInt(5, economy);
-		results.updateInt(6, Util.getTurn());
+		results.updateInt(6, Util.turn);
 	}
 }

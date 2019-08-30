@@ -1,6 +1,12 @@
 package com.watersfall.clocgame.servlet.decisions;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.model.nation.NationPolicy;
+import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.util.UserUtils;
+import com.watersfall.clocgame.util.Util;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.servlet.ServletException;
@@ -11,57 +17,47 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 @WebServlet(urlPatterns = "/decisions/manpower")
 public class DecisionManpower extends HttpServlet
 {
+
 	static BasicDataSource database = Database.getDataSource();
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		String sess = request.getSession().getId();
 		PrintWriter writer = response.getWriter();
 		Connection conn = null;
 		try
 		{
+			int user = UserUtils.getUser(request);
+			conn = database.getConnection();
 			int selection = Integer.parseInt(request.getParameter("selection"));
-			conn = Database.getDataSource().getConnection();
-			PreparedStatement statementCheck = conn.prepareStatement("SELECT manpower_change, manpower, cloc_policy.id " +
-					"FROM cloc_policy, cloc_login " +
-					"WHERE sess=? and cloc_login.id = cloc_policy.id");
-			statementCheck.setString(1, sess);
-			ResultSet check = statementCheck.executeQuery();
-			if(!check.first())
+			if(selection < 0 || selection > 4)
 			{
-				writer.append("<p>You must be logged in to do this!</p>");
+				throw new NumberFormatException();
 			}
-			else if(check.getInt("manpower_change") > 0)
+			NationPolicy policy = new NationPolicy(conn, user, true);
+			if(Util.turn < policy.getChangeManpower() + 1)
 			{
-				writer.append("<p>You cannot change this yet!</p>");
+				writer.append(DecisionResponses.noChange());
 			}
-			else if(check.getInt("manpower") == selection)
+			else if(policy.getManpower() == selection)
 			{
-				writer.append("<p>You already have this policy set!</p>");
-			}
-			else if(selection > 4 || selection < 0)
-			{
-				writer.append("<p>Don't do that</p>");
+				writer.append(DecisionResponses.same());
 			}
 			else
 			{
-				PreparedStatement update = conn.prepareStatement("UPDATE cloc_policy SET manpower=?, manpower_change=? WHERE id=?");
-				update.setInt(1, selection);
-				update.setInt(2, 2);
-				update.setInt(3, check.getInt("id"));
-				update.execute();
+				policy.setManpower(selection);
+				policy.update();
 				conn.commit();
-				writer.append("<p>Policy changed!</p>");
+				writer.append(DecisionResponses.updated());
 			}
 		}
-		catch(Exception e)
+		catch(SQLException e)
 		{
 			try
 			{
@@ -71,20 +67,37 @@ public class DecisionManpower extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append("<p>Error: " + e.getLocalizedMessage() + "!</p>");
+			writer.append(PolicyResponses.genericException(e));
 			e.printStackTrace();
+		}
+		catch(NotLoggedInException e)
+		{
+			writer.append(PolicyResponses.noLogin());
+		}
+		catch(NumberFormatException | NullPointerException e)
+		{
+			writer.append(PolicyResponses.genericError());
+		}
+		catch(NationNotFoundException e)
+		{
+			writer.append(PolicyResponses.noNation());
 		}
 		finally
 		{
 			try
 			{
 				conn.close();
-				writer.close();
 			}
 			catch(Exception ex)
 			{
 				//Ignore
 			}
 		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		super.doGet(request, response);
 	}
 }

@@ -3,6 +3,7 @@ package com.watersfall.clocgame.controller.filter;
 import com.watersfall.clocgame.controller.Sessions;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -27,6 +28,7 @@ public class LoggedInFilter implements Filter
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
+		request.setAttribute("turn", Util.turn);
 		try
 		{
 			HttpServletRequest req = (HttpServletRequest) request;

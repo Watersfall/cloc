@@ -2,9 +2,13 @@ package com.watersfall.clocgame.listeners;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.constants.PolicyConstants;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Startup implements ServletContextListener
 {
@@ -17,6 +21,18 @@ public class Startup implements ServletContextListener
 	@Override
 	public void contextInitialized(ServletContextEvent event)
 	{
-		event.getServletContext().setAttribute("dataSource", Database.getDataSource());
+		try
+		{
+			event.getServletContext().setAttribute("dataSource", Database.getDataSource());
+			Connection conn = Database.getDataSource().getConnection();
+			ResultSet results = conn.prepareStatement("SELECT turn FROM cloc_main").executeQuery();
+			Util.turn = results.getInt(1);
+		}
+		catch(SQLException e)
+		{
+
+		}
+
+
 	}
 }
