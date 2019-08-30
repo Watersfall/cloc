@@ -11,12 +11,9 @@
             <p>You have visited this page incorrectly!</p>
         </c:when>
         <c:when test="${not empty user and not empty nation and nation.id == user}">
-            <c:redirect url="/main"/>
+            <c:redirect url="/main.jsp"/>
         </c:when>
         <c:otherwise>
-            <c:if test="${not empty send}">
-                <p><c:out value="${send}"/></p>
-            </c:if>
             <div class="nation">
                 <h1><c:out value="${nation.cosmetic.nationTitle}"/> <br> of <br><c:out value="${nation.cosmetic.nationName}"/></h1>
                 <img class="flag" src="https://imgur.com/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
@@ -93,11 +90,11 @@
                 </tr>
                 <c:forEach var="i" items="${nation.armies.armies}">
                     <tr>
-                        <td>${i.region.name}</td>
-                        <td>${i.army}</td>
-                        <td>${i.training}</td>
-                        <td>${i.weapons}</td>
-                        <td>${i.id}</td>
+                        <td>${i.value.region.name}</td>
+                        <td>${i.value.army}</td>
+                        <td>${i.value.training}</td>
+                        <td>${i.value.weapons}</td>
+                        <td>${i.value.id}</td>
                     </tr>
                 </c:forEach>
             </table>

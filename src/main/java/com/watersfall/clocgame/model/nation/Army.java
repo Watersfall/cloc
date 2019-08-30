@@ -1,8 +1,11 @@
 package com.watersfall.clocgame.model.nation;
 
+import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.model.Region;
 import lombok.Getter;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -27,24 +30,23 @@ public class Army
 	private @Getter
 	ResultSet results;
 
-	private static void setRow(ResultSet results, int row) throws SQLException
+	public Army(Connection connection, int id, boolean safe) throws SQLException
 	{
-		if(results.getRow() != row)
+		PreparedStatement read;
+		if(safe)
 		{
-			results.beforeFirst();
-			while(results.next())
-			{
-				if(results.getRow() == row)
-				{
-					return;
-				}
-			}
+			read = connection.prepareStatement("SELECT owner, region, army, training, weapons, artillery, id " + "FROM cloc_armies " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
-	}
-
-	public Army(ResultSet results) throws SQLException
-	{
-		this.results = results;
+		else
+		{
+			read = connection.prepareStatement("SELECT owner, region, army, training, weapons, artillery, id " + "FROM cloc_armies " + "WHERE id=?");
+		}
+		read.setInt(1, id);
+		this.results = read.executeQuery();
+		if(!results.first())
+		{
+			throw new CityNotFoundException("No army with that id!");
+		}
 		this.owner = results.getInt(1);
 		this.region = Region.getFromName(results.getString(2));
 		this.army = results.getInt(3);
@@ -57,13 +59,11 @@ public class Army
 
 	public void setRegion(Region region) throws SQLException
 	{
-		setRow(this.results, this.row);
 		results.updateString(2, region.getName());
 	}
 
 	public void setArmy(int army) throws SQLException
 	{
-		setRow(this.results, this.row);
 		if(army < 0)
 		{
 			army = 0;
@@ -73,7 +73,6 @@ public class Army
 
 	public void setTraining(int training) throws SQLException
 	{
-		setRow(this.results, this.row);
 		if(training < 0)
 		{
 			training = 0;
@@ -87,7 +86,6 @@ public class Army
 
 	public void setWeapons(int weapons) throws SQLException
 	{
-		setRow(this.results, this.row);
 		if(weapons < 0)
 		{
 			weapons = 0;
@@ -97,7 +95,6 @@ public class Army
 
 	public void setArtillery(int artillery) throws SQLException
 	{
-		setRow(this.results, this.row);
 		if(artillery < 0)
 		{
 			artillery = 0;
@@ -107,7 +104,6 @@ public class Army
 
 	public void update() throws SQLException
 	{
-		setRow(this.results, this.row);
 		results.updateRow();
 	}
 }

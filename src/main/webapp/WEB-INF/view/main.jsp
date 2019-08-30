@@ -86,7 +86,18 @@
             </tr>
             <tr>
                 <td>Growth</td>
-                <td>$<c:out value="${home.economy.growth}"/> Million per Month</td>
+                <td>
+                    <div class="dropdown">
+                        <span>
+                            ${home.economy.growth}
+                        </span>
+                        <div class="dropdown-content">
+                            ${growth.factories > 0 ? '+' + growth.factories + ' from factories<br>': ''}
+                            ${growth.home < 0 ? '-' + growth.home + ' from home army<br>' : ''}
+                            ${growth.foreign < 0 ? '-' + growth.foreign + ' from foreign armies' : ''}
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>Steel Stockpile</td>
@@ -135,11 +146,11 @@
             </tr>
             <c:forEach var="i" items="${home.armies.armies}">
                 <tr>
-                    <td>${i.region.name}</td>
-                    <td>${i.army}</td>
-                    <td>${i.training}</td>
-                    <td>${i.weapons}</td>
-                    <td>${i.id}</td>
+                    <td>${i.value.region.name}</td>
+                    <td>${i.value.army}</td>
+                    <td>${i.value.training}</td>
+                    <td>${i.value.weapons}</td>
+                    <td>${i.value.id}</td>
                 </tr>
             </c:forEach>
         </table>

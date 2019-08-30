@@ -8,12 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NationArmies extends NationBase
 {
 
-	private @Getter
-	ArrayList<Army> armies;
+	private @Getter HashMap<Integer, Army> armies;
 
 	public NationArmies(Connection connection, int id, boolean safe) throws SQLException
 	{
@@ -21,11 +21,11 @@ public class NationArmies extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT owner, region, army, training, weapons, artillery, id " + "FROM cloc_armies " + "WHERE owner=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT owner, id " + "FROM cloc_armies " + "WHERE owner=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT owner, region, army, training, weapons, artillery, id " + "FROM cloc_armies " + "WHERE owner=?");
+			read = connection.prepareStatement("SELECT owner, id " + "FROM cloc_armies " + "WHERE owner=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -36,24 +36,14 @@ public class NationArmies extends NationBase
 		else
 		{
 			results.beforeFirst();
-			this.armies = new ArrayList<>();
+			this.armies = new HashMap<>();
 			this.connection = connection;
 			this.safe = safe;
 			this.id = id;
 			while(results.next())
 			{
-				armies.add(new Army(results));
+				armies.put(0, new Army(connection, results.getInt(1), safe));
 			}
 		}
 	}
-
-	public void updateAll() throws SQLException
-	{
-		results.beforeFirst();
-		while(results.next())
-		{
-			results.updateRow();
-		}
-	}
-
 }

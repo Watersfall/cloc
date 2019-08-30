@@ -9,6 +9,7 @@ import lombok.Getter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class Nation
 {
@@ -95,5 +96,30 @@ public class Nation
 		}
 	}
 
-
+	public HashMap<String, Integer> getGrowthChange()
+	{
+		HashMap<String, Integer> map = new HashMap<>();
+		int factories = 0;
+		int troopsHome = 0;
+		int troopsForeign = 0;
+		for(City city : cities.getCities().values())
+		{
+			factories += city.getIndustryCivilian() + city.getIndustryMilitary() + city.getIndustryNitrogen();
+		}
+		for(Army army : armies.getArmies().values())
+		{
+			if(army.getRegion() == foreign.getRegion())
+			{
+				troopsHome += army.getArmy();
+			}
+			else
+			{
+				troopsForeign += army.getArmy();
+			}
+		}
+		map.put("factories", factories);
+		map.put("home", troopsHome / 20);
+		map.put("foreign", troopsForeign / 10);
+		return map;
+	}
 }
