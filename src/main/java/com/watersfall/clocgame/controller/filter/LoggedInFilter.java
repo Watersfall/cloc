@@ -1,6 +1,5 @@
 package com.watersfall.clocgame.controller.filter;
 
-import com.watersfall.clocgame.controller.Sessions;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Util;
@@ -37,17 +36,8 @@ public class LoggedInFilter implements Filter
 			if(sess != null && sess.getAttribute("user") != null)
 			{
 				int user = Integer.parseInt(sess.getAttribute("user").toString());
-				Sessions sessions = Sessions.getInstance();
-				Nation nation;
-				if((nation = sessions.getNation(user)) == null)
-				{
-					Connection connection = Database.getDataSource().getConnection();
-					req.setAttribute("home", new Nation(connection, user, false));
-				}
-				else
-				{
-					req.setAttribute("home", nation);
-				}
+				Connection connection = Database.getDataSource().getConnection();
+				req.setAttribute("home", new Nation(connection, user, false));
 			}
 		}
 		catch(SQLException e)

@@ -21,22 +21,15 @@ public class NationController extends HttpServlet
 		if(req.getParameter("id") != null)
 		{
 			int id = Integer.parseInt(req.getParameter("id"));
-			if(Sessions.getInstance().getNation(id) != null)
+			try
 			{
-				req.setAttribute("nation", Sessions.getInstance().getNation(id));
+				Connection connection = Database.getDataSource().getConnection();
+				req.setAttribute("nation", new Nation(connection, id, false));
+				connection.close();
 			}
-			else
+			catch(Exception e)
 			{
-				try
-				{
-					Connection connection = Database.getDataSource().getConnection();
-					req.setAttribute("nation", new Nation(connection, id, false));
-					connection.close();
-				}
-				catch(Exception e)
-				{
-					//Ignore
-				}
+				//Ignore
 			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
