@@ -244,11 +244,15 @@ button:disabled, button[disabled] {
     margin-bottom: 4%;
 }
 
-.positive {
+p.positive {
+    all:initial;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     color: rgb(0, 255, 0);
 }
 
-.negative {
+p.negative {
+    all:initial;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     color: rgb(255, 0, 0);
 }
 

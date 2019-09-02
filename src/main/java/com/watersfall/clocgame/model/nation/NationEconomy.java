@@ -81,112 +81,67 @@ public class NationEconomy extends NationBase
 		{
 			economic = 100;
 		}
+		this.economic = economic;
 		results.updateInt(1, economic);
 	}
 
 	public void setGdp(double gdp) throws SQLException
 	{
-		if(gdp < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(2, gdp);
-		}
+		this.gdp = gdp;
+		results.updateDouble(2, gdp);
 	}
 
 	public void setGrowth(double growth) throws SQLException
 	{
+		this.growth = growth;
 		results.updateDouble(3, growth);
 	}
 
 	public void setBudget(double budget) throws SQLException
 	{
+		this.budget = budget;
 		results.updateDouble(4, budget);
 	}
 
 	public void setIron(double iron) throws SQLException
 	{
-		if(iron < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(5, iron);
-		}
+		this.iron = iron;
+		results.updateDouble(5, iron);
 	}
 
 	public void setCoal(double coal) throws SQLException
 	{
-		if(coal < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(6, coal);
-		}
+		this.coal = coal;
+		results.updateDouble(6, coal);
 	}
 
 	public void setOil(double oil) throws SQLException
 	{
-		if(oil < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(7, oil);
-		}
+		this.oil = oil;
+		results.updateDouble(7, oil);
 	}
 
 	public void setFood(double food) throws SQLException
 	{
-		if(food < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(8, food);
-		}
+		this.food = food;
+		results.updateDouble(8, food);
 	}
 
 	public void setSteel(double steel) throws SQLException
 	{
-		if(steel < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(9, steel);
-		}
+		this.steel = steel;
+		results.updateDouble(9, steel);
 	}
 
 	public void setNitrogen(double nitrogen) throws SQLException
 	{
-		if(nitrogen < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(10, nitrogen);
-		}
+		this.nitrogen = nitrogen;
+		results.updateDouble(10, nitrogen);
 	}
 
 	public void setResearch(double research) throws SQLException
 	{
-		if(research < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(11, research);
-		}
+		this.research = research;
+		results.updateDouble(11, research);
 	}
 }

@@ -53,16 +53,22 @@
 .dropdown {
     position: relative;
     display: inline-block;
+    width: 100%;
 }
 
 .dropdown-content {
+    top: 100%;
+    left: 0;
+    float: left;
     display: none;
     position: absolute;
     background-color: black;
-    padding: 5px 16px;
+    padding: 5px 5px;
+    margin: 1px 1px;
     z-index: 1;
+    width: auto;
 }
 
 .dropdown:hover .dropdown-content {
-    display: block;
+    display: inline-block;
 }

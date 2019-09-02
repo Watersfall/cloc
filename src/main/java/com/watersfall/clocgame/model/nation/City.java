@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.constants.Costs;
+import com.watersfall.clocgame.constants.ProductionConstants;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.ValueException;
 import com.watersfall.clocgame.model.CityType;
@@ -14,6 +15,13 @@ import java.util.HashMap;
 
 public class City
 {
+	public static final int EMPLOYMENT_MINE = 10000;
+	public static final int EMPLOYMENT_FACTORY = 100000;
+	public static final int EMPLOYMENT_UNIVERSITY = 50000;
+	public static final int LAND_MINE = 250;
+	public static final int LAND_FACTORY = 1000;
+	public static final int LAND_UNIVERSITY = 500;
+
 	private @Getter
 	int id;
 	private @Getter
@@ -281,5 +289,127 @@ public class City
 	public int getBarrackCost()
 	{
 		return 0;
+	}
+
+	public int getTotalEmployment()
+	{
+		int employment = 0;
+		employment += (this.coalMines + this.ironMines + this.oilWells) * City.EMPLOYMENT_MINE;
+		employment += (this.industryCivilian + this.industryMilitary + this.industryNitrogen) * City.EMPLOYMENT_FACTORY;
+		employment += (this.universities) * City.EMPLOYMENT_UNIVERSITY;
+		return employment;
+	}
+
+	public HashMap<String, Double> getCoalProduction()
+	{
+		HashMap<String, Double> map = new HashMap<>();
+		double mines = this.getCoalMines() * ProductionConstants.MINE_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getCoalMines();
+		double total = mines + bonus;
+		double costs = (this.getIndustryCivilian() + this.getIndustryNitrogen() + this.getIndustryMilitary()) * ProductionConstants.FACTORY_COAL_PER_WEEK;
+		double net = total - costs;
+		map.put("mines", mines);
+		map.put("bonus", bonus);
+		map.put("total", total);
+		map.put("costs", costs);
+		map.put("net", net);
+		return map;
+	}
+
+	public HashMap<String, Double> getIronProduction()
+	{
+		HashMap<String, Double> map = new HashMap<>();
+		double mines = this.getIronMines() * ProductionConstants.MINE_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIronMines();
+		double total = mines + bonus;
+		double costs = (this.getIndustryCivilian() + this.getIndustryNitrogen() + this.getIndustryMilitary()) * ProductionConstants.FACTORY_IRON_PER_WEEK;
+		double net = total - costs;
+		map.put("mines", mines);
+		map.put("bonus", bonus);
+		map.put("total", total);
+		map.put("costs", costs);
+		map.put("net", net);
+		return map;
+	}
+
+	public HashMap<String, Double> getOilProduction()
+	{
+		HashMap<String, Double> map = new HashMap<>();
+		double wells = this.getIronMines() * ProductionConstants.WELL_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getOilWells();
+		double total = wells + bonus;
+		double costs = (this.getIndustryCivilian() + this.getIndustryNitrogen() + this.getIndustryMilitary()) * ProductionConstants.FACTORY_OIL_PER_WEEK;
+		double net = total - costs;
+		map.put("wells", wells);
+		map.put("bonus", bonus);
+		map.put("total", total);
+		map.put("costs", costs);
+		map.put("net", net);
+		return map;
+	}
+
+	public HashMap<String, Double> getSteelProduction()
+	{
+		HashMap<String, Double> map = new HashMap<>();
+		double factories = this.getIndustryCivilian() * ProductionConstants.STEEL_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryCivilian();
+		double total = factories + bonus;
+		double costs = 0;
+		double net = total - costs;
+		map.put("factories", factories);
+		map.put("bonus", bonus);
+		map.put("total", total);
+		map.put("costs", costs);
+		map.put("net", net);
+		return map;
+	}
+
+	public HashMap<String, Double> getNitrogenProduction()
+	{
+		HashMap<String, Double> map = new HashMap<>();
+		double factories = this.getIndustryNitrogen() * ProductionConstants.NITROGEN_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryNitrogen();
+		double total = factories + bonus;
+		double costs = 0e0;
+		double net = total - costs;
+		map.put("factories", factories);
+		map.put("bonus", bonus);
+		map.put("total", total);
+		map.put("costs", costs);
+		map.put("net", net);
+		return map;
+	}
+
+	public HashMap<String, Double> getWeaponsProduction()
+	{
+		HashMap<String, Double> map = new HashMap<>();
+		double factories = this.getIndustryNitrogen() * ProductionConstants.GUNS_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryNitrogen();
+		double total = factories + bonus;
+		map.put("factories", factories);
+		map.put("bonus", bonus);
+		map.put("total", total);
+		return map;
+	}
+
+	public HashMap<String, Double> getResearchProduction()
+	{
+		HashMap<String, Double> map = new HashMap<>();
+		double universities = this.getUniversities() * ProductionConstants.RESEARCH_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getUniversities();
+		double total = universities + bonus;
+		map.put("universities", universities);
+		map.put("bonus", bonus);
+		map.put("total", total);
+		return map;
+	}
+
+	public HashMap<String, Integer> getLandUsage()
+	{
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("mines", City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
+		map.put("factories", City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
+		map.put("universities", City.LAND_UNIVERSITY * (this.universities));
+		return map;
 	}
 }

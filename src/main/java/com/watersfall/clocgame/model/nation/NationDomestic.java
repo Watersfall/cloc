@@ -20,7 +20,7 @@ public class NationDomestic extends NationBase
 	private @Getter
 	int stability;
 	private @Getter
-	double population;
+	long population;
 	private @Getter
 	int rebels;
 
@@ -51,21 +51,14 @@ public class NationDomestic extends NationBase
 			this.government = results.getInt(2);
 			this.approval = results.getInt(3);
 			this.stability = results.getInt(4);
-			this.population = results.getDouble(5);
+			this.population = results.getLong(5);
 			this.rebels = results.getInt(6);
 		}
 	}
 
 	public void setLand(int land) throws SQLException
 	{
-		if(land < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateInt(1, land);
-		}
+		results.updateInt(1, land);
 	}
 
 	public void setGovernment(int government) throws SQLException
@@ -109,25 +102,11 @@ public class NationDomestic extends NationBase
 
 	public void setPopulation(double population) throws SQLException
 	{
-		if(population < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateDouble(5, population);
-		}
+		results.updateDouble(5, population);
 	}
 
 	public void setRebels(int rebels) throws SQLException
 	{
-		if(rebels < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateInt(6, rebels);
-		}
+		results.updateInt(6, rebels);
 	}
 }
