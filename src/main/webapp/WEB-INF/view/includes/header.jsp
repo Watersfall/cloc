@@ -97,7 +97,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/policies.jsp">
+                        <a href="${pageContext.request.contextPath}/treaties.jsp">
                             <div class="headerTab">
                                 <p>Treaties</p>
                             </div>

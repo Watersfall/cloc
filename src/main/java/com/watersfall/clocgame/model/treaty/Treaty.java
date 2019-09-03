@@ -10,6 +10,18 @@ import java.util.ArrayList;
 
 public class Treaty extends NationBase
 {
+	public static ArrayList<Treaty> getAllTreaties(Connection conn) throws SQLException
+	{
+		ArrayList<Treaty> array = new ArrayList<>();
+		PreparedStatement treaties = conn.prepareStatement("SELECT id FROM cloc_treaties");
+		ResultSet results = treaties.executeQuery();
+		while(results.next())
+		{
+			array.add(new Treaty(conn, results.getInt(1), true, true));
+		}
+		return array;
+	}
+
 	public static Treaty createTreaty(Connection conn, String name) throws SQLException
 	{
 		PreparedStatement create = conn.prepareStatement("INSERT INTO cloc_treaties (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
@@ -17,7 +29,7 @@ public class Treaty extends NationBase
 		create.executeUpdate();
 		ResultSet results = create.getGeneratedKeys();
 		results.first();
-		return new Treaty(conn, results.getInt(1), false);
+		return new Treaty(conn, results.getInt(1), true, true);
 	}
 
 	private @Getter int id;
@@ -27,46 +39,17 @@ public class Treaty extends NationBase
 	private @Getter int memberCount;
 	private @Getter ArrayList<TreatyMember> members;
 
+
+	/**
+	 *
+	 * @param connection The SQL Connection
+	 * @param id The treaty ID
+	 * @param safe Whether the results should be writable
+	 * @throws SQLException if an SQL error occurs
+	 */
 	public Treaty(Connection connection, int id, boolean safe) throws SQLException
 	{
-		super(connection, id, safe);
-		PreparedStatement read;
-		ResultSet treaty;
-		if(safe)
-		{
-			read = connection.prepareStatement("SELECT alliance_id FROM cloc_treaties_members WHERE nation_id=? ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			read = connection.prepareStatement("SELECT alliance_id FROM cloc_treaties_members WHERE nation_id=?");
-		}
-		read.setInt(1, id);
-		this.results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new TreatyNotFoundException("Nation not in any treaties!");
-		}
-		else
-		{
-			if(safe)
-			{
-				read = connection.prepareStatement("SELECT name, flag, description, id " + "FROM cloc_treaties " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			}
-			else
-			{
-				read = connection.prepareStatement("SELECT name, flag, description, id " + "FROM cloc_treaties " + "WHERE id=?");
-			}
-			read.setInt(1, results.getInt(1));
-			treaty = read.executeQuery();
-			if(!treaty.first())
-			{
-				throw new TreatyNotFoundException("Treaty does not exist!");
-			}
-			this.name = treaty.getString(1);
-			this.flag = treaty.getString(2);
-			this.description = treaty.getString(3);
-			this.id = treaty.getInt(4);
-		}
+		this(connection, id, safe, true);
 	}
 
 	/**
@@ -108,18 +91,20 @@ public class Treaty extends NationBase
 			this.name = results.getString(1);
 			this.flag = results.getString(2);
 			this.description = results.getString(3);
-			this.memberCount = resultsMembers.getFetchSize();
 		}
 		if(!lazyLoad)
 		{
-			while(results.next())
+			members = new ArrayList<>();
+			while(resultsMembers.next())
 			{
 				members.add(new TreatyMember(connection, resultsMembers.getInt(1), false));
 			}
+			this.memberCount = members.size();
 		}
-		if(!safe)
+		else
 		{
-			connection.close();
+			resultsMembers.last();
+			memberCount = results.getRow();
 		}
 	}
 

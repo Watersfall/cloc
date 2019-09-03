@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.model.treaty;
 
+import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.TreatyPermissionException;
 import com.watersfall.clocgame.model.nation.Nation;
 import lombok.Getter;
@@ -25,6 +26,10 @@ public class TreatyMember extends Nation
 		PreparedStatement read = connection.prepareStatement("SELECT founder, manage, kick, invite, edit, alliance_id, nation_id FROM cloc_treaties_members WHERE nation_id=?");
 		read.setInt(1, id);
 		this.results = read.executeQuery();
+		if(!results.first())
+		{
+			throw new NationNotFoundException("No nation with that id!");
+		}
 		this.founder = results.getBoolean(1);
 		this.manage = results.getBoolean(2);
 		this.kick = results.getBoolean(3);

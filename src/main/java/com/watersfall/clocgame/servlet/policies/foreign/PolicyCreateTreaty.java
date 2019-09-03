@@ -21,7 +21,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
-@WebServlet(urlPatterns = "/policies/creatytreaty")
+@WebServlet(urlPatterns = {"/policies/createtreaty", "/createtreaty.jsp"})
 public class PolicyCreateTreaty extends HttpServlet
 {
 
@@ -45,7 +45,7 @@ public class PolicyCreateTreaty extends HttpServlet
 				}
 				else
 				{
-					Nation nation = new Nation(conn, user, false);
+					Nation nation = new Nation(conn, user, true, false);
 					Treaty treaty= Treaty.createTreaty(conn, name);
 					nation.joinTreaty(treaty, true);
 					conn.commit();
@@ -102,6 +102,6 @@ public class PolicyCreateTreaty extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		super.doGet(request, response);
+		request.getServletContext().getRequestDispatcher("/WEB-INF/view/createtreaty.jsp").forward(request, response);
 	}
 }

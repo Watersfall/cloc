@@ -165,7 +165,7 @@
                         $0k
                     </td>
                     <td>
-                        <button class="policyButton" type="submit" onclick="window.location.href = '/createtreaty'">Create</button>
+                        <button class="policyButton" type="submit" onclick="window.location.href = '/createtreaty.jsp'">Create</button>
                     </td>
                 </tr>
             </c:when>
