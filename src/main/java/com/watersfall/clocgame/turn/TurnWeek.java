@@ -22,11 +22,12 @@ public class TurnWeek implements Runnable
 		{
 			connection = Database.getDataSource().getConnection();
 			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
+			connection.prepareStatement("UPDATE cloc_main SET turn=turn+1").execute();
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
 				int id = results.getInt(1);
-				Nation nation = new Nation(connection, id, true);
+				Nation nation = new Nation(connection, id, true, true);
 				NationEconomy economy = nation.getEconomy();
 				NationDomestic domestic = nation.getDomestic();
 				/*
