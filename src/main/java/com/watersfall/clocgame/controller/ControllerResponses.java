@@ -36,6 +36,16 @@ public class ControllerResponses
 		return "<p>" + field + " must be less than " + characters + " characters!";
 	}
 
+	public static String notEnough()
+	{
+		return "<p>You do not have enough to give!</p>";
+	}
+
+	public static String negative()
+	{
+		return "<p>You cannot give 0 or less!</p>";
+	}
+
 	/*
 	** Responses
 	 */
@@ -48,5 +58,15 @@ public class ControllerResponses
 	public static String registered()
 	{
 		return "<p>Registered!</p>";
+	}
+
+	public static String sent()
+	{
+		return "<p>Send!</p>";
+	}
+
+	public static String war()
+	{
+		return "<p>You have declared war!</p>";
 	}
 }

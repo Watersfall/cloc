@@ -7,8 +7,11 @@
 <div class="main">
     <%@ include file="includes/results.jsp" %>
     <c:choose>
-        <c:when test="${nation == null}">
+        <c:when test="${param['id'] == null}">
             <p>You have visited this page incorrectly!</p>
+        </c:when>
+        <c:when test="${nation == null}">
+            <p>This nation does not exist!</p>
         </c:when>
         <c:when test="${not empty user and not empty nation and nation.id == user}">
             <c:redirect url="/main.jsp"/>
@@ -140,7 +143,7 @@
                     <tr>
                         <td>Send Money</td>
                         <td>
-                            <input type="number" id="amountCash" name="sendcash">
+                            <input type="number" id="amountCash" name="sendcash" min="0">
                             <button type="submit" onclick="sendCash(document.getElementById('amountCash').value, <c:out
                                     value="${nation}"/>);">Send
                             </button>
@@ -149,7 +152,7 @@
                     <tr>
                         <td>Send Iron</td>
                         <td>
-                            <input type="number" id="amountIron" name="sendiron">
+                            <input type="number" id="amountIron" name="sendiron" min="0">
                             <button type="submit"
                                     onclick="sendIron(document.getElementById('amountIron').value, <c:out value="${nation}"/>);">
                                 Send
@@ -159,7 +162,7 @@
                     <tr>
                         <td>Send Coal</td>
                         <td>
-                            <input type="number" id="amountCoal" name="sendcoal">
+                            <input type="number" id="amountCoal" name="sendcoal" min="0">
                             <button type="submit"
                                     onclick="sendCoal(document.getElementById('amountCoal').value, <c:out value="${nation}"/>);">
                                 Send
@@ -169,7 +172,7 @@
                     <tr>
                         <td>Send Oil</td>
                         <td>
-                            <input type="number" id="amountOil" name="sendoil">
+                            <input type="number" id="amountOil" name="sendoil" min="0">
                             <button type="submit"
                                     onclick="sendOil(document.getElementById('amountOil').value, <c:out value="${nation}"/>);">
                                 Send
@@ -179,7 +182,7 @@
                     <tr>
                         <td>Send Steel</td>
                         <td>
-                            <input type="number" id="amountSteel" name="sendsteel">
+                            <input type="number" id="amountSteel" name="sendsteel" min="0">
                             <button type="submit"
                                     onclick="sendSteel(document.getElementById('amountSteel').value, <c:out value="${nation}"/>);">
                                 Send
@@ -187,6 +190,11 @@
                         </td>
                     </tr>
                 </table>
+                <form action="nation.do" method="POST">
+                    <input type="hidden" name="action" value="war"/>
+                    <input type="hidden" name="id" value="${nation.id}"/>
+                    <button type="submit">Declare War</button>
+                </form>
             </c:if>
         </c:otherwise>
     </c:choose>

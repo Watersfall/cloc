@@ -4,7 +4,7 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <div class="main">
-    <form method="POST" action="${pageContext.request.contextPath}//policies/creatytreaty">
+    <form method="POST" action="${pageContext.request.contextPath}/policies/createtreaty">
         <input type="text" name="name" maxlength="32">
         <button type="submit">Create</button>
     </form>

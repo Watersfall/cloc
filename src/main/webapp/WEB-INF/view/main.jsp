@@ -9,6 +9,9 @@
 		<p>You must be logged in to view this page!</p>
 	</c:if>
 	<c:if test="${sessionScope.user != null}">
+		<c:if test="${home.offensive != null || home.defensive != null}">
+			<p>You are at war!</p>;
+		</c:if>
 		<div class="nation">
 			<h1><c:out value="${home.cosmetic.nationTitle}"/><br> of <br><c:out value="${home.cosmetic.nationName}"/></h1>
 			<img class="flag" src="https://imgur.com/${home.cosmetic.flag}" alt="flag">

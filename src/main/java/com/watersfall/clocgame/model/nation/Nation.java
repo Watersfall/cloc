@@ -1,10 +1,13 @@
 package com.watersfall.clocgame.model.nation;
 
+import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.TreatyNotFoundException;
 import com.watersfall.clocgame.exception.WarNotFoundException;
 import com.watersfall.clocgame.math.Math;
+import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.model.war.War;
+import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -46,12 +49,25 @@ public class Nation
 		cities = new NationCities(connection, id, safe);
 		armies = new NationArmies(connection, id, safe);
 		policy = new NationPolicy(connection, id, safe);
-		try{defensive = new War(connection, id, safe, false);}catch(WarNotFoundException e){defensive=null;}
-		try{offensive = new War(connection, id, safe, true);}catch(WarNotFoundException e){offensive=null;}
-		try{treaty = new Treaty(connection, id, safe);}catch(TreatyNotFoundException e){treaty=null;}
+		//try{treaty = new Treaty(connection, id, safe);}catch(TreatyNotFoundException e){treaty=null;}
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;
+	}
+
+	public Nation(Connection connection, int id, boolean safe, boolean getWars) throws SQLException
+	{
+		this(connection, id, safe);
+		if(getWars)
+		{
+			try{defensive = new War(connection, id, safe, false);}catch(WarNotFoundException e){defensive=null;}
+			try{offensive = new War(connection, id, safe, true);}catch(WarNotFoundException e){offensive=null;}
+		}
+		else
+		{
+			offensive = null;
+			defensive = null;
+		}
 	}
 
 	/**
@@ -67,6 +83,14 @@ public class Nation
 
 	public void joinTreaty(Treaty treaty, boolean founder) throws SQLException
 	{
+		PreparedStatement check = connection.prepareStatement("SELECT * FROM cloc_treaties_members WHERE nation_id=?");
+		check.setInt(1, this.id);
+		if(check.executeQuery().first())
+		{
+			PreparedStatement leave = connection.prepareStatement("DELETE FROM cloc_treaties_members WHERE nation_id=?");
+			leave.setInt(1, this.id);
+			leave.execute();
+		}
 		PreparedStatement join =  connection.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
 		join.setInt(1, treaty.getId());
 		join.setInt(2, this.id);
@@ -82,18 +106,20 @@ public class Nation
 
 	public boolean canDeclareWar(Nation nation)
 	{
-		return this.offensive == null && nation.getDefensive() == null;
+		return (this.offensive == null && nation.getDefensive() == null) && Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion());
 	}
 
-	public War declareWar(Nation nation) throws SQLException
+	public void declareWar(Nation nation) throws SQLException
 	{
-		if(canDeclareWar(nation))
+		if(nation != null && canDeclareWar(nation))
 		{
-			return new War(this.connection, this, nation);
-		}
-		else
-		{
-			return null;
+			Connection conn = Database.getDataSource().getConnection();
+			PreparedStatement declare = conn.prepareStatement("INSERT INTO cloc_war (attacker, defender, start) VALUES (?,?,?)");
+			declare.setInt(1, this.id);
+			declare.setInt(2, nation.getId());
+			declare.setInt(3, Util.turn);
+			declare.execute();
+			conn.commit();
 		}
 	}
 
