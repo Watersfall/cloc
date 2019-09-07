@@ -3,10 +3,6 @@ package com.watersfall.clocgame.util;
 import com.watersfall.clocgame.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class UserUtils
 {

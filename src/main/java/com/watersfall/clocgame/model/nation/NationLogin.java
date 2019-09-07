@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class NationLogin extends NationBase
 {
-	private int id;
+	private @Getter int id;
 	private @Getter
 	String username;
 	private @Getter

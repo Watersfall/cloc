@@ -1,9 +1,10 @@
 package com.watersfall.clocgame.controller;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,17 +48,17 @@ public class NationController extends HttpServlet
 
 		if(req.getSession().getAttribute("user") == null)
 		{
-			writer.append(ControllerResponses.noLogin());
+			writer.append(Responses.noLogin());
 			return;
 		}
 		if(req.getParameter("id") == null)
 		{
-			writer.append(ControllerResponses.genericError());
+			writer.append(Responses.genericError());
 			return;
 		}
 		if(action == null)
 		{
-			writer.append(ControllerResponses.genericError());
+			writer.append(Responses.genericError());
 			return;
 		}
 
@@ -75,18 +76,18 @@ public class NationController extends HttpServlet
 				case "sendcoal":
 					if(req.getParameter("amount") == null)
 					{
-						writer.append(ControllerResponses.genericError());
+						writer.append(Responses.genericError());
 						break;
 					}
 					amount = Integer.parseInt(req.getParameter("amount"));
 					if(amount <= 0)
 					{
-						writer.append(ControllerResponses.negative());
+						writer.append(Responses.negative());
 						break;
 					}
 					else if(amount > sender.getEconomy().getCoal())
 					{
-						writer.append(ControllerResponses.notEnough());
+						writer.append(Responses.notEnough());
 						break;
 					}
 					else
@@ -96,24 +97,24 @@ public class NationController extends HttpServlet
 						sender.update();
 						receiver.update();
 						connection.commit();
-						writer.append(ControllerResponses.sent());
+						writer.append(Responses.sent());
 					}
 					break;
 				case "sendiron":
 					if(req.getParameter("amount") == null)
 					{
-						writer.append(ControllerResponses.genericError());
+						writer.append(Responses.genericError());
 						break;
 					}
 					amount = Integer.parseInt(req.getParameter("amount"));
 					if(amount <= 0)
 					{
-						writer.append(ControllerResponses.negative());
+						writer.append(Responses.negative());
 						break;
 					}
 					else if(amount > sender.getEconomy().getIron())
 					{
-						writer.append(ControllerResponses.notEnough());
+						writer.append(Responses.notEnough());
 						break;
 					}
 					else
@@ -123,24 +124,24 @@ public class NationController extends HttpServlet
 						sender.update();
 						receiver.update();
 						connection.commit();
-						writer.append(ControllerResponses.sent());
+						writer.append(Responses.sent());
 					}
 					break;
 				case "sendoil":
 					if(req.getParameter("amount") == null)
 					{
-						writer.append(ControllerResponses.genericError());
+						writer.append(Responses.genericError());
 						break;
 					}
 					amount = Integer.parseInt(req.getParameter("amount"));
 					if(amount <= 0)
 					{
-						writer.append(ControllerResponses.negative());
+						writer.append(Responses.negative());
 						break;
 					}
 					else if(amount > sender.getEconomy().getOil())
 					{
-						writer.append(ControllerResponses.notEnough());
+						writer.append(Responses.notEnough());
 						break;
 					}
 					else
@@ -150,24 +151,24 @@ public class NationController extends HttpServlet
 						sender.update();
 						receiver.update();
 						connection.commit();
-						writer.append(ControllerResponses.sent());
+						writer.append(Responses.sent());
 					}
 					break;
 				case "sendsteel":
 					if(req.getParameter("amount") == null)
 					{
-						writer.append(ControllerResponses.genericError());
+						writer.append(Responses.genericError());
 						break;
 					}
 					amount = Integer.parseInt(req.getParameter("amount"));
 					if(amount <= 0)
 					{
-						writer.append(ControllerResponses.negative());
+						writer.append(Responses.negative());
 						break;
 					}
 					else if(amount > sender.getEconomy().getSteel())
 					{
-						writer.append(ControllerResponses.notEnough());
+						writer.append(Responses.notEnough());
 						break;
 					}
 					else
@@ -177,24 +178,24 @@ public class NationController extends HttpServlet
 						sender.update();
 						receiver.update();
 						connection.commit();
-						writer.append(ControllerResponses.sent());
+						writer.append(Responses.sent());
 					}
 					break;
 				case "sendnitrogen":
 					if(req.getParameter("amount") == null)
 					{
-						writer.append(ControllerResponses.genericError());
+						writer.append(Responses.genericError());
 						break;
 					}
 					amount = Integer.parseInt(req.getParameter("amount"));
 					if(amount <= 0)
 					{
-						writer.append(ControllerResponses.negative());
+						writer.append(Responses.negative());
 						break;
 					}
 					else if(amount > sender.getEconomy().getNitrogen())
 					{
-						writer.append(ControllerResponses.notEnough());
+						writer.append(Responses.notEnough());
 						break;
 					}
 					else
@@ -204,24 +205,24 @@ public class NationController extends HttpServlet
 						sender.update();
 						receiver.update();
 						connection.commit();
-						writer.append(ControllerResponses.sent());
+						writer.append(Responses.sent());
 					}
 					break;
 				case "sendmoney":
 					if(req.getParameter("amount") == null)
 					{
-						writer.append(ControllerResponses.genericError());
+						writer.append(Responses.genericError());
 						break;
 					}
 					amount = Integer.parseInt(req.getParameter("amount"));
 					if(amount <= 0)
 					{
-						writer.append(ControllerResponses.negative());
+						writer.append(Responses.negative());
 						break;
 					}
 					else if(amount > sender.getEconomy().getBudget())
 					{
-						writer.append(ControllerResponses.notEnough());
+						writer.append(Responses.notEnough());
 						break;
 					}
 					else
@@ -231,7 +232,7 @@ public class NationController extends HttpServlet
 						sender.update();
 						receiver.update();
 						connection.commit();
-						writer.append(ControllerResponses.sent());
+						writer.append(Responses.sent());
 					}
 					break;
 				case "war":
@@ -243,13 +244,13 @@ public class NationController extends HttpServlet
 					{
 						sender.declareWar(receiver);
 						connection.commit();
-						writer.append(ControllerResponses.war());
+						writer.append(Responses.war());
 					}
 			}
 		}
 		catch(SQLException e)
 		{
-			writer.append(ControllerResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			try
 			{
 				connection.rollback();
@@ -261,11 +262,11 @@ public class NationController extends HttpServlet
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		catch(NumberFormatException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		finally
 		{

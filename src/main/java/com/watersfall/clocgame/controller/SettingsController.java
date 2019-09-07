@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.controller;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
 
@@ -33,31 +34,31 @@ public class SettingsController extends HttpServlet
 		String desc = req.getParameter("description");
 		if(flag == null || leader == null || nationTitle == null || leaderTitle == null || desc == null)
 		{
-			writer.append(ControllerResponses.nullFields());
+			writer.append(Responses.nullFields());
 		}
 		else
 		{
 			if(req.getSession().getAttribute("user") == null)
 			{
-				writer.append(ControllerResponses.noLogin());
+				writer.append(Responses.noLogin());
 			}
 			else
 			{
 				if(flag.length() > 128)
 				{
-					writer.append(ControllerResponses.tooLong("Flag", 128));
+					writer.append(Responses.tooLong("Flag", 128));
 				}
 				else if(leader.length() > 128)
 				{
-					writer.append(ControllerResponses.tooLong("Leader", 128));
+					writer.append(Responses.tooLong("Leader", 128));
 				}
 				else if(nationTitle.length() > 128)
 				{
-					writer.append(ControllerResponses.tooLong("Nation title", 128));
+					writer.append(Responses.tooLong("Nation title", 128));
 				}
 				else if(leaderTitle.length() > 128)
 				{
-					writer.append(ControllerResponses.tooLong("Leader Title", 128));
+					writer.append(Responses.tooLong("Leader Title", 128));
 				}
 				else
 				{
@@ -79,7 +80,7 @@ public class SettingsController extends HttpServlet
 						try
 						{
 							connection.rollback();
-							writer.append(ControllerResponses.genericException(e));
+							writer.append(Responses.genericException(e));
 						}
 						catch(Exception ex)
 						{

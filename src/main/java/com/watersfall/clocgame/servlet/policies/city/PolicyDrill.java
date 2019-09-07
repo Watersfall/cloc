@@ -4,7 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.util.UserUtils;
@@ -42,14 +42,14 @@ public class PolicyDrill extends HttpServlet
 			City city = new City(conn, id, true);
 			if(user != city.getOwner())
 			{
-				writer.append(PolicyResponses.notYourCity());
+				writer.append(Responses.notYourCity());
 			}
 			else
 			{
 				int cost = city.getWellCost();
 				if(economy.getBudget() < cost)
 				{
-					writer.append(PolicyResponses.noMoney());
+					writer.append(Responses.noMoney());
 				}
 				else
 				{
@@ -58,7 +58,7 @@ public class PolicyDrill extends HttpServlet
 					city.update();
 					economy.update();
 					conn.commit();
-					writer.append(PolicyResponses.drill());
+					writer.append(Responses.drill());
 				}
 			}
 		}
@@ -72,24 +72,24 @@ public class PolicyDrill extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append(PolicyResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			e.printStackTrace();
 		}
 		catch(NotLoggedInException e)
 		{
-			writer.append(PolicyResponses.noLogin());
+			writer.append(Responses.noLogin());
 		}
 		catch(NumberFormatException | NullPointerException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		catch(CityNotFoundException e)
 		{
-			writer.append(PolicyResponses.noCity());
+			writer.append(Responses.noCity());
 		}
 		finally
 		{

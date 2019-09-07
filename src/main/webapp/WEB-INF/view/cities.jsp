@@ -28,7 +28,7 @@
     <table id="nation">
         <tr>
             <c:forEach var="i" items="${home.cities.cities}">
-                <th style="width: ${100 / result_cities.rowCount}%" onclick="loadCity(${i.key})">${i.value.name}</th>
+                <th style="width: ${100 / home.cities.cities.size}%" onclick="loadCity(${i.key})">${i.value.name}</th>
             </c:forEach>
         </tr>
     </table>

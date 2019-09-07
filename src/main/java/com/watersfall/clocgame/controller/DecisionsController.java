@@ -1,5 +1,7 @@
 package com.watersfall.clocgame.controller;
 
+import com.watersfall.clocgame.constants.Responses;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +36,7 @@ public class DecisionsController extends HttpServlet
 				req.getServletContext().getRequestDispatcher("/decisions/economy").include(req, resp);
 				break;
 			default:
-				writer.append(ControllerResponses.genericError());
+				writer.append(Responses.genericError());
 				break;
 		}
 	}

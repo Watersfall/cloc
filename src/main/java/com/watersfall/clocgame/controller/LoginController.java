@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.controller;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
 import com.watersfall.clocgame.util.Md5;
 
 import javax.servlet.ServletException;
@@ -36,7 +36,7 @@ public class LoginController extends HttpServlet
 		{
 			if(username == null || password == null)
 			{
-				writer.append(ControllerResponses.nullFields());
+				writer.append(Responses.nullFields());
 			}
 			else
 			{
@@ -48,11 +48,11 @@ public class LoginController extends HttpServlet
 				ResultSet results = check.executeQuery();
 				if(!results.first())
 				{
-					writer.append(ControllerResponses.invalidLogin());
+					writer.append(Responses.invalidLogin());
 				}
 				else
 				{
-					writer.append(ControllerResponses.loggedIn());
+					writer.append(Responses.loggedIn());
 					req.getSession().setAttribute("user", results.getInt(1));
 					if(url == null)
 					{
@@ -64,7 +64,7 @@ public class LoginController extends HttpServlet
 		}
 		catch(SQLException e)
 		{
-			writer.append(ControllerResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 		}
 	}
 }

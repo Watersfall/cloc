@@ -3,6 +3,7 @@ package com.watersfall.clocgame.controller.filter;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Util;
+import lombok.Getter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -16,7 +17,7 @@ import java.sql.SQLException;
 @WebFilter(urlPatterns = "*.jsp")
 public class LoggedInFilter implements Filter
 {
-	private ServletContext context;
+	private @Getter ServletContext context;
 
 	@Override
 	public void init(FilterConfig config)

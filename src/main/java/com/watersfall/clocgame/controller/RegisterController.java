@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.controller;
 
-import com.watersfall.clocgame.controller.ControllerResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Region;
@@ -37,7 +37,7 @@ public class RegisterController extends HttpServlet
 		String econString = req.getParameter("economy");
 		if(username == null || nation == null || capital == null || password == null || region == null || govString == null || econString == null)
 		{
-			writer.append(ControllerResponses.nullFields());
+			writer.append(Responses.nullFields());
 		}
 		else
 		{
@@ -58,23 +58,23 @@ public class RegisterController extends HttpServlet
 			}
 			catch(NumberFormatException e)
 			{
-				writer.append(ControllerResponses.genericError());
+				writer.append(Responses.genericError());
 			}
 			if(username.length() > 32)
 			{
-				writer.append(ControllerResponses.tooLong("Username", 32));
+				writer.append(Responses.tooLong("Username", 32));
 			}
 			else if(nation.length() > 32)
 			{
-				writer.append(ControllerResponses.tooLong("Nation name", 32));
+				writer.append(Responses.tooLong("Nation name", 32));
 			}
 			else if(capital.length() > 32)
 			{
-				writer.append(ControllerResponses.tooLong("Nation name", 32));
+				writer.append(Responses.tooLong("Nation name", 32));
 			}
 			else if(Region.getFromName(region) == null)
 			{
-				writer.append(ControllerResponses.genericError());
+				writer.append(Responses.genericError());
 			}
 			else
 			{
@@ -133,7 +133,7 @@ public class RegisterController extends HttpServlet
 					armies.execute();
 					cities.execute();
 					connection.commit();
-					writer.append(ControllerResponses.registered());
+					writer.append(Responses.registered());
 					resp.sendRedirect(req.getContextPath() + "/main.jsp");
 				}
 				catch(SQLException e)

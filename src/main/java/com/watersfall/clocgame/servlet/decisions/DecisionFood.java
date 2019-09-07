@@ -4,7 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.model.nation.NationPolicy;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -67,20 +67,20 @@ public class DecisionFood extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append(PolicyResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			e.printStackTrace();
 		}
 		catch(NotLoggedInException e)
 		{
-			writer.append(PolicyResponses.noLogin());
+			writer.append(Responses.noLogin());
 		}
 		catch(NumberFormatException | NullPointerException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		finally
 		{

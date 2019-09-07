@@ -8,14 +8,6 @@
 <div class="main">
     <%@ include file="includes/results.jsp" %>
     <h1><c:out value="${param['policies']}"/> Policy</h1>
-    <c:if test="${not empty policyResult}">
-        <div class="result">
-            <c:if test="${not empty image}">
-                <img class="policyImage" src="${pageContext.request.contextPath}/images/policies/<c:out value="${image}"/>" alt="Policy">
-            </c:if>
-            <p><c:out value="${policyResult}"/></p>
-        </div>
-    </c:if>
     <table id="policy">
         <tr>
             <th style="width: 15%">
@@ -30,7 +22,7 @@
             <th style="width: 20%"></th>
         </tr>
         <c:choose>
-            <c:when test="${check.rowCount == 0}">
+            <c:when test="${sessionScope.user == null}">
                 <p>You must be logged in to view this page!</p>
             </c:when>
             <c:when test="${param['policies'] == 'Economic'}">

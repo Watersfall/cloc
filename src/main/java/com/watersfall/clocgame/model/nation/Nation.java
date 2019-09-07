@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.TreatyNotFoundException;
 import com.watersfall.clocgame.exception.WarNotFoundException;
 import com.watersfall.clocgame.math.Math;
 import com.watersfall.clocgame.model.Region;

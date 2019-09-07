@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.ValueException;
 import lombok.Getter;
 
 import java.sql.Connection;

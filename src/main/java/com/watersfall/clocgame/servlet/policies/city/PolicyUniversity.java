@@ -4,7 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.util.UserUtils;
@@ -43,22 +43,22 @@ public class PolicyUniversity extends HttpServlet
 			NationEconomy economy = new NationEconomy(conn, id, true);
 			if(city.getOwner() != user)
 			{
-				writer.append(PolicyResponses.notYourCity());
+				writer.append(Responses.notYourCity());
 			}
 			else
 			{
 				HashMap<String, Integer> cost = city.getUniversityCost();
 				if(cost.get("iron") > economy.getIron())
 				{
-					writer.append(PolicyResponses.noIron());
+					writer.append(Responses.noIron());
 				}
 				else if(cost.get("coal") > economy.getCoal())
 				{
-					writer.append(PolicyResponses.noCoal());
+					writer.append(Responses.noCoal());
 				}
 				else if(cost.get("steel") > economy.getSteel())
 				{
-					writer.append(PolicyResponses.noSteel());
+					writer.append(Responses.noSteel());
 				}
 				else
 				{
@@ -69,7 +69,7 @@ public class PolicyUniversity extends HttpServlet
 					city.update();
 					economy.update();
 					conn.commit();
-					writer.append(PolicyResponses.university());
+					writer.append(Responses.university());
 				}
 			}
 		}
@@ -83,24 +83,24 @@ public class PolicyUniversity extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append(PolicyResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			e.printStackTrace();
 		}
 		catch(NotLoggedInException e)
 		{
-			writer.append(PolicyResponses.noLogin());
+			writer.append(Responses.noLogin());
 		}
 		catch(NumberFormatException | NullPointerException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		catch(CityNotFoundException e)
 		{
-			writer.append(PolicyResponses.noCity());
+			writer.append(Responses.noCity());
 		}
 		finally
 		{

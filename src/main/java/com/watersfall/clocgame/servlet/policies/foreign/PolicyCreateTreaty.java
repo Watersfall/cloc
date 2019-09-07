@@ -4,7 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.UserUtils;
@@ -41,7 +41,7 @@ public class PolicyCreateTreaty extends HttpServlet
 			{
 				if(name.length() > 32)
 				{
-					writer.append(PolicyResponses.tooLong());
+					writer.append(Responses.tooLong());
 				}
 				else
 				{
@@ -67,24 +67,24 @@ public class PolicyCreateTreaty extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append(PolicyResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			e.printStackTrace();
 		}
 		catch(NotLoggedInException e)
 		{
-			writer.append(PolicyResponses.noLogin());
+			writer.append(Responses.noLogin());
 		}
 		catch(NumberFormatException | NullPointerException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		catch(CityNotFoundException e)
 		{
-			writer.append(PolicyResponses.noCity());
+			writer.append(Responses.noCity());
 		}
 		finally
 		{

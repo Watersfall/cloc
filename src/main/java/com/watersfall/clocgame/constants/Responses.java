@@ -1,6 +1,6 @@
-package com.watersfall.clocgame.servlet.policies;
+package com.watersfall.clocgame.constants;
 
-public class PolicyResponses
+public class Responses
 {
 
 	/*
@@ -47,10 +47,20 @@ public class PolicyResponses
 		return "<p>Name must be less than 32 characters!</p>";
 	}
 
+	public static String negative()
+	{
+		return "<p>You cannot give 0 or less!</p>";
+	}
+
 
 	/*
 	** MISSING REQUIREMENTS
 	 */
+
+	public static String nullFields()
+	{
+		return "<p>Please fill out all fields!</p>";
+	}
 
 	public static String noMoney()
 	{
@@ -92,9 +102,39 @@ public class PolicyResponses
 		return "<p>City is not on the coast!</p>";
 	}
 
+	public static String tooLong(String field, int characters)
+	{
+		return "<p>" + field + " must be less than " + characters + " characters!";
+	}
+
+	public static String invalidLogin()
+	{
+		return "<p>Incorrect username or password!</p>";
+	}
+
 	/*
 	** RESPONSES
 	 */
+
+	public static String loggedIn()
+	{
+		return "<p>Logged in!</p>";
+	}
+
+	public static String registered()
+	{
+		return "<p>Registered!</p>";
+	}
+
+	public static String sent()
+	{
+		return "<p>Sent!</p>";
+	}
+
+	public static String war()
+	{
+		return "<p>You have declared war!</p>";
+	}
 
 	public static String freeMoneyCapitalist()
 	{

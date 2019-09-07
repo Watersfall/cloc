@@ -3,7 +3,7 @@ package com.watersfall.clocgame.servlet.policies.military;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.model.nation.NationMilitary;
 import com.watersfall.clocgame.util.UserUtils;
@@ -43,11 +43,11 @@ public class PolicyBuildArtillery extends HttpServlet
 			NationEconomy economy = new NationEconomy(conn, user, true);
 			if(economy.getSteel() < STEEL)
 			{
-				writer.append(PolicyResponses.noSteel());
+				writer.append(Responses.noSteel());
 			}
 			else if(economy.getNitrogen() < NITROGEN)
 			{
-				writer.append(PolicyResponses.noNitrogen());
+				writer.append(Responses.noNitrogen());
 			}
 			else
 			{
@@ -57,7 +57,7 @@ public class PolicyBuildArtillery extends HttpServlet
 				military.update();
 				economy.update();
 				conn.commit();
-				writer.append(PolicyResponses.artillery());
+				writer.append(Responses.artillery());
 			}
 		}
 		catch(SQLException e)
@@ -70,20 +70,20 @@ public class PolicyBuildArtillery extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append(PolicyResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			e.printStackTrace();
 		}
 		catch(NotLoggedInException e)
 		{
-			writer.append(PolicyResponses.noLogin());
+			writer.append(Responses.noLogin());
 		}
 		catch(NumberFormatException | NullPointerException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		finally
 		{

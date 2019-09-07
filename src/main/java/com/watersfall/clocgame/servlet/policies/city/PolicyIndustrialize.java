@@ -4,7 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.util.UserUtils;
@@ -42,22 +42,22 @@ public class PolicyIndustrialize extends HttpServlet
 			City city = new City(conn, id, true);
 			if(user != city.getOwner())
 			{
-				writer.append(PolicyResponses.notYourCity());
+				writer.append(Responses.notYourCity());
 			}
 			else
 			{
 				HashMap<String, Integer> cost = city.getFactoryCost();
 				if(cost.get("iron") > economy.getIron())
 				{
-					writer.append(PolicyResponses.noIron());
+					writer.append(Responses.noIron());
 				}
 				else if(cost.get("coal") > economy.getCoal())
 				{
-					writer.append(PolicyResponses.noCoal());
+					writer.append(Responses.noCoal());
 				}
 				else if(cost.get("steel") > economy.getSteel())
 				{
-					writer.append(PolicyResponses.noSteel());
+					writer.append(Responses.noSteel());
 				}
 				else
 				{
@@ -68,7 +68,7 @@ public class PolicyIndustrialize extends HttpServlet
 					city.update();
 					economy.update();
 					conn.commit();
-					writer.append(PolicyResponses.industrialize());
+					writer.append(Responses.industrialize());
 				}
 			}
 		}
@@ -82,24 +82,24 @@ public class PolicyIndustrialize extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append(PolicyResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			e.printStackTrace();
 		}
 		catch(NotLoggedInException e)
 		{
-			writer.append(PolicyResponses.noLogin());
+			writer.append(Responses.noLogin());
 		}
 		catch(NumberFormatException | NullPointerException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		catch(CityNotFoundException e)
 		{
-			writer.append(PolicyResponses.noCity());
+			writer.append(Responses.noCity());
 		}
 		finally
 		{

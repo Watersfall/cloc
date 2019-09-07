@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.util.UserUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -43,11 +43,11 @@ public class PolicyFreeMoneyCapitalist extends HttpServlet
 				update.setEconomic(update.getEconomic() + 5);
 				update.update();
 				connection.commit();
-				out.write(PolicyResponses.freeMoneyCapitalist());
+				out.write(Responses.freeMoneyCapitalist());
 			}
 			else
 			{
-				out.write(PolicyResponses.noLogin());
+				out.write(Responses.noLogin());
 			}
 		}
 		catch(SQLException e)

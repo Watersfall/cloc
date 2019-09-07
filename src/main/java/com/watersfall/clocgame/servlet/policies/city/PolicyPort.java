@@ -4,7 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.servlet.policies.PolicyResponses;
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.util.UserUtils;
@@ -43,17 +43,17 @@ public class PolicyPort extends HttpServlet
 			int cost = city.getPortCost();
 			if(user != city.getOwner())
 			{
-				writer.append(PolicyResponses.notYourCity());
+				writer.append(Responses.notYourCity());
 			}
 			else
 			{
 				if(!city.isCoastal())
 				{
-					writer.append(PolicyResponses.notCoastal());
+					writer.append(Responses.notCoastal());
 				}
 				else if(cost > economy.getBudget())
 				{
-					writer.append(PolicyResponses.noMoney());
+					writer.append(Responses.noMoney());
 				}
 				else
 				{
@@ -62,7 +62,7 @@ public class PolicyPort extends HttpServlet
 					city.update();
 					economy.update();
 					conn.commit();
-					writer.append(PolicyResponses.port());
+					writer.append(Responses.port());
 				}
 			}
 		}
@@ -76,24 +76,24 @@ public class PolicyPort extends HttpServlet
 			{
 				//Ignore
 			}
-			writer.append(PolicyResponses.genericException(e));
+			writer.append(Responses.genericException(e));
 			e.printStackTrace();
 		}
 		catch(NotLoggedInException e)
 		{
-			writer.append(PolicyResponses.noLogin());
+			writer.append(Responses.noLogin());
 		}
 		catch(NumberFormatException | NullPointerException e)
 		{
-			writer.append(PolicyResponses.genericError());
+			writer.append(Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			writer.append(PolicyResponses.noNation());
+			writer.append(Responses.noNation());
 		}
 		catch(CityNotFoundException e)
 		{
-			writer.append(PolicyResponses.noCity());
+			writer.append(Responses.noCity());
 		}
 		finally
 		{

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/treaty.jsp", "/treaty.do"})
 public class TreatyController extends HttpServlet

@@ -4,16 +4,6 @@
     <short-name>CLOC</short-name>
 
     <tag>
-        <name>password</name>
-        <tag-class>com.watersfall.clocgame.tags.Password</tag-class>
-        <body-content>scriptless</body-content>
-        <attribute>
-            <name>value</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-    <tag>
         <name>approval</name>
         <tag-class>com.watersfall.clocgame.tags.Approval</tag-class>
         <body-content>scriptless</body-content>
@@ -77,26 +67,6 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.Integer</type>
-        </attribute>
-    </tag>
-    <tag>
-        <name>region</name>
-        <tag-class>com.watersfall.clocgame.tags.Region</tag-class>
-        <body-content>scriptless</body-content>
-        <attribute>
-            <name>value</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-    <tag>
-        <name>database</name>
-        <tag-class>com.watersfall.clocgame.tags.DatabaseConnection</tag-class>
-        <body-content>empty</body-content>
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
 </taglib>
