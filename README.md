@@ -1,66 +1,126 @@
-# cloc
+# <CLOC
 
 Discord Link: https://discord.gg/x2VwYkS
 
+Contents: 
+-
+- com
+    - watersfall
+        - clocgame
+            - constants
+                - Costs.java : Policy costs constants, for use in policy servlets and in policy views
+                - ProductionConstants.java : Base outputs of the various buildings
+                - Responses.java : Contains all responses to policies, decisions, logging in, errors, and anything else
+            - controller
+                - filter
+                    - LoggedInFilter.java : A filter that runs on all URLs ending in .jsp that checks if the current session 
+                    is logged in, and creates and assigns a Nation model for that user
+                - The rest of the controllers are for their respective pages, i.e. MainController is for /main.jsp, etc.
+            - database
+                - Database.java : Singleton that contains that BasicDataSource object used for all MYSQL Connections
+            - exception
+                - CityNotFoundException.java : Thrown when a model is attempted to be instantiated for a city that doesn't exist
+                - NationNotFoundException.java : Same as CityNotFoundException.java but for a nation instead of a city
+                - NotLoggedInException.java : Thrown when a user attempts to do an action that requires being logged in without being logged in
+                - TreatyNotFoundException.java : Same as CityNotFoundException.java but for treaties
+                - TreatyPermissionException.java : Thrown when a user attempts a treaty management action they don't have permission to do, 
+                for example, inviting or kicking someone with the inviting or kicking permission bit
+                - ValueException.java : Thrown when a non-allowed value is entered, for example, a non-number where a number should be
+                - WarNotFoundException.java : Same as CityNotFoundException.java but for wars
+            - listeners
+                - Session.java : All code that gets run when a session is created or destroyed, currently nothing for both
+                - Startup.java : All the code that get run when the server starts up, currently setting the database attribute 
+                for servlets and jsp's to use, setting the current turn number, and starting up turn change
+            - math
+                - Math.java : Custom implementations of certain math functions to do the wrong thing with negatives and 0
+            - model
+                - nation : Models representing each part of a nation, with a Nation.java model containing all of them
+                - treaty : Models representing a treaty and it's members
+                - war : Model representing a war
+                - CityType.java : Enum class containing the city types, as well as their database names
+                - Region.java : Enum class containing the different regions, as well as their database names and methods 
+                to check bordering
+            - schedulers
+                - WeekScheduler.java : Cron scheduler that currently runs TurnWeek.java every hour
+            - servlet
+                - decisions : Servlet classes that handle changing decisions from the decisions.jsp page
+                - events : Executes the effects of any events a nation may receive
+                - policies : Servlet classes that run any policies from the policies.jsp page
+            - tags : Converts the database integer into the display strings
+                - Alignment.java 
+                - Approval.java 
+                - Economic.java
+                - Government.java
+                - Rebel.java
+                - Stability.java
+            - turn
+                - TurnWeek.java : Processes the weekly turn change called from WeekScheduler.java
+            - util
+                - Md5.java : Class containing the password hashing function
+                - UserUtils.java : Contains a method to get a user's id, or throw an exception if they're not logged in
+                - Util.java : The turn number and nothing else at the moment
+                
+- webapp
+    - css
+    - images
+    - js
+    - WEB-INF
+        - view
+        - custom.tld
+        - web.xml
+    -favicon.ico
+            
+            
+Todo List:
+-   
+- War
+    - War Formulas
+    - Attacking with land, navy, etc.
+    - UI for it
+    - Viewing war history
+    - Sending and accepting peace offers
+    - View all current wars
+    - Casualty logging?
 
-Current Bugs:
-
-  - ~~"Too many connections" on spam click~~
-  - ~~Making factories doesnt work~~
-  - Factory, etc. costs don't fire
-  
-Todo List: (In no particular order)
-
-  - ~~Register page with options for region region, government, and economy~~
-  
-  - Events
+- Treaties
+    - Inviting 
+    - Leaving
+    - Disbanding
+    - Showing up on nation pages
+    - Ability to set name, description, and flag
     
-  - Turn Changes
-  
-  - Mobile page
+- Cities
+    - Removing mines, factories, etc.
+    - Make land a hard limit for construction
+    - Farming improvements
+    - Make city type have an effect
+    - Potentially rework railroads to reduce factory, etc. upkeep costs instead
 
-  - Split Factories into Civilian and Military Factories
-    - Civilian produce STEEL and growth
-    - Military produce equipment but no growth or STEEL
-    - Able to build them separately at the same cost, and also convert for a set cost
-  - Factories increase in cost independently, at a much slower pace, 
-  similar to mines/wells, to make STEEL more of a "basic resource", like RM and Oil
-  
-  - Population Mechanics:
-    - Population growth determined by several factors
-      - Available jobs from buildings
-      - Population growth from food
-      - Size of military
-    - Population effects on manpower
-      - Higher population allows more conscription
-      - More conscription however, lowers population growth
-      - Mass deconscription temporarily largely increases population growth
-      
-  - Side Bar
-    - "The World" and "The Alliances" next to each other and expand below when clicked
-    - Expandable "Resources" tab
-    - Expandable policies tab
-    - Do something with "Settings" and "Logout"
-    - Do something with the login
-    - Setting tab as a gear icon
-   
-  - Policies Page
-    - Do policies without reloading the entire page for each click
-    - Add top bar for the different policy tabs
-    - Add hover CSS to policies
-    - Add "Government Policy"
-    - Government Policy
-      - Policies to change government type
-    - Domestic Policy
-      - Population growth related things
-      - Buildings to make people like you
-      - QoL stuff
-    - Economic Policy
-      - Mines/wells/factories/other production buildings
-      - Policies to change economy type
-    - Foreign Policy
-      - Interactions with the major powers
-    - Military Policy
-      - Conscript/Deconscript, training
-      - Building equipment, artillery, ships, planes, zeppelins
+- Military
+    - Creating, reinforcing, training, supplying
+    - Building and using ships
+    - Building and using aircraft
     
+- Decisions
+    - More basic decisions
+    - Remove some policies in favor of decisions
+    - Rename to something "State Policy" or something similar
+    
+- Policies
+    - Re-add Free Prisoners, Arrest, and alignment policies
+    - Rename to something other than policies
+
+- Research & Technology
+    - Create the entire thing lmao
+    - Equipment technology, better weapons, artillery, planes
+    - Economic technology, mining, factory, etc.
+    - Chemical weapons
+    - Oil power
+    
+- UI & Frontend
+    - See "Research & Technology"
+    - G R A P H S
+    
+- Database & Backend
+    - Add logging tables for graphing
+    - Add logging for any errors or exceptions
