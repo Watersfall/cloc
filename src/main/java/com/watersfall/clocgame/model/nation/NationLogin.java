@@ -12,16 +12,11 @@ import java.sql.SQLException;
 public class NationLogin extends NationBase
 {
 	private @Getter int id;
-	private @Getter
-	String username;
-	private @Getter
-	String email;
-	private @Getter
-	String password;
-	private @Getter
-	String ipRegister;
-	private @Getter
-	String ipLast;
+	private @Getter String username;
+	private @Getter String email;
+	private @Getter String password;
+	private @Getter String ipRegister;
+	private @Getter String ipLast;
 
 	public NationLogin(Connection connection, int id, boolean safe) throws SQLException
 	{

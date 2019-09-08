@@ -152,7 +152,7 @@
 				<td>
 					<div class="dropdown">
 						<span>
-							${home.economy.food}
+								${home.economy.food}
 						</span>
 						<div class="dropdown-content">
 							<p class="positive">+${food.farming} from farming</p>

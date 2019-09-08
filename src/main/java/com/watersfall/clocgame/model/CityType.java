@@ -6,8 +6,7 @@ public enum CityType
 {
 	MINING("MINING"), DRILLING("DRILLING"), INDUSTRY("INDUSTRY"), FARMING("FARMING");
 
-	private @Getter
-	String name;
+	private @Getter String name;
 
 	CityType(String name)
 	{

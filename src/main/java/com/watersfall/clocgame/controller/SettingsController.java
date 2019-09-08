@@ -66,7 +66,7 @@ public class SettingsController extends HttpServlet
 					try
 					{
 						connection = Database.getDataSource().getConnection();
-						NationCosmetic update = new NationCosmetic(connection, (Integer)req.getSession().getAttribute("user"), true);
+						NationCosmetic update = new NationCosmetic(connection, (Integer) req.getSession().getAttribute("user"), true);
 						update.setFlag(flag);
 						update.setPortrait(leader);
 						update.setNationTitle(nationTitle);

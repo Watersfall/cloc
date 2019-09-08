@@ -11,24 +11,15 @@ import java.sql.SQLException;
 
 public class Army
 {
-	private @Getter
-	int id;
-	private @Getter
-	int owner;
-	private @Getter
-	Region region;
-	private @Getter
-	int army;
-	private @Getter
-	int training;
-	private @Getter
-	int weapons;
-	private @Getter
-	int artillery;
-	private @Getter
-	int row;
-	private @Getter
-	ResultSet results;
+	private @Getter int id;
+	private @Getter int owner;
+	private @Getter Region region;
+	private @Getter int army;
+	private @Getter int training;
+	private @Getter int weapons;
+	private @Getter int artillery;
+	private @Getter int row;
+	private @Getter ResultSet results;
 
 	public Army(Connection connection, int id, boolean safe) throws SQLException
 	{

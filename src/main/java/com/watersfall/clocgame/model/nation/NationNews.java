@@ -12,8 +12,7 @@ import java.util.ArrayList;
 public class NationNews extends NationBase
 {
 
-	private @Getter
-	ArrayList<News> news;
+	private @Getter ArrayList<News> news;
 
 	public NationNews(Connection connection, int id, boolean safe) throws SQLException
 	{

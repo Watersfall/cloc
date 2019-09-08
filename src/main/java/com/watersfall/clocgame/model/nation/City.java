@@ -22,40 +22,23 @@ public class City
 	public static final int LAND_FACTORY = 1000;
 	public static final int LAND_UNIVERSITY = 500;
 
-	private @Getter
-	int id;
-	private @Getter
-	int owner;
-	private @Getter
-	boolean capital;
-	private @Getter
-	boolean coastal;
-	private @Getter
-	int railroads;
-	private @Getter
-	int ports;
-	private @Getter
-	int barracks;
-	private @Getter
-	int ironMines;
-	private @Getter
-	int coalMines;
-	private @Getter
-	int oilWells;
-	private @Getter
-	int industryCivilian;
-	private @Getter
-	int industryMilitary;
-	private @Getter
-	int industryNitrogen;
-	private @Getter
-	int universities;
-	private @Getter
-	String name;
-	private @Getter
-	CityType type;
-	private @Getter
-	ResultSet results;
+	private @Getter int id;
+	private @Getter int owner;
+	private @Getter boolean capital;
+	private @Getter boolean coastal;
+	private @Getter int railroads;
+	private @Getter int ports;
+	private @Getter int barracks;
+	private @Getter int ironMines;
+	private @Getter int coalMines;
+	private @Getter int oilWells;
+	private @Getter int industryCivilian;
+	private @Getter int industryMilitary;
+	private @Getter int industryNitrogen;
+	private @Getter int universities;
+	private @Getter String name;
+	private @Getter CityType type;
+	private @Getter ResultSet results;
 
 	public City(Connection connection, int id, boolean safe) throws SQLException
 	{

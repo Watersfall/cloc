@@ -8,14 +8,10 @@ import java.sql.SQLException;
 
 public abstract class NationBase
 {
-	protected @Getter
-	int id;
-	protected @Getter
-	Connection connection;
-	protected @Getter
-	boolean safe;
-	protected @Getter
-	ResultSet results;
+	protected @Getter int id;
+	protected @Getter Connection connection;
+	protected @Getter boolean safe;
+	protected @Getter ResultSet results;
 
 	public NationBase(Connection connection, int id, boolean safe) throws SQLException
 	{

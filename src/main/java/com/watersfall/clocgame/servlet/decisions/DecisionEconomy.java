@@ -1,12 +1,12 @@
 package com.watersfall.clocgame.servlet.decisions;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.exception.WarNotFoundException;
 import com.watersfall.clocgame.model.nation.NationPolicy;
 import com.watersfall.clocgame.model.war.War;
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 import org.apache.commons.dbcp2.BasicDataSource;

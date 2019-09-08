@@ -11,32 +11,19 @@ import java.sql.SQLException;
 
 public class NationMilitary extends NationBase
 {
-	private @Getter
-	int id;
-	private @Getter
-	int fighters;
-	private @Getter
-	int zeppelins;
-	private @Getter
-	int bombers;
-	private @Getter
-	int submarines;
-	private @Getter
-	int destroyers;
-	private @Getter
-	int cruisers;
-	private @Getter
-	int preBattleships;
-	private @Getter
-	int battleships;
-	private @Getter
-	int transports;
-	private @Getter
-	int stockpileArtillery;
-	private @Getter
-	int stockpileWeapons;
-	private @Getter
-	int warProtection;
+	private @Getter int id;
+	private @Getter int fighters;
+	private @Getter int zeppelins;
+	private @Getter int bombers;
+	private @Getter int submarines;
+	private @Getter int destroyers;
+	private @Getter int cruisers;
+	private @Getter int preBattleships;
+	private @Getter int battleships;
+	private @Getter int transports;
+	private @Getter int stockpileArtillery;
+	private @Getter int stockpileWeapons;
+	private @Getter int warProtection;
 
 	public NationMilitary(Connection connection, int id, boolean safe) throws SQLException
 	{

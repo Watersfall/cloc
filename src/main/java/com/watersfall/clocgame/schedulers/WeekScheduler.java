@@ -6,7 +6,8 @@ import lombok.Getter;
 
 public class WeekScheduler
 {
-	private static @Getter Scheduler scheduler;
+	private static @Getter
+	Scheduler scheduler;
 
 	private WeekScheduler()
 	{

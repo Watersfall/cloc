@@ -12,10 +12,8 @@ import java.sql.SQLException;
 public class NationForeign extends NationBase
 {
 
-	private @Getter
-	Region region;
-	private @Getter
-	int alignment;
+	private @Getter Region region;
+	private @Getter int alignment;
 
 	public NationForeign(Connection connection, int id, boolean safe) throws SQLException
 	{

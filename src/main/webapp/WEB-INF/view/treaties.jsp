@@ -5,13 +5,13 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <div class="main">
-    <table id="policy">
-        <tr>
-            <th>Flag</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Members</th>
-        </tr>
+	<table id="policy">
+		<tr>
+			<th>Flag</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Members</th>
+		</tr>
 		<c:forEach var="treaty" items="${treaties}">
 			<tr>
 				<td>${treaty.flag}</td>
@@ -20,7 +20,7 @@
 				<td>${treaty.memberCount}</td>
 			</tr>
 		</c:forEach>
-    </table>
+	</table>
 </div>
 </body>
 </html>

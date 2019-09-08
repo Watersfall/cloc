@@ -63,7 +63,7 @@ public class NationCities extends NationBase
 			costs += map.get("costs");
 			net += map.get("net");
 		}
-		map =  new HashMap<>();
+		map = new HashMap<>();
 		map.put("mines", mines);
 		map.put("bonus", bonus);
 		map.put("total", total);
@@ -89,7 +89,7 @@ public class NationCities extends NationBase
 			costs += map.get("costs");
 			net += map.get("net");
 		}
-		map =  new HashMap<>();
+		map = new HashMap<>();
 		map.put("mines", mines);
 		map.put("bonus", bonus);
 		map.put("total", total);
@@ -115,7 +115,7 @@ public class NationCities extends NationBase
 			costs += map.get("costs");
 			net += map.get("net");
 		}
-		map =  new HashMap<>();
+		map = new HashMap<>();
 		map.put("wells", wells);
 		map.put("bonus", bonus);
 		map.put("total", total);
@@ -141,7 +141,7 @@ public class NationCities extends NationBase
 			costs += map.get("costs");
 			net += map.get("net");
 		}
-		map =  new HashMap<>();
+		map = new HashMap<>();
 		map.put("factories", factories);
 		map.put("bonus", bonus);
 		map.put("total", total);
@@ -167,7 +167,7 @@ public class NationCities extends NationBase
 			costs += map.get("costs");
 			net += map.get("net");
 		}
-		map =  new HashMap<>();
+		map = new HashMap<>();
 		map.put("factories", factories);
 		map.put("bonus", bonus);
 		map.put("total", total);
@@ -189,7 +189,7 @@ public class NationCities extends NationBase
 			bonus += map.get("bonus");
 			total += map.get("total");
 		}
-		map =  new HashMap<>();
+		map = new HashMap<>();
 		map.put("factories", factories);
 		map.put("bonus", bonus);
 		map.put("total", total);
@@ -209,7 +209,7 @@ public class NationCities extends NationBase
 			bonus += map.get("bonus");
 			total += map.get("total");
 		}
-		map =  new HashMap<>();
+		map = new HashMap<>();
 		map.put("universities", universities);
 		map.put("bonus", bonus);
 		map.put("total", total);

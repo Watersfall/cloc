@@ -1,74 +1,74 @@
 #nation {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
 }
 
 #nation td, #nation th {
-    border: 1px solid black;
-    padding: 8px;
-    width: 33%;
+	border: 1px solid black;
+	padding: 8px;
+	width: 33%;
 }
 
 #nation tr:nth-child(even) {
-    background-color: rgba(30, 30, 30, 0.5);
-    color: white;
+	background-color: rgba(30, 30, 30, 0.5);
+	color: white;
 }
 
 #nation tr:nth-child(odd) {
-    background-color: rgba(40, 40, 40, 0.5);
-    color: white;
+	background-color: rgba(40, 40, 40, 0.5);
+	color: white;
 }
 
 #nation tr:hover {
-    background-color: rgba(20, 20, 20, 0.5);
+	background-color: rgba(20, 20, 20, 0.5);
 }
 
 #nation caption {
-    border: 1px solid black;
-    border-bottom: 0;
-    padding: 8px;
-    background-color: rgba(30, 30, 30, 0.5);
-    color: white;
+	border: 1px solid black;
+	border-bottom: 0;
+	padding: 8px;
+	background-color: rgba(30, 30, 30, 0.5);
+	color: white;
 }
 
 #nation caption:hover {
-    background-color: rgba(20, 20, 20, 0.5);
+	background-color: rgba(20, 20, 20, 0.5);
 }
 
 .flag {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 300px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 300px;
 }
 
 .leader {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 156px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 156px;
 }
 
 .dropdown {
-    position: relative;
-    display: inline-block;
-    width: 100%;
+	position: relative;
+	display: inline-block;
+	width: 100%;
 }
 
 .dropdown-content {
-    top: 100%;
-    left: 0;
-    float: left;
-    display: none;
-    position: absolute;
-    background-color: black;
-    padding: 5px 5px;
-    margin: 1px 1px;
-    z-index: 1;
-    width: auto;
+	top: 100%;
+	left: 0;
+	float: left;
+	display: none;
+	position: absolute;
+	background-color: black;
+	padding: 5px 5px;
+	margin: 1px 1px;
+	z-index: 1;
+	width: auto;
 }
 
 .dropdown:hover .dropdown-content {
-    display: inline-block;
+	display: inline-block;
 }

@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.database;
 
-import org.apache.commons.dbcp2.*;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 public class Database
 {

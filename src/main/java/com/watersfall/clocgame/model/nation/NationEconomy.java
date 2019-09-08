@@ -10,28 +10,17 @@ import java.sql.SQLException;
 
 public class NationEconomy extends NationBase
 {
-	private @Getter
-	int economic;
-	private @Getter
-	double gdp;
-	private @Getter
-	double growth;
-	private @Getter
-	double budget;
-	private @Getter
-	double iron;
-	private @Getter
-	double coal;
-	private @Getter
-	double oil;
-	private @Getter
-	double food;
-	private @Getter
-	double steel;
-	private @Getter
-	double nitrogen;
-	private @Getter
-	double research;
+	private @Getter int economic;
+	private @Getter double gdp;
+	private @Getter double growth;
+	private @Getter double budget;
+	private @Getter double iron;
+	private @Getter double coal;
+	private @Getter double oil;
+	private @Getter double food;
+	private @Getter double steel;
+	private @Getter double nitrogen;
+	private @Getter double research;
 
 	public NationEconomy(Connection connection, int id, boolean safe) throws SQLException
 	{

@@ -10,18 +10,12 @@ import java.sql.SQLException;
 
 public class NationDomestic extends NationBase
 {
-	private @Getter
-	int land;
-	private @Getter
-	int government;
-	private @Getter
-	int approval;
-	private @Getter
-	int stability;
-	private @Getter
-	long population;
-	private @Getter
-	int rebels;
+	private @Getter int land;
+	private @Getter int government;
+	private @Getter int approval;
+	private @Getter int stability;
+	private @Getter long population;
+	private @Getter int rebels;
 
 	public NationDomestic(Connection connection, int id, boolean safe) throws SQLException
 	{

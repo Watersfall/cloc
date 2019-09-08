@@ -11,20 +11,13 @@ import java.sql.SQLException;
 
 public class NationCosmetic extends NationBase
 {
-	private @Getter
-	String nationName;
-	private @Getter
-	String username;
-	private @Getter
-	String nationTitle;
-	private @Getter
-	String leaderTitle;
-	private @Getter
-	String portrait;
-	private @Getter
-	String flag;
-	private @Getter
-	String description;
+	private @Getter String nationName;
+	private @Getter String username;
+	private @Getter String nationTitle;
+	private @Getter String leaderTitle;
+	private @Getter String portrait;
+	private @Getter String flag;
+	private @Getter String description;
 
 	public NationCosmetic(Connection connection, int id, boolean safe) throws SQLException
 	{

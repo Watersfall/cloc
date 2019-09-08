@@ -16,8 +16,7 @@ import java.util.HashMap;
 
 public class Nation
 {
-	private @Getter
-	int id;
+	private @Getter int id;
 	private @Getter NationCosmetic cosmetic;
 	private @Getter NationDomestic domestic;
 	private @Getter NationEconomy economy;
@@ -59,8 +58,22 @@ public class Nation
 		this(connection, id, safe);
 		if(getWars)
 		{
-			try{defensive = new War(connection, id, safe, false);}catch(WarNotFoundException e){defensive=null;}
-			try{offensive = new War(connection, id, safe, true);}catch(WarNotFoundException e){offensive=null;}
+			try
+			{
+				defensive = new War(connection, id, safe, false);
+			}
+			catch(WarNotFoundException e)
+			{
+				defensive = null;
+			}
+			try
+			{
+				offensive = new War(connection, id, safe, true);
+			}
+			catch(WarNotFoundException e)
+			{
+				offensive = null;
+			}
 		}
 		else
 		{
@@ -90,7 +103,7 @@ public class Nation
 			leave.setInt(1, this.id);
 			leave.execute();
 		}
-		PreparedStatement join =  connection.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
+		PreparedStatement join = connection.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
 		join.setInt(1, treaty.getId());
 		join.setInt(2, this.id);
 		join.setBoolean(3, founder);
@@ -192,7 +205,7 @@ public class Nation
 			employment += city.getTotalEmployment();
 		}
 		modifier += unemployment;
-		unemployment = Math.log((double)(employment - this.domestic.getPopulation()) / (double)this.domestic.getPopulation());
+		unemployment = Math.log((double) (employment - this.domestic.getPopulation()) / (double) this.domestic.getPopulation());
 		map.put("base", growth);
 		map.put("policies", modifier);
 		map.put("unemployment", unemployment);

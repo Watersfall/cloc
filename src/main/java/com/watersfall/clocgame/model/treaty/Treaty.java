@@ -41,10 +41,9 @@ public class Treaty extends NationBase
 
 
 	/**
-	 *
 	 * @param connection The SQL Connection
-	 * @param id The treaty ID
-	 * @param safe Whether the results should be writable
+	 * @param id         The treaty ID
+	 * @param safe       Whether the results should be writable
 	 * @throws SQLException if an SQL error occurs
 	 */
 	public Treaty(Connection connection, int id, boolean safe) throws SQLException
@@ -53,13 +52,12 @@ public class Treaty extends NationBase
 	}
 
 	/**
-	 *
 	 * @param connection The connection object to use
-	 * @param id The Treaty id
-	 * @param safe Whether the results should be writable
-	 * @param lazyLoad Controls how much of the Treaty is loaded.
-	 * On <i>true</i>, only loads the Treaty,
-	 * on <i>false</i>, loads the Treaty as well as all it's members
+	 * @param id         The Treaty id
+	 * @param safe       Whether the results should be writable
+	 * @param lazyLoad   Controls how much of the Treaty is loaded.
+	 *                   On <i>true</i>, only loads the Treaty,
+	 *                   on <i>false</i>, loads the Treaty as well as all it's members
 	 * @throws SQLException if an SQL error occurs
 	 */
 

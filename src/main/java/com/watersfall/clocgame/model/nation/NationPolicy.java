@@ -11,20 +11,13 @@ import java.sql.SQLException;
 
 public class NationPolicy extends NationBase
 {
-	private @Getter
-	int id;
-	private @Getter
-	int manpower;
-	private @Getter
-	int changeManpower;
-	private @Getter
-	int food;
-	private @Getter
-	int changeFood;
-	private @Getter
-	int economy;
-	private @Getter
-	int changeEconomy;
+	private @Getter int id;
+	private @Getter int manpower;
+	private @Getter int changeManpower;
+	private @Getter int food;
+	private @Getter int changeFood;
+	private @Getter int economy;
+	private @Getter int changeEconomy;
 
 	public NationPolicy(Connection connection, int id, boolean safe) throws SQLException
 	{

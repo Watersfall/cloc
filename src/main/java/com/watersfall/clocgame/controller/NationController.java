@@ -4,7 +4,6 @@ import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.constants.Responses;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

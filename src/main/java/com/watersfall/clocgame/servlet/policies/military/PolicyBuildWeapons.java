@@ -1,9 +1,9 @@
 package com.watersfall.clocgame.servlet.policies.military;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.model.nation.NationMilitary;
 import com.watersfall.clocgame.util.UserUtils;

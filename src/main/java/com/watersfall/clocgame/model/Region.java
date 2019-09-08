@@ -6,8 +6,7 @@ public enum Region
 {
 	NORTH_AMERICA("North America"), SOUTH_AMERICA("South America"), AFRICA("Africa"), MIDDLE_EAST("Middle East"), EUROPE("Europe"), ASIA("Asia"), OCEANIA("Oceania"), SIBERIA("Siberia");
 
-	private @Getter
-	String name;
+	private @Getter String name;
 
 	Region(String name)
 	{

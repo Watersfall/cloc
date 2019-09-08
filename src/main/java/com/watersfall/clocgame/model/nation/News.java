@@ -7,20 +7,13 @@ import java.sql.SQLException;
 
 public class News
 {
-	private @Getter
-	int id;
-	private @Getter
-	int sender;
-	private @Getter
-	int receiver;
-	private @Getter
-	String content;
-	private @Getter
-	String image;
-	private @Getter
-	ResultSet results;
-	private @Getter
-	int row;
+	private @Getter int id;
+	private @Getter int sender;
+	private @Getter int receiver;
+	private @Getter String content;
+	private @Getter String image;
+	private @Getter ResultSet results;
+	private @Getter int row;
 
 	private static void setRow(ResultSet results, int row) throws SQLException
 	{

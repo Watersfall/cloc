@@ -1,10 +1,10 @@
 package com.watersfall.clocgame.servlet.policies.foreign;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.UserUtils;
@@ -46,7 +46,7 @@ public class PolicyCreateTreaty extends HttpServlet
 				else
 				{
 					Nation nation = new Nation(conn, user, true, false);
-					Treaty treaty= Treaty.createTreaty(conn, name);
+					Treaty treaty = Treaty.createTreaty(conn, name);
 					nation.joinTreaty(treaty, true);
 					conn.commit();
 					request.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp?id=" + treaty.getId()).forward(request, response);

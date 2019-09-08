@@ -4,7 +4,7 @@ public class Responses
 {
 
 	/*
-	** ERRORS
+	 ** ERRORS
 	 */
 
 	public static String noLogin()
@@ -54,7 +54,7 @@ public class Responses
 
 
 	/*
-	** MISSING REQUIREMENTS
+	 ** MISSING REQUIREMENTS
 	 */
 
 	public static String nullFields()
@@ -113,7 +113,7 @@ public class Responses
 	}
 
 	/*
-	** RESPONSES
+	 ** RESPONSES
 	 */
 
 	public static String loggedIn()

@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
 <c:set var="mobile" scope="session">
-    ${fn:containsIgnoreCase(header['User-Agent'],'iphone')
+	${fn:containsIgnoreCase(header['User-Agent'],'iphone')
         || fn:containsIgnoreCase(header['User-Agent'], 'android')
         || fn:containsIgnoreCase(header['User-Agent'], 'mobile') }
 </c:set>

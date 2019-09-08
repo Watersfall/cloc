@@ -31,7 +31,7 @@ public class TurnWeek implements Runnable
 				NationEconomy economy = nation.getEconomy();
 				NationDomestic domestic = nation.getDomestic();
 				/*
-				** Economy
+				 ** Economy
 				 */
 
 				// Production
@@ -79,7 +79,7 @@ public class TurnWeek implements Runnable
 				}
 
 				/*
-				** Domestic
+				 ** Domestic
 				 */
 
 				if(economy.getFood() < 0)

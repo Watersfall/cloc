@@ -24,7 +24,7 @@ public class CityController extends HttpServlet
 			if(req.getParameter("id") != null)
 			{
 				int id = Integer.parseInt(req.getParameter("id"));
-				Nation nation = (Nation)req.getSession().getAttribute("home");
+				Nation nation = (Nation) req.getSession().getAttribute("home");
 				if(req.getSession().getAttribute("user") != null && nation != null && nation.getCities().getCities().get(id) != null)
 				{
 					req.setAttribute("city", nation.getCities().getCities().get(id));
