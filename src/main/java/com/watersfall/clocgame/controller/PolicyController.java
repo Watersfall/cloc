@@ -211,6 +211,7 @@ public class PolicyController extends HttpServlet
 		catch(NumberFormatException | NullPointerException e)
 		{
 			writer.append(Responses.genericError());
+			e.printStackTrace();
 		}
 		catch(NationNotFoundException e)
 		{

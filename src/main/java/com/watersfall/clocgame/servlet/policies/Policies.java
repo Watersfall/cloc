@@ -105,7 +105,7 @@ public class Policies
 			economy.setBudget(economy.getBudget() - cost);
 			city.update();
 			economy.update();
-			return Responses.coalMine();
+			return Responses.drill();
 		}
 	}
 
@@ -675,9 +675,14 @@ public class Policies
 		{
 			return Responses.noManpower();
 		}
+		else if(nation.getArmies().getArmies().get(idArmy) == null)
+		{
+			return Responses.notYourCity();
+		}
 		else
 		{
 			nation.getArmies().getArmies().get(idArmy).setArmy(nation.getArmies().getArmies().get(idArmy).getArmy() + 2);
+			nation.getArmies().getArmies().get(idArmy).update();
 			return Responses.conscript();
 		}
 	}
