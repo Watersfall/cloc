@@ -48,6 +48,11 @@ public class Army
 		this.row = results.getRow();
 	}
 
+	public int getTrainingCost()
+	{
+		return this.army * this.army / 2;
+	}
+
 	public void setRegion(Region region) throws SQLException
 	{
 		results.updateString(2, region.getName());

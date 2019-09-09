@@ -1,12 +1,12 @@
-package com.watersfall.clocgame.servlet.policies.city;
+package com.watersfall.clocgame.servlet.policies;
 
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.model.nation.City;
-import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.UserUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -19,11 +19,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 
-@WebServlet(urlPatterns = "/policies/militarize")
-public class PolicyMilitarize extends HttpServlet
+@WebServlet(urlPatterns = {"/policies/createtreaty", "/createtreaty.jsp"})
+public class PolicyCreateTreaty extends HttpServlet
 {
 
 	static BasicDataSource database = Database.getDataSource();
@@ -32,45 +31,30 @@ public class PolicyMilitarize extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		PrintWriter writer = response.getWriter();
-
 		Connection conn = null;
 		try
 		{
 			int user = UserUtils.getUser(request);
-			int id = Integer.parseInt(request.getParameter("id"));
 			conn = database.getConnection();
-			NationEconomy economy = new NationEconomy(conn, user, true);
-			City city = new City(conn, id, true);
-			if(user != city.getOwner())
+			String name;
+			if((name = request.getParameter("name")) != null)
 			{
-				writer.append(Responses.notYourCity());
-			}
-			else
-			{
-				HashMap<String, Integer> cost = city.getFactoryCost();
-				if(cost.get("iron") > economy.getIron())
+				if(name.length() > 32)
 				{
-					writer.append(Responses.noIron());
-				}
-				else if(cost.get("coal") > economy.getCoal())
-				{
-					writer.append(Responses.noCoal());
-				}
-				else if(cost.get("steel") > economy.getSteel())
-				{
-					writer.append(Responses.noSteel());
+					writer.append(Responses.tooLong());
 				}
 				else
 				{
-					economy.setCoal(economy.getCoal() - cost.get("coal"));
-					economy.setIron(economy.getIron() - cost.get("iron"));
-					economy.setSteel(economy.getSteel() - cost.get("steel"));
-					city.setIndustryMilitary(city.getIndustryMilitary() + 1);
-					city.update();
-					economy.update();
+					Nation nation = new Nation(conn, user, true, false);
+					Treaty treaty = Treaty.createTreaty(conn, name);
+					nation.joinTreaty(treaty, true);
 					conn.commit();
-					writer.append(Responses.militarize());
+					request.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp?id=" + treaty.getId()).forward(request, response);
 				}
+			}
+			else
+			{
+				request.getServletContext().getRequestDispatcher("/WEB-INF/view/createtreaty.jsp").forward(request, response);
 			}
 		}
 		catch(SQLException e)
@@ -118,6 +102,6 @@ public class PolicyMilitarize extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		super.doGet(request, response);
+		request.getServletContext().getRequestDispatcher("/WEB-INF/view/createtreaty.jsp").forward(request, response);
 	}
 }

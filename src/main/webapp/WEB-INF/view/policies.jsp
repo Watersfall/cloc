@@ -4,6 +4,7 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <script src="${pageContext.request.contextPath}/js/policies.js"></script>
+<%--@elvariable id="costs" type="com.watersfall.clocgame.servlet.policies.Policies"--%>
 <%-- POLICIES --%>
 <div class="main">
 	<%@ include file="includes/results.jsp" %>
@@ -67,7 +68,7 @@
 						approval and moves your government to the right.
 					</td>
 					<td>
-						$<c:out value="${policyConstants.CRACKDOWN}"/>k
+						$<c:out value="${costs.crackdownCost}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('crackdown')">Crackdown</button>
@@ -82,24 +83,10 @@
 						your government to the left.
 					</td>
 					<td>
-						$<c:out value="${policyConstants.FREE}"/>k
+						$<c:out value="${costs.freeCost}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('free')">Free</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Build University
-					</td>
-					<td>
-						Build a university to further your research! Consumes 2 STEEL. Same cost as factories.
-					</td>
-					<td>
-						nada
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="policy('university')">Advance</button>
 					</td>
 				</tr>
 			</c:when>
@@ -112,7 +99,7 @@
 						Praise France's Democracy, hoping to make them like you.
 					</td>
 					<td>
-						$<c:out value="${policyConstants.ALIGN_ENTENTE}"/>k
+						$<c:out value="${costs.alignCost}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('alignentente')">Praise</button>
@@ -126,7 +113,7 @@
 						Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
 					</td>
 					<td>
-						$<c:out value="${policyConstants.ALIGN_CENTRAL_POWERS}"/>k
+						$<c:out value="${costs.alignCost}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('aligncentral')">Admire</button>
@@ -140,7 +127,7 @@
 						Go out on stage and celebrate your people's strength!
 					</td>
 					<td>
-						$<c:out value="${policyConstants.ALIGN_NEUTRAL}"/>k
+						$<c:out value="${costs.alignCost}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('alignneutral')">Celebrate</button>
@@ -164,86 +151,30 @@
 			<c:when test="${param['policies'] == 'Military'}">
 				<tr>
 					<td>
-						Conscript
+						Build Weapons
 					</td>
 					<td>
-						Throw more men into your army at the cost of manpower and overall training.
+						Build some weapons to equip your army
 					</td>
 					<td>
-						Reduction in Manpower, Training
+						<c:out value="${costs.weaponsSteel}"/> Steel
 					</td>
 					<td>
-						<button class="policyButton" type="submit" onclick="policy('conscript')">Conscript</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Train
-					</td>
-					<td>
-						Train your army
-					</td>
-					<td>
-						$k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="policy('train')">Train</button>
+						<button class="policyButton" type="submit" onclick="policy('buildweapons')">Build</button>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						Build Submarine
+						Build Artillery
 					</td>
 					<td>
-						Build a submarine to augment your glorious navy!
+						Build some artillery guns to increase the lethality of your army
 					</td>
 					<td>
-
+						<c:out value="${costs.artillerySteel}"/> Steel and ${costs.artilleryNitrogen} Nitrogen
 					</td>
 					<td>
-						<button class="policyButton" type="submit" onclick="policy('buildship?ship=ss')">Celebrate</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Build Destroyer
-					</td>
-					<td>
-						Build a destroyer to augment your glorious navy!
-					</td>
-					<td>
-
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="policy('buildship?ship=dd')">Celebrate</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Build Cruiser
-					</td>
-					<td>
-						Build a cruiser to augment your glorious navy!
-					</td>
-					<td>
-
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="policy('buildship?ship=cl')">Celebrate</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Build Battleship
-					</td>
-					<td>
-						Build a battleship to augment your glorious navy!
-					</td>
-					<td>
-
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="policy('buildship?ship=bb')">Celebrate</button>
+						<button class="policyButton" type="submit" onclick="policy('buildartillery')">Build</button>
 					</td>
 				</tr>
 			</c:when>

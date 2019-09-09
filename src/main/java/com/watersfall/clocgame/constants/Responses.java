@@ -92,6 +92,11 @@ public class Responses
 		return "<p>You do not have enough research!</p>";
 	}
 
+	public static String noManpower()
+	{
+		return "<p>You do not have enough manpower</p>";
+	}
+
 	public static String notEnough()
 	{
 		return "<p>You do not have enough to send!</p>";
@@ -107,9 +112,49 @@ public class Responses
 		return "<p>" + field + " must be less than " + characters + " characters!";
 	}
 
+	public static String limit()
+	{
+		return "<p>You can not build any more of these!</p>";
+	}
+
 	public static String invalidLogin()
 	{
 		return "<p>Incorrect username or password!</p>";
+	}
+
+	public static String noCriminals()
+	{
+		return "<p>There are no more jaywalkers to arrest!</p>";
+	}
+
+	public static String hated()
+	{
+		return "<p>You are not popular enough to do this</p>";
+	}
+
+	public static String noPrisoners()
+	{
+		return "<p>You do not have more prisoners to free</p>";
+	}
+
+	public static String unstable()
+	{
+		return "<p>You are not stable enough to do this!</p>";
+	}
+
+	public static String alreadyYourAlignment()
+	{
+		return "<p>That is already your alignment!</p>";
+	}
+
+	public static String noneLeft()
+	{
+		return "<p>You do not have any left to remove!</p>";
+	}
+
+	public static String fullTrained()
+	{
+		return "<p>Your army is already fully trained!</p>";
 	}
 
 	/*
@@ -204,5 +249,65 @@ public class Responses
 	public static String weapons()
 	{
 		return "<p>You manufacture some new uniforms and rifles for your conscripts!</p>";
+	}
+
+	public static String arrest()
+	{
+		return "<p>Your police force arrests every petty criminal they could find!</p>";
+	}
+
+	public static String free()
+	{
+		return "<p>Your convicts enjoy their freedom!</p>";
+	}
+
+	public static String align(int align)
+	{
+		switch(align)
+		{
+			case 1:
+				return "<p>You align yourself with the Entente!</p>";
+			case 0:
+				return "<p>Your people cheer as you declare your neutrality!</p>";
+			case -1:
+				return "<p>You align yourself with the Central Powers!</p>";
+			default:
+				return "<p>What did you do?</p>";
+		}
+	}
+
+	public static String close(String type)
+	{
+		return "<p>You close down a " + type + " and thousands of workers lose their jobs!</p>";
+	}
+
+	public static String closeN(String type)
+	{
+		return "<p>You close down an " + type + " and thousands of workers lose their jobs!</p>";
+	}
+
+	public static String closePort()
+	{
+		return "<p>You close down a port and thousands of boats lose their homes!</p>";
+	}
+
+	public static String closeBarrack()
+	{
+		return "<p>You close down a barrack and thousands of soldiers lose their homes!</p>";
+	}
+
+	public static String closeRailroad()
+	{
+		return "<p>You tear up a railroad and thousands of railroad cars lose their homes!</p>";
+	}
+
+	public static String conscript()
+	{
+		return "<p>You conscript 2000 soldiers!</p>";
+	}
+
+	public static String train()
+	{
+		return "<p>You train your army!</p>";
 	}
 }

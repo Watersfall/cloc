@@ -304,6 +304,30 @@ public class Nation
 		return map;
 	}
 
+	public long getFreeManpower()
+	{
+		int soldiers = 0;
+		long manpower = domestic.getPopulation();
+		switch(policy.getManpower())
+		{
+			case 0:
+				manpower *= 0.025;
+			case 1:
+				manpower *= 0.05;
+			case 2:
+				manpower *= 0.1;
+			case 3:
+				manpower *= 0.25;
+			case 4:
+				manpower *= 0.45;
+		}
+		for(Army army : armies.getArmies().values())
+		{
+			soldiers += army.getArmy() * 1000;
+		}
+		return manpower - soldiers;
+	}
+
 	public void update() throws SQLException
 	{
 		cosmetic.update();

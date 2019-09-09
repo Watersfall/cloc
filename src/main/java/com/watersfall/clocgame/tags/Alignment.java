@@ -20,10 +20,9 @@ public class Alignment extends SimpleTagSupport
 	public void doTag() throws JspException, IOException
 	{
 		JspWriter out = getJspContext().getOut();
-		String economic = (value == 0) ? ("Central Powers")
-				: (value == 1) ? ("Neutral")
-				: (value == 2) ? ("Entente")
-				: (value == -1) ? ("Soviet Union")
+		String economic = (value == -1) ? ("Central Powers")
+				: (value == 0) ? ("Neutral")
+				: (value == 1) ? ("Entente")
 				: ("What did you do?");
 		out.print(economic);
 	}
