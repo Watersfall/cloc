@@ -4,13 +4,15 @@ import lombok.Getter;
 
 public enum Region
 {
-	NORTH_AMERICA("North America"), SOUTH_AMERICA("South America"), AFRICA("Africa"), MIDDLE_EAST("Middle East"), EUROPE("Europe"), ASIA("Asia"), OCEANIA("Oceania"), SIBERIA("Siberia");
+	NORTH_AMERICA("North America", "North American"), SOUTH_AMERICA("South America", "South American"), AFRICA("Africa", "African"), MIDDLE_EAST("Middle East", "Middle Eastern"), EUROPE("Europe", "European"), ASIA("Asia", "Asian"), OCEANIA("Oceania", "Oceanian"), SIBERIA("Siberia", "Siberian");
 
 	private @Getter String name;
+	private @Getter String adjective;
 
-	Region(String name)
+	Region(String name, String adjective)
 	{
 		this.name = name;
+		this.adjective = adjective;
 	}
 
 	public static boolean borders(Region region1, Region region2)

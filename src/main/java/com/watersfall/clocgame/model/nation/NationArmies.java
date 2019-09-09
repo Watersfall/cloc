@@ -41,7 +41,7 @@ public class NationArmies extends NationBase
 			this.id = id;
 			while(results.next())
 			{
-				armies.put(0, new Army(connection, results.getInt(1), safe));
+				armies.put(results.getInt(2), new Army(connection, results.getInt(2), safe));
 			}
 		}
 	}

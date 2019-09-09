@@ -35,7 +35,7 @@ function armyPolicy(policy, armyId)
 	document.getElementById('resultsContainer').style.visibility = "visible";
 	document.getElementById("result").innerHTML = "<p>Loading...</p>";
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "/policy/army/" + policy + "?army=" + cityId, true);
+	xhttp.open("POST", "/policy/army/" + policy + "?army=" + armyId, true);
 	xhttp.send();
 	xhttp.onreadystatechange = function()
 	{
