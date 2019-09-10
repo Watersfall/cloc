@@ -304,9 +304,19 @@ public class Nation
 		return map;
 	}
 
-	public long getFreeManpower()
+	public int getTotalArmySize()
 	{
 		int soldiers = 0;
+		for(Army army : armies.getArmies().values())
+		{
+			soldiers += army.getArmy();
+		}
+		return soldiers;
+	}
+
+	public long getFreeManpower()
+	{
+		int soldiers = getTotalArmySize() * 1000;
 		long manpower = domestic.getPopulation();
 		switch(policy.getManpower())
 		{
@@ -320,10 +330,6 @@ public class Nation
 				manpower *= 0.25;
 			case 4:
 				manpower *= 0.45;
-		}
-		for(Army army : armies.getArmies().values())
-		{
-			soldiers += army.getArmy() * 1000;
 		}
 		return manpower - soldiers;
 	}
