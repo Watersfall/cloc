@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.controller.filter;
+package com.watersfall.clocgame.filter;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
@@ -29,6 +29,7 @@ public class LoggedInFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		request.setAttribute("turn", Util.turn);
+		Connection connection = null;
 		try
 		{
 			HttpServletRequest req = (HttpServletRequest) request;
@@ -37,7 +38,7 @@ public class LoggedInFilter implements Filter
 			if(sess != null && sess.getAttribute("user") != null)
 			{
 				int user = Integer.parseInt(sess.getAttribute("user").toString());
-				Connection connection = Database.getDataSource().getConnection();
+				connection = Database.getDataSource().getConnection();
 				req.setAttribute("home", new Nation(connection, user, false, true));
 			}
 		}
