@@ -46,6 +46,17 @@ public class LoggedInFilter implements Filter
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			try
+			{
+				connection.close();
+			}
+			catch(Exception e)
+			{
+				//Ignore
+			}
+		}
 		chain.doFilter(request, response);
 	}
 }
