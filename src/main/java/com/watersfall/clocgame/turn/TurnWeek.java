@@ -96,6 +96,13 @@ public class TurnWeek implements Runnable
 
 				nation.update();
 			}
+
+			/*
+			 ** Logs
+			 */
+
+			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
+
 			connection.commit();
 
 		}

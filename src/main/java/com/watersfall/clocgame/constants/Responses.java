@@ -172,6 +172,11 @@ public class Responses
 		return "<p>You are not at war with this nation!</p>";
 	}
 
+	public static String alreadyAttacked()
+	{
+		return "<p>Your army is still preparing!</p>";
+	}
+
 	/*
 	 ** RESPONSES
 	 */

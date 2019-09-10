@@ -3,8 +3,10 @@ package com.watersfall.clocgame.controller;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.Army;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.war.Log;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -250,7 +252,10 @@ public class NationController extends HttpServlet
 					if(sender.getOffensive() != receiver.getId() && sender.getDefensive() != receiver.getId())
 					{
 						writer.append(Responses.noWar());
-						break;
+					}
+					else if(Log.checkLog(connection, sender.getId(), receiver.getForeign().getRegion(), LogType.LAND))
+					{
+						writer.append(Responses.alreadyAttacked());
 					}
 					else
 					{
@@ -262,16 +267,16 @@ public class NationController extends HttpServlet
 							defender.setArmy(defender.getArmy() - 10);
 							defender.update();
 							writer.append("Victory! You have killed 10k enemy soldiers!");
-							break;
 						}
 						else
 						{
 							attacker.setArmy(attacker.getArmy() - 10);
 							attacker.update();
 							writer.append("Defeat! You have lost 10k soldiers!");
-							break;
 						}
+						Log.createLog(connection, sender.getId(), receiver.getForeign().getRegion(), LogType.LAND, 0);
 					}
+					break;
 			}
 			connection.commit();
 		}
