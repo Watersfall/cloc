@@ -1,4 +1,3 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ include file="includes/default.jsp" %>
 <html>
 <%@ include file="includes/head.jsp" %>

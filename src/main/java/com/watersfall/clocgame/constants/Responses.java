@@ -22,6 +22,11 @@ public class Responses
 		return "<p>Not your city!</p>";
 	}
 
+	public static String notYourArmy()
+	{
+		return "<p>Not your army!</p>";
+	}
+
 	public static String genericError()
 	{
 		return "<p>Don't do that</p>";
@@ -94,7 +99,12 @@ public class Responses
 
 	public static String noManpower()
 	{
-		return "<p>You do not have enough manpower</p>";
+		return "<p>You do not have enough manpower!</p>";
+	}
+
+	public static String noTroops()
+	{
+		return "<p>You can not deconscript further!</p>";
 	}
 
 	public static String notEnough()
@@ -304,6 +314,11 @@ public class Responses
 	public static String conscript()
 	{
 		return "<p>You conscript 2000 soldiers!</p>";
+	}
+
+	public static String deconscript()
+	{
+		return "<p>You fire off thousands of soldiers!</p>";
 	}
 
 	public static String train()

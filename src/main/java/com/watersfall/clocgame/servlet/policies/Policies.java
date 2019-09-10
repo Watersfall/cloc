@@ -677,13 +677,32 @@ public class Policies
 		}
 		else if(nation.getArmies().getArmies().get(idArmy) == null)
 		{
-			return Responses.notYourCity();
+			return Responses.notYourArmy();
 		}
 		else
 		{
 			nation.getArmies().getArmies().get(idArmy).setArmy(nation.getArmies().getArmies().get(idArmy).getArmy() + 2);
 			nation.getArmies().getArmies().get(idArmy).update();
 			return Responses.conscript();
+		}
+	}
+
+	public static String deconscript(Connection conn, int idArmy, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
+	{
+		Army army = new Army(conn, idArmy, true);
+		if(army.getOwner() != idNation)
+		{
+			return Responses.notYourArmy();
+		}
+		else if(army.getArmy() <= 5)
+		{
+			return Responses.noTroops();
+		}
+		else
+		{
+			army.setArmy(army.getArmy() - 2);
+			army.update();
+			return Responses.deconscript();
 		}
 	}
 

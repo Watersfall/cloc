@@ -2,6 +2,7 @@
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
 <c:set var="mobile" scope="session">
 	${fn:containsIgnoreCase(header['User-Agent'],'iphone')

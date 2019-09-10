@@ -152,6 +152,9 @@ public class PolicyController extends HttpServlet
 						case "train":
 							writer.append(Policies.train(conn, user, id));
 							break;
+						case "deconscript":
+							writer.append(Policies.deconscript(conn, user, id));
+							break;
 						default:
 							super.doPost(req, resp);
 							break;
