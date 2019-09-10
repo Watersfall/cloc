@@ -45,7 +45,7 @@ public class PolicyCreateTreaty extends HttpServlet
 				}
 				else
 				{
-					Nation nation = new Nation(conn, user, true, false);
+					Nation nation = new Nation(conn, user, true);
 					Treaty treaty = Treaty.createTreaty(conn, name);
 					nation.joinTreaty(treaty, true);
 					conn.commit();

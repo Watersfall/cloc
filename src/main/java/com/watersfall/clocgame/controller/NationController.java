@@ -3,6 +3,7 @@ package com.watersfall.clocgame.controller;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.nation.Army;
 import com.watersfall.clocgame.model.nation.Nation;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ public class NationController extends HttpServlet
 			try
 			{
 				Connection connection = Database.getDataSource().getConnection();
-				req.setAttribute("nation", new Nation(connection, id, false, true));
+				req.setAttribute("nation", new Nation(connection, id, false));
 				connection.close();
 			}
 			catch(Exception e)
@@ -67,8 +68,8 @@ public class NationController extends HttpServlet
 		try
 		{
 			connection = Database.getDataSource().getConnection();
-			Nation sender = new Nation(connection, idSender, true, true);
-			Nation receiver = new Nation(connection, idReceiever, true, true);
+			Nation sender = new Nation(connection, idSender, true);
+			Nation receiver = new Nation(connection, idReceiever, true);
 			int amount;
 			switch(action)
 			{
@@ -245,7 +246,34 @@ public class NationController extends HttpServlet
 						connection.commit();
 						writer.append(Responses.war());
 					}
+				case "land":
+					if(sender.getOffensive() != receiver.getId() && sender.getDefensive() != receiver.getId())
+					{
+						writer.append(Responses.noWar());
+						break;
+					}
+					else
+					{
+						//There's only the home army for every nation atm, will need to fix this when you can create more
+						Army attacker = (Army) sender.getArmies().getArmies().values().toArray()[0];
+						Army defender = (Army) receiver.getArmies().getArmies().values().toArray()[0];
+						if(attacker.getAttackPower() > defender.getAttackPower())
+						{
+							defender.setArmy(defender.getArmy() - 10);
+							defender.update();
+							writer.append("Victory! You have killed 10k enemy soldiers!");
+							break;
+						}
+						else
+						{
+							attacker.setArmy(attacker.getArmy() - 10);
+							attacker.update();
+							writer.append("Defeat! You have lost 10k soldiers!");
+							break;
+						}
+					}
 			}
+			connection.commit();
 		}
 		catch(SQLException e)
 		{

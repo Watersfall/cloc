@@ -167,6 +167,11 @@ public class Responses
 		return "<p>Your army is already fully trained!</p>";
 	}
 
+	public static String noWar()
+	{
+		return "<p>You are not at war with this nation!</p>";
+	}
+
 	/*
 	 ** RESPONSES
 	 */

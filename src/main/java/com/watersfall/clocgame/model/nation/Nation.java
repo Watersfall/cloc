@@ -11,6 +11,7 @@ import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -25,8 +26,8 @@ public class Nation
 	private @Getter NationCities cities;
 	private @Getter NationArmies armies;
 	private @Getter NationPolicy policy;
-	private @Getter War defensive;
-	private @Getter War offensive;
+	private @Getter int defensive;
+	private @Getter int offensive;
 	private @Getter Treaty treaty;
 	private @Getter Connection connection;
 	private @Getter boolean safe;
@@ -51,34 +52,29 @@ public class Nation
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;
-	}
 
-	public Nation(Connection connection, int id, boolean safe, boolean getWars) throws SQLException
-	{
-		this(connection, id, safe);
-		if(getWars)
+		//Wars
+		PreparedStatement attacker = connection.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=?");
+		PreparedStatement defender = connection.prepareStatement("SELECT attacker FROM cloc_war WHERE id=?");
+		attacker.setInt(1, this.id);
+		defender.setInt(1, this.id);
+		ResultSet resultsAttacker = attacker.executeQuery();
+		ResultSet resultsDefender = defender.executeQuery();
+		if(!resultsAttacker.first())
 		{
-			try
-			{
-				defensive = new War(connection, id, safe, false);
-			}
-			catch(WarNotFoundException e)
-			{
-				defensive = null;
-			}
-			try
-			{
-				offensive = new War(connection, id, safe, true);
-			}
-			catch(WarNotFoundException e)
-			{
-				offensive = null;
-			}
+			offensive = 0;
 		}
 		else
 		{
-			offensive = null;
-			defensive = null;
+			this.offensive = resultsAttacker.getInt(1);
+		}
+		if(!resultsDefender.first())
+		{
+			defensive = 0;
+		}
+		else
+		{
+			this.defensive = resultsDefender.getInt(1);
 		}
 	}
 
@@ -118,7 +114,7 @@ public class Nation
 
 	public boolean canDeclareWar(Nation nation)
 	{
-		return (this.offensive == null && nation.getDefensive() == null) && Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion());
+		return (this.offensive == 0 && nation.getDefensive() == 0) && Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion());
 	}
 
 	public void declareWar(Nation nation) throws SQLException
@@ -217,11 +213,11 @@ public class Nation
 	{
 		HashMap<String, Integer> map = new HashMap<>();
 		int policies = 0;
-		if(defensive == null && offensive == null && policy.getEconomy() > 2)
+		if(defensive == 0 && offensive == 0 && policy.getEconomy() > 2)
 		{
 			policies += -2;
 		}
-		if(defensive != null && offensive != null && policy.getEconomy() < 2)
+		if(defensive != 0 && offensive != 0 && policy.getEconomy() < 2)
 		{
 			policies += -2;
 		}

@@ -27,7 +27,7 @@ public class TurnWeek implements Runnable
 			while(results.next())
 			{
 				int id = results.getInt(1);
-				Nation nation = new Nation(connection, id, true, true);
+				Nation nation = new Nation(connection, id, true);
 				NationEconomy economy = nation.getEconomy();
 				NationDomestic domestic = nation.getDomestic();
 				/*

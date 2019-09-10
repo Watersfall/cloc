@@ -98,6 +98,17 @@ public class Army
 		results.updateInt(6, artillery);
 	}
 
+	public int getAttackPower()
+	{
+		int power = this.getArmy() * 1000;
+		if(!(power >= this.weapons))
+		{
+			power *= (int)(this.weapons / power);
+		}
+		power *= Math.sqrt(artillery + 1);
+		return power;
+	}
+
 	public void update() throws SQLException
 	{
 		results.updateRow();

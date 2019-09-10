@@ -3,6 +3,9 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="user" type="java.lang.Integer"--%>
 <script src="${pageContext.request.contextPath}/js/nation.js"></script>
 <div class="main">
 	<%@ include file="includes/results.jsp" %>
@@ -190,11 +193,23 @@
 						</td>
 					</tr>
 				</table>
-				<form action="nation.do" method="POST">
-					<input type="hidden" name="action" value="war"/>
-					<input type="hidden" name="id" value="${nation.id}"/>
-					<button type="submit">Declare War</button>
-				</form>
+				<c:choose>
+					<c:when test="${home.defensive == nation.id || home.offensive == nation.id}">
+						<form action="nation.do" method="POST">
+							<input type="hidden" name="action" value="land"/>
+							<input type="hidden" name="id" value="${nation.id}"/>
+							<button type="submit">Attack!</button>
+						</form>
+					</c:when>
+					<c:otherwise>
+						<form action="nation.do" method="POST">
+							<input type="hidden" name="action" value="war"/>
+							<input type="hidden" name="id" value="${nation.id}"/>
+							<button type="submit">Declare War</button>
+						</form>
+					</c:otherwise>
+				</c:choose>
+
 			</c:if>
 		</c:otherwise>
 	</c:choose>

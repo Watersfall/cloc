@@ -37,8 +37,8 @@ public class War
 		}
 		else
 		{
-			this.attacker = new Nation(conn, war.getInt(1), safe, false);
-			this.defender = new Nation(conn, war.getInt(2), safe, false);
+			this.attacker = new Nation(conn, war.getInt(1), safe);
+			this.defender = new Nation(conn, war.getInt(2), safe);
 			this.start = war.getInt(3);
 			this.end = war.getInt(4);
 			this.id = war.getInt(5);
@@ -57,8 +57,8 @@ public class War
 		else
 		{
 			this.id = id;
-			attacker = new Nation(conn, war.getInt(1), safe, false);
-			defender = new Nation(conn, war.getInt(2), safe, false);
+			attacker = new Nation(conn, war.getInt(1), safe);
+			defender = new Nation(conn, war.getInt(2), safe);
 			start = war.getInt(3);
 			end = war.getInt(4);
 		}

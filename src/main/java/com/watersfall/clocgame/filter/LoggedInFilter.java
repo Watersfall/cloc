@@ -39,7 +39,7 @@ public class LoggedInFilter implements Filter
 			{
 				int user = Integer.parseInt(sess.getAttribute("user").toString());
 				connection = Database.getDataSource().getConnection();
-				req.setAttribute("home", new Nation(connection, user, false, true));
+				req.setAttribute("home", new Nation(connection, user, false));
 			}
 		}
 		catch(SQLException e)
