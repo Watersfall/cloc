@@ -1,19 +1,19 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.WarNotFoundException;
 import com.watersfall.clocgame.math.Math;
+import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.treaty.Treaty;
-import com.watersfall.clocgame.model.war.War;
 import com.watersfall.clocgame.util.Util;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.*;
 
 public class Nation
 {
@@ -33,6 +33,7 @@ public class Nation
 	private @Getter boolean safe;
 
 	/**
+	 * Primary Nation constructor that creates a Nation from an ID
 	 * @param connection The connection object to use
 	 * @param id         The id of the nation being loaded
 	 * @param safe       Whether the contents of the returned Nation object should be editable
@@ -76,6 +77,84 @@ public class Nation
 		{
 			this.defensive = resultsDefender.getInt(1);
 		}
+	}
+
+	/**
+	 * Returns an unordered Collection of all Nations in the database matching the where clause fed into the method
+	 * @param conn  The SQL connection to use
+	 * @param where the SQL where clause
+	 * @return Collection of nations matching where
+	 * @throws SQLException if a database issue occurs
+	 */
+	public static Collection<Nation> getNations(Connection conn, String where) throws SQLException
+	{
+		Collection<Nation> nations = new HashSet<>();
+		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
+				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
+				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
+				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
+				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
+				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
+				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
+				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+				"WHERE " + where);
+		ResultSet results = get.executeQuery();
+		while(results.next())
+		{
+			nations.add(new Nation(conn, results.getInt(1), false));
+		}
+		return nations;
+	}
+
+	/**
+	 * Returns an ordered Collection of all nations matching the where clause, sorted by the order clause
+	 * @param conn  the SQL connection to use
+	 * @param where the SQL where clause
+	 * @param order the SQL order by clause
+	 * @return Collection of nations matching where
+	 * @throws SQLException if a database issue occurs
+	 */
+	public static Collection<Nation> getNations(Connection conn, String where, String order) throws SQLException
+	{
+		Collection<Nation> nations = new ArrayList<>();
+		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
+				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
+				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
+				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
+				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
+				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
+				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
+				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+				"WHERE " + where + "\n" +
+				"ORDER BY " + order);
+		ResultSet results = get.executeQuery();
+		while(results.next())
+		{
+			nations.add(new Nation(conn, results.getInt(1), false));
+		}
+		return nations;
+	}
+
+	public static Collection<Nation> getNations(Connection conn, String where, String order, String limit) throws SQLException
+	{
+		Collection<Nation> nations = new ArrayList<>();
+		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
+				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
+				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
+				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
+				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
+				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
+				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
+				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+				"WHERE " + where + "\n" +
+				"ORDER BY " + order + "\n" +
+				"LIMIT " + limit);
+		ResultSet results = get.executeQuery();
+		while(results.next())
+		{
+			nations.add(new Nation(conn, results.getInt(1), false));
+		}
+		return nations;
 	}
 
 	/**
