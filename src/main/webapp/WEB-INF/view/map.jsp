@@ -3,8 +3,10 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
+<%--@elvariable id="regions" type="java.util.HashMap"--%>
+<%--@elvariable id="nations" type="java.util.Collection"--%>
+<%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <div class="main">
-	<c:set var="regions" value="North America,South America,Africa,Middle East,Europe,Asia,Oceania,Siberia"/>
 	<svg id="world-map" width="85%" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
 		<g id="world">
 			<a href="${pageContext.request.contextPath}/map.jsp?region=Siberia">
@@ -58,54 +60,28 @@
 					<th>Domestic Armies</th>
 					<th>Foreign Armies</th>
 				</tr>
-				<c:forEach items="${regions}" var="i">
-					<sql:query var="region_economy" dataSource="${database}">
-						SELECT SUM(cloc_economy.gdp), SUM(cloc_armies.army)
-						FROM cloc_economy, cloc_armies, cloc_foreign
-						WHERE cloc_foreign.region=? AND cloc_foreign.id = cloc_armies.id AND cloc_foreign.id = cloc_economy.id AND cloc_armies.region=? AND cloc_armies.region=cloc_foreign.region
-						<sql:param value="${i}"/>
-						<sql:param value="${i}"/>
-					</sql:query>
-					<sql:query var="region_armies" dataSource="${database}">
-						SELECT SUM(army) FROM cloc_armies, cloc_foreign WHERE cloc_armies.region=? AND cloc_foreign.region != cloc_armies.region
-						<sql:param value="${i}"/>
-					</sql:query>
+				<c:forEach items="${regions}" var="region">
 					<tr>
-						<td><c:out value="${i}"/></td>
-						<td>$<c:out value="${not empty region_economy.rows[0].get('SUM(cloc_economy.gdp)') ? region_economy.rows[0].get('SUM(cloc_economy.gdp)') : '0'}"/> Million</td>
-						<td><c:out value="${not empty region_economy.rows[0].get('SUM(cloc_armies.army)') ? region_economy.rows[0].get('SUM(cloc_armies.army)') : '0'}"/>k Active Personnel</td>
-						<td><c:out value="${not empty region_economy.rows[0].get('SUM(army)') ? region_economy.rows[0].get('SUM(army)') : '0'}"/>k Active Personnel</td>
+						<td><a href="map.jsp?region=${region.key}">${region.key}</a> </td>
+						<td>$${region.value.gdp} Million</td>
+						<td>${region.value.home}k Active Personnel</td>
+						<td>${region.value.foreign}k Active Personnel</td>
 					</tr>
 				</c:forEach>
 			</table>
 		</c:when>
-		<c:when test="${param['region'] == 'North America'
-            || param['region'] == 'South America'
-            || param['region'] == 'Africa'
-            || param['region'] == 'Middle East'
-            || param['region'] == 'Africa'
-            || param['region'] == 'Europe'
-            || param['region'] == 'Asia'
-            || param['region'] == 'Oceania'
-            || param['region'] == 'Siberia' }">
-			<sql:query var="region" dataSource="${database}">
-				SELECT cloc_cosmetic.nation_name, cloc_cosmetic.username, cloc_cosmetic.flag, cloc_cosmetic.id
-				FROM cloc_cosmetic, cloc_foreign
-				WHERE cloc_foreign.region = ? AND cloc_foreign.id = cloc_cosmetic.id
-				ORDER BY cloc_cosmetic.id ASC
-				<sql:param value="${param['region']}"/>
-			</sql:query>
+		<c:when test="${not empty param['region']}">
 			<table id="nation">
 				<tr>
 					<th>Flag</th>
 					<th>Nation Name</th>
 					<th>Leader Name</th>
 				</tr>
-				<c:forEach items="${region.rows}" var="row">
+				<c:forEach items="${nations}" var="nation">
 					<tr>
-						<td><img class="indexflag" src="https://imgur.com/<c:out value="${row.flag}"/>" alt="flag"></td>
-						<td><a href="${pageContext.request.contextPath}/nation.jsp?id=<c:out value="${row.id}"/>"><c:out value="${row.nation_name}"/></a></td>
-						<td><c:out value="${row.username}"/></td>
+						<td><img class="indexflag" src="https://imgur.com/<c:out value="${nation.cosmetic.flag}"/>" alt="flag"></td>
+						<td><a href="${pageContext.request.contextPath}/nation.jsp?id=<c:out value="${nation.id}"/>"><c:out value="${nation.cosmetic.nationName}"/></a></td>
+						<td><c:out value="${nation.cosmetic.username}"/></td>
 					</tr>
 				</c:forEach>
 			</table>
