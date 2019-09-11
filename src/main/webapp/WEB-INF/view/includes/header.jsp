@@ -3,8 +3,12 @@
 		<c:when test="${sessionScope.user == null}">
 			<div class="login">
 				<form class="loginForm" action="${pageContext.request.contextPath}/login.do" method="POST">
-					<input class="loginText" type="text" name="username" placeholder="Username"><br>
-					<input class="loginText" type="password" name="password" placeholder="Password"><br>
+					<label>
+						<input class="loginText" type="text" name="username" placeholder="Username">
+					</label><br>
+					<label>
+						<input class="loginText" type="password" name="password" placeholder="Password">
+					</label><br>
 					<input class="loginText" type="submit" value="Login">
 				</form>
 				<form class="loginForm" action="${pageContext.request.contextPath}/index.jsp" method="GET">
@@ -37,7 +41,7 @@
 						</a>
 						<ul id="policies" style="display: none">
 							<li>
-								<a href="/policies.jsp?policies=Economic">
+								<a href="${pageContext.request.contextPath}/policies.jsp?policies=Economic">
 									<div class="headerTab">
 										<p>Economy</p>
 									</div>

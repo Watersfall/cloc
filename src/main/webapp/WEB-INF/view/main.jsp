@@ -3,6 +3,10 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="production" type="java.util.HashMap"--%>
+<%--@elvariable id="food" type="java.util.HashMap"--%>
+<%--@elvariable id="population" type="java.util.HashMap"--%>
 <div class="main">
 	<c:if test="${sessionScope.user == null}">
 		<p>You must be logged in to view this page!</p>

@@ -121,7 +121,6 @@
 								<button ${city.ports <= 0 ? 'disabled' : ''} onclick="cityPolicy('unport', '${city.id}')">Close</button>
 							</li>
 						</c:if>
-
 					</ul>
 				</c:otherwise>
 			</c:choose>

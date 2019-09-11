@@ -3,6 +3,8 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="turn" type="java.lang.Integer"--%>
 <script src="${pageContext.request.contextPath}/js/decisions.js"></script>
 <div class="main">
 	<%@ include file="includes/results.jsp" %>
@@ -18,7 +20,7 @@
 			<td>Economy</td>
 			<td>The structure of our economy</td>
 			<td>
-				<select id="economy" onchange="updateDesc('economy')" class="select" ${home.policy.changeEconomy + 1 > turn ? 'disabled' : ''}>
+				<label for="economy"></label><select id="economy" onchange="updateDesc('economy')" class="select" ${home.policy.changeEconomy + 1 > turn ? 'disabled' : ''}>
 					<option class="option" id="economy_socialist" ${home.policy.economy == 0 ? 'selected' : ''} disabled>Socialist Economy</option>
 					<option class="option" id="economy_civilian" ${home.policy.economy == 1 ? 'selected' : ''}>Civilian Economy</option>
 					<option class="option" id="economy_normal" ${home.policy.economy == 2 ? 'selected' : ''}>Standard Economy</option>
@@ -41,7 +43,7 @@
 			<td>Manpower</td>
 			<td>Raise or lower manpower</td>
 			<td>
-				<select id="manpower" onchange="updateDesc('manpower')" class="select" ${home.policy.changeManpower + 1 > turn ? 'disabled' : ''}>
+				<label for="manpower"></label><select id="manpower" onchange="updateDesc('manpower')" class="select" ${home.policy.changeManpower + 1 > turn ? 'disabled' : ''}>
 					<option class="option" id="manpower_disarmed" ${home.policy.manpower == 0 ? 'selected' : ''}>Disarmed Populace</option>
 					<option class="option" id="manpower_volunteer" ${home.policy.manpower == 1 ? 'selected' : ''}>Volunteer Army</option>
 					<option class="option" id="manpower_drives" ${home.policy.manpower == 2 ? 'selected' : ''}>Recruitment Drives</option>
@@ -64,7 +66,7 @@
 			<td>Food</td>
 			<td>How much food do people deserve</td>
 			<td>
-				<select id="food" onchange="updateDesc('food')" class="select" ${home.policy.changeFood + 1 > turn ? 'disabled' : ''}>
+				<label for="food"></label><select id="food" onchange="updateDesc('food')" class="select" ${home.policy.changeFood + 1 > turn ? 'disabled' : ''}>
 					<option class="option" id="food_ration" ${home.policy.food == 0 ? 'selected' : ''}>Strict rationing</option>
 					<option class="option" id="food_normal" ${home.policy.food == 1 ? 'selected' : ''}>Normal</option>
 					<option class="option" id="food_free" ${home.policy.food == 2 ? 'selected' : ''}>Free Food</option>

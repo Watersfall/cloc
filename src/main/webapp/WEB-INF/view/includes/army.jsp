@@ -8,7 +8,7 @@
 		margin-right:auto;
 	}
 	.table td{
-		text-align: left;
+		text-align: center;
 	}
 	p{
 		text-align: inherit;

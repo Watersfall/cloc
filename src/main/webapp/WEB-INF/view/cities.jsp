@@ -3,12 +3,13 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <script src="${pageContext.request.contextPath}/js/policies.js"></script>
 <script>
 	function loadCity(id)
 	{
 		let url = new URL(window.location.href);
-		if((url.searchParams.get("id") != id))
+		if((url.searchParams.get("id") !== id))
 		{
 			document.getElementById("city").innerHTML = "<p>Loading...</p>";
 			let xhttp = new XMLHttpRequest();
@@ -30,7 +31,7 @@
 	<table id="nation">
 		<tr>
 			<c:forEach var="i" items="${home.cities.cities}">
-				<th style="width: ${100 / home.cities.cities.size}%" onclick="loadCity(${i.key})">${i.value.name}</th>
+				<th style="width: ${100 / home.cities.cities.size}%" onclick="loadCity('${i.key}')">${i.value.name}</th>
 			</c:forEach>
 		</tr>
 	</table>
