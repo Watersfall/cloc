@@ -147,8 +147,7 @@
 						<td>Send Money</td>
 						<td>
 							<label for="amountCash"></label><input type="number" id="amountCash" name="sendcash" min="0">
-							<button type="submit" onclick="sendCash(document.getElementById('amountCash').value, <c:out
-									value="${nation}"/>);">Send
+							<button type="submit" onclick="send('sendmoney', document.getElementById('amountCash').value, '${nation.id}')">Send
 							</button>
 						</td>
 					</tr>
@@ -156,9 +155,7 @@
 						<td>Send Iron</td>
 						<td>
 							<label for="amountIron"></label><input type="number" id="amountIron" name="sendiron" min="0">
-							<button type="submit"
-									onclick="sendIron(document.getElementById('amountIron').value, <c:out value="${nation}"/>);">
-								Send
+							<button type="submit" onclick="send('sendiron', document.getElementById('amountIron').value, '${nation.id}')">Send
 							</button>
 						</td>
 					</tr>
@@ -166,9 +163,7 @@
 						<td>Send Coal</td>
 						<td>
 							<label for="amountCoal"></label><input type="number" id="amountCoal" name="sendcoal" min="0">
-							<button type="submit"
-									onclick="sendCoal(document.getElementById('amountCoal').value, <c:out value="${nation}"/>);">
-								Send
+							<button type="submit" onclick="send('sendcoal', document.getElementById('amountCoal').value, '${nation.id}')">Send
 							</button>
 						</td>
 					</tr>
@@ -176,9 +171,7 @@
 						<td>Send Oil</td>
 						<td>
 							<label for="amountOil"></label><input type="number" id="amountOil" name="sendoil" min="0">
-							<button type="submit"
-									onclick="sendOil(document.getElementById('amountOil').value, <c:out value="${nation}"/>);">
-								Send
+							<button type="submit" onclick="send('sendoil', document.getElementById('amountOil').value, '${nation.id}')">Send
 							</button>
 						</td>
 					</tr>
@@ -186,30 +179,13 @@
 						<td>Send Steel</td>
 						<td>
 							<label for="amountSteel"></label><input type="number" id="amountSteel" name="sendsteel" min="0">
-							<button type="submit"
-									onclick="sendSteel(document.getElementById('amountSteel').value, <c:out value="${nation}"/>);">
-								Send
+							<button type="submit" onclick="send('sendsteel', document.getElementById('amountSteel').value, '${nation.id}')">Send
 							</button>
 						</td>
 					</tr>
 				</table>
-				<c:choose>
-					<c:when test="${home.defensive == nation.id || home.offensive == nation.id}">
-						<form action="nation.do" method="POST">
-							<input type="hidden" name="action" value="land"/>
-							<input type="hidden" name="id" value="${nation.id}"/>
-							<button type="submit">Attack!</button>
-						</form>
-					</c:when>
-					<c:otherwise>
-						<form action="nation.do" method="POST">
-							<input type="hidden" name="action" value="war"/>
-							<input type="hidden" name="id" value="${nation.id}"/>
-							<button type="submit">Declare War</button>
-						</form>
-					</c:otherwise>
-				</c:choose>
-
+				<button style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'inline' : 'none'}" onclick="send('land', null, '${nation.id}')">Attack!</button>
+				<button style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'none' : 'inline'}" onclick="declareWar(${nation.id})">Declare War</button>
 			</c:if>
 		</c:otherwise>
 	</c:choose>
