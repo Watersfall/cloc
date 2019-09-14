@@ -4,6 +4,8 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="offensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="defensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="production" type="java.util.HashMap"--%>
 <%--@elvariable id="food" type="java.util.HashMap"--%>
 <%--@elvariable id="population" type="java.util.HashMap"--%>
@@ -235,6 +237,17 @@
 				<td><c:out value="${home.military.zeppelins}"/></td>
 			</tr>
 		</table>
+
+		<h1>Wars</h1>
+		<c:if test="${offensive != null}">
+			<p>Offensive: <a href="${pageContext.request.contextPath}/nation.jsp?id=${offensive.id}">${offensive.cosmetic.nationName}</a></p>
+		</c:if>
+		<c:if test="${defensive != null}">
+			<p>Defensive: <a href="${pageContext.request.contextPath}/nation.jsp?id=${defensive.id}">${defensive.cosmetic.nationName}</a></p>
+		</c:if>
+		<c:if test="${offensive == null && defensive == null}">
+			<p>None</p>
+		</c:if>
 	</c:if>
 	<p><br><br><br></p>
 </div>
