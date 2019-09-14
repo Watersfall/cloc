@@ -193,7 +193,9 @@ public class Nation
 
 	public boolean canDeclareWar(Nation nation)
 	{
-		return (this.offensive == 0 && nation.getDefensive() == 0) && Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion());
+		return (this.offensive == 0 && nation.getDefensive() == 0)
+				&& Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion())
+				&& nation.getMilitary().getWarProtection() <= Util.turn;
 	}
 
 	public void declareWar(Nation nation) throws SQLException

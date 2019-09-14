@@ -6,6 +6,7 @@ import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.Army;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.nation.NationMilitary;
 import com.watersfall.clocgame.model.war.Log;
 import com.watersfall.clocgame.util.Util;
 
@@ -276,6 +277,9 @@ public class NationController extends HttpServlet
 							updateWar.setInt(2, attacker.getId());
 							updateWar.setInt(3, defender.getId());
 							updateWar.execute();
+							NationMilitary military = new NationMilitary(connection, defender.getId(), true);
+							military.setWarProtection(Util.turn + 4);
+							military.update();
 							writer.append(Responses.warWon());
 						}
 						else
