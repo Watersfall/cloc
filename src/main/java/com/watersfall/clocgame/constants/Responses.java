@@ -196,6 +196,11 @@ public class Responses
 		return "<p>Sent!</p>";
 	}
 
+	public static String cannotWar()
+	{
+		return "<p>You can not declare war on this nation!</p>";
+	}
+
 	public static String war()
 	{
 		return "<p>You have declared war!</p>";
@@ -334,5 +339,15 @@ public class Responses
 	public static String train()
 	{
 		return "<p>You train your army!</p>";
+	}
+
+	public static String offensiveVictory(int attacker, int defender)
+	{
+		return "<p>Victory! You have killed " + defender + "k enemy soldiers while suffering " + attacker+ "k casualties!</p>";
+	}
+
+	public static String offensiveDefeat(int attacker, int defender)
+	{
+		return "<p>Defeat! You have lost " + attacker+ "k soldiers while only killing " + defender + "k enemy troops!</p>";
 	}
 }

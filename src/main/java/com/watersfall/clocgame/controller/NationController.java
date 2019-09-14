@@ -240,6 +240,7 @@ public class NationController extends HttpServlet
 				case "war":
 					if(!sender.canDeclareWar(receiver))
 					{
+						writer.append(Responses.cannotWar());
 						break;
 					}
 					else
@@ -262,17 +263,17 @@ public class NationController extends HttpServlet
 						//There's only the home army for every nation atm, will need to fix this when you can create more
 						Army attacker = (Army) sender.getArmies().getArmies().values().toArray()[0];
 						Army defender = (Army) receiver.getArmies().getArmies().values().toArray()[0];
-						if(attacker.getAttackPower() > defender.getAttackPower())
+						int attackLosses = attacker.getAttackingCasualties(defender);
+						int defenderLosses = defender.getDefendingCasualties(attacker);
+						attacker.setArmy(attacker.getArmy() - attackLosses);
+						defender.setArmy(defender.getArmy() - defenderLosses);
+						if(attacker.getPower() > defender.getPower())
 						{
-							defender.setArmy(defender.getArmy() - 10);
-							defender.update();
-							writer.append("Victory! You have killed 10k enemy soldiers!");
+							writer.append(Responses.offensiveVictory(attackLosses, defenderLosses));
 						}
 						else
 						{
-							attacker.setArmy(attacker.getArmy() - 10);
-							attacker.update();
-							writer.append("Defeat! You have lost 10k soldiers!");
+							writer.append(Responses.offensiveDefeat(attackLosses, defenderLosses));
 						}
 						Log.createLog(connection, sender.getId(), receiver.getForeign().getRegion(), LogType.LAND, 0);
 					}

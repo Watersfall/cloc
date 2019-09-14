@@ -98,15 +98,57 @@ public class Army
 		results.updateInt(6, artillery);
 	}
 
-	public int getAttackPower()
+	public double getPower()
 	{
-		int power = this.getArmy() * 1000;
-		if(!(power >= this.weapons))
+		double power = army * 1000;
+		if(power > weapons)
 		{
-			power *= (int)(this.weapons / power);
+			power = power * (weapons / power);
 		}
+		power = Math.sqrt(power / 1000);
+		power *= Math.sqrt(training + 1);
 		power *= Math.sqrt(artillery + 1);
-		return power;
+		return Math.sqrt(power);
+	}
+
+	public int getAttackingCasualties(Army defender)
+	{
+		double attackPower = this.getPower();
+		double defensePower = defender.getPower();
+		if(attackPower > defensePower)
+		{
+			defensePower = Math.pow(defensePower, 1.95);
+			double armyHp = this.army * 20.0;
+			armyHp -= defensePower;
+			return (int)(this.army - (armyHp / 20.0));
+		}
+		else
+		{
+			defensePower = Math.pow(defensePower, 2.0);
+			double armyHp = this.army * 20.0;
+			armyHp -= defensePower;
+			return (int)(this.army - (armyHp / 20.0));
+		}
+	}
+
+	public int getDefendingCasualties(Army attacker)
+	{
+		double attackPower = attacker.getPower();
+		double defensePower = this.getPower();
+		if(attackPower > defensePower)
+		{
+			attackPower = Math.pow(attackPower, 2.0);
+			double armyHp = this.army * 20.0;
+			armyHp -= attackPower;
+			return (int)(this.army - (armyHp / 20.0));
+		}
+		else
+		{
+			attackPower = Math.pow(attackPower, 1.95);
+			double armyHp = this.army * 20.0;
+			armyHp -= attackPower;
+			return (int)(this.army - (armyHp / 20.0));
+		}
 	}
 
 	public void update() throws SQLException
