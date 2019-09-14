@@ -71,7 +71,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(fighters, 1);
+			results.updateInt(1, fighters);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(zeppelins, 2);
+			results.updateInt(2, zeppelins);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(bombers, 3);
+			results.updateInt(3, bombers);
 		}
 	}
 
@@ -107,7 +107,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(submarines, 4);
+			results.updateInt(4, submarines);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(destroyers, 5);
+			results.updateInt(5, destroyers);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(cruisers, 6);
+			results.updateInt(6, cruisers);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(preBattleships, 7);
+			results.updateInt(7, preBattleships);
 		}
 	}
 
@@ -155,7 +155,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(battleships, 8);
+			results.updateInt(8, battleships);
 		}
 	}
 
@@ -167,7 +167,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(transports, 9);
+			results.updateInt(9, transports);
 		}
 	}
 
@@ -179,7 +179,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(stockpileArtillery, 10);
+			results.updateInt(10, stockpileArtillery);
 		}
 	}
 
@@ -191,7 +191,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(stockpileWeapons, 11);
+			results.updateInt(11, stockpileWeapons);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(warProtection, 12);
+			results.updateInt(12, warProtection);
 		}
 	}
 
