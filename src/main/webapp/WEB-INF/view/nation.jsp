@@ -184,8 +184,8 @@
 						</td>
 					</tr>
 				</table>
-				<button style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'inline' : 'none'}" onclick="send('land', null, '${nation.id}')">Attack!</button>
-				<button style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'none' : 'inline'}" onclick="declareWar(${nation.id})">Declare War</button>
+				<button id="land" style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'inline' : 'none'}" onclick="send('land', null, '${nation.id}')">Attack!</button>
+				<button id="decc" style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'none' : 'inline'}" onclick="declareWar(${nation.id})">Declare War</button>
 			</c:if>
 		</c:otherwise>
 	</c:choose>

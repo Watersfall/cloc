@@ -7,6 +7,7 @@ import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.Army;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.war.Log;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/nation.jsp", "/nation.do"})
@@ -241,7 +243,6 @@ public class NationController extends HttpServlet
 					if(!sender.canDeclareWar(receiver))
 					{
 						writer.append(Responses.cannotWar());
-						break;
 					}
 					else
 					{
@@ -249,6 +250,7 @@ public class NationController extends HttpServlet
 						connection.commit();
 						writer.append(Responses.war());
 					}
+					break;
 				case "land":
 					if(sender.getOffensive() != receiver.getId() && sender.getDefensive() != receiver.getId())
 					{
@@ -263,19 +265,37 @@ public class NationController extends HttpServlet
 						//There's only the home army for every nation atm, will need to fix this when you can create more
 						Army attacker = (Army) sender.getArmies().getArmies().values().toArray()[0];
 						Army defender = (Army) receiver.getArmies().getArmies().values().toArray()[0];
-						int attackLosses = attacker.getAttackingCasualties(defender);
-						int defenderLosses = defender.getDefendingCasualties(attacker);
-						attacker.setArmy(attacker.getArmy() - attackLosses);
-						defender.setArmy(defender.getArmy() - defenderLosses);
-						if(attacker.getPower() > defender.getPower())
+						if(attacker.getArmy() <= 5)
 						{
-							writer.append(Responses.offensiveVictory(attackLosses, defenderLosses));
+							writer.append(Responses.noTroopsForAttack());
+						}
+						else if(defender.getArmy() <= 5)
+						{
+							PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=? WHERE attacker=? AND defender=?");
+							updateWar.setInt(1, Util.turn);
+							updateWar.setInt(2, attacker.getId());
+							updateWar.setInt(3, defender.getId());
+							updateWar.execute();
+							writer.append(Responses.warWon());
 						}
 						else
 						{
-							writer.append(Responses.offensiveDefeat(attackLosses, defenderLosses));
+							int attackLosses = attacker.getAttackingCasualties(defender);
+							int defenderLosses = defender.getDefendingCasualties(attacker);
+							attacker.setArmy(attacker.getArmy() - attackLosses);
+							defender.setArmy(defender.getArmy() - defenderLosses);
+							attacker.update();
+							defender.update();
+							if(attacker.getPower() > defender.getPower())
+							{
+								writer.append(Responses.offensiveVictory(attackLosses, defenderLosses));
+							}
+							else
+							{
+								writer.append(Responses.offensiveDefeat(attackLosses, defenderLosses));
+							}
+							Log.createLog(connection, sender.getId(), receiver.getForeign().getRegion(), LogType.LAND, 0);
 						}
-						Log.createLog(connection, sender.getId(), receiver.getForeign().getRegion(), LogType.LAND, 0);
 					}
 					break;
 			}

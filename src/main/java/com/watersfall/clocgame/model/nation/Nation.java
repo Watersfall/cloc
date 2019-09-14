@@ -55,8 +55,8 @@ public class Nation
 		this.safe = safe;
 
 		//Wars
-		PreparedStatement attacker = connection.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=?");
-		PreparedStatement defender = connection.prepareStatement("SELECT attacker FROM cloc_war WHERE id=?");
+		PreparedStatement attacker = connection.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1");
+		PreparedStatement defender = connection.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1");
 		attacker.setInt(1, this.id);
 		defender.setInt(1, this.id);
 		ResultSet resultsAttacker = attacker.executeQuery();

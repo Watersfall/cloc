@@ -102,6 +102,11 @@ public class Responses
 		return "<p>You do not have enough manpower!</p>";
 	}
 
+	public static String noTroopsForAttack()
+	{
+		return "<p>You do not have enough troops to attack!</p>";
+	}
+
 	public static String noTroops()
 	{
 		return "<p>You can not deconscript further!</p>";
@@ -349,5 +354,10 @@ public class Responses
 	public static String offensiveDefeat(int attacker, int defender)
 	{
 		return "<p>Defeat! You have lost " + attacker+ "k soldiers while only killing " + defender + "k enemy troops!</p>";
+	}
+
+	public static String warWon()
+	{
+		return "<p>You have won the war, winning absolutely nothing because I haven't written that part yet!</p>";
 	}
 }
