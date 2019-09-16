@@ -182,6 +182,11 @@ public class Responses
 		return "<p>Your army is still preparing!</p>";
 	}
 
+	public static String noLand()
+	{
+		return "<p>You do not have enough land!</p>";
+	}
+
 	/*
 	 ** RESPONSES
 	 */

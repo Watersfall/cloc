@@ -18,9 +18,9 @@ public class City
 	public static final int EMPLOYMENT_MINE = 10000;
 	public static final int EMPLOYMENT_FACTORY = 100000;
 	public static final int EMPLOYMENT_UNIVERSITY = 50000;
-	public static final int LAND_MINE = 250;
-	public static final int LAND_FACTORY = 1000;
-	public static final int LAND_UNIVERSITY = 500;
+	public static final int LAND_MINE = 100;
+	public static final int LAND_FACTORY = 500;
+	public static final int LAND_UNIVERSITY = 750;
 
 	private @Getter int id;
 	private @Getter int owner;

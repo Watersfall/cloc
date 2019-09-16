@@ -229,4 +229,17 @@ public class NationCities extends NationBase
 		return map;
 	}
 
+	public int getTotalLandUsage()
+	{
+		int total = 0;
+		for(City city : cities.values())
+		{
+			for(Integer integer : city.getLandUsage().values())
+			{
+				total += integer;
+			}
+		}
+		return total;
+	}
+
 }
