@@ -26,6 +26,7 @@ public class Nation
 	private @Getter NationCities cities;
 	private @Getter NationArmies armies;
 	private @Getter NationPolicy policy;
+	private @Getter NationTech tech;
 	private @Getter int defensive;
 	private @Getter int offensive;
 	private @Getter int treaty;
@@ -49,6 +50,7 @@ public class Nation
 		cities = new NationCities(connection, id, safe);
 		armies = new NationArmies(connection, id, safe);
 		policy = new NationPolicy(connection, id, safe);
+		tech = new NationTech(connection, id, safe);
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;

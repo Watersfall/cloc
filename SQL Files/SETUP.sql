@@ -118,6 +118,7 @@ CREATE TABLE cloc_tech(
 	bolt_action_tech TINYINT UNSIGNED DEFAULT 0,
 	semi_automatic_tech TINYINT UNSIGNED DEFAULT 0,
 	machine_gun_tech TINYINT UNSIGNED DEFAULT 0,
+	food_tech TINYINT UNSIGNED DEFAULT 0,
 	FOREIGN KEY fk_tech (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
