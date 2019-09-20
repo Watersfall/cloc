@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.controller;
+package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;

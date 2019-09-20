@@ -3,8 +3,7 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/header.jsp" %>
-<script src="${pageContext.request.contextPath}/js/policies.js"></script>
-<%--@elvariable id="costs" type="com.watersfall.clocgame.servlet.policies.Policies"--%>
+<%--@elvariable id="costs" type="com.watersfall.clocgame.action.PolicyActions"--%>
 <%-- POLICIES --%>
 <div class="main">
 	<%@ include file="includes/results.jsp" %>

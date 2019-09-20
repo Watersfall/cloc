@@ -6,7 +6,6 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="user" type="java.lang.Integer"--%>
-<script src="${pageContext.request.contextPath}/js/nation.js"></script>
 <div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<c:choose>

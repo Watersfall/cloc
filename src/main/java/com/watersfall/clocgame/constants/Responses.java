@@ -187,6 +187,26 @@ public class Responses
 		return "<p>You do not have enough land!</p>";
 	}
 
+	public static String noChange()
+	{
+		return "<p>You can not change this yet!</p>";
+	}
+
+	public static String policySame()
+	{
+		return "<p>You already have this policy set!</p>";
+	}
+
+	public static String policyNoWar()
+	{
+		return "<p>You must be at war to select this!</p>";
+	}
+
+	public static String policyNoPeace()
+	{
+		return "<p>You can not select this when at war!</p>";
+	}
+
 	/*
 	 ** RESPONSES
 	 */
@@ -364,5 +384,20 @@ public class Responses
 	public static String warWon()
 	{
 		return "<p>You have won the war, winning absolutely nothing because I haven't written that part yet!</p>";
+	}
+
+	public static String updated(String field)
+	{
+		return "<p>" + field + " updated!</p>";
+	}
+
+	public static String updated()
+	{
+		return "<p>Updated!</p>";
+	}
+
+	public static String policyUpdated()
+	{
+		return "<p>Policy updated!</p>";
 	}
 }

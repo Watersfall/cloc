@@ -4,12 +4,11 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <div class="main">
-	<form method="POST" action="${pageContext.request.contextPath}/policies/createtreaty">
-		<label>
-			<input type="text" name="name" maxlength="32">
-		</label>
-		<button type="submit">Create</button>
-	</form>
+	<%@ include file="includes/results.jsp" %>
+	<label>
+		<input id="name" type="text" name="name" maxlength="32">
+	</label>
+	<button onclick="createTreaty(document.getElementById('name').value)">Create</button>
 </div>
 </body>
 </html>

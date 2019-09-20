@@ -5,7 +5,6 @@
 <%@ include file="includes/header.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="turn" type="java.lang.Integer"--%>
-<script src="${pageContext.request.contextPath}/js/decisions.js"></script>
 <div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<table id="policy">

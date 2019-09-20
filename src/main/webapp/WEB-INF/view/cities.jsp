@@ -4,7 +4,6 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<script src="${pageContext.request.contextPath}/js/policies.js"></script>
 <script>
 	function loadCity(id)
 	{

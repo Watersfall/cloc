@@ -1,12 +1,11 @@
-package com.watersfall.clocgame.controller;
+package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.model.nation.Army;
-import com.watersfall.clocgame.servlet.policies.Policies;
+import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -79,64 +78,64 @@ public class PolicyController extends HttpServlet
 					switch(policy)
 					{
 						case "coalmine":
-							writer.append(Policies.coalMine(conn, user, id));
+							writer.append(PolicyActions.coalMine(conn, user, id));
 							break;
 						case "ironmine":
-							writer.append(Policies.ironMine(conn, user, id));
+							writer.append(PolicyActions.ironMine(conn, user, id));
 							break;
 						case "drill":
-							writer.append(Policies.drill(conn, user, id));
+							writer.append(PolicyActions.drill(conn, user, id));
 							break;
 						case "industrialize":
-							writer.append(Policies.industrialize(conn, user, id));
+							writer.append(PolicyActions.industrialize(conn, user, id));
 							break;
 						case "militarize":
-							writer.append(Policies.militarize(conn, user, id));
+							writer.append(PolicyActions.militarize(conn, user, id));
 							break;
 						case "nitrogenplant":
-							writer.append(Policies.nitrogen(conn, user, id));
+							writer.append(PolicyActions.nitrogen(conn, user, id));
 							break;
 						case "university":
-							writer.append(Policies.university(conn, user, id));
+							writer.append(PolicyActions.university(conn, user, id));
 							break;
 						case "port":
-							writer.append(Policies.port(conn, user, id));
+							writer.append(PolicyActions.port(conn, user, id));
 							break;
 						case "barrack":
-							writer.append(Policies.barrack(conn, user, id));
+							writer.append(PolicyActions.barrack(conn, user, id));
 							break;
 						case "railroad":
-							writer.append(Policies.railroad(conn, user, id));
+							writer.append(PolicyActions.railroad(conn, user, id));
 							break;
 						case "uncoalmine":
-							writer.append(Policies.unCoalMine(conn, user, id));
+							writer.append(PolicyActions.unCoalMine(conn, user, id));
 							break;
 						case "unironmine":
-							writer.append(Policies.unIronMine(conn, user, id));
+							writer.append(PolicyActions.unIronMine(conn, user, id));
 							break;
 						case "undrill":
-							writer.append(Policies.unDrill(conn, user, id));
+							writer.append(PolicyActions.unDrill(conn, user, id));
 							break;
 						case "unindustrialize":
-							writer.append(Policies.unIndustrialize(conn, user, id));
+							writer.append(PolicyActions.unIndustrialize(conn, user, id));
 							break;
 						case "unmilitarize":
-							writer.append(Policies.unMilitarize(conn, user, id));
+							writer.append(PolicyActions.unMilitarize(conn, user, id));
 							break;
 						case "unnitrogenplant":
-							writer.append(Policies.unNitrogen(conn, user, id));
+							writer.append(PolicyActions.unNitrogen(conn, user, id));
 							break;
 						case "ununiversity":
-							writer.append(Policies.unUniversity(conn, user, id));
+							writer.append(PolicyActions.unUniversity(conn, user, id));
 							break;
 						case "unport":
-							writer.append(Policies.unPort(conn, user, id));
+							writer.append(PolicyActions.unPort(conn, user, id));
 							break;
 						case "unbarrack":
-							writer.append(Policies.unBarrack(conn, user, id));
+							writer.append(PolicyActions.unBarrack(conn, user, id));
 							break;
 						case "unrailroad":
-							writer.append(Policies.unRailroad(conn, user, id));
+							writer.append(PolicyActions.unRailroad(conn, user, id));
 							break;
 						default:
 							super.doPost(req, resp);
@@ -147,13 +146,13 @@ public class PolicyController extends HttpServlet
 					switch(policy)
 					{
 						case "conscript":
-							writer.append(Policies.conscript(conn, user, id));
+							writer.append(PolicyActions.conscript(conn, user, id));
 							break;
 						case "train":
-							writer.append(Policies.train(conn, user, id));
+							writer.append(PolicyActions.train(conn, user, id));
 							break;
 						case "deconscript":
-							writer.append(Policies.deconscript(conn, user, id));
+							writer.append(PolicyActions.deconscript(conn, user, id));
 							break;
 						default:
 							super.doPost(req, resp);
@@ -164,31 +163,31 @@ public class PolicyController extends HttpServlet
 					switch(policy)
 					{
 						case "freemoneycapitalist":
-							writer.append(Policies.freeMoneyCapitalist(conn, user));
+							writer.append(PolicyActions.freeMoneyCapitalist(conn, user));
 							break;
 						case "freemoneycommunist":
-							writer.append(Policies.freeMoneyCommunist(conn, user));
+							writer.append(PolicyActions.freeMoneyCommunist(conn, user));
 							break;
 						case "crackdown":
-							writer.append(Policies.arrest(conn, user));
+							writer.append(PolicyActions.arrest(conn, user));
 							break;
 						case "free":
-							writer.append(Policies.free(conn, user));
+							writer.append(PolicyActions.free(conn, user));
 							break;
 						case "alignentente":
-							writer.append(Policies.alignEntente(conn, user));
+							writer.append(PolicyActions.alignEntente(conn, user));
 							break;
 						case "alignneutral":
-							writer.append(Policies.alignNeutral(conn, user));
+							writer.append(PolicyActions.alignNeutral(conn, user));
 							break;
 						case "aligncentral":
-							writer.append(Policies.alignCentralPowers(conn, user));
+							writer.append(PolicyActions.alignCentralPowers(conn, user));
 							break;
 						case "buildartillery":
-							writer.append(Policies.artillery(conn, user));
+							writer.append(PolicyActions.artillery(conn, user));
 							break;
 						case "buildweapons":
-							writer.append(Policies.weapons(conn, user));
+							writer.append(PolicyActions.weapons(conn, user));
 							break;
 					}
 			}

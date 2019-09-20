@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.filter;
+package com.watersfall.clocgame.servlet.filter;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;

@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.servlet.policies;
+package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.exception.CityNotFoundException;
@@ -10,9 +10,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class Policies
+public class PolicyActions
 {
-	public Policies(){}
+	public PolicyActions(){}
 
 	//<editor-fold desc="Constants"
 	//<editor-fold desc="Costs"

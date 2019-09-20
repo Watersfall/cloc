@@ -1,13 +1,13 @@
-package com.watersfall.clocgame.servlet.decisions;
+package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.model.nation.NationPolicy;
+import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.UserUtils;
-import com.watersfall.clocgame.util.Util;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,14 +19,14 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-
-@WebServlet(urlPatterns = "/decisions/manpower")
-public class DecisionManpower extends HttpServlet
+@WebServlet(urlPatterns = {"/createtreaty.jsp", "/createtreaty.do"})
+public class CreateTreatyController extends HttpServlet
 {
+	@Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+	{
+		req.getServletContext().getRequestDispatcher("/WEB-INF/view/createtreaty.jsp").forward(req, resp);
+	}
 
-	static BasicDataSource database = Database.getDataSource();
-
-	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		PrintWriter writer = response.getWriter();
@@ -34,27 +34,31 @@ public class DecisionManpower extends HttpServlet
 		try
 		{
 			int user = UserUtils.getUser(request);
-			conn = database.getConnection();
-			int selection = Integer.parseInt(request.getParameter("selection"));
-			if(selection < 0 || selection > 4)
+			conn = Database.getDataSource().getConnection();
+			String name;
+			if((name = request.getParameter("name")) != null)
 			{
-				throw new NumberFormatException();
-			}
-			NationPolicy policy = new NationPolicy(conn, user, true);
-			if(Util.turn < policy.getChangeManpower() + 1)
-			{
-				writer.append(DecisionResponses.noChange());
-			}
-			else if(policy.getManpower() == selection)
-			{
-				writer.append(DecisionResponses.same());
+				if(name.length() > 32)
+				{
+					writer.append(Responses.tooLong());
+				}
+				else
+				{
+					Nation nation = new Nation(conn, user, true);
+					if(nation.getTreaty() != 0)
+					{
+
+					}
+					Treaty treaty = Treaty.createTreaty(conn, name);
+					nation.joinTreaty(treaty, true);
+					conn.commit();
+					response.setStatus(201);
+					writer.append(Integer.toString(treaty.getId()));
+				}
 			}
 			else
 			{
-				policy.setManpower(selection);
-				policy.update();
-				conn.commit();
-				writer.append(DecisionResponses.updated());
+				writer.append(Responses.nullFields());
 			}
 		}
 		catch(SQLException e)
@@ -82,6 +86,10 @@ public class DecisionManpower extends HttpServlet
 		{
 			writer.append(Responses.noNation());
 		}
+		catch(CityNotFoundException e)
+		{
+			writer.append(Responses.noCity());
+		}
 		finally
 		{
 			try
@@ -93,11 +101,5 @@ public class DecisionManpower extends HttpServlet
 				//Ignore
 			}
 		}
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
-		super.doGet(request, response);
 	}
 }

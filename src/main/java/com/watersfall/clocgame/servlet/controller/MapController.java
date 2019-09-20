@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.controller;
+package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Region;
