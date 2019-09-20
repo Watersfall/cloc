@@ -28,7 +28,7 @@ public class Nation
 	private @Getter NationPolicy policy;
 	private @Getter int defensive;
 	private @Getter int offensive;
-	private @Getter Treaty treaty;
+	private @Getter int treaty;
 	private @Getter Connection connection;
 	private @Getter boolean safe;
 
@@ -49,7 +49,6 @@ public class Nation
 		cities = new NationCities(connection, id, safe);
 		armies = new NationArmies(connection, id, safe);
 		policy = new NationPolicy(connection, id, safe);
-		//try{treaty = new Treaty(connection, id, safe);}catch(TreatyNotFoundException e){treaty=null;}
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;
@@ -76,6 +75,20 @@ public class Nation
 		else
 		{
 			this.defensive = resultsDefender.getInt(1);
+		}
+
+		//Treaty
+		PreparedStatement treatyCheck = connection.prepareStatement("SELECT alliance_id FROM cloc_treaties_members " +
+				"WHERE nation_id=?");
+		treatyCheck.setInt(1, this.id);
+		ResultSet resultsTreaty = treatyCheck.executeQuery();
+		if(!resultsTreaty.first())
+		{
+			treaty = 0;
+		}
+		else
+		{
+			treaty = resultsTreaty.getInt(1);
 		}
 	}
 

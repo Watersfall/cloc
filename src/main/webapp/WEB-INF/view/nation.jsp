@@ -80,7 +80,7 @@
 				</tr>
 				<tr>
 					<td>Treaty Membership</td>
-					<td><c:out value="${nation.treaty.name}"/></td>
+					<td><c:out value="${nation.treaty}"/></td>
 				</tr>
 			</table>
 			<h1>Military</h1>
