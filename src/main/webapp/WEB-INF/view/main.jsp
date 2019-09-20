@@ -10,6 +10,7 @@
 <%--@elvariable id="food" type="java.util.HashMap"--%>
 <%--@elvariable id="population" type="java.util.HashMap"--%>
 <div class="main">
+	<%@ include file="includes/results.jsp" %>
 	<c:if test="${sessionScope.user == null}">
 		<p>You must be logged in to view this page!</p>
 	</c:if>

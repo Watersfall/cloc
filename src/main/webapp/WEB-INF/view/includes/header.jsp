@@ -2,15 +2,13 @@
 	<c:choose>
 		<c:when test="${sessionScope.user == null}">
 			<div class="login">
-				<form class="loginForm" action="${pageContext.request.contextPath}/login.do" method="POST">
-					<label>
-						<input class="loginText" type="text" name="username" placeholder="Username">
-					</label><br>
-					<label>
-						<input class="loginText" type="password" name="password" placeholder="Password">
-					</label><br>
-					<input class="loginText" type="submit" value="Login">
-				</form>
+				<label>
+					<input id="username" class="loginText" type="text" name="username" placeholder="Username">
+				</label><br>
+				<label>
+					<input id="password" class="loginText" type="password" name="password" placeholder="Password">
+				</label><br>
+				<input class="loginText" type="submit" onclick="login(document.getElementById('username').value, document.getElementById('password').value);" value="Login">
 				<form class="loginForm" action="${pageContext.request.contextPath}/index.jsp" method="GET">
 					<input type="submit" value="Home">
 				</form>

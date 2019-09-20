@@ -192,4 +192,27 @@ function createTreaty(name)
 	};
 }
 
-
+function login(user, pass)
+{
+	document.getElementById('resultsContainer').style.visibility = "visible";
+	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	let xhttp = new XMLHttpRequest();
+	let params = "username=" + user + "&password=" + pass;
+	xhttp.open("POST", "login.do", true);
+	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	xhttp.send(params);
+	xhttp.onreadystatechange = function()
+	{
+		if(xhttp.readyState === 4 && xhttp.status === 200)
+		{
+			if(xhttp.responseText != "")
+			{
+				document.getElementById("result").innerHTML = xhttp.responseText;
+			}
+			else
+			{
+				location.reload();
+			}
+		}
+	};
+}

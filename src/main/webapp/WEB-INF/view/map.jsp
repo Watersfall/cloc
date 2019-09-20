@@ -7,6 +7,7 @@
 <%--@elvariable id="nations" type="java.util.Collection"--%>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <div class="main">
+	<%@ include file="includes/results.jsp" %>
 	<svg id="world-map" width="85%" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
 		<g id="world">
 			<a href="${pageContext.request.contextPath}/map.jsp?region=Siberia">

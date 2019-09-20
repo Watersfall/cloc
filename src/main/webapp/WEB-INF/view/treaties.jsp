@@ -5,6 +5,7 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <div class="main">
+	<%@ include file="includes/results.jsp" %>
 	<table id="policy">
 		<tr>
 			<th>Flag</th>

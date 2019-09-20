@@ -4,6 +4,7 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <div class="main">
+	<%@ include file="includes/results.jsp" %>
 	<form class="registerForm" action="${pageContext.request.contextPath}/register.do" method="POST">
 		<label>
 			Username

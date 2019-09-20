@@ -31,7 +31,6 @@ public class LoginController extends HttpServlet
 		PrintWriter writer = resp.getWriter();
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
-		String url = req.getParameter("url");
 		try
 		{
 			if(username == null || password == null)
@@ -52,13 +51,7 @@ public class LoginController extends HttpServlet
 				}
 				else
 				{
-					writer.append(Responses.loggedIn());
 					req.getSession().setAttribute("user", results.getInt(1));
-					if(url == null)
-					{
-						url = "main.jsp";
-					}
-					resp.sendRedirect(url);
 				}
 			}
 		}

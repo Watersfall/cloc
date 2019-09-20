@@ -6,6 +6,7 @@
 <%--@elvariable id="nations" type="java.util.Collection"--%>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <div class="main">
+	<%@ include file="includes/results.jsp" %>
 	<h1 title="Title" id="top">Test</h1>
 	<hr>
 	<table id="nation">

@@ -5,6 +5,7 @@
 <body>
 <%@ include file="includes/header.jsp" %>
 <div class="main">
+	<%@ include file="includes/results.jsp" %>
 	<c:choose>
 		<c:when test="${empty param['id']}">
 			<p>You have visited this page incorrectly!</p>
