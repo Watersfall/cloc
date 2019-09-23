@@ -30,6 +30,14 @@ public class TechnologyController extends HttpServlet
 		{
 			req.setAttribute("techs", Technologies.values());
 		}
+		if(req.getParameter("type") != null)
+		{
+			req.setAttribute("type", req.getParameter("type"));
+		}
+		else
+		{
+			req.setAttribute("type", "standard");
+		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/technology.jsp").forward(req, resp);
 	}
 
