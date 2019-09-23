@@ -1,12 +1,14 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.technology.Technologies;
 import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 public class NationTech extends NationBase
 {
@@ -20,6 +22,7 @@ public class NationTech extends NationBase
 	private @Getter int semiAuto;
 	private @Getter int machineGun;
 	private @Getter int food;
+	private @Getter HashSet<Technologies> researchedTechs;
 
 	/**
 	 * Constructs the technologies of a Nation1
@@ -61,6 +64,28 @@ public class NationTech extends NationBase
 			this.semiAuto = results.getInt(8);
 			this.machineGun = results.getInt(9);
 			this.food = results.getInt(10);
+			loadTechnologies();
+		}
+	}
+
+	private void loadTechnologies()
+	{
+		this.researchedTechs = new HashSet<>();
+		if(this.chem >= Technologies.CHEMICAL_WEAPONS.getTechnology().getRequiredSuccesses())
+		{
+			researchedTechs.add(Technologies.CHEMICAL_WEAPONS);
+		}
+		if(this.advancedChem >= Technologies.ADVANCED_CHEMICAL_WEAPONS.getTechnology().getRequiredSuccesses())
+		{
+			researchedTechs.add(Technologies.ADVANCED_CHEMICAL_WEAPONS);
+		}
+		if(this.bomber >= Technologies.BOMBERS.getTechnology().getRequiredSuccesses())
+		{
+			researchedTechs.add(Technologies.BOMBERS);
+		}
+		if(this.boltAction >= Technologies.BOLT_ACTION.getTechnology().getRequiredSuccesses())
+		{
+			researchedTechs.add(Technologies.BOLT_ACTION);
 		}
 	}
 
@@ -112,6 +137,25 @@ public class NationTech extends NationBase
 	public void setFood(int food) throws SQLException
 	{
 		this.results.updateInt(10, food);
+	}
+
+	public void setTech(Technologies tech) throws SQLException
+	{
+		switch(tech)
+		{
+			case BOLT_ACTION:
+				setBoltAction(boltAction + 1);
+				break;
+			case BOMBERS:
+				setBomber(bomber + 1);
+				break;
+			case CHEMICAL_WEAPONS:
+				setChem(chem + 1);
+				break;
+			case ADVANCED_CHEMICAL_WEAPONS:
+				setAdvancedChem(advancedChem + 1);
+				break;
+		}
 	}
 
 }

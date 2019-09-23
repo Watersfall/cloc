@@ -57,6 +57,11 @@ public class Responses
 		return "<p>You cannot give 0 or less!</p>";
 	}
 
+	public static String missingPrerequisite()
+	{
+		return "<p>You cannot research this technology!</p>";
+	}
+
 
 	/*
 	 ** MISSING REQUIREMENTS
@@ -110,6 +115,27 @@ public class Responses
 	public static String noTroops()
 	{
 		return "<p>You can not deconscript further!</p>";
+	}
+
+	public static String no(String field)
+	{
+		switch(field)
+		{
+			case "budget":
+				return noMoney();
+			case "iron":
+				return noIron();
+			case "coal":
+				return noCoal();
+			case "steel":
+				return noSteel();
+			case "nitrogen":
+				return noNitrogen();
+			case"research":
+				return noResearch();
+			default:
+				return genericError();
+		}
 	}
 
 	public static String notEnough()
@@ -205,6 +231,11 @@ public class Responses
 	public static String policyNoPeace()
 	{
 		return "<p>You can not select this when at war!</p>";
+	}
+
+	public static String alreadyHaveTech()
+	{
+		return "<p>You already have this technology!</p>";
 	}
 
 	/*
@@ -399,5 +430,15 @@ public class Responses
 	public static String policyUpdated()
 	{
 		return "<p>Policy updated!</p>";
+	}
+
+	public static String researchSucceeded()
+	{
+		return "<p>Researched!</p>";
+	}
+
+	public static String researchFailed()
+	{
+		return "<p>You have failed to make progress</p>";
 	}
 }
