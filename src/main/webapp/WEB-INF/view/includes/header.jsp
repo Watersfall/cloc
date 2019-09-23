@@ -1,119 +1,39 @@
-<div class="top">
-	<c:choose>
-		<c:when test="${sessionScope.user == null}">
-			<div class="login">
-				<label>
-					<input id="username" class="loginText" type="text" name="username" placeholder="Username">
-				</label><br>
-				<label>
-					<input id="password" class="loginText" type="password" name="password" placeholder="Password">
-				</label><br>
-				<input class="loginText" type="submit" onclick="login(document.getElementById('username').value, document.getElementById('password').value);" value="Login">
-				<form class="loginForm" action="${pageContext.request.contextPath}/index.jsp" method="GET">
-					<input type="submit" value="Home">
-				</form>
-			</div>
-			<div class="login">
-				<form class="loginForm" action="${pageContext.request.contextPath}/register.jsp">
-					<input class="loginText" type="submit" value="Register">
-				</form>
-			</div>
-			<div class="login">
-				<a href="https://discord.gg/x2VwYkS">Discord Server</a>
-			</div>
-		</c:when>
-		<c:otherwise>
-			<div class="login">
-				<div class="headerFlag">
-					<a href="${pageContext.request.contextPath}/main.jsp">
-						<img class="headerFlag" src="https://imgur.com/<c:out value="${home.cosmetic.flag}"/>" alt="Flag">
-					</a>
-					<h1 style="text-align: right;"><c:out value="${home.cosmetic.nationTitle}"/> of<br><c:out value="${home.cosmetic.nationName}"/></h1>
-				</div>
-				<ul>
-					<li>
-						<a style="cursor: pointer;" onclick="showHidePolicies()">
-							<div class="headerTab">
-								<p>Policies</p>
-							</div>
-						</a>
-						<ul id="policies" style="display: none">
-							<li>
-								<a href="${pageContext.request.contextPath}/policies.jsp?policies=Economic">
-									<div class="headerTab">
-										<p>Economy</p>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}/policies.jsp?policies=Domestic">
-									<div class="headerTab">
-										<p>Domestic</p>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}/policies.jsp?policies=Foreign">
-									<div class="headerTab">
-										<p>Foreign</p>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}/policies.jsp?policies=Military">
-									<div class="headerTab">
-										<p>Military</p>
-									</div>
-								</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a href="${pageContext.request.contextPath}/decisions.jsp">
-							<div class="headerTab">
-								<p>Decisions</p>
-							</div>
-						</a>
-					</li>
-					<li>
-						<a style="cursor: pointer;" onclick="showHideWorld()">
-							<div class="headerTab">
-								<p>Realpolitik</p>
-							</div>
-						</a>
-						<ul id="world" style="display: none">
-							<li>
-								<a href="${pageContext.request.contextPath}/index.jsp">
-									<div class="headerTab">
-										<p>World Rankings</p>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}map.jsp">
-									<div class="headerTab">
-										<p>Regions</p>
-									</div>
-								</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a href="${pageContext.request.contextPath}/treaties.jsp">
-							<div class="headerTab">
-								<p>Treaties</p>
-							</div>
-						</a>
-					</li>
-					<li>
-						<a href="${pageContext.request.contextPath}/settings.jsp">
-							<div class="headerTab">
-								<p>Settings</p>
-							</div>
-						</a>
-					</li>
-				</ul>
-			</div>
-		</c:otherwise>
-	</c:choose>
-</div>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<c:if test="${home != null}">
+	<div class="header">
+		<ul>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/budget.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.budget * 1000}"/></p>
+			</li>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/food.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.food}"/></p>
+			</li>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/coal.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.coal}"/></p>
+			</li>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/iron.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.iron}"/></p>
+			</li>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/oil.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.oil}"/></p>
+			</li>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/steel.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.steel}"/></p>
+			</li>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/nitrogen.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.nitrogen}"/></p>
+			</li>
+			<li>
+				<img src="${pageContext.request.contextPath}/images/ui/research.svg" alt="budget"/>
+				<p><cloc:uiFormat value="${home.economy.research}"/></p>
+			</li>
+		</ul>
+	</div>
+</c:if>

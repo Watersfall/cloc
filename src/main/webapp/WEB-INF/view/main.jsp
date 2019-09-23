@@ -2,7 +2,7 @@
 <html>
 <%@ include file="includes/head.jsp" %>
 <body>
-<%@ include file="includes/header.jsp" %>
+<%@ include file="includes/side.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="offensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="defensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
