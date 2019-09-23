@@ -58,6 +58,21 @@ public class TechnologyController extends HttpServlet
 				case "advanced_chem_tech":
 					writer.append(ResearchActions.doResearch(nation, Technologies.ADVANCED_CHEMICAL_WEAPONS));
 					break;
+				case "strategic_bombing_tech":
+					writer.append(ResearchActions.doResearch(nation, Technologies.STRATEGIC_BOMBING));
+					break;
+				case "tank_tech":
+					writer.append(ResearchActions.doResearch(nation, Technologies.TANK));
+					break;
+				case "ship_oil_tech":
+					writer.append(ResearchActions.doResearch(nation, Technologies.SHIP_OIL));
+					break;
+				case "semi_automatic_tech":
+					writer.append(ResearchActions.doResearch(nation, Technologies.SEMI_AUTOMATIC));
+					break;
+				case "machine_gun_tech":
+					writer.append(ResearchActions.doResearch(nation, Technologies.MACHINE_GUN));
+					break;
 				default:
 					writer.append(Responses.genericError());
 					break;

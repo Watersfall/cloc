@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.model.technology.technologies;
+package com.watersfall.clocgame.model.technology.technologies.single;
 
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.Technologies;
