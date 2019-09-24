@@ -1,22 +1,23 @@
-package com.watersfall.clocgame.model.technology.technologies.single;
+package com.watersfall.clocgame.model.technology.technologies.single.vehicles;
 
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
-import com.watersfall.clocgame.model.technology.Technology;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TechnologyTank extends Technology
+public class TechnologyTank extends SingleTechnology
 {
 	private static TechnologyTank technologyTank;
 	public static final String NAME = "Tanks";
 	public static final String DESC = "Tanks";
 	public static final String COLUMN_NAME = "tank_tech";
+	public static final String FIELD_NAME = "Tank";
 
 	private TechnologyTank()
 	{
-		super(NAME, DESC, COLUMN_NAME, 1);
+		super(NAME, DESC, COLUMN_NAME, FIELD_NAME, 1);
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();

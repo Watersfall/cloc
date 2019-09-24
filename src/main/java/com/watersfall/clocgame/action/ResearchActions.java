@@ -40,9 +40,12 @@ public class ResearchActions
 		{
 			for(HashMap.Entry<String, Integer> entry : tech.getCosts().entrySet())
 			{
-				String methodName = "set" + entry.getKey().substring(0, 1).toUpperCase().concat(entry.getKey().substring(1));
-				Method method = nation.getEconomy().getClass().getMethod(methodName, double.class);
-				method.invoke(nation.getEconomy(), entry.getValue());
+				String getName = "get" + entry.getKey().substring(0, 1).toUpperCase().concat(entry.getKey().substring(1));
+				String setName = "set" + entry.getKey().substring(0, 1).toUpperCase().concat(entry.getKey().substring(1));
+				Method getMethod = nation.getEconomy().getClass().getMethod(getName);
+				Method setMethod = nation.getEconomy().getClass().getMethod(setName, double.class);
+				double current = (double)getMethod.invoke(nation.getEconomy());
+				setMethod.invoke(nation.getEconomy(), current - entry.getValue());
 			}
 		}
 		catch(Exception e)
@@ -74,7 +77,7 @@ public class ResearchActions
 			String response;
 			if((int)(Math.random() * 100) <= tech.getTechnology().getSuccessChance(nation))
 			{
-				nation.getTech().setTech(tech);
+				nation.getTech().setTechnologies(tech, nation.getTech().getTechnology(tech) + 1);
 				response = Responses.researchSucceeded();
 			}
 			else

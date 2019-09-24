@@ -47,7 +47,7 @@
 								</c:forEach>
 							</td>
 							<td>
-								<button onclick="research('${tech.technology.tableName}')" class="button">Research</button>
+								<button onclick="research('${tech.name()}')" class="button">Research</button>
 							</td>
 						</tr>
 					</c:if>
@@ -69,7 +69,7 @@
 									<c:when test="${index.first && index.last}">
 										${pre.technology.name}
 									</c:when>
-									<c:when test="${index.first && !index.last}">
+									<c:when test="${index.last && !index.first}">
 										and ${pre.technology.name}
 									</c:when>
 									<c:otherwise>

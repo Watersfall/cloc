@@ -52,39 +52,9 @@ public class TechnologyController extends HttpServlet
 			String tech = req.getParameter("tech");
 			int user = UserUtils.getUser(req);
 			Nation nation = new Nation(conn, user, true);
-			switch(tech)
-			{
-				case "bolt_action_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.BOLT_ACTION));
-					break;
-				case "bomber_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.BOMBERS));
-					break;
-				case "chem_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.CHEMICAL_WEAPONS));
-					break;
-				case "advanced_chem_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.ADVANCED_CHEMICAL_WEAPONS));
-					break;
-				case "strategic_bombing_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.STRATEGIC_BOMBING));
-					break;
-				case "tank_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.TANK));
-					break;
-				case "ship_oil_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.SHIP_OIL));
-					break;
-				case "semi_automatic_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.SEMI_AUTOMATIC));
-					break;
-				case "machine_gun_tech":
-					writer.append(ResearchActions.doResearch(nation, Technologies.MACHINE_GUN));
-					break;
-				default:
-					writer.append(Responses.genericError());
-					break;
-			}
+			Technologies technology = Technologies.valueOf(tech);
+			writer.append(ResearchActions.doResearch(nation, technology));
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
@@ -103,7 +73,7 @@ public class TechnologyController extends HttpServlet
 		{
 			writer.append(Responses.noLogin());
 		}
-		catch(NumberFormatException | NullPointerException e)
+		catch(NullPointerException | IllegalArgumentException e)
 		{
 			writer.append(Responses.genericError());
 			e.printStackTrace();
