@@ -19,6 +19,7 @@ public class ArmiesController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		Connection conn = null;
 		try
 		{
 			int id = Integer.parseInt(req.getSession().getAttribute("user").toString());
@@ -29,13 +30,27 @@ public class ArmiesController extends HttpServlet
 			}
 			else if(id > 0)
 			{
-				Connection conn = Database.getDataSource().getConnection();
+				conn = Database.getDataSource().getConnection();
 				req.setAttribute("armies", new NationArmies(conn, id, false));
-				conn.close();
 			}
 		}
 		catch(NumberFormatException | SQLException | NullPointerException e)
 		{
+			//Ignore
+			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				conn.close();
+			}
+			catch(Exception e)
+			{
+
+				//Ignore
+				e.printStackTrace();
+			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/armies.jsp").forward(req, resp);
 	}

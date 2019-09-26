@@ -19,6 +19,7 @@ public class CitiesController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		Connection conn = null;
 		try
 		{
 			if(req.getParameter("id") != null)
@@ -31,14 +32,27 @@ public class CitiesController extends HttpServlet
 				}
 				else
 				{
-					Connection connection = Database.getDataSource().getConnection();
-					req.setAttribute("city", new City(connection, id, false));
-					connection.close();
+					conn = Database.getDataSource().getConnection();
+					req.setAttribute("city", new City(conn, id, false));
 				}
 			}
 		}
 		catch(NumberFormatException | SQLException e)
 		{
+			//Ignore
+			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				conn.close();
+			}
+			catch(Exception e)
+			{
+				//Ignore
+				e.printStackTrace();
+			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/cities.jsp").forward(req, resp);
 	}

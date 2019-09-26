@@ -28,15 +28,14 @@ public class MainController extends HttpServlet
 				req.setAttribute("production", nation.getCities().getAllTotalProductions());
 				req.setAttribute("population", nation.getPopulationGrowth());
 				req.setAttribute("food", nation.getFoodProduction());
+				conn = Database.getDataSource().getConnection();
 				if(nation.getDefensive() != 0)
 				{
-					conn = Database.getDataSource().getConnection();
 					Nation defensive = new Nation(conn, nation.getDefensive(), false);
 					req.setAttribute("defensive", defensive);
 				}
 				if(nation.getOffensive() != 0)
 				{
-					conn = Database.getDataSource().getConnection();
 					Nation offensive = new Nation(conn, nation.getOffensive(), false);
 					req.setAttribute("offensive", offensive);
 				}

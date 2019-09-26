@@ -76,5 +76,18 @@ public class DecisionsController extends HttpServlet
 		{
 			writer.append(Responses.noNation());
 		}
+		finally
+		{
+			try
+			{
+				connection.close();
+			}
+			catch(Exception e)
+			{
+
+				//Ignore
+				e.printStackTrace();
+			}
+		}
 	}
 }

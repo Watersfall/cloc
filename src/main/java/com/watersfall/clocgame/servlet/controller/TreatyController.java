@@ -17,16 +17,30 @@ public class TreatyController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		Connection conn = null;
 		try
 		{
 			int id = Integer.parseInt(req.getParameter("id"));
-			Connection conn = Database.getDataSource().getConnection();
+			conn = Database.getDataSource().getConnection();
 			Treaty treaty = new Treaty(conn, id, false, false);
 			req.setAttribute("treaty", treaty);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				conn.close();
+			}
+			catch(Exception e)
+			{
+
+				//Ignore
+				e.printStackTrace();
+			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
 	}

@@ -21,11 +21,12 @@ public class Startup implements ServletContextListener
 	@Override
 	public void contextInitialized(ServletContextEvent event)
 	{
+		Connection conn = null;
 		try
 		{
 			WeekScheduler.startWeek();
 			event.getServletContext().setAttribute("database", Database.getDataSource());
-			Connection conn = Database.getDataSource().getConnection();
+			conn = Database.getDataSource().getConnection();
 			ResultSet results = conn.prepareStatement("SELECT turn FROM cloc_main").executeQuery();
 			results.first();
 			Util.turn = results.getInt(1);
@@ -34,7 +35,19 @@ public class Startup implements ServletContextListener
 		{
 			e.printStackTrace();
 		}
+		finally
+		{
+			try
+			{
+				conn.close();
+			}
+			catch(Exception e)
+			{
 
+				//Ignore
+				e.printStackTrace();
+			}
+		}
 
 	}
 }

@@ -24,7 +24,7 @@ public class MapController extends HttpServlet
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		String param = req.getParameter("region");
-		Connection conn;
+		Connection conn = null;
 		try
 		{
 			conn = Database.getDataSource().getConnection();
@@ -66,6 +66,19 @@ public class MapController extends HttpServlet
 		catch(SQLException | NullPointerException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				conn.close();
+			}
+			catch(Exception e)
+			{
+
+				//Ignore
+				e.printStackTrace();
+			}
 		}
 
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/map.jsp").forward(req, resp);
