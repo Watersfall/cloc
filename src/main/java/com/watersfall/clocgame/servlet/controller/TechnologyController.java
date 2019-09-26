@@ -8,6 +8,7 @@ import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.Technologies;
+import com.watersfall.clocgame.model.technology.technologies.Category;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -33,6 +34,18 @@ public class TechnologyController extends HttpServlet
 		if(req.getParameter("type") != null)
 		{
 			req.setAttribute("type", req.getParameter("type"));
+			if(req.getParameter("type").equals("tree"))
+			{
+				req.setAttribute("categories", Category.values());
+				if(req.getParameter("category") != null)
+				{
+					req.setAttribute("category", req.getParameter("category"));
+				}
+				else
+				{
+					req.setAttribute("category", "WEAPONS");
+				}
+			}
 		}
 		else
 		{
