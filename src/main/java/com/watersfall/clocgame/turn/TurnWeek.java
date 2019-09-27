@@ -91,8 +91,8 @@ public class TurnWeek implements Runnable
 					domestic.setPopulation(domestic.getPopulation() + (domestic.getPopulation() * (nation.getPopulationGrowth().get("total") * 0.25)));
 				}
 
-				domestic.setApproval(nation.getApprovalChange().get("total"));
-				domestic.setStability(nation.getStabilityChange().get("total"));
+				domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get("total"));
+				domestic.setStability(domestic.getStability() + nation.getStabilityChange().get("total"));
 
 				nation.update();
 			}
