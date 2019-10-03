@@ -119,94 +119,119 @@
 						grid-auto-rows: minmax(100px, auto);
 						grid-gap: 0;
 					}
+
+					.vertical{
+						position:absolute;
+						bottom: 50%;
+						left: calc(50% - 0.5em);
+						width: 1em;
+						height: 100%;
+						border-left: gray solid 1em;
+						z-index: -1;
+					}
+
+					.horizontalLeft{
+						position:absolute;
+						top: calc(50% - 0.5em);
+						left: -50%;
+						width: 100%;
+						height: 1em;
+						border-top: gray solid 1em;
+						z-index: -1;
+					}
+
+					.horizontalRight{
+						position:absolute;
+						top: calc(50% - 0.5em);
+						right: -50%;
+						width: 100%;
+						height: 1em;
+						border-top: gray solid 1em;
+						z-index: -1;
+					}
+
+					.cornerBottomRight{
+						position:absolute;
+						right: calc(-50% - 0.5em);
+						width: 100%;
+						top: -50%;
+						height: 100%;
+						border-right: gray solid 1em;
+						border-bottom: gray solid 1em;
+						border-left: transparent 0;
+						border-top: transparent 0;
+						z-index: -1;
+					}
+
+					.cornerBottomLeft{
+						position:absolute;
+						left: calc(-50% - 0.5em);
+						width: 100%;
+						top: -50%;
+						height: 100%;
+						border-style: solid;
+						border-right: transparent 0;
+						border-bottom: gray solid 1em;
+						border-left: gray solid 1em;
+						border-top: transparent 0;
+						z-index: -1;
+					}
+					.tech {
+						text-align: center;
+						display: inline-block;
+						border: rgb(35,35,35) 0.25em solid;
+						padding: 1em;
+						border-radius: 0.1em;
+						background: rgb(55, 55, 55);
+						margin: 1em;
+					}
+
+					.researched {
+						background-color: darkgreen;
+					}
+
+					.available {
+						background-color: goldenrod;
+						cursor: pointer;
+					}
+
+					.available p {
+						-webkit-user-select: none;
+						-moz-user-select: none;
+						-ms-user-select: none;
+						user-select: none;
+					}
+
+					.unavailable {
+						background-color: gray;
+					}
 				</style>
-				<div class="wrapper">
-					<style>
-						.vertical{
-							position:absolute;
-							bottom: 50%;
-							left: calc(50% - 0.5em);
-							width: 1em;
-							height: 100%;
-							border-left: gray solid 1em;
-							z-index: -1;
+				<script>
+					function tech(tech, next)
+					{
+						document.getElementById('resultsContainer').style.visibility = "visible";
+						document.getElementById("result").innerHTML = "<p>Loading...</p>";
+						let attempt = document.getElementById(tech);
+						if(attempt == null)
+						{
+							document.getElementById("result").innerHTML = "<p>Don't do that!</p>";
 						}
-
-						.horizontalLeft{
-							position:absolute;
-							top: calc(50% - 0.5em);
-							left: -50%;
-							width: 100%;
-							height: 1em;
-							border-top: gray solid 1em;
-							z-index: -1;
+						else if(attempt.classList.contains("unavailable"))
+						{
+							document.getElementById("result").innerHTML = "<p>You can not research this technology!</p>";
 						}
-
-						.horizontalRight{
-							position:absolute;
-							top: calc(50% - 0.5em);
-							right: -50%;
-							width: 100%;
-							height: 1em;
-							border-top: gray solid 1em;
-							z-index: -1;
+						else if(attempt.classList.contains("researched"))
+						{
+							document.getElementById("result").innerHTML = "<p>You already have this technology!</p>";
 						}
-
-						.cornerBottomRight{
-							position:absolute;
-							right: calc(-50% - 0.5em);
-							width: 100%;
-							top: -50%;
-							height: 100%;
-							border-right: gray solid 1em;
-							border-bottom: gray solid 1em;
-							border-left: transparent 0;
-							border-top: transparent 0;
-							z-index: -1;
+						else
+						{
+							research(tech);
 						}
-
-						.cornerBottomLeft{
-							position:absolute;
-							left: calc(-50% - 0.5em);
-							width: 100%;
-							top: -50%;
-							height: 100%;
-							border-style: solid;
-							border-right: transparent 0;
-							border-bottom: gray solid 1em;
-							border-left: gray solid 1em;
-							border-top: transparent 0;
-							z-index: -1;
-						}
-						.tech {
-							text-align: center;
-							display: inline-block;
-							border: rgb(35,35,35) 0.25em solid;
-							padding: 1em;
-							border-radius: 0.1em;
-							background: rgb(55, 55, 55);
-						}
-					</style>
-					<c:forEach items="${techs}" var="tech">
-						<c:if test="${tech.category == category}">
-							<div style="grid-column: ${tech.x};grid-row: ${tech.y};">
-								<div style="position:relative;">
-									<div class="tech" style="margin: 1em; ${home.tech.researchedTechs.contains(tech)? 'background-color: darkgreen': tech.technology.isAvailable(home)? 'background-color: goldenrod;' : 'background-color: dark-gray'}">
-										<p>${tech.technology.name}</p>
-									</div>
-									<c:if test="${tech.cssClass.contains(',')}" var="multiple">
-										<c:set var="array" value="${fn:split(tech.cssClass, ',')}"/>
-										<c:forEach var="divClass" items="${array}">
-											<div class="${divClass}" style="${tech.technology.isAvailable(home) ? 'border-color: gold' : home.tech.researchedTechs.contains(tech) ? 'border-color: green' : 'border-color: gray'}"></div>
-										</c:forEach>
-									</c:if>
-									<c:if test="${multiple == false}">
-										<div class="${tech.cssClass}" style="${tech.technology.isAvailable(home) ? 'border-color: gold' : home.tech.researchedTechs.contains(tech) ? 'border-color: green' : 'border-color: gray'}"></div>
-									</c:if>
-								</div>
-							</div>
-						</c:if>
-					</c:forEach>
+					}
+				</script>
+				<div class="wrapper" id="techTree">
+					<%@include file="includes/techtree.jsp"%>
 				</div>
 			</c:when>
 		</c:choose>

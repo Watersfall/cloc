@@ -215,6 +215,28 @@ function research(tech)
 		if(xhttp.readyState === 4 && xhttp.status === 200)
 		{
 			document.getElementById("result").innerHTML = xhttp.responseText;
+			updateTechs();
+		}
+	};
+}
+
+function updateTechs()
+{
+	let url = new URL(window.location.href);
+	let params = "";
+	if(url.searchParams.get("category") !== null)
+	{
+		params = "category=" + url.searchParams.get("category");
+	}
+	let xhttp = new XMLHttpRequest();
+	xhttp.open("GET", "techtree.jsp?" + params, true);
+	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	xhttp.send();
+	xhttp.onreadystatechange = function()
+	{
+		if(xhttp.readyState === 4 && xhttp.status === 200)
+		{
+			document.getElementById("techTree").innerHTML = xhttp.responseText;
 		}
 	};
 }
