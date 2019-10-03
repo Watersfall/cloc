@@ -119,6 +119,13 @@
 					</a>
 				</li>
 				<li>
+					<a href="${pageContext.request.contextPath}/technology.jsp">
+						<div class="headerTab">
+							<p>Technology</p>
+						</div>
+					</a>
+				</li>
+				<li>
 					<a style="cursor: pointer;" onclick="showHideWorld()">
 						<div class="headerTab">
 							<p>Realpolitik</p>

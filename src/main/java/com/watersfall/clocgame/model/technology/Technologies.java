@@ -38,10 +38,10 @@ public enum Technologies
 	MACHINE_GUN(TechnologyMachineGun.getInstance(), Category.WEAPONS, 2, 5, "vertical"),
 
 
-	TANK(TechnologyTank.getInstance(), Category.LAND, 1, 1, "vertical"),
-	SHIP_OIL(TechnologyShipOil.getInstance(), Category.SEA, 1, 1, "vertical"),
-	BOMBERS(TechnologyBombers.getInstance(), Category.AIR, 1, 1, "vertical"),
-	CHEMICAL_WEAPONS(TechnologyChemicalWeapons.getInstance(), Category.WMD, 1, 1, "vertical"),
+	TANK(TechnologyTank.getInstance(), Category.LAND, 1, 1, ""),
+	SHIP_OIL(TechnologyShipOil.getInstance(), Category.SEA, 1, 1, ""),
+	BOMBERS(TechnologyBombers.getInstance(), Category.AIR, 1, 1, ""),
+	CHEMICAL_WEAPONS(TechnologyChemicalWeapons.getInstance(), Category.WMD, 1, 1, ""),
 	ADVANCED_CHEMICAL_WEAPONS(TechnologyAdvancedChemicalWeapons.getInstance(), Category.WMD, 1, 2, "vertical"),
 	STRATEGIC_BOMBING(TechnologyStrategicBombing.getInstance(), Category.AIR, 1, 2, "vertical");
 
