@@ -21,8 +21,6 @@ public class NationMilitary extends NationBase
 	private @Getter int preBattleships;
 	private @Getter int battleships;
 	private @Getter int transports;
-	private @Getter int stockpileArtillery;
-	private @Getter int stockpileWeapons;
 	private @Getter int warProtection;
 
 	public NationMilitary(Connection connection, int id, boolean safe) throws SQLException
@@ -31,11 +29,11 @@ public class NationMilitary extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT fighters, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, artillery_stockpile, weapon_stockpile, war_protection, id " + "FROM cloc_military " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT fighters, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, war_protection, id " + "FROM cloc_military " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT fighters, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, artillery_stockpile, weapon_stockpile, war_protection, id " + "FROM cloc_military " + "WHERE id=?");
+			read = connection.prepareStatement("SELECT fighters, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, war_protection, id " + "FROM cloc_military " + "WHERE id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -57,9 +55,7 @@ public class NationMilitary extends NationBase
 			this.preBattleships = results.getInt(7);
 			this.battleships = results.getInt(8);
 			this.transports = results.getInt(9);
-			this.stockpileArtillery = results.getInt(10);
-			this.stockpileWeapons = results.getInt(11);
-			this.warProtection = results.getInt(12);
+			this.warProtection = results.getInt(10);
 		}
 	}
 
@@ -171,30 +167,6 @@ public class NationMilitary extends NationBase
 		}
 	}
 
-	public void setStockpileArtillery(int stockpileArtillery) throws SQLException
-	{
-		if(stockpileArtillery < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateInt(10, stockpileArtillery);
-		}
-	}
-
-	public void setStockpileWeapons(int stockpileWeapons) throws SQLException
-	{
-		if(stockpileWeapons < 0)
-		{
-			throw new ValueException("Can not be negative!");
-		}
-		else
-		{
-			results.updateInt(11, stockpileWeapons);
-		}
-	}
-
 	public void setWarProtection(int warProtection) throws SQLException
 	{
 		if(warProtection < 0)
@@ -203,7 +175,7 @@ public class NationMilitary extends NationBase
 		}
 		else
 		{
-			results.updateInt(12, warProtection);
+			results.updateInt(10, warProtection);
 		}
 	}
 

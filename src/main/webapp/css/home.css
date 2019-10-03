@@ -461,6 +461,7 @@ p.neutral {
 	width: 85%;
 	top: 3em;
 	left: 15%;
+	z-index: 10;
 }
 
 .results {
@@ -547,4 +548,12 @@ textarea{
 	background-color: gainsboro !important;
 	border: rgb(55, 55, 55) solid 2px;
 	color: black;
+}
+
+#world path{
+	fill: gray;
+}
+
+#world path:hover{
+	fill: darkgray;
 }

@@ -83,21 +83,25 @@ CREATE TABLE cloc_military(
 	pre_battleships INT UNSIGNED DEFAULT 0,
 	battleships INT UNSIGNED DEFAULT 0,
 	transports INT UNSIGNED DEFAULT 0,
-	artillery_stockpile INT UNSIGNED DEFAULT 0,
-	weapon_stockpile INT UNSIGNED DEFAULT 0,
 	war_protection TINYINT DEFAULT 4,
 	FOREIGN KEY fk_military (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_armies(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	owner INT,
-	region ENUM('North America', 'South America', 'Africa', 'Middle East', 'Europe', 'Asia', 'Oceania', 'Siberia'),
-	army INT UNSIGNED,
-	training INT UNSIGNED,
-	weapons INT UNSIGNED,
-	artillery INT UNSIGNED,
-	FOREIGN KEY fk_armies (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
+CREATE TABLE cloc_army(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    size INT DEFAULT 20,
+    training INT DEFAULT 50,
+    musket INT DEFAULT 20000,
+	rifled_musket INT DEFAULT 0,
+	single_shot INT DEFAULT 0,
+	needle_nose INT DEFAULT 0,
+	bolt_action_manual INT DEFAULT 0,
+	bolt_action_clip INT DEFAULT 0,
+	straight_pull INT DEFAULT 0,
+	semi_auto INT DEFAULT 0,
+	machine_gun INT DEFAULT 0,
+	artillery INT DEFAULT 0,
+	FOREIGN KEY fk_army (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_foreign(

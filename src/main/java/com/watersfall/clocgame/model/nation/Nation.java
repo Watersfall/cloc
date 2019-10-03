@@ -25,7 +25,7 @@ public class Nation
 	private @Getter NationForeign foreign;
 	private @Getter NationMilitary military;
 	private @Getter NationCities cities;
-	private @Getter NationArmies armies;
+	private @Getter NationArmy army;
 	private @Getter NationPolicy policy;
 	private @Getter NationTech tech;
 	private @Getter int defensive;
@@ -48,8 +48,8 @@ public class Nation
 		economy = new NationEconomy(connection, id, safe);
 		foreign = new NationForeign(connection, id, safe);
 		military = new NationMilitary(connection, id, safe);
+		army = new NationArmy(connection, id, safe);
 		cities = new NationCities(connection, id, safe);
-		armies = new NationArmies(connection, id, safe);
 		policy = new NationPolicy(connection, id, safe);
 		tech = new NationTech(connection, id, safe);
 		this.id = id;
@@ -238,29 +238,14 @@ public class Nation
 	{
 		HashMap<String, Integer> map = new HashMap<>();
 		int factories = 0;
-		int troopsHome = 0;
-		int troopsForeign = 0;
+		int army = this.army.getSize() / 20;
 		for(City city : cities.getCities().values())
 		{
 			factories += city.getIndustryCivilian() + city.getIndustryMilitary() + city.getIndustryNitrogen();
 		}
-		for(Army army : armies.getArmies().values())
-		{
-			if(army.getRegion() == foreign.getRegion())
-			{
-				troopsHome += army.getArmy();
-			}
-			else
-			{
-				troopsForeign += army.getArmy();
-			}
-		}
-		int home = troopsHome / 20;
-		int foreign = troopsForeign / 10;
 		map.put("factories", factories);
-		map.put("home", home);
-		map.put("foreign", foreign);
-		map.put("net", factories - home - foreign);
+		map.put("army", army);
+		map.put("net", factories - army);
 		return map;
 	}
 
@@ -403,19 +388,9 @@ public class Nation
 		return map;
 	}
 
-	public int getTotalArmySize()
-	{
-		int soldiers = 0;
-		for(Army army : armies.getArmies().values())
-		{
-			soldiers += army.getArmy();
-		}
-		return soldiers;
-	}
-
 	public long getFreeManpower()
 	{
-		int soldiers = getTotalArmySize() * 1000;
+		int soldiers = this.army.getSize() * 1000;
 		long manpower = domestic.getPopulation();
 		switch(policy.getManpower())
 		{
@@ -444,10 +419,6 @@ public class Nation
 		for(City city : cities.getCities().values())
 		{
 			city.update();
-		}
-		for(Army army : armies.getArmies().values())
-		{
-			army.update();
 		}
 	}
 }

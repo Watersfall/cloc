@@ -55,18 +55,6 @@ public class PolicyController extends HttpServlet
 					id = Integer.parseInt(req.getParameter("city"));
 				}
 			}
-			else if(args[1].equalsIgnoreCase("army"))
-			{
-				if(args.length < 3)
-				{
-					super.doPost(req, resp);
-				}
-				else
-				{
-					policy = args[2];
-					id = Integer.parseInt(req.getParameter("army"));
-				}
-			}
 			else
 			{
 				policy = args[1];
@@ -142,23 +130,6 @@ public class PolicyController extends HttpServlet
 							break;
 					}
 					break;
-				case "army":
-					switch(policy)
-					{
-						case "conscript":
-							writer.append(PolicyActions.conscript(conn, user, id));
-							break;
-						case "train":
-							writer.append(PolicyActions.train(conn, user, id));
-							break;
-						case "deconscript":
-							writer.append(PolicyActions.deconscript(conn, user, id));
-							break;
-						default:
-							super.doPost(req, resp);
-							break;
-					}
-					break;
 				default:
 					switch(policy)
 					{
@@ -185,6 +156,15 @@ public class PolicyController extends HttpServlet
 							break;
 						case "aligncentral":
 							writer.append(PolicyActions.alignCentralPowers(conn, user));
+							break;
+						case "conscript":
+							writer.append(PolicyActions.conscript(conn, user));
+							break;
+						case "train":
+							writer.append(PolicyActions.train(conn, user));
+							break;
+						case "deconscript":
+							writer.append(PolicyActions.deconscript(conn, user));
 							break;
 						case "buildartillery":
 							writer.append(PolicyActions.artillery(conn, user));

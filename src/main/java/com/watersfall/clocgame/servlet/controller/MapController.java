@@ -43,21 +43,14 @@ public class MapController extends HttpServlet
 				HashMap<String, HashMap<String, Double>> map = new HashMap<>();
 				for(Region region : Region.values())
 				{
-					PreparedStatement home = conn.prepareStatement("SELECT SUM(gdp), SUM(army) FROM cloc_economy, cloc_armies, cloc_foreign \n" +
-							"WHERE cloc_armies.region=? AND cloc_foreign.region=? AND cloc_economy.id = cloc_foreign.id AND cloc_foreign.id = cloc_armies.owner;");
-					PreparedStatement foreign = conn.prepareStatement("SELECT SUM(army) FROM cloc_armies, cloc_foreign \n" +
-							"WHERE cloc_armies.region != cloc_foreign.region AND cloc_armies.region=? AND cloc_foreign.id = cloc_armies.owner");
-					foreign.setString(1, region.getName());
-					home.setString(1, region.getName());
-					home.setString(2, region.getName());
-					ResultSet resultsHome = home.executeQuery();
-					ResultSet resultsForeign = foreign.executeQuery();
-					resultsHome.first();
-					resultsForeign.first();
+					PreparedStatement armies = conn.prepareStatement("SELECT SUM(gdp), SUM(size) FROM cloc_economy, cloc_army, cloc_foreign \n" +
+							"WHERE cloc_foreign.region=? AND cloc_economy.id = cloc_foreign.id AND cloc_foreign.id = cloc_army.id");
+					armies.setString(1, region.getName());
+					ResultSet results = armies.executeQuery();
+					results.first();
 					HashMap<String, Double> temp = new HashMap<>();
-					temp.put("gdp", resultsHome.getDouble(1));
-					temp.put("home", resultsHome.getDouble(2));
-					temp.put("foreign", resultsForeign.getDouble(1));
+					temp.put("gdp", results.getDouble(1));
+					temp.put("army", results.getDouble(2));
 					map.put(region.getName(), temp);
 				}
 				req.setAttribute("regions", map);

@@ -91,7 +91,7 @@ public class RegisterController extends HttpServlet
 					PreparedStatement military = connection.prepareStatement("INSERT INTO cloc_military () VALUES ()");
 					PreparedStatement policy = connection.prepareStatement("INSERT INTO cloc_policy () VALUES ()");
 					PreparedStatement tech = connection.prepareStatement("INSERT INTO cloc_tech () VALUES ()");
-					PreparedStatement armies = connection.prepareStatement("INSERT INTO cloc_armies (owner, region, army, training, weapons, artillery) VALUES (?,?,?,?,?,?)");
+					PreparedStatement armies = connection.prepareStatement("INSERT INTO cloc_army () VALUES ()");
 					PreparedStatement cities = connection.prepareStatement("INSERT INTO cloc_cities (owner, capital, coastal, name, type) VALUES (?,?,?,?,?)");
 					login.setString(1, username);
 					login.setString(2, password);
@@ -112,12 +112,6 @@ public class RegisterController extends HttpServlet
 					{
 						id = results.getInt(1);
 					}
-					armies.setInt(1, id);
-					armies.setString(2, region);
-					armies.setInt(3, 10);
-					armies.setInt(4, 50);
-					armies.setInt(5, 10000);
-					armies.setInt(6, 0);
 					cities.setInt(1, id);
 					cities.setBoolean(2, true);
 					cities.setBoolean(3, false);

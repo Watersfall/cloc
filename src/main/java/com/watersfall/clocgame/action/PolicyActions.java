@@ -36,8 +36,8 @@ public class PolicyActions
 	//<editor-fold desc="Gain">
 	private static final int FREE_MONEY_GAIN = 1000;
 	private static final int ARTILLERY_GAIN = 3;
-	private static final int WEAPONS_GAIN = 25;
-//</editor-fold>
+	private static final int WEAPONS_GAIN = 1000;
+	//</editor-fold>
 	//</editor-fold>
 
 	//<editor-fold desc="City Policies">
@@ -687,96 +687,41 @@ public class PolicyActions
 	//</editor-fold>
 
 	//<editor-fold desc="Military Policies">
-	public static String artillery(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String conscript(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		NationMilitary military = new NationMilitary(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getSteel() < ARTILLERY_STEEL)
-		{
-			return Responses.noSteel();
-		}
-		else if(economy.getNitrogen() < ARTILLERY_NITROGEN)
-		{
-			return Responses.noNitrogen();
-		}
-		else
-		{
-			military.setStockpileArtillery(military.getStockpileArtillery() + ARTILLERY_GAIN);
-			economy.setSteel(economy.getSteel() - ARTILLERY_STEEL);
-			economy.setNitrogen(economy.getNitrogen() - ARTILLERY_NITROGEN);
-			military.update();
-			economy.update();
-			return Responses.artillery();
-		}
-	}
-
-	public static String weapons(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
-	{
-		NationMilitary military = new NationMilitary(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getSteel() < WEAPONS_STEEL)
-		{
-			return Responses.noSteel();
-		}
-		else
-		{
-			military.setStockpileWeapons(military.getStockpileWeapons() + WEAPONS_GAIN);
-			economy.setSteel(economy.getSteel() - WEAPONS_STEEL);
-			military.update();
-			economy.update();
-			return Responses.weapons();
-		}
-	}
-	//</editor-fold>
-
-	//<editor-fold desc="Army Policies">
-	public static String conscript(Connection conn, int idArmy, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
-	{
-		Nation nation = new Nation(conn, idNation, true);
+		Nation nation = new Nation(conn, id, true);
 		if(nation.getFreeManpower() < 2000)
 		{
 			return Responses.noManpower();
 		}
-		else if(nation.getArmies().getArmies().get(idArmy) == null)
-		{
-			return Responses.notYourArmy();
-		}
 		else
 		{
-			nation.getArmies().getArmies().get(idArmy).setArmy(nation.getArmies().getArmies().get(idArmy).getArmy() + 2);
-			nation.getArmies().getArmies().get(idArmy).update();
+			nation.getArmy().setSize(nation.getArmy().getSize() + 2);
+			nation.getArmy().update();
 			return Responses.conscript();
 		}
 	}
 
-	public static String deconscript(Connection conn, int idArmy, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
+	public static String deconscript(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		Army army = new Army(conn, idArmy, true);
-		if(army.getOwner() != idNation)
-		{
-			return Responses.notYourArmy();
-		}
-		else if(army.getArmy() <= 5)
+		NationArmy army = new NationArmy(conn, id, true);
+		if(army.getSize() <= 5)
 		{
 			return Responses.noTroops();
 		}
 		else
 		{
-			army.setArmy(army.getArmy() - 2);
+			army.setSize(army.getSize() - 2);
 			army.update();
 			return Responses.deconscript();
 		}
 	}
 
-	public static String train(Connection conn, int idArmy, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
+	public static String train(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		Army army = new Army(conn, idArmy, true);
-		NationEconomy economy = new NationEconomy(conn, idNation, true);
-		if(army.getOwner() != idNation)
-		{
-			return Responses.notYourCity();
-		}
-		else if(economy.getBudget() < army.getTrainingCost())
+		NationArmy army = new NationArmy(conn, id, true);
+		NationEconomy economy = new NationEconomy(conn, id, true);
+		if(economy.getBudget() < army.getTrainingCost())
 		{
 			return Responses.noMoney();
 		}
@@ -791,6 +736,47 @@ public class PolicyActions
 			army.update();
 			economy.update();
 			return Responses.train();
+		}
+	}
+
+	public static String artillery(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		NationArmy army = new NationArmy(connection, idNation, true);
+		NationEconomy economy = new NationEconomy(connection, idNation, true);
+		if(economy.getSteel() < ARTILLERY_STEEL)
+		{
+			return Responses.noSteel();
+		}
+		else if(economy.getNitrogen() < ARTILLERY_NITROGEN)
+		{
+			return Responses.noNitrogen();
+		}
+		else
+		{
+			army.setArtillery(army.getArtillery() + ARTILLERY_GAIN);
+			economy.setSteel(economy.getSteel() - ARTILLERY_STEEL);
+			economy.setNitrogen(economy.getNitrogen() - ARTILLERY_NITROGEN);
+			army.update();
+			economy.update();
+			return Responses.artillery();
+		}
+	}
+
+	public static String weapons(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		NationArmy army = new NationArmy(connection, idNation, true);
+		NationEconomy economy = new NationEconomy(connection, idNation, true);
+		if(economy.getSteel() < WEAPONS_STEEL)
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			army.setMusket(army.getMusket() + WEAPONS_GAIN);
+			economy.setSteel(economy.getSteel() - WEAPONS_STEEL);
+			army.update();
+			economy.update();
+			return Responses.weapons();
 		}
 	}
 	//</editor-fold>

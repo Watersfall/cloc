@@ -1,10 +1,8 @@
+DROP TABLE cloc_armies;
+
 ALTER TABLE cloc_war
 	ADD COLUMN winner INT DEFAULT -1
 	AFTER end;
-
-ALTER TABLE cloc_armies
-	ADD COLUMN artillery INT DEFAULT 0
-	AFTER weapons;
 
 ALTER TABLE cloc_economy
 	DROP COLUMN iron_mines,
@@ -26,8 +24,6 @@ ALTER TABLE cloc_login
 ALTER TABLE cloc_military
     ADD COLUMN bombers INT UNSIGNED DEFAULT 0 AFTER zeppelins,
 	ADD COLUMN pre_battleships INT UNSIGNED DEFAULT 0 AFTER cruisers,
-    ADD COLUMN artillery_stockpile INT UNSIGNED DEFAULT 0 AFTER transports,
-    ADD COLUMN weapon_stockpile INT UNSIGNED DEFAULT 0 AFTER artillery_stockpile,
     DROP COLUMN army_home,
     DROP COLUMN training_home,
     DROP COLUMN weapons_home;
@@ -96,9 +92,6 @@ ALTER TABLE cloc_policy
 ALTER TABLE cloc_tech
 	ADD CONSTRAINT fk_tech FOREIGN KEY (id) REFERENCES cloc_login (id) ON DELETE CASCADE;
 
-ALTER TABLE cloc_armies
-	ADD CONSTRAINT fk_armies FOREIGN KEY (owner) REFERENCES cloc_login (id) ON DELETE CASCADE;
-
 ALTER TABLE cloc_news
 	ADD CONSTRAINT fk_armies FOREIGN KEY (receiver) REFERENCES cloc_login (id) ON DELETE CASCADE;
 
@@ -123,6 +116,23 @@ CREATE TABLE cloc_cities(
 	name TEXT,
 	type ENUM('MINING', 'DRILLING', 'INDUSTRY', 'FARMING'),
 	FOREIGN KEY fk_cities (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cloc_army(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	size INT DEFAULT 20,
+	training INT DEFAULT 50,
+	musket INT DEFAULT 20000,
+	rifled_musket INT DEFAULT 0,
+	single_shot INT DEFAULT 0,
+	needle_nose INT DEFAULT 0,
+	bolt_action_manual INT DEFAULT 0,
+	bolt_action_clip INT DEFAULT 0,
+	straight_pull INT DEFAULT 0,
+	semi_auto INT DEFAULT 0,
+	machine_gun INT DEFAULT 0,
+	artillery INT DEFAULT 0,
+	FOREIGN KEY fk_army (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_treaties(

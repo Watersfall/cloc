@@ -2,8 +2,8 @@ package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.LogType;
-import com.watersfall.clocgame.model.nation.Army;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.nation.NationArmy;
 import com.watersfall.clocgame.model.nation.NationMilitary;
 import com.watersfall.clocgame.model.war.Log;
 import com.watersfall.clocgame.util.Util;
@@ -191,13 +191,13 @@ public class NationActions
 		else
 		{
 			//There's only the home army for every nation atm, will need to fix this when you can create more
-			Army attacker = (Army) sender.getArmies().getArmies().values().toArray()[0];
-			Army defender = (Army) receiver.getArmies().getArmies().values().toArray()[0];
-			if(attacker.getArmy() <= 5)
+			NationArmy attacker = sender.getArmy();
+			NationArmy defender = receiver.getArmy();
+			if(attacker.getSize() <= 5)
 			{
 				return Responses.noTroopsForAttack();
 			}
-			else if(defender.getArmy() <= 5)
+			else if(defender.getSize() <= 5)
 			{
 				PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=? WHERE attacker=? AND defender=?");
 				updateWar.setInt(1, Util.turn);
@@ -214,8 +214,8 @@ public class NationActions
 				String losses;
 				int attackLosses = attacker.getAttackingCasualties(defender);
 				int defenderLosses = defender.getDefendingCasualties(attacker);
-				attacker.setArmy(attacker.getArmy() - attackLosses);
-				defender.setArmy(defender.getArmy() - defenderLosses);
+				attacker.setSize(attacker.getSize() - attackLosses);
+				defender.setSize(defender.getSize() - defenderLosses);
 				attacker.update();
 				defender.update();
 				if(attacker.getPower() > defender.getPower())

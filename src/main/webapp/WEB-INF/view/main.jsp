@@ -136,13 +136,10 @@
 						<c:if test="${growth.factories != 0}">
 							<p class="positive">+${growth.factories} from factories</p><br>
 						</c:if>
-						<c:if test="${growth.home != 0}">
-							<p class="negative">-${growth.home} from home army</p><br>
+						<c:if test="${growth.army != 0}">
+							<p class="negative">-${growth.army} from army upkeep</p><br>
 						</c:if>
-						<c:if test="${growth.foreign != 0}">
-							<p class="negative">-${growth.foreign} from foreign armies</p><br>
-						</c:if>
-						<c:if test="${growth.factories == 0 && growth.home == 0 && growth.foreign == 0}">
+						<c:if test="${growth.factories == 0 && growth.army == 0}">
 							<p class="neutral">No change...</p>
 						</c:if>
 					</div>
@@ -175,21 +172,17 @@
 		<table id="nation">
 			<caption>Army</caption>
 			<tr>
-				<th>Region</th>
-				<th>Size</th>
-				<th>Training</th>
-				<th>Equipment</th>
-				<th>Reinforce</th>
+				<td>Size</td>
+				<td>${home.army.size}</td>
 			</tr>
-			<c:forEach var="i" items="${home.armies.armies}">
-				<tr>
-					<td><a href="${pageContext.request.contextPath}/armies.jsp">${i.value.region.name}</a></td>
-					<td>${i.value.army}</td>
-					<td>${i.value.training}</td>
-					<td>${i.value.weapons}</td>
-					<td>${i.value.id}</td>
-				</tr>
-			</c:forEach>
+			<tr>
+				<td>Training</td>
+				<td>${home.army.training}/100</td>
+			</tr>
+			<tr>
+				<td>Equipment</td>
+				<td>${home.army.musket} / ${home.army.size * 1000} needed</td>
+			</tr>
 		</table>
 		<br><br>
 		<table id="nation">

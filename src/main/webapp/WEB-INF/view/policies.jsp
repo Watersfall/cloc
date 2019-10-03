@@ -4,6 +4,7 @@
 <body>
 <%@ include file="includes/side.jsp" %>
 <%--@elvariable id="costs" type="com.watersfall.clocgame.action.PolicyActions"--%>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%-- POLICIES --%>
 <div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
@@ -162,6 +163,48 @@
 				</tr>
 			</c:when>
 			<c:when test="${param['policies'] == 'Military'}">
+				<tr>
+					<td>
+						Conscript
+					</td>
+					<td>
+						Throw more men into your army at the cost of manpower and overall training.
+					</td>
+					<td>
+						Manpower
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="policy('conscript')">Conscript</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Deconscript
+					</td>
+					<td>
+						Maybe that's a little too much army...
+					</td>
+					<td>
+						Nothing
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="policy('deconscript')">Fire</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Train
+					</td>
+					<td>
+						Train your army
+					</td>
+					<td>
+						$${home.army.trainingCost}k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="policy('train')">Train</button>
+					</td>
+				</tr>
 				<tr>
 					<td>
 						Build Weapons

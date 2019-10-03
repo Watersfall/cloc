@@ -94,23 +94,19 @@
 			<table id="nation">
 				<caption>Army</caption>
 				<tr>
-					<th>Region</th>
-					<th>Size</th>
-					<th>Training</th>
-					<th>Equipment</th>
-					<th>Reinforce</th>
+					<td>Size</td>
+					<td>${nation.army.size}</td>
 				</tr>
-				<c:forEach var="i" items="${nation.armies.armies}">
-					<tr>
-						<td>${i.value.region.name}</td>
-						<td>${i.value.army}</td>
-						<td>${i.value.training}</td>
-						<td>${i.value.weapons}</td>
-						<td>${i.value.id}</td>
-					</tr>
-				</c:forEach>
+				<tr>
+					<td>Training</td>
+					<td>${nation.army.training}/100</td>
+				</tr>
+				<tr>
+					<td>Equipment</td>
+					<td>${nation.army.musket} / ${nation.army.size * 1000} needed</td>
+				</tr>
 			</table>
-			<br>
+			<br><br>
 			<table id="nation">
 				<caption>Navy</caption>
 				<tr>
@@ -134,7 +130,7 @@
 					<td><c:out value="${nation.military.transports}"/></td>
 				</tr>
 			</table>
-			<br>
+			<br><br>
 			<table id="nation">
 				<caption>Airforce</caption>
 				<tr>
