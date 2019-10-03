@@ -45,7 +45,7 @@ public class CreateTreatyController extends HttpServlet
 				else
 				{
 					Nation nation = new Nation(conn, user, true);
-					if(nation.getTreaty() != 0)
+					if(nation.getTreaty() != null)
 					{
 
 					}

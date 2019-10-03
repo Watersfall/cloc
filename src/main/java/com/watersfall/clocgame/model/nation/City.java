@@ -318,7 +318,7 @@ public class City
 	public HashMap<String, Double> getOilProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
-		double wells = this.getIronMines() * ProductionConstants.WELL_PER_WEEK;
+		double wells = this.getOilWells() * ProductionConstants.WELL_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getOilWells();
 		double total = wells + bonus;
 		double costs = (this.getIndustryCivilian() + this.getIndustryNitrogen() + this.getIndustryMilitary()) * ProductionConstants.FACTORY_OIL_PER_WEEK;

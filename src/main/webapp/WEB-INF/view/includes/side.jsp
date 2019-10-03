@@ -1,26 +1,53 @@
 <div class="top">
 	<c:choose>
 		<c:when test="${sessionScope.user == null}">
-			<div class="login">
-				<label>
-					<input id="username" class="loginText" type="text" name="username" placeholder="Username">
-				</label><br>
-				<label>
-					<input id="password" class="loginText" type="password" name="password" placeholder="Password">
-				</label><br>
-				<input class="loginText" type="submit" onclick="login(document.getElementById('username').value, document.getElementById('password').value);" value="Login">
-				<form class="loginForm" action="${pageContext.request.contextPath}/index.jsp" method="GET">
-					<input type="submit" value="Home">
-				</form>
-			</div>
-			<div class="login">
-				<form class="loginForm" action="${pageContext.request.contextPath}/register.jsp">
-					<input class="loginText" type="submit" value="Register">
-				</form>
-			</div>
-			<div class="login">
-				<a href="https://discord.gg/x2VwYkS">Discord Server</a>
-			</div>
+			<ul>
+				<li>
+					<a href="${pageContext.request.contextPath}/">
+						<div class="headerTab">
+							<h1>&ltCLOC</h1>
+						</div>
+					</a>
+				</li>
+				<li>
+					<a>
+						<div class="headerTab">
+							<p>Login</p>
+							<br>
+							<label>
+								<input id="username" class="loginText" type="text" name="username" placeholder="Username">
+							</label><br>
+							<label>
+								<input id="password" class="loginText" type="password" name="password" placeholder="Password">
+							</label><br>
+							<button onclick="login(document.getElementById('username').value, document.getElementById('password').value);">Log in</button>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<ul>
+				<li>
+					<a href="${pageContext.request.contextPath}/">
+						<div class="headerTab">
+							<p>Home</p>
+						</div>
+					</a>
+				</li>
+				<li>
+					<a href="${pageContext.request.contextPath}/register.jsp">
+						<div class="headerTab">
+							<p>Register</p>
+						</div>
+					</a>
+				</li>
+				<li>
+					<a href="https://discord.gg/x2VwYkS">
+						<div class="headerTab">
+							<p>Discord Server</p>
+						</div>
+					</a>
+				</li>
+			</ul>
 		</c:when>
 		<c:otherwise>
 			<a href="${pageContext.request.contextPath}/main.jsp">
@@ -31,6 +58,7 @@
 					<a style="cursor: pointer;" onclick="showHideCities()">
 						<div class="headerTab">
 							<p>Cities</p>
+							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
 					<ul id="cities" style="display: none">
@@ -49,6 +77,7 @@
 					<a style="cursor: pointer;" onclick="showHidePolicies()">
 						<div class="headerTab">
 							<p>Policies</p>
+							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
 					<ul id="policies" style="display: none">
@@ -93,11 +122,12 @@
 					<a style="cursor: pointer;" onclick="showHideWorld()">
 						<div class="headerTab">
 							<p>Realpolitik</p>
+							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
 					<ul id="world" style="display: none">
 						<li>
-							<a href="${pageContext.request.contextPath}/index.jsp">
+							<a href="${pageContext.request.contextPath}/rankings.jsp">
 								<div class="headerTabSmall">
 									<p>World Rankings</p>
 								</div>
@@ -122,7 +152,8 @@
 				<li>
 					<a style="cursor: pointer;" onclick="showHideUser()">
 						<div class="headerTab">
-							<p>User</p>
+							<p>User<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/></p>
+							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
 					<ul id="user" style="display: none">

@@ -13,8 +13,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 
-@WebServlet(urlPatterns = "/index.jsp")
-public class IndexController extends HttpServlet
+@WebServlet(urlPatterns = "/rankings.jsp")
+public class RankingsController extends HttpServlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -41,6 +41,6 @@ public class IndexController extends HttpServlet
 				//Ignore
 			}
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/index.jsp").forward(req, resp);
+		req.getServletContext().getRequestDispatcher("/WEB-INF/view/rankings.jsp").forward(req, resp);
 	}
 }

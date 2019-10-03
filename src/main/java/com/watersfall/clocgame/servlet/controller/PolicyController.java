@@ -1,11 +1,11 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -173,6 +173,9 @@ public class PolicyController extends HttpServlet
 							break;
 						case "free":
 							writer.append(PolicyActions.free(conn, user));
+							break;
+						case "landclearance":
+							writer.append(PolicyActions.landClearance(conn, user));
 							break;
 						case "alignentente":
 							writer.append(PolicyActions.alignEntente(conn, user));

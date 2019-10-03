@@ -4,7 +4,7 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<c:choose>
 		<c:when test="${empty param['id']}">
@@ -31,6 +31,7 @@
 			</table>
 		</c:otherwise>
 	</c:choose>
+</div>
 </div>
 </body>
 </html>

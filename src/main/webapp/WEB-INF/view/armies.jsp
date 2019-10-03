@@ -5,7 +5,7 @@
 <%@ include file="includes/side.jsp" %>
 <%--@elvariable id="armies" type="com.watersfall.clocgame.model.nation.NationArmies"--%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<c:set var="manpower" value="${home.freeManpower - (home.freeManpower % 2000)}"/>
 	<h1>Armies</h1>
@@ -15,6 +15,7 @@
 			<%@ include file="includes/army.jsp" %>
 		</c:forEach>
 	</ul>
+</div>
 </div>
 </body>
 </html>

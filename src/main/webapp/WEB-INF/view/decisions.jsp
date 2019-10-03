@@ -5,9 +5,9 @@
 <%@ include file="includes/side.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="turn" type="java.lang.Integer"--%>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
-	<table id="policy">
+	<table id="nation">
 		<tr>
 			<th>Decision</th>
 			<th>Description</th>
@@ -81,6 +81,7 @@
 			</td>
 		</tr>
 	</table>
+</div>
 </div>
 </body>
 </html>

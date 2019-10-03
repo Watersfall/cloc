@@ -5,11 +5,7 @@ html {
 body {
 	height: 100%;
 	text-align: center;
-	background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 80%, rgba(0, 0, 0, 0.8) 100%), url(/images/background.jpg) no-repeat center fixed;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
+	background-color: rgb(14, 14, 14);
 }
 
 h1 {
@@ -33,23 +29,26 @@ p {
 	color: white;
 }
 
+.container{
+	position: absolute;
+	top: 3em;
+	left: 15%;
+	width: 85%;
+	z-index: 1;
+	text-align: center;
+	margin-bottom: 3em;
+}
+
 .main {
 	min-height: 100%;
-	margin: auto;
-	width: 60%;
-	left: 25%;
-	position: absolute;
-	background-color: rgba(10, 10, 10, 0.5);
-	padding-left: 5%;
-	padding-right: 5%;
-	padding-top: 5%;
-	box-shadow: 0 0 10px 10px rgba(10, 10, 10, 0.5);
-	z-index: 1;
+	padding-top: 2em;
+	max-width: 75em;
+	margin: 0 auto;
 }
 
 .top {
-	width: 10%;
-	background: rgba(75, 75, 75, 0.5);
+	width: 15%;
+	background: rgb(75, 75, 75);
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -86,28 +85,29 @@ p {
 	background: transparent;
 }
 
-.login {
-	padding: 15px;
+.login{
+	background-color: rgb(55, 55, 55);
 }
 
-.loginForm {
-	padding: 15px;
+
+input[type=text]{
+	margin: 0.5em 0;
+	padding: 0.5em 0;
+	background-color: gainsboro !important;
+	border: rgb(55, 55, 55) solid 2px;
+	color: black;
 }
 
-.registerForm {
-	padding: 15px;
-	display: inline;
+input[type=password]{
+	margin: 0.5em 0;
+	padding: 0.5em 0;
+	background-color: gainsboro !important;
+	border: rgb(55, 55, 55) solid 2px;
+	color: black;
 }
 
-.loginText {
-	min-width: 75px;
-}
-
-.RegisterText {
-	min-width: 150px;
-	padding: 10px 10px;
-	margin: 10px 10px;
-	display: inline;
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 1000px gainsboro inset;
 }
 
 .settings {
@@ -118,8 +118,8 @@ p {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	height: 78px;
-	width: 150px;
+	height: 5em;
+	width: 9em;
 }
 
 .headerFlag {
@@ -133,37 +133,66 @@ p {
 }
 
 .headerTab {
-	background-color: rgba(65, 65, 65, 0.85);
+	background-color: rgb(55, 55, 55);
 	padding-left: 0;
 	margin-left: 0;
 	display: block;
 	width: 100%;
-	border-radius: 0 15px 15px 0;
 	float: left;
-	box-shadow: inset 0 0 2px white, -2px 0 3px rgba(0, 0, 0, 0.3);
+	box-sizing: border-box;
+	position: relative;
+}
+
+.headerTab:hover{
+	background-color: rgb(33, 33, 33);
+}
+
+.headerTab p{
+	width: auto;
+	display: inline-block;
+}
+
+.headerTab img{
+	width: 1em;
+	height: auto;
+	position: absolute;
+	left: calc(100% - 1.5em);
+	top: calc(50% - 0.5em);
+}
+
+.topTab {
+	background-color: rgb(55, 55, 55);
+	padding: 0 1em;
+	display: inline;
+	float: left;
 	box-sizing: border-box;
 }
 
+.topTab:hover{
+	background-color: rgb(33, 33, 33);
+}
+
 .headerTabSmall {
-	background-color: rgba(65, 65, 65, 0.85);
+	background-color: rgb(55, 55, 55);
 	display: block;
 	width: 80%;
-	border-radius: 0 15px 15px 0;
 	margin-left: 0;
 	float: left;
-	box-shadow: inset 0 0 2px white, -2px 0 3px rgba(0, 0, 0, 0.3);
 	box-sizing: border-box;
+}
+
+.headerTabSmall:hover{
+	background-color: rgb(33, 33, 33);
 }
 
 .header{
 	width: 100%;
-	display: flex;
+	display: inline;
 	align-items: center;
-	height: 3em;
 	top: 0;
 	left: 0;
 	position: fixed;
-	background: rgba(75, 75, 75, 0.5);
+	background: rgb(55, 55, 55);
 	vertical-align: center;
 	z-index: 2;
 	line-height: 3em;
@@ -172,7 +201,9 @@ p {
 .header ul{
 	margin: 0;
 	float: left;
-	padding-left: 10%;
+	padding-left: 15%;
+	display: inline;
+	width: 100%;
 }
 
 .header ul li{
@@ -181,7 +212,6 @@ p {
 	margin: 0;
 	text-align: center;
 	color: white;
-	display:inline;
 }
 
 .header ul li p{
@@ -197,23 +227,57 @@ p {
 	padding-right: 2px;
 }
 
-.logout {
-	min-width: 75px;
-	margin-left: auto;
-	margin-right: auto;
-	bottom: 10%;
+.resourceTab{
+	position: absolute;
+	padding: 0.5em;
+	top: 100%;
+	background-color: rgb(33, 33, 33);
+	z-index: 4;
+	display: none;
 }
 
-.policy {
+#policy {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	margin: 0 auto;
 	width: 100%;
-	padding-top: 5%;
-	padding-bottom: 5%;
-	background-color: rgb(7, 7, 7);
-	border: 2px solid rgb(21, 21, 21);
+	text-align: left;
 }
 
-.policy:hover {
-	background-color: rgb(14, 14, 14);
+#policy td, #policy th {
+	padding: 8px;
+}
+
+#policy tr:nth-child(even) {
+	background-color: rgb(50, 50, 50);
+	color: white;
+}
+
+#policy tr:nth-child(odd) {
+	background-color: rgb(60, 60, 60);
+	color: white;
+}
+
+#policy tr:hover {
+	background-color: rgb(35, 35, 35);
+}
+
+#policy caption {
+	padding: 8px;
+	background-color: rgb(50, 50, 50);
+	color: white;
+}
+
+#policy caption:hover {
+	background-color: rgb(35, 35, 35);
+}
+
+#policy img {
+	float: left;
+}
+
+#policy input[type=text]{
+	width: 40em;
 }
 
 a:link {
@@ -234,25 +298,6 @@ a:hover {
 a:active {
 	color: white;
 	text-decoration: none;
-}
-
-#policy {
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-	border-collapse: collapse;
-	width: 100%;
-	border-top: 2px solid rgb(21, 21, 21);
-	border-bottom: 2px solid rgb(21, 21, 21);
-}
-
-#policy td, #policy th {
-	background-color: rgb(7, 7, 7);
-	border: 1px solid rgb(21, 21, 21);
-	padding: 8px;
-	color: white;
-}
-
-#policy tr:hover {
-	background-color: rgb(14, 14, 14);
 }
 
 button {
@@ -318,6 +363,12 @@ p.negative {
 	all: initial;
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: rgb(255, 0, 0);
+}
+
+p.neutral {
+	all: initial;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: rgb(255, 255, 255);
 }
 
 .right {
@@ -406,11 +457,10 @@ p.negative {
 .resultsContainer {
 	visibility: hidden;
 	position: fixed;
-	background-color: rgba(75, 75, 75, 0.5);
-	width: 100%;
+	background-color: rgb(35, 35, 35);
+	width: 85%;
 	top: 3em;
-	left: 10%;
-	box-shadow: 0px 0px 50px rgba(75, 75, 75, 1);
+	left: 15%;
 }
 
 .results {
@@ -419,8 +469,9 @@ p.negative {
 }
 
 select {
+	outline: none;
 	width: 100%;
-	background-color: rgb(7, 7, 7);
+	background-color: rgb(21, 21, 21);
 	border: 1px solid rgb(21, 21, 21);
 	text-align: center;
 	text-align-last: center;
@@ -429,10 +480,13 @@ select {
 }
 
 select:hover {
-	background-color: rgb(14, 14, 14);
+	outline: none;
+	background-color: rgb(33, 33, 33);
+	border: 1px solid rgb(21, 21, 21);
 }
 
 select:disabled {
+	outline: none;
 	width: 100%;
 	background-color: rgb(7, 7, 7);
 	border: 1px solid rgb(21, 21, 21);
@@ -441,13 +495,11 @@ select:disabled {
 	color: rgb(155, 155, 155);
 }
 
-option {
+select option {
+	outline: none;
 	color: white;
-	background-color: rgb(7, 7, 7);
-}
-
-option:hover {
-	background: rgb(21, 21, 21)
+	background-color: rgb(33, 33, 33);
+	border: 1px solid rgb(21, 21, 21);
 }
 
 .optionDesc {
@@ -460,16 +512,39 @@ ul {
 	list-style: none;
 }
 
+#city ul{
+	padding-left: 0;
+}
+
 .cityElements {
 	text-align: center;
 	display: inline-block;
 	border: black 3px solid;
-	padding: 25px;
-	border-radius: 10px;
+	margin: 0;
+	padding: 1em;
 	background: rgb(55, 55, 55);
+}
+
+.noClose img{
+	max-width: 1em;
 }
 
 img {
 	max-width: 100%;
 	height: auto;
+}
+
+label{
+	color: white;
+	font-size: 1.5em;
+}
+
+textarea{
+	width: 40em;
+	height: 5em;
+	margin: 0.5em 0;
+	padding: 0.5em 0;
+	background-color: gainsboro !important;
+	border: rgb(55, 55, 55) solid 2px;
+	color: black;
 }

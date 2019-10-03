@@ -3,16 +3,16 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
-	<table id="nation">
+	<table id="policy">
 		<tr>
 			<th style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=researched"><div>Researched</div></a></th>
 			<th style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp"><div>Available</div></a></th>
 			<th style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=tree"><div>Tech Tree</div></a></th>
 		</tr>
 	</table>
-	<table id="nation">
+	<table id="policy">
 		<%--@elvariable id="type" type="java.lang.String"--%>
 		<%--@elvariable id="category" type="java.lang.String"--%>
 		<%--@elvariable id="techs" type="java.util.List"--%>
@@ -211,6 +211,7 @@
 			</c:when>
 		</c:choose>
 	</table>
+</div>
 </div>
 </body>
 </html>

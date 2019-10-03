@@ -29,7 +29,7 @@ public class Responses
 
 	public static String genericError()
 	{
-		return "<p>Don't do that</p>";
+		return "<p>Try again stupid</p>";
 	}
 
 	public static String genericException(Exception e)
@@ -345,6 +345,11 @@ public class Responses
 	public static String free()
 	{
 		return "<p>Your convicts enjoy their freedom!</p>";
+	}
+
+	public static String landClearance(int amount)
+	{
+		return "<p>You peacefully annexed " + amount + "km<sup>2</sup> of land from the natives!</p>";
 	}
 
 	public static String align(int align)

@@ -1,39 +1,50 @@
 #nation {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	border-collapse: collapse;
+	margin: 0 auto;
 	width: 100%;
 }
 
 #nation td, #nation th {
-	border: 1px solid black;
+	position: relative;
 	padding: 8px;
 	width: 33%;
 }
 
 #nation tr:nth-child(even) {
-	background-color: rgba(30, 30, 30, 0.5);
+	background-color: rgb(50, 50, 50);
 	color: white;
 }
 
 #nation tr:nth-child(odd) {
-	background-color: rgba(40, 40, 40, 0.5);
+	background-color: rgb(60, 60, 60);
 	color: white;
 }
 
 #nation tr:hover {
-	background-color: rgba(20, 20, 20, 0.5);
+	background-color: rgb(35, 35, 35);
 }
 
 #nation caption {
-	border: 1px solid black;
-	border-bottom: 0;
 	padding: 8px;
-	background-color: rgba(30, 30, 30, 0.5);
+	background-color: rgb(50, 50, 50);
 	color: white;
 }
 
 #nation caption:hover {
-	background-color: rgba(20, 20, 20, 0.5);
+	background-color: rgb(35, 35, 35);
+}
+
+#nation div.noClose{
+	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#nation div.noClose:hover{
+	color: cornflowerblue;
 }
 
 .flag {

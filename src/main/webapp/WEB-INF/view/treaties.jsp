@@ -1,10 +1,11 @@
 <%--@elvariable id="treaties" type="java.util.ArrayList"--%>
+<%--@elvariable id="treaty" type="com.watersfall.clocgame.model.treaty.Treaty"--%>
 <%@ include file="includes/default.jsp" %>
 <html>
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<table id="policy">
 		<tr>
@@ -22,6 +23,7 @@
 			</tr>
 		</c:forEach>
 	</table>
+</div>
 </div>
 </body>
 </html>

@@ -25,7 +25,7 @@
 		}
 	}
 </script>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<table id="nation">
 		<tr>
@@ -35,6 +35,7 @@
 		</tr>
 	</table>
 	<%@ include file="includes/city.jsp" %>
+</div>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <%@ include file="includes/side.jsp" %>
 <%--@elvariable id="costs" type="com.watersfall.clocgame.action.PolicyActions"--%>
 <%-- POLICIES --%>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<h1><c:out value="${param['policies']}"/> Policy</h1>
 	<table id="policy">
@@ -86,6 +86,20 @@
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('free')">Free</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Land Clearance
+					</td>
+					<td>
+						Slash and burn some useless jungle to make room for our expanding economy
+					</td>
+					<td>
+						$${costs.landClearance}k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="policy('landclearance')">Burn</button>
 					</td>
 				</tr>
 			</c:when>
@@ -179,6 +193,7 @@
 			</c:when>
 		</c:choose>
 	</table>
+</div>
 </div>
 </body>
 </html>

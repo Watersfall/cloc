@@ -2,18 +2,19 @@ package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.math.Math;
-import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.Util;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Nation
 {
@@ -29,7 +30,7 @@ public class Nation
 	private @Getter NationTech tech;
 	private @Getter int defensive;
 	private @Getter int offensive;
-	private @Getter int treaty;
+	private @Getter Treaty treaty;
 	private @Getter Connection connection;
 	private @Getter boolean safe;
 
@@ -86,11 +87,11 @@ public class Nation
 		ResultSet resultsTreaty = treatyCheck.executeQuery();
 		if(!resultsTreaty.first())
 		{
-			treaty = 0;
+			treaty = null;
 		}
 		else
 		{
-			treaty = resultsTreaty.getInt(1);
+			treaty = new Treaty(connection, resultsTreaty.getInt(1), safe);
 		}
 	}
 
@@ -189,9 +190,7 @@ public class Nation
 		check.setInt(1, this.id);
 		if(check.executeQuery().first())
 		{
-			PreparedStatement leave = connection.prepareStatement("DELETE FROM cloc_treaties_members WHERE nation_id=?");
-			leave.setInt(1, this.id);
-			leave.execute();
+			leaveTreaty();
 		}
 		PreparedStatement join = connection.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
 		join.setInt(1, treaty.getId());
@@ -204,6 +203,14 @@ public class Nation
 	{
 		PreparedStatement leave = connection.prepareStatement("DELETE FROM cloc_treaties_members WHERE nation_id=?");
 		leave.setInt(1, this.id);
+		leave.execute();
+		PreparedStatement emptyCheck = connection.prepareStatement("SELECT nation_id FROM cloc_treaties_members WHERE alliance_id=?");
+		emptyCheck.setInt(1, this.treaty.getId());
+		ResultSet results = emptyCheck.executeQuery();
+		if(!results.first())
+		{
+			this.treaty.delete();
+		}
 	}
 
 	public boolean canDeclareWar(Nation nation)
@@ -391,7 +398,7 @@ public class Nation
 	{
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("farming", this.getFreeLand() / 250);
-		map.put("costs", 0);
+		map.put("costs", (int)(this.domestic.getPopulation() / 2000));
 		map.put("net", map.get("farming"));
 		return map;
 	}

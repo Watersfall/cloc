@@ -6,7 +6,7 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="user" type="java.lang.Integer"--%>
-<div class="main">
+<div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
 	<c:choose>
 		<c:when test="${param['id'] == null}">
@@ -80,7 +80,14 @@
 				</tr>
 				<tr>
 					<td>Treaty Membership</td>
-					<td><c:out value="${nation.treaty}"/></td>
+					<td>
+						<c:if test="${nation.treaty != null}">
+							<a href="${pageContext.request.contextPath}/treaty.jsp?id=${nation.treaty.id}">${nation.treaty.name}</a>
+						</c:if>
+						<c:if test="${nation.treaty == null}">
+							None
+						</c:if>
+					</td>
 				</tr>
 			</table>
 			<h1>Military</h1>

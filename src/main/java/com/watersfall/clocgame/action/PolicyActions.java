@@ -22,6 +22,7 @@ public class PolicyActions
 	private static final int ARTILLERY_STEEL = 15;
 	private static final int ARTILLERY_NITROGEN = 7;
 	private static final int WEAPONS_STEEL = 5;
+	private static final int LAND_CLEARANCE = 10000;
 	//</editor-fold>
 	//<editor-fold desc="Modifiers"
 	private static final int CRACKDOWN_STAB = 5;
@@ -605,6 +606,25 @@ public class PolicyActions
 			return Responses.free();
 		}
 	}
+
+	public static String landClearance(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		NationDomestic domestic = new NationDomestic(connection, idNation, true);
+		NationEconomy economy = new NationEconomy(connection, idNation, true);
+		if(economy.getBudget() < LAND_CLEARANCE)
+		{
+			return Responses.noMoney();
+		}
+		else
+		{
+			int gain = (int)(Math.random() * 2500) + 500;
+			economy.setBudget(economy.getBudget() - FREE_COST);
+			domestic.setLand(domestic.getLand() + gain);
+			domestic.update();
+			economy.update();
+			return Responses.landClearance(gain);
+		}
+	}
 	//</editor-fold>
 
 	//<editor-fold desc="Economic Policies">
@@ -804,6 +824,11 @@ public class PolicyActions
 	public int getWeaponsSteel()
 	{
 		return WEAPONS_STEEL;
+	}
+
+	public int getLandClearance()
+	{
+		return LAND_CLEARANCE;
 	}
 	//</editor-fold>
 }

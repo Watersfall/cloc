@@ -49,3 +49,27 @@ function showHideCities()
 		div.style.display = "none";
 	}
 }
+
+function showHideTab(tab)
+{
+	let tabs = ["budget", "food", "coal", "iron", "oil", "steel", "nitrogen", "research", "approval", "stability", "land", "population", "growth"];
+	if(tab !== null)
+	{
+		let div = document.getElementById(tab);
+		if(div.style.display === "")
+		{
+			div.style.display = "block";
+		}
+		else
+		{
+			div.style.display = "";
+		}
+	}
+	for(let i = 0; i < tabs.length; i++)
+	{
+		if(tabs[i] !== tab)
+		{
+			document.getElementById(tabs[i]).style.display = "";
+		}
+	}
+}

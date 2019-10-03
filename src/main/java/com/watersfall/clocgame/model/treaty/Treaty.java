@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model.treaty;
 
 import com.watersfall.clocgame.exception.TreatyNotFoundException;
+import com.watersfall.clocgame.exception.TreatyPermissionException;
 import com.watersfall.clocgame.exception.ValueException;
 import com.watersfall.clocgame.model.nation.NationBase;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class Treaty extends NationBase
 		ResultSet results = treaties.executeQuery();
 		while(results.next())
 		{
-			array.add(new Treaty(conn, results.getInt(1), true, true));
+			array.add(new Treaty(conn, results.getInt(1), false, true));
 		}
 		return array;
 	}
@@ -101,8 +102,12 @@ public class Treaty extends NationBase
 		}
 		else
 		{
-			resultsMembers.last();
-			memberCount = results.getRow();
+			int i = 0;
+			while(resultsMembers.next())
+			{
+				i++;
+			}
+			memberCount = i;
 		}
 	}
 
@@ -133,5 +138,27 @@ public class Treaty extends NationBase
 	public void setDescription(String description) throws SQLException
 	{
 		results.updateString(3, description);
+	}
+
+	public void delete(TreatyMember member) throws SQLException
+	{
+		if(!member.isFounder())
+		{
+			throw new TreatyPermissionException("Only the founder can do this!");
+		}
+		else
+		{
+			delete();
+		}
+	}
+
+	public void delete() throws SQLException
+	{
+		PreparedStatement deleteMembers = connection.prepareStatement("DELETE FROM cloc_treaties_members WHERE alliance_id=?");
+		PreparedStatement deleteAlliance = connection.prepareStatement("DELETE FROM cloc_treaties WHERE id=?");
+		deleteMembers.setInt(1, this.id);
+		deleteAlliance.setInt(1, this.id);
+		deleteMembers.execute();
+		deleteAlliance.execute();
 	}
 }
