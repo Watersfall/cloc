@@ -47,10 +47,10 @@ public class CreateTreatyController extends HttpServlet
 					Nation nation = new Nation(conn, user, true);
 					if(nation.getTreaty() != null)
 					{
-
+						nation.leaveTreaty();
 					}
 					Treaty treaty = Treaty.createTreaty(conn, name);
-					nation.joinTreaty(treaty, true);
+					nation.joinTreaty(treaty, true, true);
 					conn.commit();
 					response.setStatus(201);
 					writer.append(Integer.toString(treaty.getId()));

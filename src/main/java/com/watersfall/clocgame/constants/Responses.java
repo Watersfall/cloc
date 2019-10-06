@@ -17,6 +17,11 @@ public class Responses
 		return "<p>Not your nation!</p>";
 	}
 
+	public static String notYourTreaty()
+	{
+		return "<p>Not your treaty!</p>";
+	}
+
 	public static String notYourCity()
 	{
 		return "<p>Not your city!</p>";
@@ -60,6 +65,11 @@ public class Responses
 	public static String missingPrerequisite()
 	{
 		return "<p>You cannot research this technology!</p>";
+	}
+
+	public static String noPermission()
+	{
+		return "<p>You do not have permission to do this!</p>";
 	}
 
 
@@ -236,6 +246,16 @@ public class Responses
 	public static String alreadyHaveTech()
 	{
 		return "<p>You already have this technology!</p>";
+	}
+
+	public static String alreadyInvited()
+	{
+		return "<p>You have already invited this nation!</p>";
+	}
+
+	public static String noInvite()
+	{
+		return "<p>You do not have an invite!</p>";
 	}
 
 	/*
@@ -445,5 +465,30 @@ public class Responses
 	public static String researchFailed()
 	{
 		return "<p>You have failed to make progress</p>";
+	}
+
+	public static String invited()
+	{
+		return "<p>Invite sent!</p>";
+	}
+
+	public static String kicked()
+	{
+		return "<p>Member kicked!</p>";
+	}
+
+	public static String resigned()
+	{
+		return "<p>Resigned!</p>";
+	}
+
+	public static String inviteAccepted()
+	{
+		return "<p>Accepted!</p>";
+	}
+
+	public static String inviteRejected()
+	{
+		return "<p>Rejected!</p>";
 	}
 }

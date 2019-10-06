@@ -7,16 +7,17 @@
 <%@ include file="includes/side.jsp" %>
 <div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
+	<h1>Treaties</h1>
 	<table id="policy">
 		<tr>
-			<th>Flag</th>
-			<th>Name</th>
+			<th style="width: 10em">Alliance</th>
+			<th></th>
 			<th>Description</th>
 			<th>Members</th>
 		</tr>
 		<c:forEach var="treaty" items="${treaties}">
 			<tr>
-				<td>${treaty.flag}</td>
+				<td><img class="indexflag" src="https://i.imgur.com/${treaty.flag}" alt="flag"/></td>
 				<td><a href="${pageContext.request.contextPath}/treaty.jsp?id=${treaty.id}">${treaty.name}</a></td>
 				<td>${treaty.description}</td>
 				<td>${treaty.memberCount}</td>

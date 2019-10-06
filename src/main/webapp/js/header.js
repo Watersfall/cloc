@@ -69,7 +69,11 @@ function showHideTab(tab)
 	{
 		if(tabs[i] !== tab)
 		{
-			document.getElementById(tabs[i]).style.display = "";
+			let tab = document.getElementById(tabs[i]);
+			if(tab != null)
+			{
+				tab.style.display = "";
+			}
 		}
 	}
 }

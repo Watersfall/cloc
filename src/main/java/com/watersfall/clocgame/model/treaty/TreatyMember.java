@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.model.treaty;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.TreatyPermissionException;
 import com.watersfall.clocgame.model.nation.Nation;
 import lombok.Getter;
 
@@ -68,27 +68,20 @@ public class TreatyMember extends Nation
 		results.updateInt(6, id);
 	}
 
-	public void invite(Nation nation)
-	{
-		if(!(this.invite || this.manage || this.founder))
-		{
-			throw new TreatyPermissionException("You do not have permission to do this!");
-		}
-	}
-
-	public void kick(TreatyMember member) throws SQLException
+	public String kick(TreatyMember member) throws SQLException
 	{
 		if(member.getIdTreaty() != this.getIdTreaty())
 		{
-			throw new TreatyPermissionException("Not your treaty!");
+			return Responses.notYourTreaty();
 		}
 		else if(!(this.kick || this.manage || this.founder))
 		{
-			throw new TreatyPermissionException("You do not have permission to do this!");
+			return Responses.noPermission();
 		}
 		else
 		{
 			member.leaveTreaty();
+			return Responses.kicked();
 		}
 	}
 }

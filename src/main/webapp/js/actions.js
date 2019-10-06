@@ -240,3 +240,21 @@ function updateTechs()
 		}
 	};
 }
+
+function updateTreaty(attribute, value)
+{
+	document.getElementById('resultsContainer').style.visibility = "visible";
+	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	let xhttp = new XMLHttpRequest();
+	let params = "attribute=" + attribute + "&value=" + value;
+	xhttp.open("POST", "treaty.do", true);
+	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	xhttp.send(params);
+	xhttp.onreadystatechange = function()
+	{
+		if(xhttp.readyState === 4 && xhttp.status === 200)
+		{
+			document.getElementById("result").innerHTML = xhttp.responseText;
+		}
+	};
+}

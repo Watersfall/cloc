@@ -13,9 +13,10 @@ public class Database
 		database.setUrl("jdbc:mysql://localhost/cloc");
 		database.setUsername("root");
 		database.setPassword(System.getenv("CLOC_PASS"));
-		database.setMinIdle(5);
+		database.setInitialSize(1);
+		database.setMinIdle(10);
 		database.setMaxIdle(25);
-		database.setMaxTotal(100);
+		database.setMaxTotal(50);
 		database.setMaxOpenPreparedStatements(100);
 		database.setDefaultAutoCommit(false);
 		return database;

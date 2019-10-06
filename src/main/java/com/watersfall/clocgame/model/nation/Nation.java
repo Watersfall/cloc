@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.math.Math;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.treaty.Treaty;
@@ -28,6 +29,7 @@ public class Nation
 	private @Getter NationArmy army;
 	private @Getter NationPolicy policy;
 	private @Getter NationTech tech;
+	private @Getter NationInvites invites;
 	private @Getter int defensive;
 	private @Getter int offensive;
 	private @Getter Treaty treaty;
@@ -52,6 +54,7 @@ public class Nation
 		cities = new NationCities(connection, id, safe);
 		policy = new NationPolicy(connection, id, safe);
 		tech = new NationTech(connection, id, safe);
+		invites = new NationInvites(connection, id, safe);
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;
@@ -92,6 +95,29 @@ public class Nation
 		else
 		{
 			treaty = new Treaty(connection, resultsTreaty.getInt(1), safe);
+		}
+	}
+
+	/**
+	 *
+	 * @param conn The SQL connection to use
+	 * @param name The nation name to get
+	 * @param safe Whether the returned nation should be safe to write to
+	 * @return A nation object of the nation with the specified name
+	 * @throws SQLException if a database issue occurs
+	 */
+	public static Nation getNationByName(Connection conn, String name, boolean safe) throws SQLException, NationNotFoundException
+	{
+		PreparedStatement read = conn.prepareStatement("SELECT id FROM cloc_cosmetic WHERE nation_name=?");
+		read.setString(1, name);
+		ResultSet results = read.executeQuery();
+		if(!results.first())
+		{
+			throw new NationNotFoundException("No nation with that name!");
+		}
+		else
+		{
+			return new Nation(conn, results.getInt(1), safe);
 		}
 	}
 
@@ -186,17 +212,38 @@ public class Nation
 
 	public void joinTreaty(Treaty treaty, boolean founder) throws SQLException
 	{
-		PreparedStatement check = connection.prepareStatement("SELECT * FROM cloc_treaties_members WHERE nation_id=?");
-		check.setInt(1, this.id);
-		if(check.executeQuery().first())
+		this.joinTreaty(treaty.getId(), founder);
+	}
+
+	public void joinTreaty(Integer id, boolean founder) throws SQLException
+	{
+		this.joinTreaty(id, founder, false);
+	}
+
+	public void joinTreaty(Treaty treaty, boolean founder, boolean ignoreInvite) throws SQLException
+	{
+		this.joinTreaty(treaty.getId(), founder, ignoreInvite);
+	}
+
+	public void joinTreaty(Integer id, boolean founder, boolean ignoreInvite) throws SQLException
+	{
+		if((ignoreInvite) || (this.invites.getInvites().contains(id)))
 		{
-			leaveTreaty();
+			PreparedStatement check = connection.prepareStatement("SELECT * FROM cloc_treaties_members WHERE nation_id=?");
+			check.setInt(1, this.id);
+			if(check.executeQuery().first())
+			{
+				leaveTreaty();
+			}
+			PreparedStatement join = connection.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
+			join.setInt(1, id);
+			join.setInt(2, this.id);
+			join.setBoolean(3, founder);
+			join.execute();
+			PreparedStatement deleteInvite = connection.prepareStatement("DELETE FROM cloc_treaty_invites WHERE nation_id=?");
+			deleteInvite.setInt(1, this.id);
+			deleteInvite.execute();
 		}
-		PreparedStatement join = connection.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
-		join.setInt(1, treaty.getId());
-		join.setInt(2, this.id);
-		join.setBoolean(3, founder);
-		join.execute();
 	}
 
 	public void leaveTreaty() throws SQLException
