@@ -110,6 +110,22 @@
 				</td>
 			</tr>
 			<tr>
+				<td>Manpower</td>
+				<td>
+					<div class="noClose" onclick="showHideTab('manpower')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+ 						<fmt:formatNumber value="${home.freeManpower}"/>
+					</div>
+					<div class="resourceTab" id="manpower">
+						<p class="neutral"><fmt:formatNumber value="${home.totalManpower}"/> Total</p><br><br>
+						<c:set var="manpower" value="${home.usedManpower}"/>
+						<c:forEach var="entry" items="${manpower}">
+							<p class="negative"><fmt:formatNumber value="${entry.value}"/> in ${entry.key}<br></p>
+						</c:forEach>
+					</div>
+				</td>
+			</tr>
+			<tr>
 				<td>Rebel Threat</td>
 				<td><cloc:rebels value="${home.domestic.rebels}"/></td>
 			</tr>

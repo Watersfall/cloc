@@ -52,7 +52,7 @@ function showHideCities()
 
 function showHideTab(tab)
 {
-	let tabs = ["budget", "food", "coal", "iron", "oil", "steel", "nitrogen", "research", "approval", "stability", "land", "population", "growth"];
+	let tabs = ["budget", "food", "coal", "iron", "oil", "steel", "nitrogen", "research", "approval", "stability", "land", "population", "growth", "manpower"];
 	if(tab !== null)
 	{
 		let div = document.getElementById(tab);

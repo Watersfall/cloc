@@ -15,6 +15,7 @@ public class NationDomestic extends NationBase
 	private @Getter int approval;
 	private @Getter int stability;
 	private @Getter long population;
+	private @Getter long manpowerLost;
 	private @Getter int rebels;
 
 	public NationDomestic(Connection connection, int id, boolean safe) throws SQLException
@@ -23,11 +24,11 @@ public class NationDomestic extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT land, government, approval, stability, population, rebels, id " + "FROM cloc_domestic " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT land, government, approval, stability, population, rebels, lost_manpower, id " + "FROM cloc_domestic " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT land, government, approval, stability, population, rebels, id " + "FROM cloc_domestic " + "WHERE id=?");
+			read = connection.prepareStatement("SELECT land, government, approval, stability, population, rebels, lost_manpower, id " + "FROM cloc_domestic " + "WHERE id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -46,6 +47,7 @@ public class NationDomestic extends NationBase
 			this.stability = results.getInt(4);
 			this.population = results.getLong(5);
 			this.rebels = results.getInt(6);
+			this.manpowerLost = results.getInt(7);
 		}
 	}
 
@@ -101,5 +103,10 @@ public class NationDomestic extends NationBase
 	public void setRebels(int rebels) throws SQLException
 	{
 		results.updateInt(6, rebels);
+	}
+
+	public void setManpowerLost(long lostManpower) throws SQLException
+	{
+		results.updateLong(7, lostManpower);
 	}
 }

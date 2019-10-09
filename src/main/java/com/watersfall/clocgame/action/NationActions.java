@@ -4,6 +4,7 @@ import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationArmy;
+import com.watersfall.clocgame.model.nation.NationDomestic;
 import com.watersfall.clocgame.model.nation.NationMilitary;
 import com.watersfall.clocgame.model.war.Log;
 import com.watersfall.clocgame.util.Util;
@@ -193,6 +194,8 @@ public class NationActions
 			//There's only the home army for every nation atm, will need to fix this when you can create more
 			NationArmy attacker = sender.getArmy();
 			NationArmy defender = receiver.getArmy();
+			NationDomestic attackerManpower = sender.getDomestic();
+			NationDomestic defenderManpower = receiver.getDomestic();
 			if(attacker.getSize() <= 5)
 			{
 				return Responses.noTroopsForAttack();
@@ -215,9 +218,13 @@ public class NationActions
 				int attackLosses = attacker.getAttackingCasualties(defender);
 				int defenderLosses = defender.getDefendingCasualties(attacker);
 				attacker.setSize(attacker.getSize() - attackLosses);
+				attackerManpower.setManpowerLost(attackerManpower.getManpowerLost() + attackLosses);
 				defender.setSize(defender.getSize() - defenderLosses);
+				defenderManpower.setManpowerLost(defenderManpower.getManpowerLost() + defenderLosses);
 				attacker.update();
 				defender.update();
+				attackerManpower.update();
+				defenderManpower.update();
 				if(attacker.getPower() > defender.getPower())
 				{
 					losses =  Responses.offensiveVictory(attackLosses, defenderLosses);

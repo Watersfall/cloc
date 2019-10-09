@@ -166,6 +166,7 @@ input:-webkit-autofill {
 	display: inline;
 	float: left;
 	box-sizing: border-box;
+	text-align: left;
 }
 
 .topTab:hover{
@@ -357,18 +358,21 @@ p.positive {
 	all: initial;
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: rgb(0, 255, 0);
+	text-align: left;
 }
 
 p.negative {
 	all: initial;
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: rgb(255, 0, 0);
+	text-align: left;
 }
 
 p.neutral {
 	all: initial;
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: rgb(255, 255, 255);
+	text-align: left;
 }
 
 .right {

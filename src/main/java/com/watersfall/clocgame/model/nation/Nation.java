@@ -435,9 +435,9 @@ public class Nation
 		return map;
 	}
 
-	public long getFreeManpower()
+	public long getTotalManpower()
 	{
-		int soldiers = this.army.getSize() * 1000;
+		long lostManpower = domestic.getManpowerLost();
 		long manpower = domestic.getPopulation();
 		switch(policy.getManpower())
 		{
@@ -452,6 +452,35 @@ public class Nation
 			case 4:
 				manpower *= 0.45;
 		}
+		return manpower - lostManpower;
+	}
+
+	public HashMap<String, Long> getUsedManpower()
+	{
+		HashMap<String, Long> map = new HashMap<>();
+		long navy = this.military.getBattleships() +
+				this.military.getCruisers() +
+				this.military.getPreBattleships() +
+				this.military.getCruisers() +
+				this.military.getDestroyers() +
+				this.military.getSubmarines();
+		navy *= 500;
+		long airforce = this.military.getFighters() +
+				this.military.getBombers() +
+				this.military.getZeppelins();
+		airforce *= 50;
+		long army = this.army.getSize();
+		army *= 1000;
+		map.put("Navy", navy);
+		map.put("Airforce", airforce);
+		map.put("Army", army);
+		return map;
+	}
+
+	public long getFreeManpower()
+	{
+		long soldiers = this.army.getSize() * 1000;
+		long manpower = getTotalManpower();
 		return manpower - soldiers;
 	}
 

@@ -12,7 +12,7 @@ public class WeekScheduler
 	private WeekScheduler()
 	{
 		scheduler = new Scheduler();
-		scheduler.schedule("0 * * * *", new TurnWeek());
+		scheduler.schedule("* * * * *", new TurnWeek());
 		scheduler.start();
 	}
 

@@ -23,19 +23,19 @@ public class NumberFormatter extends TagSupport
 		}
 		else if(formatted.length() > 12)
 		{
-			formatted = ((long)(number / 1e12)) + "." + ((long)((number / 1e9) % 100) / 10)+ "T";
+			formatted = ((long)(number / 1e12)) + "." + ((long)((number / 1e10) % 100) / 10)+ "T";
 		}
 		else if(formatted.length() > 9)
 		{
-			formatted = ((long)(number / 1e9)) + "." + ((long)((number / 1e6) % 100) / 10)+ "B";
+			formatted = ((long)(number / 1e9)) + "." + ((long)((number / 1e7) % 100) / 10)+ "B";
 		}
 		else if(formatted.length() > 6)
 		{
-			formatted = ((long)(number / 1e6)) + "." + ((long)((number / 1e3) % 100) / 10)+ "M";
+			formatted = ((long)(number / 1e6)) + "." + ((long)((number / 1e4) % 100) / 10)+ "M";
 		}
 		else if(formatted.length() > 3)
 		{
-			formatted = ((long)(number / 1e3)) + "." + ((long)((number / 1e0) % 100) / 10)+ "K";
+			formatted = ((long)(number / 1e3)) + "." + ((long)((number / 1e1) % 100) / 10)+ "K";
 		}
 		else
 		{
