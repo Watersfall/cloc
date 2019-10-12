@@ -43,243 +43,222 @@ public class PolicyActions
 	//<editor-fold desc="City Policies">
 	public static String coalMine(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		NationCities cities = new NationCities(connection, idNation, true);
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		City city = cities.getCities().get(idCity);
+		Nation nation = new Nation(connection, idNation, true);
+		City city = nation.getCities().getCities().get(idCity);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
 		int cost = city.getMineCost();
-		if(economy.getBudget() < cost)
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(domestic.getLand() - cities.getTotalLandUsage() < City.LAND_MINE)
+		else if(nation.getFreeLand() < City.LAND_MINE)
 		{
 			return Responses.noLand();
 		}
 		else
 		{
 			city.setCoalMines(city.getCoalMines() + 1);
-			economy.setBudget(economy.getBudget() - cost);
-			city.update();
-			economy.update();
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.update();
 			return Responses.coalMine();
 		}
 	}
 
 	public static String ironMine(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		NationCities cities = new NationCities(connection, idNation, true);
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		City city = cities.getCities().get(idCity);
+		Nation nation = new Nation(connection, idNation, true);
+		City city = nation.getCities().getCities().get(idCity);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
 		int cost = city.getMineCost();
-		if(economy.getBudget() < cost)
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(domestic.getLand() - cities.getTotalLandUsage() < City.LAND_MINE)
+		else if(nation.getFreeLand() < City.LAND_MINE)
 		{
 			return Responses.noLand();
 		}
 		else
 		{
 			city.setIronMines(city.getIronMines() + 1);
-			economy.setBudget(economy.getBudget() - cost);
-			city.update();
-			economy.update();
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.update();
 			return Responses.ironMine();
 		}
 	}
 
 	public static String drill(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		NationCities cities = new NationCities(connection, idNation, true);
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		City city = cities.getCities().get(idCity);
+		Nation nation = new Nation(connection, idNation, true);
+		City city = nation.getCities().getCities().get(idCity);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
 		int cost = city.getWellCost();
-		if(economy.getBudget() < cost)
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(domestic.getLand() - cities.getTotalLandUsage() < City.LAND_MINE)
+		else if(nation.getFreeLand() < City.LAND_MINE)
 		{
 			return Responses.noLand();
 		}
 		else
 		{
 			city.setOilWells(city.getOilWells() + 1);
-			economy.setBudget(economy.getBudget() - cost);
-			city.update();
-			economy.update();
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.update();
 			return Responses.drill();
 		}
 	}
 
 	public static String industrialize(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		NationCities cities = new NationCities(connection, idNation, true);
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		City city = cities.getCities().get(idCity);
+		Nation nation = new Nation(connection, idNation, true);
+		City city = nation.getCities().getCities().get(idCity);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
-		else if(domestic.getLand() - cities.getTotalLandUsage() < City.LAND_FACTORY)
+		else if(nation.getFreeLand() < City.LAND_FACTORY)
 		{
 			return Responses.noLand();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
-		if(economy.getCoal() < cost.get("coal"))
+		if(nation.getEconomy().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(economy.getIron() < cost.get("iron"))
+		else if(nation.getEconomy().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(economy.getSteel() < cost.get("steel"))
+		else if(nation.getEconomy().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			economy.setCoal(economy.getCoal() - cost.get("coal"));
-			economy.setIron(economy.getIron() - cost.get("iron"));
-			economy.setSteel(economy.getSteel() - cost.get("steel"));
+			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
+			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
 			city.setIndustryCivilian(city.getIndustryCivilian() + 1);
-			city.update();
-			economy.update();
+			nation.update();
 			return Responses.industrialize();
 		}
 	}
 
 	public static String militarize(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		NationCities cities = new NationCities(connection, idNation, true);
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		City city = cities.getCities().get(idCity);
+		Nation nation = new Nation(connection, idNation, true);
+		City city = nation.getCities().getCities().get(idCity);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
-		else if(domestic.getLand() - cities.getTotalLandUsage() < City.LAND_FACTORY)
+		else if(nation.getFreeLand() < City.LAND_FACTORY)
 		{
 			return Responses.noLand();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
-		if(economy.getCoal() < cost.get("coal"))
+		if(nation.getEconomy().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(economy.getIron() < cost.get("iron"))
+		else if(nation.getEconomy().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(economy.getSteel() < cost.get("steel"))
+		else if(nation.getEconomy().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			economy.setCoal(economy.getCoal() - cost.get("coal"));
-			economy.setIron(economy.getIron() - cost.get("iron"));
-			economy.setSteel(economy.getSteel() - cost.get("steel"));
+			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
+			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
 			city.setIndustryMilitary(city.getIndustryMilitary() + 1);
-			city.update();
-			economy.update();
+			nation.update();
 			return Responses.militarize();
 		}
 	}
 
 	public static String nitrogen(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		NationCities cities = new NationCities(connection, idNation, true);
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		City city = cities.getCities().get(idCity);
+		Nation nation = new Nation(connection, idNation, true);
+		City city = nation.getCities().getCities().get(idCity);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
-		else if(domestic.getLand() - cities.getTotalLandUsage() < City.LAND_FACTORY)
+		else if(nation.getFreeLand() < City.LAND_FACTORY)
 		{
 			return Responses.noLand();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
-		if(economy.getCoal() < cost.get("coal"))
+		if(nation.getEconomy().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(economy.getIron() < cost.get("iron"))
+		else if(nation.getEconomy().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(economy.getSteel() < cost.get("steel"))
+		else if(nation.getEconomy().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			economy.setCoal(economy.getCoal() - cost.get("coal"));
-			economy.setIron(economy.getIron() - cost.get("iron"));
-			economy.setSteel(economy.getSteel() - cost.get("steel"));
+			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
+			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
 			city.setIndustryNitrogen(city.getIndustryNitrogen() + 1);
-			city.update();
-			economy.update();
-			return Responses.nitrogenPlant();
+			nation.update();
+			return Responses.militarize();
 		}
 	}
 
 	public static String university(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		NationCities cities = new NationCities(connection, idNation, true);
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		City city = cities.getCities().get(idCity);
+		Nation nation = new Nation(connection, idNation, true);
+		City city = nation.getCities().getCities().get(idCity);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
-		else if(domestic.getLand() - cities.getTotalLandUsage() < City.LAND_UNIVERSITY)
+		else if(nation.getFreeLand() < City.LAND_UNIVERSITY)
 		{
 			return Responses.noLand();
 		}
 		HashMap<String, Integer> cost = city.getUniversityCost();
-		if(economy.getCoal() < cost.get("coal"))
+		if(nation.getEconomy().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(economy.getIron() < cost.get("iron"))
+		else if(nation.getEconomy().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(economy.getSteel() < cost.get("steel"))
+		else if(nation.getEconomy().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			economy.setCoal(economy.getCoal() - cost.get("coal"));
-			economy.setIron(economy.getIron() - cost.get("iron"));
-			economy.setSteel(economy.getSteel() - cost.get("steel"));
+			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
+			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
 			city.setUniversities(city.getUniversities() + 1);
-			city.update();
-			economy.update();
+			nation.update();
 			return Responses.nitrogenPlant();
 		}
 	}
@@ -369,7 +348,20 @@ public class PolicyActions
 		}
 	}
 
-	private static String remove(Connection connection, int idNation, int idCity, int type) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	/**
+	 * Called by the specific close actions with their specified type
+	 * Should probably refactor out the specific methods in favor of just using this at some point
+	 * @param connection The SQL Connection to use
+	 * @param idNation The Nation ID the city is in
+	 * @param idCity the City ID to remove from
+	 * @param type Magic int representing the type of building to remove
+	 * @return A displayable error message if one occurs, or null if there is no error
+	 * @throws SQLException If a database error occurs
+	 * @throws NationNotFoundException If the Nation with the specified ID does not exist
+	 * @throws CityNotFoundException If the City with the specified ID does not exist
+	 * @throws NotLoggedInException If the user attempting this is not logged in
+	 */
+	private static String remove(Connection connection, int idNation, int idCity, int type) throws SQLException, NationNotFoundException, CityNotFoundException, NotLoggedInException
 	{
 		City city = new City(connection, idCity, true);
 		if(city.getOwner() != idNation)
@@ -719,22 +711,20 @@ public class PolicyActions
 
 	public static String train(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		NationArmy army = new NationArmy(conn, id, true);
-		NationEconomy economy = new NationEconomy(conn, id, true);
-		if(economy.getBudget() < army.getTrainingCost())
+		Nation nation = new Nation(conn, id, true);
+		if(nation.getEconomy().getBudget() < nation.getTrainingCost())
 		{
 			return Responses.noMoney();
 		}
-		else if(army.getTraining() >= 100)
+		else if(nation.getArmy().getTraining() >= 100)
 		{
 			return Responses.fullTrained();
 		}
 		else
 		{
-			army.setTraining(army.getTraining() + 5);
-			economy.setBudget(economy.getBudget() - army.getTrainingCost());
-			army.update();
-			economy.update();
+			nation.getArmy().setTraining(nation.getArmy().getTraining() + 5);
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - nation.getTrainingCost());
+			nation.update();
 			return Responses.train();
 		}
 	}

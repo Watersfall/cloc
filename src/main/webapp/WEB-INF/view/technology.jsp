@@ -69,38 +69,6 @@
 			</c:when>
 			<c:when test="${type == 'tree'}">
 				<!-- this is gonna be fun -->
-				<style>
-					.categories{
-						width: 100%;
-						margin-left: auto;
-						margin-right: auto;
-						display: block;
-					}
-
-					.categories ul {
-						list-style-type: none;
-						padding: 0;
-						overflow: hidden;
-						background-color: #333333;
-						margin: 0 0 1em auto;
-					}
-
-					.categories li {
-						float: left;
-					}
-
-					.categories li a {
-						display: block;
-						color: white;
-						text-align: center;
-						padding: 16px;
-						text-decoration: none;
-					}
-
-					.categories li a:hover {
-						background-color: #111111;
-					}
-				</style>
 				<div class="categories">
 					<ul>
 						<c:forEach items="${categories}" var="cat">

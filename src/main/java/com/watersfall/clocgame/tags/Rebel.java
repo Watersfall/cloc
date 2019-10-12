@@ -17,6 +17,7 @@ public class Rebel extends SimpleTagSupport
 		this.value = value;
 	}
 
+	@Override
 	public void doTag() throws JspException, IOException
 	{
 		JspWriter out = getJspContext().getOut();

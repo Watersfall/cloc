@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.ValueException;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -53,7 +52,7 @@ public class NationLogin extends NationBase
 	{
 		if(username.length() > 32)
 		{
-			throw new ValueException("Can not be longer than 32 characters!");
+			throw new IllegalArgumentException("Can not be longer than 32 characters!");
 		}
 		else
 		{
@@ -65,7 +64,7 @@ public class NationLogin extends NationBase
 	{
 		if(email.length() > 32767)
 		{
-			throw new ValueException("Can not be longer than 32,767 characters!");
+			throw new IllegalArgumentException("Can not be longer than 32,767 characters!");
 		}
 		else
 		{
@@ -77,7 +76,7 @@ public class NationLogin extends NationBase
 	{
 		if(password.length() > 32)
 		{
-			throw new ValueException("Can not be longer than 32 characters!");
+			throw new IllegalArgumentException("Can not be longer than 32 characters!");
 		}
 		else
 		{
@@ -89,7 +88,7 @@ public class NationLogin extends NationBase
 	{
 		if(ip.length() > 15)
 		{
-			throw new ValueException("Can not be longer than 15 characters!");
+			throw new IllegalArgumentException("Can not be longer than 15 characters!");
 		}
 		else
 		{
@@ -101,7 +100,7 @@ public class NationLogin extends NationBase
 	{
 		if(ip.length() > 15)
 		{
-			throw new ValueException("Can not be longer than 15 characters!");
+			throw new IllegalArgumentException("Can not be longer than 15 characters!");
 		}
 		else
 		{

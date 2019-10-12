@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.ValueException;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -56,7 +55,7 @@ public class NationCosmetic extends NationBase
 	{
 		if(nationName.length() > 32)
 		{
-			throw new ValueException("Can not be more than 32 characters!");
+			throw new IllegalArgumentException("Can not be more than 32 characters!");
 		}
 		else
 		{
@@ -69,7 +68,7 @@ public class NationCosmetic extends NationBase
 	{
 		if(nationName.length() > 32)
 		{
-			throw new ValueException("Can not be more than 32 characters!");
+			throw new IllegalArgumentException("Can not be more than 32 characters!");
 		}
 		else
 		{
@@ -82,7 +81,7 @@ public class NationCosmetic extends NationBase
 	{
 		if(nationName.length() > 128)
 		{
-			throw new ValueException("Can not be more than 128 characters!");
+			throw new IllegalArgumentException("Can not be more than 128 characters!");
 		}
 		else
 		{
@@ -95,7 +94,7 @@ public class NationCosmetic extends NationBase
 	{
 		if(nationName.length() > 128)
 		{
-			throw new ValueException("Can not be more than 128 characters!");
+			throw new IllegalArgumentException("Can not be more than 128 characters!");
 		}
 		else
 		{
@@ -108,7 +107,7 @@ public class NationCosmetic extends NationBase
 	{
 		if(nationName.length() > 128)
 		{
-			throw new ValueException("Can not be more than 128 characters!");
+			throw new IllegalArgumentException("Can not be more than 128 characters!");
 		}
 		else
 		{
@@ -121,7 +120,7 @@ public class NationCosmetic extends NationBase
 	{
 		if(nationName.length() > 128)
 		{
-			throw new ValueException("Can not be more than 128 characters!");
+			throw new IllegalArgumentException("Can not be more than 128 characters!");
 		}
 		else
 		{
@@ -134,7 +133,7 @@ public class NationCosmetic extends NationBase
 	{
 		if(nationName.length() > 32767)
 		{
-			throw new ValueException("Can not be more than 32,767 characters!");
+			throw new IllegalArgumentException("Can not be more than 32,767 characters!");
 		}
 		else
 		{

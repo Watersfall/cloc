@@ -34,7 +34,7 @@ public class LoggedInFilter implements Filter
 		{
 			HttpServletRequest req = (HttpServletRequest) request;
 			HttpServletResponse res = (HttpServletResponse) response;
-			HttpSession sess = req.getSession(false);
+			HttpSession sess = req.getSession(true);
 			if(sess != null && sess.getAttribute("user") != null)
 			{
 				int user = Integer.parseInt(sess.getAttribute("user").toString());

@@ -109,7 +109,7 @@ public class NationController extends HttpServlet
 					writer.append(NationActions.declareWar(sender, receiver, req));
 					break;
 				case "land":
-					writer.append(NationActions.landOffensive(connection, sender, receiver, req));
+					writer.append(NationActions.landOffensive(connection, sender, receiver));
 					break;
 			}
 			connection.commit();

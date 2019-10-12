@@ -20,6 +20,10 @@ public abstract class NationBase
 		this.safe = safe;
 	}
 
+	/**
+	 * Updates the database with all changes made
+	 * @throws SQLException if a database error occurs
+	 */
 	public void update() throws SQLException
 	{
 		results.updateRow();

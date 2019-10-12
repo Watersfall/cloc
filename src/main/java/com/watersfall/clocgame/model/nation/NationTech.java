@@ -66,7 +66,7 @@ public class NationTech extends NationBase
 		return results.getInt(tech.getTechnology().getTableName());
 	}
 
-	public void setTechnologies(Technologies tech, int value) throws SQLException
+	public void setTechnology(Technologies tech, int value) throws SQLException
 	{
 		results.updateInt(tech.getTechnology().getTableName(), value);
 	}

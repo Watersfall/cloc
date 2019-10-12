@@ -25,7 +25,7 @@ public class MainController extends HttpServlet
 			{
 				Nation nation = (Nation) req.getAttribute("home");
 				req.setAttribute("growth", nation.getGrowthChange());
-				req.setAttribute("production", nation.getCities().getAllTotalProductions());
+				req.setAttribute("production", nation.getAllTotalProductions());
 				req.setAttribute("population", nation.getPopulationGrowth());
 				req.setAttribute("food", nation.getFoodProduction());
 				conn = Database.getDataSource().getConnection();

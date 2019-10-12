@@ -192,7 +192,7 @@
 		</c:otherwise>
 	</c:choose>
 	<p><br><br><br></p>
-</div>
+</div></div>
 <p><br><br><br></p>
 </body>
 </html>

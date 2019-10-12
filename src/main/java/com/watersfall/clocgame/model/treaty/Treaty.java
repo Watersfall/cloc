@@ -2,7 +2,6 @@ package com.watersfall.clocgame.model.treaty;
 
 import com.watersfall.clocgame.exception.TreatyNotFoundException;
 import com.watersfall.clocgame.exception.TreatyPermissionException;
-import com.watersfall.clocgame.exception.ValueException;
 import com.watersfall.clocgame.model.nation.NationBase;
 import lombok.Getter;
 
@@ -11,6 +10,12 @@ import java.util.ArrayList;
 
 public class Treaty extends NationBase
 {
+	/**
+	 * Returns an Array of all treaties in the database <i>without</i> their members
+	 * @param conn The SQL Connection to use
+	 * @return An ArrayList containing all treaties <i>without</i> their members
+	 * @throws SQLException if a database issue occurs
+	 */
 	public static ArrayList<Treaty> getAllTreaties(Connection conn) throws SQLException
 	{
 		ArrayList<Treaty> array = new ArrayList<>();
@@ -23,6 +28,13 @@ public class Treaty extends NationBase
 		return array;
 	}
 
+	/**
+	 * Creates a Treaty with the given name in the database
+	 * @param conn The SQL Connection to use
+	 * @param name The Treaty name
+	 * @return The created Treaty
+	 * @throws SQLException if a database issue occurs
+	 */
 	public static Treaty createTreaty(Connection conn, String name) throws SQLException
 	{
 		PreparedStatement create = conn.prepareStatement("INSERT INTO cloc_treaties (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
@@ -42,6 +54,7 @@ public class Treaty extends NationBase
 
 
 	/**
+	 * Creates a Treaty object without the member list
 	 * @param connection The SQL Connection
 	 * @param id         The treaty ID
 	 * @param safe       Whether the results should be writable
@@ -53,6 +66,7 @@ public class Treaty extends NationBase
 	}
 
 	/**
+	 * Creates a treaty object
 	 * @param connection The connection object to use
 	 * @param id         The Treaty id
 	 * @param safe       Whether the results should be writable
@@ -61,7 +75,6 @@ public class Treaty extends NationBase
 	 *                   on <i>false</i>, loads the Treaty as well as all it's members
 	 * @throws SQLException if an SQL error occurs
 	 */
-
 	public Treaty(Connection connection, int id, boolean safe, boolean lazyLoad) throws SQLException
 	{
 		super(connection, id, safe);
@@ -115,7 +128,7 @@ public class Treaty extends NationBase
 	{
 		if(name.length() > 32)
 		{
-			throw new ValueException("Name can not be longer than 32 characters!");
+			throw new IllegalArgumentException("Name can not be longer than 32 characters!");
 		}
 		else
 		{
@@ -127,7 +140,7 @@ public class Treaty extends NationBase
 	{
 		if(flag.length() > 32)
 		{
-			throw new ValueException("Flag can not be longer than 32 characters!");
+			throw new IllegalArgumentException("Flag can not be longer than 32 characters!");
 		}
 		else
 		{
@@ -140,6 +153,11 @@ public class Treaty extends NationBase
 		results.updateString(3, description);
 	}
 
+	/**
+	 * Checks if a treaty be deleted by a user, and then deletes it if they have permission to do so
+	 * @param member the member attempting to delete the Treaty
+	 * @throws SQLException if a database error occurs
+	 */
 	public void delete(TreatyMember member) throws SQLException
 	{
 		if(!member.isFounder())
@@ -152,6 +170,10 @@ public class Treaty extends NationBase
 		}
 	}
 
+	/**
+	 * Deletes this Treaty from the database without checking who's deleting it
+	 * @throws SQLException if a database error occurs
+	 */
 	public void delete() throws SQLException
 	{
 		PreparedStatement deleteMembers = connection.prepareStatement("DELETE FROM cloc_treaties_members WHERE alliance_id=?");

@@ -113,7 +113,7 @@ CREATE TABLE cloc_cities(
 	military_industry INT UNSIGNED DEFAULT 0,
 	nitrogen_industry INT UNSIGNED DEFAULT 0,
 	universities INT UNSIGNED DEFAULT 0,
-	name TEXT,
+	name VARCHAR(64),
 	type ENUM('MINING', 'DRILLING', 'INDUSTRY', 'FARMING'),
 	FOREIGN KEY fk_cities (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
 );

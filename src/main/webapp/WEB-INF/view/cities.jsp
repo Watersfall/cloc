@@ -27,14 +27,18 @@
 </script>
 <div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
-	<table id="nation">
-		<tr>
+	<div class="categories">
+		<ul>
 			<c:forEach var="i" items="${home.cities.cities}">
-				<th style="width: ${100 / home.cities.cities.size}%" onclick="loadCity('${i.key}')">${i.value.name}</th>
+				<li style="min-width: ${100 / home.cities.cities.size()}%" onclick="loadCity('${i.key}')">
+					<a>
+						<div style="width: 100%">${i.value.name}</div>
+					</a>
+				</li>
 			</c:forEach>
-		</tr>
-	</table>
-	<%@ include file="includes/city.jsp" %>
+		</ul>
+	</div>
+	<%@include file="includes/city.jsp"%>
 </div>
 </div>
 </body>

@@ -13,7 +13,8 @@ public class NumberFormatter extends TagSupport
 		this.value = value;
 	}
 
-	@Override public int doEndTag() throws JspException
+	@Override
+	public int doEndTag() throws JspException
 	{
 		long number = value.longValue();
 		String formatted = Long.toString(number);

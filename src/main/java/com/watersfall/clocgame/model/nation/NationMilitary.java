@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.ValueException;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -63,120 +62,91 @@ public class NationMilitary extends NationBase
 	{
 		if(fighters < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			fighters = 0;
 		}
-		else
-		{
-			results.updateInt(1, fighters);
-		}
+		results.updateInt(1, fighters);
 	}
 
 	public void setZeppelins(int zeppelins) throws SQLException
 	{
 		if(zeppelins < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			zeppelins = 0;
 		}
-		else
-		{
-			results.updateInt(2, zeppelins);
-		}
+		results.updateInt(2, zeppelins);
 	}
 
 	public void setBombers(int bombers) throws SQLException
 	{
 		if(bombers < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			bombers = 0;
 		}
-		else
-		{
-			results.updateInt(3, bombers);
-		}
+		results.updateInt(3, bombers);
 	}
 
 	public void setSubmarines(int submarines) throws SQLException
 	{
 		if(submarines < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			submarines = 0;
 		}
-		else
-		{
-			results.updateInt(4, submarines);
-		}
+		results.updateInt(4, submarines);
 	}
 
 	public void setDestroyers(int destroyers) throws SQLException
 	{
 		if(destroyers < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			destroyers = 0;
 		}
-		else
-		{
-			results.updateInt(5, destroyers);
-		}
+		results.updateInt(5, destroyers);
 	}
 
 	public void setCruisers(int cruisers) throws SQLException
 	{
 		if(cruisers < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			cruisers = 0;
 		}
 		else
-		{
-			results.updateInt(6, cruisers);
-		}
+		results.updateInt(6, cruisers);
 	}
 
 	public void setPreBattleships(int preBattleships) throws SQLException
 	{
 		if(preBattleships < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			preBattleships = 0;
 		}
-		else
-		{
-			results.updateInt(7, preBattleships);
-		}
+		results.updateInt(7, preBattleships);
 	}
 
 	public void setBattleships(int battleships) throws SQLException
 	{
 		if(battleships < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			battleships = 0;
 		}
-		else
-		{
-			results.updateInt(8, battleships);
-		}
+		results.updateInt(8, battleships);
 	}
 
 	public void setTransports(int transports) throws SQLException
 	{
 		if(transports < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			transports = 0;
 		}
-		else
-		{
-			results.updateInt(9, transports);
-		}
+		results.updateInt(9, transports);
 	}
 
 	public void setWarProtection(int warProtection) throws SQLException
 	{
 		if(warProtection < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			warProtection = 0;
 		}
-		else
-		{
-			results.updateInt(10, warProtection);
-		}
+		results.updateInt(10, warProtection);
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.constants.Responses;
-import com.watersfall.clocgame.model.treaty.TreatyMember;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -35,6 +34,12 @@ public class NationInvites extends NationBase
 		}
 	}
 
+	/**
+	 * Rejects an invite, removing it from the Nation's invite list
+	 * @param alliance The alliance id of the invite to reject
+	 * @return The displayable response message
+	 * @throws SQLException If a database error occurs
+	 */
 	public String reject(Integer alliance) throws SQLException
 	{
 		PreparedStatement delete = connection.prepareStatement("DELETE FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
@@ -51,6 +56,13 @@ public class NationInvites extends NationBase
 		}
 	}
 
+	/**
+	 * Accepts an invite, joining the treaty and removing the invite
+	 * @param alliance The alliance id of the invite to accept
+	 * @param nation The nation joining the treaty
+	 * @return The displayable response message
+	 * @throws SQLException If a database error occurs
+	 */
 	public String accept(Integer alliance, Nation nation) throws SQLException
 	{
 		if(invites.contains(alliance))
@@ -64,11 +76,17 @@ public class NationInvites extends NationBase
 		}
 	}
 
-	public String invite(Nation nation, TreatyMember member) throws SQLException
+	/**
+	 * Invites this Nation to the Treaty with the specified id
+	 * @param id The Treaty id to invite to
+	 * @return The displayable response message
+	 * @throws SQLException If a database error occurs
+	 */
+	public String invite(Integer id) throws SQLException
 	{
 		PreparedStatement check = connection.prepareStatement("SELECT id FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
-		check.setInt(1, nation.getId());
-		check.setInt(2, member.getTreaty().getId());
+		check.setInt(1, this.id);
+		check.setInt(2, id);
 		ResultSet results = check.executeQuery();
 		if(results.first())
 		{
@@ -77,8 +95,8 @@ public class NationInvites extends NationBase
 		else
 		{
 			PreparedStatement invite = connection.prepareStatement("INSERT INTO cloc_treaty_invites (alliance_id, nation_id) VALUES (?,?)");
-			invite.setInt(1, member.getTreaty().getId());
-			invite.setInt(2, nation.getId());
+			invite.setInt(1, id);
+			invite.setInt(2, this.id);
 			invite.execute();
 			return Responses.invited();
 		}

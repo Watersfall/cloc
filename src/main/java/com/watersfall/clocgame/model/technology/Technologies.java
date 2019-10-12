@@ -47,6 +47,10 @@ public enum Technologies
 
 	private @Getter Technology technology;
 	private @Getter Category category;
+
+	/**
+	 * Display parameters
+	 */
 	private @Getter int x;
 	private @Getter int y;
 	private @Getter String cssClass;

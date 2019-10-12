@@ -3,9 +3,6 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.NationArmy;
-import com.watersfall.clocgame.model.nation.NationDomestic;
-import com.watersfall.clocgame.model.nation.NationMilitary;
 import com.watersfall.clocgame.model.war.Log;
 import com.watersfall.clocgame.util.Util;
 
@@ -179,37 +176,30 @@ public class NationActions
 		}
 	}
 
-	public static String landOffensive(Connection connection, Nation sender, Nation receiver, HttpServletRequest req) throws SQLException
+	public static String landOffensive(Connection connection, Nation attacker, Nation defender) throws SQLException
 	{
-		if(sender.getOffensive() != receiver.getId() && sender.getDefensive() != receiver.getId())
+		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
 		{
 			return Responses.noWar();
 		}
-		else if(Log.checkLog(connection, sender.getId(), receiver.getForeign().getRegion(), LogType.LAND))
+		else if(Log.checkLog(connection, attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
 		{
 			return Responses.alreadyAttacked();
 		}
 		else
 		{
-			//There's only the home army for every nation atm, will need to fix this when you can create more
-			NationArmy attacker = sender.getArmy();
-			NationArmy defender = receiver.getArmy();
-			NationDomestic attackerManpower = sender.getDomestic();
-			NationDomestic defenderManpower = receiver.getDomestic();
-			if(attacker.getSize() <= 5)
+			if(attacker.getArmy().getSize() <= 5)
 			{
 				return Responses.noTroopsForAttack();
 			}
-			else if(defender.getSize() <= 5)
+			else if(defender.getArmy().getSize() <= 5)
 			{
 				PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=? WHERE attacker=? AND defender=?");
 				updateWar.setInt(1, Util.turn);
 				updateWar.setInt(2, attacker.getId());
 				updateWar.setInt(3, defender.getId());
 				updateWar.execute();
-				NationMilitary military = new NationMilitary(connection, defender.getId(), true);
-				military.setWarProtection(Util.turn + 4);
-				military.update();
+				defender.getMilitary().setWarProtection(4);
 				return Responses.warWon();
 			}
 			else
@@ -217,14 +207,12 @@ public class NationActions
 				String losses;
 				int attackLosses = attacker.getAttackingCasualties(defender);
 				int defenderLosses = defender.getDefendingCasualties(attacker);
-				attacker.setSize(attacker.getSize() - attackLosses);
-				attackerManpower.setManpowerLost(attackerManpower.getManpowerLost() + attackLosses);
-				defender.setSize(defender.getSize() - defenderLosses);
-				defenderManpower.setManpowerLost(defenderManpower.getManpowerLost() + defenderLosses);
+				attacker.getArmy().setSize(attacker.getArmy().getSize() - attackLosses);
+				attacker.getDomestic().setManpowerLost(attacker.getDomestic().getManpowerLost() + attackLosses);
+				defender.getArmy().setSize(defender.getArmy().getSize() - defenderLosses);
+				defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() + defenderLosses);
 				attacker.update();
 				defender.update();
-				attackerManpower.update();
-				defenderManpower.update();
 				if(attacker.getPower() > defender.getPower())
 				{
 					losses =  Responses.offensiveVictory(attackLosses, defenderLosses);
@@ -233,7 +221,7 @@ public class NationActions
 				{
 					losses = Responses.offensiveDefeat(attackLosses, defenderLosses);
 				}
-				Log.createLog(connection, sender.getId(), receiver.getForeign().getRegion(), LogType.LAND, 0);
+				Log.createLog(connection, attacker.getId(), defender.getForeign().getRegion(), LogType.LAND, 0);
 				return losses;
 			}
 		}

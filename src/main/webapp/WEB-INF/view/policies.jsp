@@ -199,7 +199,7 @@
 						Train your army
 					</td>
 					<td>
-						$${home.army.trainingCost}k
+						$${home.trainingCost}k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('train')">Train</button>

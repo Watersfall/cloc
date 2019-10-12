@@ -3,7 +3,6 @@ package com.watersfall.clocgame.model.nation;
 import com.watersfall.clocgame.constants.Costs;
 import com.watersfall.clocgame.constants.ProductionConstants;
 import com.watersfall.clocgame.exception.CityNotFoundException;
-import com.watersfall.clocgame.exception.ValueException;
 import com.watersfall.clocgame.model.CityType;
 import lombok.Getter;
 
@@ -92,11 +91,11 @@ public class City
 	{
 		if(railroads < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			railroads = 0;
 		}
 		else if(railroads > 10)
 		{
-			throw new ValueException("Can not be higher than 10!");
+			railroads = 10;
 		}
 		this.railroads = railroads;
 		results.updateInt(4, railroads);
@@ -106,11 +105,11 @@ public class City
 	{
 		if(ports < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			ports = 0;
 		}
 		else if(ports > 10)
 		{
-			throw new ValueException("Can not be higher than 10!");
+			ports = 10;
 		}
 		this.ports = ports;
 		results.updateInt(5, ports);
@@ -120,11 +119,11 @@ public class City
 	{
 		if(barracks < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			barracks = 0;
 		}
 		else if(barracks > 10)
 		{
-			throw new ValueException("Can not be higher than 10!");
+			barracks = 10;
 		}
 		this.barracks = barracks;
 		results.updateInt(6, barracks);
@@ -134,7 +133,7 @@ public class City
 	{
 		if(mines < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			mines = 0;
 		}
 		this.ironMines = mines;
 		results.updateInt(7, mines);
@@ -144,7 +143,7 @@ public class City
 	{
 		if(mines < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			mines = 0;
 		}
 		this.coalMines = mines;
 		results.updateInt(8, mines);
@@ -154,7 +153,7 @@ public class City
 	{
 		if(wells < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			wells = 0;
 		}
 		this.oilWells = wells;
 		results.updateInt(9, wells);
@@ -164,7 +163,7 @@ public class City
 	{
 		if(industry < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			industry = 0;
 		}
 		this.industryCivilian = industry;
 		results.updateInt(10, industry);
@@ -174,7 +173,7 @@ public class City
 	{
 		if(industry < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			industry = 0;
 		}
 		this.industryMilitary = industry;
 		results.updateInt(11, industry);
@@ -184,7 +183,7 @@ public class City
 	{
 		if(industry < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			industry = 0;
 		}
 		this.industryNitrogen = industry;
 		results.updateInt(12, industry);
@@ -194,7 +193,7 @@ public class City
 	{
 		if(universities < 0)
 		{
-			throw new ValueException("Can not be negative!");
+			universities = 0;
 		}
 		this.universities = universities;
 		results.updateInt(13, universities);
@@ -204,11 +203,11 @@ public class City
 	{
 		if(name == null)
 		{
-			throw new ValueException("Can not be null!");
+			throw new NullPointerException();
 		}
-		else if(name.length() > 32767)
+		else if(name.length() > 64)
 		{
-			throw new ValueException("Can not be more than 32,767 characters!");
+			throw new IllegalArgumentException("Can not be more than 64 characters!");
 		}
 		this.name = name;
 		results.updateString(14, name);
@@ -225,6 +224,15 @@ public class City
 		results.updateRow();
 	}
 
+	/**
+	 * Generates a HashMap of the factory cost in this city with values:
+	 * <ul>
+	 *     <li>coal</li>
+	 *     <li>iron</li>
+	 *     <li>steel</li>
+	 * </ul>
+	 * @return A HashMap of the costs
+	 */
 	public HashMap<String, Integer> getFactoryCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
@@ -237,6 +245,15 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Generates a HashMap of the university cost in this city with values:
+	 * <ul>
+	 *     <li>coal</li>
+	 *     <li>iron</li>
+	 *     <li>steel</li>
+	 * </ul>
+	 * @return A HashMap of the costs
+	 */
 	public HashMap<String, Integer> getUniversityCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
@@ -249,11 +266,19 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Gets the Iron/Coal mine cost for this city
+	 * @return The mine cost
+	 */
 	public int getMineCost()
 	{
 		return Costs.MINE_BASE + (Costs.MINE_MULT * (this.getIronMines() + this.getCoalMines()));
 	}
 
+	/**
+	 * Gets the Oil Well cost for this city
+	 * @return The well cost
+	 */
 	public int getWellCost()
 	{
 		return Costs.OIL_BASE + (Costs.OIL_MULT * this.getOilWells());
@@ -283,6 +308,17 @@ public class City
 		return employment;
 	}
 
+	/**
+	 * Returns a HashMap with the coal production of this city with keys:
+	 * <ul>
+	 *     <li>mines</li>
+	 *     <li>bonus</li>
+	 *     <li>total</li>
+	 *     <li>costs</li>
+	 *     <li>net</li>
+	 * </ul>
+	 * @return A HashMap of coal production in this city
+	 */
 	public HashMap<String, Double> getCoalProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
@@ -299,6 +335,17 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Returns a HashMap with the iron production of this city with keys:
+	 * <ul>
+	 *     <li>mines</li>
+	 *     <li>bonus</li>
+	 *     <li>total</li>
+	 *     <li>costs</li>
+	 *     <li>net</li>
+	 * </ul>
+	 * @return A HashMap of iron production in this city
+	 */
 	public HashMap<String, Double> getIronProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
@@ -315,6 +362,17 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Returns a HashMap with the oil production of this city with keys:
+	 * <ul>
+	 *     <li>wells</li>
+	 *     <li>bonus</li>
+	 *     <li>total</li>
+	 *     <li>costs</li>
+	 *     <li>net</li>
+	 * </ul>
+	 * @return A HashMap of oil production in this city
+	 */
 	public HashMap<String, Double> getOilProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
@@ -331,6 +389,17 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Returns a HashMap with the steel production of this city with keys:
+	 * <ul>
+	 *     <li>factories</li>
+	 *     <li>bonus</li>
+	 *     <li>total</li>
+	 *     <li>costs</li>
+	 *     <li>net</li>
+	 * </ul>
+	 * @return A HashMap of steel production in this city
+	 */
 	public HashMap<String, Double> getSteelProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
@@ -347,6 +416,17 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Returns a HashMap with the nitrogen production of this city with keys:
+	 * <ul>
+	 *     <li>factories</li>
+	 *     <li>bonus</li>
+	 *     <li>total</li>
+	 *     <li>costs</li>
+	 *     <li>net</li>
+	 * </ul>
+	 * @return A HashMap of nitrogen production in this city
+	 */
 	public HashMap<String, Double> getNitrogenProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
@@ -363,6 +443,15 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Returns a HashMap with the weapons production of this city with keys:
+	 * <ul>
+	 *     <li>factories</li>
+	 *     <li>bonus</li>
+	 *     <li>total</li>
+	 * </ul>
+	 * @return A HashMap of weapons production in this city
+	 */
 	public HashMap<String, Double> getWeaponsProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
@@ -375,6 +464,15 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Returns a HashMap with the research production of this city with keys:
+	 * <ul>
+	 *     <li>universities</li>
+	 *     <li>bonus</li>
+	 *     <li>total</li>
+	 * </ul>
+	 * @return A HashMap of research production in this city
+	 */
 	public HashMap<String, Double> getResearchProduction()
 	{
 		HashMap<String, Double> map = new HashMap<>();
@@ -387,6 +485,15 @@ public class City
 		return map;
 	}
 
+	/**
+	 * Returns a HashMap with the land usage of this city with keys:
+	 * <ul>
+	 *     <li>mines</li>
+	 *     <li>factories</li>
+	 *     <li>universities</li>
+	 * </ul>
+	 * @return A HashMap of land usage in this city
+	 */
 	public HashMap<String, Integer> getLandUsage()
 	{
 		HashMap<String, Integer> map = new HashMap<>();

@@ -35,11 +35,11 @@ public class TurnWeek implements Runnable
 				 */
 
 				// Production
-				HashMap<String, Double> coal = nation.getCities().getTotalCoalProduction();
-				HashMap<String, Double> iron = nation.getCities().getTotalIronProduction();
-				HashMap<String, Double> oil = nation.getCities().getTotalOilProduction();
-				HashMap<String, Double> steel = nation.getCities().getTotalSteelProduction();
-				HashMap<String, Double> nitrogen = nation.getCities().getTotalNitrogenProduction();
+				HashMap<String, Double> coal = nation.getTotalCoalProduction();
+				HashMap<String, Double> iron = nation.getTotalIronProduction();
+				HashMap<String, Double> oil = nation.getTotalOilProduction();
+				HashMap<String, Double> steel = nation.getTotalSteelProduction();
+				HashMap<String, Double> nitrogen = nation.getTotalNitrogenProduction();
 				if(coal.get("net") + economy.getCoal() >= coal.get("costs") && iron.get("net") + economy.getIron() >= iron.get("costs") && coal.get("net") + economy.getOil() >= oil.get("costs"))
 				{
 					economy.setCoal(economy.getCoal() + coal.get("net"));

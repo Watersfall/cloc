@@ -82,7 +82,7 @@ public class TreatyActions
 			if(member.isInvite() || member.isManage() || member.isFounder())
 			{
 				nation = Nation.getNationByName(member.getConnection(), name, member.isSafe());
-				return nation.getInvites().invite(nation, member);
+				return nation.getInvites().invite(member.getTreaty().getId());
 			}
 			else
 			{

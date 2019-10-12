@@ -11,6 +11,12 @@ import java.util.HashMap;
 
 public class ResearchActions
 {
+	/**
+	 * Method to check if a nation has the required costs for researching a technology
+	 * @param nation The nation to check
+	 * @param tech The tech to check
+	 * @return A displayable response of what resource is lacking, or null if the nation has all required resources
+	 */
 	private static String checkCosts(Nation nation, Technology tech)
 	{
 		try
@@ -34,6 +40,13 @@ public class ResearchActions
 		return null;
 	}
 
+	/**
+	 * Method to run the costs of researching a tech
+	 * This method runs assuming the costs have already been checked and that nothing will go negative
+	 * @param nation The nation to update
+	 * @param tech The tech to research
+	 * @return A displayable message if an exception occurs, or null if everything just works
+	 */
 	private static String doCosts(Nation nation, Technology tech)
 	{
 		try
@@ -56,6 +69,13 @@ public class ResearchActions
 		return null;
 	}
 
+	/**
+	 * Action to research a technology
+	 * @param nation The nation to update
+	 * @param tech The Technologies Enum constant representing the tech to research
+	 * @return A displayable message for the results of the research attempt
+	 * @throws SQLException if a database issue happens
+	 */
 	public static String doResearch(Nation nation, Technologies tech) throws SQLException
 	{
 		if(!tech.getTechnology().isAvailable(nation))
@@ -77,7 +97,7 @@ public class ResearchActions
 			String response;
 			if((int)(Math.random() * 100) <= tech.getTechnology().getSuccessChance(nation))
 			{
-				nation.getTech().setTechnologies(tech, nation.getTech().getTechnology(tech) + 1);
+				nation.getTech().setTechnology(tech, nation.getTech().getTechnology(tech) + 1);
 				response = Responses.researchSucceeded();
 			}
 			else

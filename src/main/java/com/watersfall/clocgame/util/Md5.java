@@ -5,6 +5,12 @@ import java.security.MessageDigest;
 
 public class Md5
 {
+	/**
+	 * Converts passwords into their md5 hash so that there's at least some form of
+	 * password security
+	 * @param password The password to hash
+	 * @return The md5 hash of the password
+	 */
 	public static String md5(String password)
 	{
 		try
