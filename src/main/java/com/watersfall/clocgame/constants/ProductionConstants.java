@@ -12,5 +12,5 @@ public class ProductionConstants
 	public static final double FACTORY_COAL_PER_WEEK = 1.0;
 	public static final double FACTORY_IRON_PER_WEEK = 1.0;
 	public static final double FACTORY_OIL_PER_WEEK = 0.0;
-
+	public static final double WEAPONS_PER_WEEK = 100.0;
 }

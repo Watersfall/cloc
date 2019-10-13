@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class City
 {
@@ -311,26 +312,32 @@ public class City
 	/**
 	 * Returns a HashMap with the coal production of this city with keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>mines</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
+	 *     <li>civilian factory demands</li>
+	 *     <li>military factory demands</li>
+	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
 	 * @return A HashMap of coal production in this city
 	 */
-	public HashMap<String, Double> getCoalProduction()
+	public LinkedHashMap<String, Double> getCoalProduction()
 	{
-		HashMap<String, Double> map = new HashMap<>();
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double mines = this.getCoalMines() * ProductionConstants.MINE_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getCoalMines();
 		double total = mines + bonus;
-		double costs = (this.getIndustryCivilian() + this.getIndustryNitrogen() + this.getIndustryMilitary()) * ProductionConstants.FACTORY_COAL_PER_WEEK;
-		double net = total - costs;
-		map.put("mines", mines);
-		map.put("bonus", bonus);
+		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_COAL_PER_WEEK;
+		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_COAL_PER_WEEK;
+		double nitrogen = -this.getIndustryMilitary() * ProductionConstants.FACTORY_COAL_PER_WEEK;
+		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
-		map.put("costs", costs);
+		map.put("mines", mines);
+		map.put("infrastructure", bonus);
+		map.put("civilian factory demands", civilian);
+		map.put("military factory demands", military);
+		map.put("nitrogen plant demands", nitrogen);
 		map.put("net", net);
 		return map;
 	}
@@ -338,165 +345,179 @@ public class City
 	/**
 	 * Returns a HashMap with the iron production of this city with keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>mines</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
+	 *     <li>civilian factory demands</li>
+	 *     <li>military factory demands</li>
+	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
 	 * @return A HashMap of iron production in this city
 	 */
-	public HashMap<String, Double> getIronProduction()
+	public LinkedHashMap<String, Double> getIronProduction()
 	{
-		HashMap<String, Double> map = new HashMap<>();
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double mines = this.getIronMines() * ProductionConstants.MINE_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIronMines();
 		double total = mines + bonus;
-		double costs = (this.getIndustryCivilian() + this.getIndustryNitrogen() + this.getIndustryMilitary()) * ProductionConstants.FACTORY_IRON_PER_WEEK;
-		double net = total - costs;
-		map.put("mines", mines);
-		map.put("bonus", bonus);
+		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_IRON_PER_WEEK;
+		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_IRON_PER_WEEK;
+		double nitrogen = -this.getIndustryMilitary() * ProductionConstants.FACTORY_IRON_PER_WEEK;
+		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
-		map.put("costs", costs);
+		map.put("mines", mines);
+		map.put("infrastructure", bonus);
+		map.put("civilian factory demands", civilian);
+		map.put("military factory demands", military);
+		map.put("nitrogen plant demands", nitrogen);
 		map.put("net", net);
 		return map;
 	}
 
 	/**
-	 * Returns a HashMap with the oil production of this city with keys:
+	 * Returns a LinkedHashMap with the oil production of this city with keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>wells</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
+	 *     <li>civilian factory demands</li>
+	 *     <li>military factory demands</li>
+	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap of oil production in this city
+	 * @return A LinkedHashMap of oil production in this city
 	 */
-	public HashMap<String, Double> getOilProduction()
+	public LinkedHashMap<String, Double> getOilProduction()
 	{
-		HashMap<String, Double> map = new HashMap<>();
-		double wells = this.getOilWells() * ProductionConstants.WELL_PER_WEEK;
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		double wells = this.getOilWells() * ProductionConstants.MINE_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getOilWells();
 		double total = wells + bonus;
-		double costs = (this.getIndustryCivilian() + this.getIndustryNitrogen() + this.getIndustryMilitary()) * ProductionConstants.FACTORY_OIL_PER_WEEK;
-		double net = total - costs;
-		map.put("wells", wells);
-		map.put("bonus", bonus);
+		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_OIL_PER_WEEK;
+		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_OIL_PER_WEEK;
+		double nitrogen = -this.getIndustryMilitary() * ProductionConstants.FACTORY_OIL_PER_WEEK;
+		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
-		map.put("costs", costs);
+		map.put("wells", wells);
+		map.put("infrastructure", bonus);
+		map.put("civilian factory demands", civilian);
+		map.put("military factory demands", military);
+		map.put("nitrogen plant demands", nitrogen);
 		map.put("net", net);
 		return map;
 	}
 
 	/**
-	 * Returns a HashMap with the steel production of this city with keys:
+	 * Returns a LinkedHashMap with the steel production of this city with keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>factories</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap of steel production in this city
+	 * @return A LinkedHashMap of steel production in this city
 	 */
-	public HashMap<String, Double> getSteelProduction()
+	public LinkedHashMap<String, Double> getSteelProduction()
 	{
-		HashMap<String, Double> map = new HashMap<>();
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double factories = this.getIndustryCivilian() * ProductionConstants.STEEL_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryCivilian();
 		double total = factories + bonus;
-		double costs = 0;
-		double net = total - costs;
-		map.put("factories", factories);
-		map.put("bonus", bonus);
+		double net = total;
 		map.put("total", total);
-		map.put("costs", costs);
+		map.put("factories", factories);
+		map.put("infrastructure", bonus);
 		map.put("net", net);
 		return map;
 	}
 
 	/**
-	 * Returns a HashMap with the nitrogen production of this city with keys:
+	 * Returns a LinkedHashMap with the nitrogen production of this city with keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>factories</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap of nitrogen production in this city
+	 * @return A LinkedHashMap of nitrogen production in this city
 	 */
-	public HashMap<String, Double> getNitrogenProduction()
+	public LinkedHashMap<String, Double> getNitrogenProduction()
 	{
-		HashMap<String, Double> map = new HashMap<>();
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double factories = this.getIndustryNitrogen() * ProductionConstants.NITROGEN_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryNitrogen();
 		double total = factories + bonus;
-		double costs = 0e0;
-		double net = total - costs;
-		map.put("factories", factories);
-		map.put("bonus", bonus);
+		double net = total;
 		map.put("total", total);
-		map.put("costs", costs);
+		map.put("factories", factories);
+		map.put("infrastructure", bonus);
 		map.put("net", net);
 		return map;
 	}
 
 	/**
-	 * Returns a HashMap with the weapons production of this city with keys:
+	 * Returns a LinkedHashMap with the weapons production of this city with keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>factories</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
+	 *     <li>infrastructure</li>
+	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap of weapons production in this city
+	 * @return A LinkedHashMap of weapons production in this city
 	 */
-	public HashMap<String, Double> getWeaponsProduction()
+	public LinkedHashMap<String, Double> getWeaponsProduction()
 	{
-		HashMap<String, Double> map = new HashMap<>();
-		double factories = this.getIndustryNitrogen() * ProductionConstants.GUNS_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryNitrogen();
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		double factories = this.getIndustryMilitary() * ProductionConstants.WEAPONS_PER_WEEK;
+		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryMilitary();
 		double total = factories + bonus;
+		double net = total;
+		map.put("total", total);
 		map.put("factories", factories);
-		map.put("bonus", bonus);
-		map.put("total", total);
+		map.put("infrastructure", bonus);
+		map.put("net", net);
 		return map;
 	}
 
 	/**
-	 * Returns a HashMap with the research production of this city with keys:
+	 * Returns a LinkedHashMap with the research production of this city with keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
+	 *     <li>default</li>
 	 *     <li>universities</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
+	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap of research production in this city
+	 * @return A LinkedHashMap of research production in this city
 	 */
-	public HashMap<String, Double> getResearchProduction()
+	public LinkedHashMap<String, Double> getResearchProduction()
 	{
-		HashMap<String, Double> map = new HashMap<>();
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		//I can't name it default...
+		//Damn reserved keywords >:(
+		double standard = 2;
 		double universities = this.getUniversities() * ProductionConstants.RESEARCH_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getUniversities();
-		double total = universities + bonus;
-		map.put("universities", universities);
-		map.put("bonus", bonus);
+		double total = universities + standard;
+		double net = total;
+		map.put("default", standard);
 		map.put("total", total);
+		map.put("universities", universities);
+		map.put("net", net);
 		return map;
 	}
 
 	/**
-	 * Returns a HashMap with the land usage of this city with keys:
+	 * Returns a LinkedHashMap with the land usage of this city with keys:
 	 * <ul>
 	 *     <li>mines</li>
 	 *     <li>factories</li>
 	 *     <li>universities</li>
 	 * </ul>
-	 * @return A HashMap of land usage in this city
+	 * @return A LinkedHashMap of land usage in this city
 	 */
-	public HashMap<String, Integer> getLandUsage()
+	public LinkedHashMap<String, Integer> getLandUsage()
 	{
-		HashMap<String, Integer> map = new HashMap<>();
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 		map.put("mines", City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
 		map.put("factories", City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
 		map.put("universities", City.LAND_UNIVERSITY * (this.universities));

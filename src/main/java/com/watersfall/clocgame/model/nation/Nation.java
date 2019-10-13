@@ -12,10 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class Nation
 {
@@ -35,14 +32,14 @@ public class Nation
 	private @Getter Treaty treaty;
 	private @Getter Connection connection;
 	private @Getter boolean safe;
-	private HashMap<String, Double> coalProduction = null;
-	private HashMap<String, Double> ironProduction = null;
-	private HashMap<String, Double> oilProduction = null;
-	private HashMap<String, Double> steelProduction = null;
-	private HashMap<String, Double> nitrogenProduction = null;
-	private HashMap<String, Double> weaponProduction = null;
-	private HashMap<String, Double> researchProduction = null;
-	private HashMap<String, HashMap<String, Double>> allProductions = null;
+	private LinkedHashMap<String, Double> coalProduction = null;
+	private LinkedHashMap<String, Double> ironProduction = null;
+	private LinkedHashMap<String, Double> oilProduction = null;
+	private LinkedHashMap<String, Double> steelProduction = null;
+	private LinkedHashMap<String, Double> nitrogenProduction = null;
+	private LinkedHashMap<String, Double> weaponProduction = null;
+	private LinkedHashMap<String, Double> researchProduction = null;
+	private HashMap<String, LinkedHashMap<String, Double>> allProductions = null;
 	private int landUsage = -1;
 
 	/**
@@ -164,7 +161,6 @@ public class Nation
 	 */
 	public Nation(Connection connection, int id, boolean safe) throws SQLException
 	{
-		long start = System.nanoTime();
 		cosmetic = new NationCosmetic(connection, id, safe);
 		domestic = new NationDomestic(connection, id, safe);
 		economy = new NationEconomy(connection, id, safe);
@@ -216,8 +212,6 @@ public class Nation
 		{
 			treaty = new Treaty(connection, resultsTreaty.getInt(1), safe);
 		}
-		long end = System.nanoTime();
-		System.out.println(end - start);
 	}
 
 	/**
@@ -624,41 +618,39 @@ public class Nation
 	/**
 	 * Calculates the total coal production of all cities
 	 * Return value cached to save performance on multiple calls
-	 * HashMap contains the following keys:
+	 * LinkedHashMap contains the following keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>mines</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
+	 *     <li>civilian factory demands</li>
+	 *     <li>military factory demands</li>
+	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap containing the total coal production of this Nation
+	 * @return A LinkedHashMap containing the total coal production of this Nation
 	 */
-	public HashMap<String, Double> getTotalCoalProduction()
+	public LinkedHashMap<String, Double> getTotalCoalProduction()
 	{
 		if(coalProduction == null)
 		{
-			double mines = 0e0;
-			double bonus = 0e0;
-			double total = 0e0;
-			double costs = 0e0;
-			double net = 0e0;
-			HashMap<String, Double> map;
+			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			map.put("total", 0e0);
+			map.put("mines", 0e0);
+			map.put("infrastructure", 0e0);
+			map.put("civilian factory demands", 0e0);
+			map.put("military factory demands", 0e0);
+			map.put("nitrogen plant demands", 0e0);
+			map.put("net", 0e0);
 			for(City city : this.getCities().getCities().values())
 			{
-				map = city.getCoalProduction();
-				mines += map.get("mines");
-				bonus += map.get("bonus");
-				total += map.get("total");
-				costs += map.get("costs");
-				net += map.get("net");
+				LinkedHashMap<String, Double> cityMap = city.getCoalProduction();
+				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				{
+					map.putIfAbsent(entry.getKey(), 0e0);
+					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+				}
 			}
-			map = new HashMap<>();
-			map.put("mines", mines);
-			map.put("bonus", bonus);
-			map.put("total", total);
-			map.put("costs", costs);
-			map.put("net", net);
 			coalProduction = map;
 		}
 		return coalProduction;
@@ -669,39 +661,37 @@ public class Nation
 	 * Return value cached to save performance on multiple calls
 	 * HashMap contains the following keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>mines</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
+	 *     <li>civilian factory demands</li>
+	 *     <li>military factory demands</li>
+	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
 	 * @return A HashMap containing the total iron production of this Nation
 	 */
-	public HashMap<String, Double> getTotalIronProduction()
+	public LinkedHashMap<String, Double> getTotalIronProduction()
 	{
 		if(ironProduction == null)
 		{
-			double mines = 0e0;
-			double bonus = 0e0;
-			double total = 0e0;
-			double costs = 0e0;
-			double net = 0e0;
-			HashMap<String, Double> map;
+			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			map.put("total", 0e0);
+			map.put("mines", 0e0);
+			map.put("infrastructure", 0e0);
+			map.put("civilian factory demands", 0e0);
+			map.put("military factory demands", 0e0);
+			map.put("nitrogen plant demands", 0e0);
+			map.put("net", 0e0);
 			for(City city : this.getCities().getCities().values())
 			{
-				map = city.getIronProduction();
-				mines += map.get("mines");
-				bonus += map.get("bonus");
-				total += map.get("total");
-				costs += map.get("costs");
-				net += map.get("net");
+				LinkedHashMap<String, Double> cityMap = city.getIronProduction();
+				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				{
+					map.putIfAbsent(entry.getKey(), 0e0);
+					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+				}
 			}
-			map = new HashMap<>();
-			map.put("mines", mines);
-			map.put("bonus", bonus);
-			map.put("total", total);
-			map.put("costs", costs);
-			map.put("net", net);
 			ironProduction = map;
 		}
 		return ironProduction;
@@ -712,39 +702,30 @@ public class Nation
 	 * Return value cached to save performance on multiple calls
 	 * HashMap contains the following keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>wells</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
+	 *     <li>civilian factory demands</li>
+	 *     <li>military factory demands</li>
+	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap containing the total iron production of this Nation
+	 * @return A LinkedHashMap containing the total iron production of this Nation
 	 */
-	public HashMap<String, Double> getTotalOilProduction()
+	public LinkedHashMap<String, Double> getTotalOilProduction()
 	{
 		if(oilProduction == null)
 		{
-			double wells = 0e0;
-			double bonus = 0e0;
-			double total = 0e0;
-			double costs = 0e0;
-			double net = 0e0;
-			HashMap<String, Double> map;
+			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 			for(City city : this.getCities().getCities().values())
 			{
-				map = city.getOilProduction();
-				wells += map.get("wells");
-				bonus += map.get("bonus");
-				total += map.get("total");
-				costs += map.get("costs");
-				net += map.get("net");
+				LinkedHashMap<String, Double> cityMap = city.getOilProduction();
+				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				{
+					map.putIfAbsent(entry.getKey(), 0e0);
+					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+				}
 			}
-			map = new HashMap<>();
-			map.put("wells", wells);
-			map.put("bonus", bonus);
-			map.put("total", total);
-			map.put("costs", costs);
-			map.put("net", net);
 			oilProduction = map;
 		}
 		return oilProduction;
@@ -753,41 +734,29 @@ public class Nation
 	/**
 	 * Calculates the total steel production of all cities
 	 * Return value cached to save performance on multiple calls
-	 * HashMap contains the following keys:
+	 * LinkedHashMap contains the following keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>factories</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap containing the total steel production of this Nation
+	 * @return A LinkedHashMap containing the total steel production of this Nation
 	 */
-	public HashMap<String, Double> getTotalSteelProduction()
+	public LinkedHashMap<String, Double> getTotalSteelProduction()
 	{
 		if(steelProduction == null)
 		{
-			double factories = 0e0;
-			double bonus = 0e0;
-			double total = 0e0;
-			double costs = 0e0;
-			double net = 0e0;
-			HashMap<String, Double> map;
+			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 			for(City city : this.getCities().getCities().values())
 			{
-				map = city.getSteelProduction();
-				factories += map.get("factories");
-				bonus += map.get("bonus");
-				total += map.get("total");
-				costs += map.get("costs");
-				net += map.get("net");
+				LinkedHashMap<String, Double> cityMap = city.getSteelProduction();
+				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				{
+					map.putIfAbsent(entry.getKey(), 0e0);
+					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+				}
 			}
-			map = new HashMap<>();
-			map.put("factories", factories);
-			map.put("bonus", bonus);
-			map.put("total", total);
-			map.put("costs", costs);
-			map.put("net", net);
 			steelProduction = map;
 		}
 		return steelProduction;
@@ -796,41 +765,29 @@ public class Nation
 	/**
 	 * Calculates the total nitrogen production of all cities
 	 * Return value cached to save performance on multiple calls
-	 * HashMap contains the following keys:
+	 * LinkedHashMap contains the following keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>factories</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap containing the total nitrogen production of this Nation
+	 * @return A LinkedHashMap containing the total nitrogen production of this Nation
 	 */
-	public HashMap<String, Double> getTotalNitrogenProduction()
+	public LinkedHashMap<String, Double> getTotalNitrogenProduction()
 	{
 		if(nitrogenProduction == null)
 		{
-			double factories = 0e0;
-			double bonus = 0e0;
-			double total = 0e0;
-			double costs = 0e0;
-			double net = 0e0;
-			HashMap<String, Double> map;
+			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 			for(City city : this.getCities().getCities().values())
 			{
-				map = city.getNitrogenProduction();
-				factories += map.get("factories");
-				bonus += map.get("bonus");
-				total += map.get("total");
-				costs += map.get("costs");
-				net += map.get("net");
+				LinkedHashMap<String, Double> cityMap = city.getNitrogenProduction();
+				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				{
+					map.putIfAbsent(entry.getKey(), 0e0);
+					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+				}
 			}
-			map = new HashMap<>();
-			map.put("factories", factories);
-			map.put("bonus", bonus);
-			map.put("total", total);
-			map.put("costs", costs);
-			map.put("net", net);
 			nitrogenProduction = map;
 		}
 		return nitrogenProduction;
@@ -839,35 +796,29 @@ public class Nation
 	/**
 	 * Calculates the total weapons production of all cities
 	 * Return value cached to save performance on multiple calls
-	 * HashMap contains the following keys:
+	 * LinkedHashMap contains the following keys:
 	 * <ul>
+	 *     <li>total (used exclusively for turn change)</li>
 	 *     <li>factories</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
-	 *     <li>costs</li>
+	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap containing the total weapons production of this Nation
+	 * @return A LinkedHashMap containing the total weapons production of this Nation
 	 */
-	public HashMap<String, Double> getTotalWeaponsProduction()
+	public LinkedHashMap<String, Double> getTotalWeaponsProduction()
 	{
 		if(weaponProduction == null)
 		{
-			double factories = 0e0;
-			double bonus = 0e0;
-			double total = 0e0;
-			HashMap<String, Double> map;
+			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 			for(City city : this.getCities().getCities().values())
 			{
-				map = city.getWeaponsProduction();
-				factories += map.get("factories");
-				bonus += map.get("bonus");
-				total += map.get("total");
+				LinkedHashMap<String, Double> cityMap = city.getWeaponsProduction();
+				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				{
+					map.putIfAbsent(entry.getKey(), 0e0);
+					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+				}
 			}
-			map = new HashMap<>();
-			map.put("factories", factories);
-			map.put("bonus", bonus);
-			map.put("total", total);
 			weaponProduction = map;
 		}
 		return weaponProduction;
@@ -876,33 +827,29 @@ public class Nation
 	/**
 	 * Calculates the total research production of all cities
 	 * Return value cached to save performance on multiple calls
-	 * HashMap contains the following keys:
+	 * LinkedHashMap contains the following keys:
 	 * <ul>
-	 *     <li>universities</li>
-	 *     <li>bonus</li>
-	 *     <li>total</li>
+	 *     <li>total (used exclusively for turn change)</li>
+	 *     <li>factories</li>
+	 *     <li>infrastructure</li>
+	 *     <li>net</li>
 	 * </ul>
-	 * @return A HashMap containing the total research production of this Nation
+	 * @return A LinkedHashMap containing the total research production of this Nation
 	 */
-	public HashMap<String, Double> getTotalResearchProduction()
+	public LinkedHashMap<String, Double> getTotalResearchProduction()
 	{
 		if(researchProduction == null)
 		{
-			double universities = 0e0;
-			double bonus = 0e0;
-			double total = 0e0;
-			HashMap<String, Double> map;
+			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 			for(City city : this.getCities().getCities().values())
 			{
-				map = city.getResearchProduction();
-				universities += map.get("universities");
-				bonus += map.get("bonus");
-				total += map.get("total");
+				LinkedHashMap<String, Double> cityMap = city.getResearchProduction();
+				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				{
+					map.putIfAbsent(entry.getKey(), 0e0);
+					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+				}
 			}
-			map = new HashMap<>();
-			map.put("universities", universities);
-			map.put("bonus", bonus);
-			map.put("total", total);
 			researchProduction = map;
 		}
 		return researchProduction;
@@ -923,22 +870,23 @@ public class Nation
 	 * Each of the inner HashMaps has the same keys as their standard getter,
 	 * typically containing:
 	 * <ul>
-	 *     <li>type (i.e. mine, factory)</li>
-	 *     <li>bonus</li>
 	 *     <li>total</li>
+	 *     <li>type (i.e. mine, factory)</li>
+	 *     <li>infrastructure</li>
+	 *     <li>net</li>
 	 * </ul>
-	 * And if it's a type with upkeep costs, it will additionally have
+	 * And if it's a type with upkeep costs, it will additionally have the various costs and upkeeps
 	 * <ul>
 	 *     <li>costs</li>
 	 *     <li>upkeep</li>
 	 * </ul>
 	 * @return A HashMap containing the total weapons production of this Nation
 	 */
-	public HashMap<String, HashMap<String, Double>> getAllTotalProductions()
+	public HashMap<String, LinkedHashMap<String, Double>> getAllTotalProductions()
 	{
 		if(allProductions == null)
 		{
-			HashMap<String, HashMap<String, Double>> map = new HashMap<>();
+			HashMap<String, LinkedHashMap<String, Double>> map = new HashMap<>();
 			map.put("coal", this.getTotalCoalProduction());
 			map.put("iron", this.getTotalIronProduction());
 			map.put("oil", this.getTotalOilProduction());
