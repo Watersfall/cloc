@@ -75,6 +75,10 @@ public class NationEconomy extends NationBase
 
 	public void setGdp(double gdp) throws SQLException
 	{
+		if(gdp < 0)
+		{
+			gdp = 0;
+		}
 		this.gdp = gdp;
 		results.updateDouble(2, gdp);
 	}
@@ -93,12 +97,20 @@ public class NationEconomy extends NationBase
 
 	public void setIron(double iron) throws SQLException
 	{
+		if(iron < 0)
+		{
+			iron = 0;
+		}
 		this.iron = iron;
 		results.updateDouble(5, iron);
 	}
 
 	public void setCoal(double coal) throws SQLException
 	{
+		if(coal < 0)
+		{
+			coal = 0;
+		}
 		this.coal = coal;
 		results.updateDouble(6, coal);
 	}
@@ -111,24 +123,40 @@ public class NationEconomy extends NationBase
 
 	public void setFood(double food) throws SQLException
 	{
+		if(food < 0)
+		{
+			food = 0;
+		}
 		this.food = food;
 		results.updateDouble(8, food);
 	}
 
 	public void setSteel(double steel) throws SQLException
 	{
+		if(steel < 0)
+		{
+			steel = 0;
+		}
 		this.steel = steel;
 		results.updateDouble(9, steel);
 	}
 
 	public void setNitrogen(double nitrogen) throws SQLException
 	{
+		if(nitrogen < 0)
+		{
+			nitrogen = 0;
+		}
 		this.nitrogen = nitrogen;
 		results.updateDouble(10, nitrogen);
 	}
 
 	public void setResearch(double research) throws SQLException
 	{
+		if(research < 0)
+		{
+			research = 0;
+		}
 		this.research = research;
 		results.updateDouble(11, research);
 	}
