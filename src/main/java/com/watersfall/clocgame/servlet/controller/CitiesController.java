@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 
@@ -37,7 +38,7 @@ public class CitiesController extends HttpServlet
 				}
 			}
 		}
-		catch(NumberFormatException | SQLException e)
+		catch(NumberFormatException | SQLException | CityNotFoundException e)
 		{
 			//Ignore
 			e.printStackTrace();
