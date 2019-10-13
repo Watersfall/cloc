@@ -551,7 +551,7 @@ public class Nation
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("farming", this.getFreeLand() / 250);
 		map.put("costs", (int)(this.domestic.getPopulation() / 2000));
-		map.put("net", map.get("farming"));
+		map.put("net", map.get("farming") - map.get("costs"));
 		return map;
 	}
 
@@ -1037,6 +1037,13 @@ public class Nation
 		}
 	}
 
+	/**
+	 * Returns the costs of a policy as a LinkedHashMap where the key is the resource and the value is the cost
+	 * for that resource<br>
+	 * Contains the cost of any policy that takes more than one resource, or a single resource that isn't cash
+	 * @param policy The name of the policy
+	 * @return A LinkedHashMap of the costs
+	 */
 	public LinkedHashMap<String, Integer> getPolicyCostMap(String policy)
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
@@ -1051,5 +1058,14 @@ public class Nation
 				break;
 		}
 		return map;
+	}
+
+	/**
+	 * Calculates how much this nation's budget increases by for the daily turn change (or 7 times a standard turn)
+	 * @return The budget increase
+	 */
+	public double getBudgetChange()
+	{
+		return this.economy.getGdp() / 7;
 	}
 }

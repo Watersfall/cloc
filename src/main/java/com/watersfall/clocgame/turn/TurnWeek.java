@@ -47,7 +47,7 @@ public class TurnWeek implements Runnable
 				economy.setIron(economy.getIron() + iron.get("total"));
 				economy.setOil(economy.getOil() + oil.get("total"));
 				economy.setResearch(economy.getResearch() + research.get("total"));
-				economy.setFood(food.get("net"));
+				economy.setFood(economy.getFood() + food.get("net"));
 				if(economy.getCoal() >= -coal.get("civilian factory demands") && economy.getIron() >= -iron.get("civilian factory demands"))
 				{
 					economy.setSteel(economy.getSteel() + steel.get("total"));

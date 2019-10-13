@@ -22,7 +22,7 @@
 						<p><cloc:uiFormat value="${home.economy.budget * 1000}"/></p>
 						<div id="budget" class="resourceTab">
 							<p class="neutral">$<fmt:formatNumber value="${home.economy.budget}"/>k Total<br></p>
-							<p class="positive">+0k</p>
+							<p class="positive">+<fmt:formatNumber value="${home.budgetChange}" maxFractionDigits="2"/>k from GDP</p>
 						</div>
 					</div>
 				</a>

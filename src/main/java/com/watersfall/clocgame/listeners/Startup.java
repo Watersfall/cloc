@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.listeners;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.schedulers.DayScheduler;
 import com.watersfall.clocgame.schedulers.WeekScheduler;
 import com.watersfall.clocgame.util.Util;
 
@@ -25,6 +26,7 @@ public class Startup implements ServletContextListener
 		try
 		{
 			WeekScheduler.startWeek();
+			DayScheduler.startDay();
 			event.getServletContext().setAttribute("database", Database.getDataSource());
 			conn = Database.getDataSource().getConnection();
 			ResultSet results = conn.prepareStatement("SELECT turn FROM cloc_main").executeQuery();

@@ -110,6 +110,7 @@ Contents:
                 to check bordering
             - schedulers
                 - WeekScheduler.java : Cron scheduler for the weekly (in-game) turn change
+                - Day Scheduler.java : Cron scheduler for the daily (in-game) turn change
             - servlet
                 - controller
                     - filter
@@ -126,6 +127,7 @@ Contents:
                 - Stability.java
             - turn
                 - TurnWeek.java : Processes the weekly turn change called from WeekScheduler.java
+                - TurnDay.java : Processes money ticks
             - util
                 - Md5.java : Class containing the password hashing function
                 - UserUtils.java : Contains a method to get a user's id, or throw an exception if they're not logged in
