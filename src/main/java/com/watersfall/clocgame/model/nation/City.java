@@ -330,7 +330,7 @@ public class City
 		double total = mines + bonus;
 		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_COAL_PER_WEEK;
 		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_COAL_PER_WEEK;
-		double nitrogen = -this.getIndustryMilitary() * ProductionConstants.FACTORY_COAL_PER_WEEK;
+		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_COAL_PER_WEEK;
 		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
 		map.put("mines", mines);
@@ -363,7 +363,7 @@ public class City
 		double total = mines + bonus;
 		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_IRON_PER_WEEK;
 		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_IRON_PER_WEEK;
-		double nitrogen = -this.getIndustryMilitary() * ProductionConstants.FACTORY_IRON_PER_WEEK;
+		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_IRON_PER_WEEK;
 		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
 		map.put("mines", mines);
@@ -396,7 +396,7 @@ public class City
 		double total = wells + bonus;
 		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_OIL_PER_WEEK;
 		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_OIL_PER_WEEK;
-		double nitrogen = -this.getIndustryMilitary() * ProductionConstants.FACTORY_OIL_PER_WEEK;
+		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_OIL_PER_WEEK;
 		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
 		map.put("wells", wells);

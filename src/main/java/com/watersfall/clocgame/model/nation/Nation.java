@@ -350,15 +350,21 @@ public class Nation
 	public HashMap<String, Integer> getGrowthChange()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
-		int factories = 0;
-		int army = this.army.getSize() / 20;
+		int factoriesCiv = 0;
+		int factoriesMil = 0;
+		int factoriesNit = 0;
+		int army = this.army.getSize() / -20;
 		for(City city : cities.getCities().values())
 		{
-			factories += city.getIndustryCivilian() + city.getIndustryMilitary() + city.getIndustryNitrogen();
+			factoriesCiv += city.getIndustryCivilian();
+			factoriesMil += city.getIndustryMilitary();
+			factoriesNit += city.getIndustryNitrogen();
 		}
-		map.put("factories", factories);
+		map.put("civilian industry", factoriesCiv);
+		map.put("military industry", factoriesMil);
+		map.put("nitrogen industry", factoriesNit);
 		map.put("army", army);
-		map.put("net", factories - army);
+		map.put("net", factoriesCiv + factoriesMil + factoriesNit + army);
 		return map;
 	}
 
@@ -921,15 +927,6 @@ public class Nation
 	}
 
 	/**
-	 * Calculates the training cost of the army
-	 * @return The training cost
-	 */
-	public int getTrainingCost()
-	{
-		return this.army.getSize() * this.army.getSize() * this.army.getTraining() / 200;
-	}
-
-	/**
 	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power
 	 */
@@ -1010,5 +1007,49 @@ public class Nation
 		{
 			city.update();
 		}
+	}
+
+	/**
+	 * Returns the cash-cost of a policy<br>
+	 * This contains most policy costs that would show up under policies->category
+	 * but does not include any that cost another resource/other resources
+	 * @param policy The name of the policy
+	 * @return The cost of the policy
+	 */
+	public int getPolicyCost(String policy)
+	{
+		switch(policy)
+		{
+			case "propaganda":
+				return (int)(this.economy.getGdp() / 2 * (this.domestic.getApproval() / 100.0));
+			case "war_propaganda":
+				return getPolicyCost("propaganda") / 2;
+			case "land_clearance":
+				return (int)this.economy.getGdp() * 2;
+			case "align":
+			case "free":
+			case "crackdown":
+				return 100;
+			case "training":
+				return this.army.getSize() * this.army.getSize() * this.army.getTraining() / 200;
+			default:
+				return 0;
+		}
+	}
+
+	public LinkedHashMap<String, Integer> getPolicyCostMap(String policy)
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		switch(policy)
+		{
+			case "artillery":
+				map.put("Steel", 15);
+				map.put("Nitrogen", 7);
+				break;
+			case "musket":
+				map.put("Steel", 5);
+				break;
+		}
+		return map;
 	}
 }

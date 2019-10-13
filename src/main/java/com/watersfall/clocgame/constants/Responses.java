@@ -258,6 +258,16 @@ public class Responses
 		return "<p>You do not have an invite!</p>";
 	}
 
+	public static String propagandaMaxApproval()
+	{
+		return "<p>You're people already love you! There is no need to convince them further!</p>";
+	}
+
+	public static String propagandaNoWar()
+	{
+		return "<p>You cannot do war propaganda while not at war!<p>";
+	}
+
 	/*
 	 ** RESPONSES
 	 */
@@ -490,5 +500,10 @@ public class Responses
 	public static String inviteRejected()
 	{
 		return "<p>Rejected!</p>";
+	}
+
+	public static String propaganda()
+	{
+		return "<p>You run a successful propaganda campaign demonizing a neighboring country, and idolizing your leader!</p>";
 	}
 }

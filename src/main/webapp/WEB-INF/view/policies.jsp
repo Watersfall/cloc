@@ -68,7 +68,7 @@
 						approval and moves your government to the right.
 					</td>
 					<td>
-						$<c:out value="${costs.crackdownCost}"/>k
+						$<c:out value="${home.getPolicyCost('crackdown')}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('crackdown')">Crackdown</button>
@@ -83,12 +83,42 @@
 						your government to the left.
 					</td>
 					<td>
-						$<c:out value="${costs.freeCost}"/>k
+						$<c:out value="${home.getPolicyCost('free')}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('free')">Free</button>
 					</td>
 				</tr>
+				<tr>
+					<td>
+						Propaganda Campaign
+					</td>
+					<td>
+						Put up posters saying how great you are! Increases approval. Cost is based on GDP and current approval
+					</td>
+					<td>
+						$${home.getPolicyCost('propaganda')}k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="policy('propaganda')">Propaganda</button>
+					</td>
+				</tr>
+				<c:if test="${home.offensive != 0 || home.defensive != 0}">
+					<tr>
+						<td>
+							War Propaganda
+						</td>
+						<td>
+							Rallying war speeches will make anyone love you right? Increases approval, but only available when at war. Cost is based on GDP and current approval
+						</td>
+						<td>
+							$${home.getPolicyCost('war_propaganda')}k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="policy('warpropaganda')">Propaganda</button>
+						</td>
+					</tr>
+				</c:if>
 				<tr>
 					<td>
 						Land Clearance
@@ -97,7 +127,7 @@
 						Slash and burn some useless jungle to make room for our expanding economy
 					</td>
 					<td>
-						$${costs.landClearance}k
+						$${home.getPolicyCost('land_clearance')}k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('landclearance')">Burn</button>
@@ -113,7 +143,7 @@
 						Praise France's Democracy, hoping to make them like you.
 					</td>
 					<td>
-						$<c:out value="${costs.alignCost}"/>k
+						$<c:out value="${home.getPolicyCost('align')}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('alignentente')">Praise</button>
@@ -127,7 +157,7 @@
 						Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
 					</td>
 					<td>
-						$<c:out value="${costs.alignCost}"/>k
+						$<c:out value="${home.getPolicyCost('align')}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('aligncentral')">Admire</button>
@@ -141,7 +171,7 @@
 						Go out on stage and celebrate your people's strength!
 					</td>
 					<td>
-						$<c:out value="${costs.alignCost}"/>k
+						$<c:out value="${home.getPolicyCost('align')}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('alignneutral')">Celebrate</button>
@@ -199,7 +229,7 @@
 						Train your army
 					</td>
 					<td>
-						$${home.trainingCost}k
+						$<c:out value="${home.getPolicyCost('training')}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('train')">Train</button>
@@ -207,13 +237,17 @@
 				</tr>
 				<tr>
 					<td>
-						Build Weapons
+						Build Muskets
 					</td>
 					<td>
-						Build some weapons to equip your army
+						The finest of the 1850's, these muskets may not be "easy to load" or have fancy "rifled barrels" but they're better than nothing
 					</td>
 					<td>
-						<c:out value="${costs.weaponsSteel}"/> Steel
+						<c:forEach var="cost" items="${home.getPolicyCostMap('musket').entrySet()}" varStatus="i">
+							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+							<c:if test="${i.last && i.count > 1}">, and </c:if>
+							<c:out value="${cost.value} ${cost.key}"/>
+						</c:forEach>
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('buildweapons')">Build</button>
@@ -224,10 +258,14 @@
 						Build Artillery
 					</td>
 					<td>
-						Build some artillery guns to increase the lethality of your army
+						The most effective way to fight without fighting, artillery guns increase the strength of your army
 					</td>
 					<td>
-						<c:out value="${costs.artillerySteel}"/> Steel and ${costs.artilleryNitrogen} Nitrogen
+						<c:forEach var="cost" items="${home.getPolicyCostMap('artillery').entrySet()}" varStatus="i">
+							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+							<c:if test="${i.last && i.count > 1}">, and </c:if>
+							<c:out value="${cost.value} ${cost.key}"/>
+						</c:forEach>
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="policy('buildartillery')">Build</button>

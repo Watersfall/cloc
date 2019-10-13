@@ -148,6 +148,12 @@ public class PolicyController extends HttpServlet
 						case "landclearance":
 							writer.append(PolicyActions.landClearance(conn, user));
 							break;
+						case "propaganda":
+							writer.append(PolicyActions.propaganda(conn, user));
+							break;
+						case "warpropaganda":
+							writer.append(PolicyActions.warPropaganda(conn, user));
+							break;
 						case "alignentente":
 							writer.append(PolicyActions.alignEntente(conn, user));
 							break;

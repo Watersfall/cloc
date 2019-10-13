@@ -617,6 +617,52 @@ public class PolicyActions
 			return Responses.landClearance(gain);
 		}
 	}
+
+	public static String propaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, id, true);
+		int cost = nation.getPolicyCost("propaganda");
+		if(nation.getEconomy().getBudget() < cost)
+		{
+			return Responses.noMoney();
+		}
+		else if(nation.getDomestic().getApproval() > 99)
+		{
+			return Responses.propagandaMaxApproval();
+		}
+		else
+		{
+			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 10);
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.update();
+			return Responses.propaganda();
+		}
+	}
+
+	public static String warPropaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, id, true);
+		int cost = nation.getPolicyCost("war_propaganda");
+		if(nation.getOffensive() == 0 && nation.getDefensive() == 0)
+		{
+			return Responses.propagandaNoWar();
+		}
+		else if(nation.getEconomy().getBudget() < cost)
+		{
+			return Responses.noMoney();
+		}
+		else if(nation.getDomestic().getApproval() > 99)
+		{
+			return Responses.propagandaMaxApproval();
+		}
+		else
+		{
+			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 10);
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.update();
+			return Responses.propaganda();
+		}
+	}
 	//</editor-fold>
 
 	//<editor-fold desc="Economic Policies">
@@ -712,7 +758,7 @@ public class PolicyActions
 	public static String train(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
 		Nation nation = new Nation(conn, id, true);
-		if(nation.getEconomy().getBudget() < nation.getTrainingCost())
+		if(nation.getEconomy().getBudget() < nation.getPolicyCost("training"))
 		{
 			return Responses.noMoney();
 		}
@@ -723,7 +769,7 @@ public class PolicyActions
 		else
 		{
 			nation.getArmy().setTraining(nation.getArmy().getTraining() + 5);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - nation.getTrainingCost());
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - nation.getPolicyCost("training"));
 			nation.update();
 			return Responses.train();
 		}
