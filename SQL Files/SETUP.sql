@@ -145,8 +145,8 @@ CREATE TABLE cloc_policy(
 	manpower_change INT DEFAULT 0,
 	food TINYINT DEFAULT 1,
 	food_change INT DEFAULT 0,
-	economy TINYINT DEFAULT 0,
-	economy_change TINYINT DEFAULT 0,
+	economy TINYINT DEFAULT 2,
+	economy_change INT DEFAULT 0,
 	FOREIGN KEY fk_policy (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 

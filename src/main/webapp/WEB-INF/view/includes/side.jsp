@@ -76,34 +76,34 @@
 				<li>
 					<a style="cursor: pointer;" onclick="showHidePolicies()">
 						<div class="headerTab">
-							<p>Policies</p>
+							<p>Decisions</p>
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
 					<ul id="policies" style="display: none">
 						<li>
-							<a href="${pageContext.request.contextPath}/policies.jsp?policies=Economic">
+							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Economic">
 								<div class="headerTabSmall">
 									<p>Economy</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/policies.jsp?policies=Domestic">
+							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Domestic">
 								<div class="headerTabSmall">
 									<p>Domestic</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/policies.jsp?policies=Foreign">
+							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Foreign">
 								<div class="headerTabSmall">
 									<p>Foreign</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/policies.jsp?policies=Military">
+							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Military">
 								<div class="headerTabSmall">
 									<p>Military</p>
 								</div>
@@ -112,9 +112,9 @@
 					</ul>
 				</li>
 				<li>
-					<a href="${pageContext.request.contextPath}/decisions.jsp">
+					<a href="${pageContext.request.contextPath}/policy.jsp">
 						<div class="headerTab">
-							<p>Decisions</p>
+							<p>State Policy</p>
 						</div>
 					</a>
 				</li>

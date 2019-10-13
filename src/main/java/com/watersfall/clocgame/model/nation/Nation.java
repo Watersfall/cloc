@@ -566,15 +566,20 @@ public class Nation
 		switch(policy.getManpower())
 		{
 			case 0:
-				manpower *= 0.025;
-			case 1:
 				manpower *= 0.05;
+				break;
+			case 1:
+				manpower *= 0.10;
+				break;
 			case 2:
-				manpower *= 0.1;
+				manpower *= 0.175;
+				break;
 			case 3:
 				manpower *= 0.25;
+				break;
 			case 4:
 				manpower *= 0.45;
+				break;
 		}
 		return manpower - lostManpower;
 	}

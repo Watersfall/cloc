@@ -1,9 +1,9 @@
-function policy(policy)
+function decision(policy)
 {
 	document.getElementById('resultsContainer').style.visibility = "visible";
 	document.getElementById("result").innerHTML = "<p>Loading...</p>";
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "/policy/" + policy, true);
+	xhttp.open("POST", "/decision/" + policy, true);
 	xhttp.send();
 	xhttp.onreadystatechange = function()
 	{
@@ -14,12 +14,12 @@ function policy(policy)
 	};
 }
 
-function cityPolicy(policy, cityId)
+function cityDecision(policy, cityId)
 {
 	document.getElementById('resultsContainer').style.visibility = "visible";
 	document.getElementById("result").innerHTML = "<p>Loading...</p>";
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "/policy/city/" + policy + "?city=" + cityId, true);
+	xhttp.open("POST", "/decision/city/" + policy + "?city=" + cityId, true);
 	xhttp.send();
 	xhttp.onreadystatechange = function()
 	{
@@ -117,13 +117,13 @@ function settingsAll(flag, portrait, nationTitle, leaderTitle, description)
 	};
 }
 
-function decision(policy)
+function policy(policy)
 {
 	document.getElementById('resultsContainer').style.visibility = "visible";
 	document.getElementById("result").innerHTML = "<p>Loading...<p>";
 	let xhttp = new XMLHttpRequest();
-	let params = 'selection=' + document.getElementById(policy).selectedIndex + '&decision=' + policy;
-	xhttp.open('POST', '/decisions.do', true);
+	let params = 'selection=' + document.getElementById(policy).selectedIndex + '&policy=' + policy;
+	xhttp.open('POST', '/policy.do', true);
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send(params);
 	xhttp.onreadystatechange = function()

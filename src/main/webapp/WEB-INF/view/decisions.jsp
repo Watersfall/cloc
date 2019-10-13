@@ -3,83 +3,276 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
+<%--@elvariable id="costs" type="com.watersfall.clocgame.action.PolicyActions"--%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="turn" type="java.lang.Integer"--%>
+<%-- POLICIES --%>
 <div class="container"><div class="main">
 	<%@ include file="includes/results.jsp" %>
-	<table id="nation">
+	<h1><c:out value="${param['policies']}"/> Policy</h1>
+	<table id="policy">
 		<tr>
-			<th>Decision</th>
-			<th>Description</th>
-			<th>Options</th>
-			<th>Description</th>
-			<th>Apply</th>
+			<th style="width: 15%">
+				Policy
+			</th>
+			<th style="width: 50%">
+				Description
+			</th>
+			<th style="width: 20%;">
+				Cost
+			</th>
+			<th style="width: 20%"></th>
 		</tr>
-		<tr>
-			<td>Economy</td>
-			<td>The structure of our economy</td>
-			<td>
-				<label for="economy"></label><select id="economy" onchange="updateDesc('economy')" class="select" ${home.policy.changeEconomy + 1 > turn ? 'disabled' : ''}>
-					<option class="option" id="economy_socialist" ${home.policy.economy == 0 ? 'selected' : ''} disabled>Socialist Economy</option>
-					<option class="option" id="economy_civilian" ${home.policy.economy == 1 ? 'selected' : ''}>Civilian Economy</option>
-					<option class="option" id="economy_normal" ${home.policy.economy == 2 ? 'selected' : ''}>Standard Economy</option>
-					<option class="option" id="economy_military" ${home.policy.economy == 3 ? 'selected' : ''}>Military Economy</option>
-					<option class="option" id="economy_total" ${home.policy.economy == 4 ? 'selected' : ''}>Total Mobilization</option>
-				</select>
-			</td>
-			<td>
-				<p class="optionDesc" id="economy_socialist_desc" style="display:${home.policy.economy == 0 ? 'block' : 'none'};">Socialist Economy</p>
-				<p class="optionDesc" id="economy_civilian_desc" style="display:${home.policy.economy == 1 ? 'block' : 'none'};">Civilian Economy</p>
-				<p class="optionDesc" id="economy_normal_desc" style="display:${home.policy.economy == 2 ? 'block' : 'none'};">Standard Economy</p>
-				<p class="optionDesc" id="economy_military_desc" style="display:${home.policy.economy == 3 ? 'block' : 'none'};">Military Economy</p>
-				<p class="optionDesc" id="economy_total_desc" style="display:${home.policy.economy == 3 ? 'block' : 'none'};">Total Mobilization</p>
-			</td>
-			<td>
-				<button class="policyButton" onclick="decision('economy')" ${home.policy.changeFood + 1 > turn ? 'disabled' : ''}>Update</button>
-			</td>
-		</tr>
-		<tr>
-			<td>Manpower</td>
-			<td>Raise or lower manpower</td>
-			<td>
-				<label for="manpower"></label><select id="manpower" onchange="updateDesc('manpower')" class="select" ${home.policy.changeManpower + 1 > turn ? 'disabled' : ''}>
-					<option class="option" id="manpower_disarmed" ${home.policy.manpower == 0 ? 'selected' : ''}>Disarmed Populace</option>
-					<option class="option" id="manpower_volunteer" ${home.policy.manpower == 1 ? 'selected' : ''}>Volunteer Army</option>
-					<option class="option" id="manpower_drives" ${home.policy.manpower == 2 ? 'selected' : ''}>Recruitment Drives</option>
-					<option class="option" id="manpower_draft" ${home.policy.manpower == 3 ? 'selected' : ''}>Mandatory Draft</option>
-					<option class="option" id="manpower_scraping" ${home.policy.manpower == 4 ? 'selected' : ''}>Extended Draft</option>
-				</select>
-			</td>
-			<td>
-				<p class="optionDesc" id="manpower_disarmed_desc" style="display:${home.policy.manpower == 0 ? 'block' : 'none'};">Disarmed Populace</p>
-				<p class="optionDesc" id="manpower_volunteer_desc" style="display:${home.policy.manpower == 1 ? 'block' : 'none'};">Volunteer Army</p>
-				<p class="optionDesc" id="manpower_drives_desc" style="display:${home.policy.manpower == 2 ? 'block' : 'none'};">Recruitment Drives</p>
-				<p class="optionDesc" id="manpower_draft_desc" style="display:${home.policy.manpower == 3 ? 'block' : 'none'};">Mandatory Draft</p>
-				<p class="optionDesc" id="manpower_scraping_desc" style="display:${home.policy.manpower == 4 ? 'block' : 'none'};">Extended Draft</p>
-			</td>
-			<td>
-				<button class="policyButton" onclick="decision('manpower')" ${home.policy.changeManpower + 1 > turn ? 'disabled' : ''}>Update</button>
-			</td>
-		</tr>
-		<tr>
-			<td>Food</td>
-			<td>How much food do people deserve</td>
-			<td>
-				<label for="food"></label><select id="food" onchange="updateDesc('food')" class="select" ${home.policy.changeFood + 1 > turn ? 'disabled' : ''}>
-					<option class="option" id="food_ration" ${home.policy.food == 0 ? 'selected' : ''}>Strict rationing</option>
-					<option class="option" id="food_normal" ${home.policy.food == 1 ? 'selected' : ''}>Normal</option>
-					<option class="option" id="food_free" ${home.policy.food == 2 ? 'selected' : ''}>Free Food</option>
-				</select>
-			</td>
-			<td>
-				<p class="optionDesc" id="food_ration_desc" style="display:${home.policy.food == 0 ? 'block' : 'none'};">Strict rationing</p>
-				<p class="optionDesc" id="food_normal_desc" style="display:${home.policy.food == 1 ? 'block' : 'none'};">Normal</p>
-				<p class="optionDesc" id="food_free_desc" style="display:${home.policy.food == 2 ? 'block' : 'none'};">Free Food</p>
-			</td>
-			<td>
-				<button class="policyButton" onclick="decision('food')" ${home.policy.changeFood + 1 > turn ? 'disabled' : ''}>Update</button>
-			</td>
-		</tr>
+		<c:choose>
+			<c:when test="${sessionScope.user == null}">
+				<p>You must be logged in to view this page!</p>
+			</c:when>
+			<c:when test="${param['policies'] == 'Economic'}">
+				<tr>
+					<td>
+						Free Money
+					</td>
+					<td>
+						Acquire some free money, the Free Market way.
+					</td>
+					<td>
+						Free!
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('freemoneycapitalist')">Get Rich
+						</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Free Money
+					</td>
+					<td>
+						Acquire some free money, the Communist way.
+					</td>
+					<td>
+						Free!
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('freemoneycommunist')">Get Rich
+						</button>
+					</td>
+				</tr>
+			</c:when>
+			<c:when test="${param['policies'] == 'Domestic'}">
+				<tr>
+					<td>
+						Increase Arrest Quotas
+					</td>
+					<td>
+						Tell your police force they need to arrest more criminals! Increases stability, but lowers
+						approval and moves your government to the right.
+					</td>
+					<td>
+						$<c:out value="${home.getPolicyCost('crackdown')}"/>k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('crackdown')">Crackdown</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Pardon Petty Criminals
+					</td>
+					<td>
+						Release the jaywalkers from their cells! Decreases stability, but increases approval and moves
+						your government to the left.
+					</td>
+					<td>
+						$<c:out value="${home.getPolicyCost('free')}"/>k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('free')">Free</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Propaganda Campaign
+					</td>
+					<td>
+						Put up posters saying how great you are! Increases approval. Cost is based on GDP and current approval
+					</td>
+					<td>
+						$${home.getPolicyCost('propaganda')}k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('propaganda')">Propaganda</button>
+					</td>
+				</tr>
+				<c:if test="${home.offensive != 0 || home.defensive != 0}">
+					<tr>
+						<td>
+							War Propaganda
+						</td>
+						<td>
+							Rallying war speeches will make anyone love you right? Increases approval, but only available when at war. Cost is based on GDP and current approval
+						</td>
+						<td>
+							$${home.getPolicyCost('war_propaganda')}k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('warpropaganda')">Propaganda</button>
+						</td>
+					</tr>
+				</c:if>
+				<tr>
+					<td>
+						Land Clearance
+					</td>
+					<td>
+						Slash and burn some useless jungle to make room for our expanding economy
+					</td>
+					<td>
+						$${home.getPolicyCost('land_clearance')}k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('landclearance')">Burn</button>
+					</td>
+				</tr>
+			</c:when>
+			<c:when test="${param['policies'] == 'Foreign'}">
+				<tr>
+					<td>
+						Align With The Entente
+					</td>
+					<td>
+						Praise France's Democracy, hoping to make them like you.
+					</td>
+					<td>
+						$<c:out value="${home.getPolicyCost('align')}"/>k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('alignentente')">Praise</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Align With The Central Powers
+					</td>
+					<td>
+						Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
+					</td>
+					<td>
+						$<c:out value="${home.getPolicyCost('align')}"/>k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('aligncentral')">Admire</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Declare Neutrality
+					</td>
+					<td>
+						Go out on stage and celebrate your people's strength!
+					</td>
+					<td>
+						$<c:out value="${home.getPolicyCost('align')}"/>k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('alignneutral')">Celebrate</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Form Treaty
+					</td>
+					<td>
+						Create an international alliance to keep yourself safe
+					</td>
+					<td>
+						$0k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="window.location.href = '/createtreaty.jsp'">Create</button>
+					</td>
+				</tr>
+			</c:when>
+			<c:when test="${param['policies'] == 'Military'}">
+				<tr>
+					<td>
+						Conscript
+					</td>
+					<td>
+						Throw more men into your army at the cost of manpower and overall training.
+					</td>
+					<td>
+						Manpower
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('conscript')">Conscript</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Deconscript
+					</td>
+					<td>
+						Maybe that's a little too much army...
+					</td>
+					<td>
+						Nothing
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('deconscript')">Fire</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Train
+					</td>
+					<td>
+						Train your army
+					</td>
+					<td>
+						$<c:out value="${home.getPolicyCost('training')}"/>k
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('train')">Train</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Build Muskets
+					</td>
+					<td>
+						The finest of the 1850's, these muskets may not be "easy to load" or have fancy "rifled barrels" but they're better than nothing
+					</td>
+					<td>
+						<c:forEach var="cost" items="${home.getPolicyCostMap('musket').entrySet()}" varStatus="i">
+							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+							<c:if test="${i.last && i.count > 1}">, and </c:if>
+							<c:out value="${cost.value} ${cost.key}"/>
+						</c:forEach>
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('buildweapons')">Build</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Build Artillery
+					</td>
+					<td>
+						The most effective way to fight without fighting, artillery guns increase the strength of your army
+					</td>
+					<td>
+						<c:forEach var="cost" items="${home.getPolicyCostMap('artillery').entrySet()}" varStatus="i">
+							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+							<c:if test="${i.last && i.count > 1}">, and </c:if>
+							<c:out value="${cost.value} ${cost.key}"/>
+						</c:forEach>
+					</td>
+					<td>
+						<button class="policyButton" type="submit" onclick="decision('buildartillery')">Build</button>
+					</td>
+				</tr>
+			</c:when>
+		</c:choose>
 	</table>
 </div>
 </div>
