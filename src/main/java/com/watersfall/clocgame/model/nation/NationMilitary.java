@@ -64,6 +64,7 @@ public class NationMilitary extends NationBase
 		{
 			fighters = 0;
 		}
+		this.fighters = fighters;
 		results.updateInt(1, fighters);
 	}
 
@@ -73,6 +74,7 @@ public class NationMilitary extends NationBase
 		{
 			zeppelins = 0;
 		}
+		this.zeppelins = zeppelins;
 		results.updateInt(2, zeppelins);
 	}
 
@@ -82,6 +84,7 @@ public class NationMilitary extends NationBase
 		{
 			bombers = 0;
 		}
+		this.bombers = bombers;
 		results.updateInt(3, bombers);
 	}
 
@@ -91,6 +94,7 @@ public class NationMilitary extends NationBase
 		{
 			submarines = 0;
 		}
+		this.submarines = submarines;
 		results.updateInt(4, submarines);
 	}
 
@@ -100,6 +104,7 @@ public class NationMilitary extends NationBase
 		{
 			destroyers = 0;
 		}
+		this.destroyers = destroyers;
 		results.updateInt(5, destroyers);
 	}
 
@@ -109,7 +114,7 @@ public class NationMilitary extends NationBase
 		{
 			cruisers = 0;
 		}
-		else
+		this.cruisers = cruisers;
 		results.updateInt(6, cruisers);
 	}
 
@@ -119,6 +124,7 @@ public class NationMilitary extends NationBase
 		{
 			preBattleships = 0;
 		}
+		this.preBattleships = preBattleships;
 		results.updateInt(7, preBattleships);
 	}
 
@@ -128,6 +134,7 @@ public class NationMilitary extends NationBase
 		{
 			battleships = 0;
 		}
+		this.battleships = battleships;
 		results.updateInt(8, battleships);
 	}
 
@@ -137,6 +144,7 @@ public class NationMilitary extends NationBase
 		{
 			transports = 0;
 		}
+		this.transports = transports;
 		results.updateInt(9, transports);
 	}
 
@@ -146,6 +154,7 @@ public class NationMilitary extends NationBase
 		{
 			warProtection = 0;
 		}
+		this.warProtection = warProtection;
 		results.updateInt(10, warProtection);
 	}
 

@@ -53,18 +53,36 @@ public class NationPolicy extends NationBase
 
 	public void setManpower(int manpower) throws SQLException
 	{
+		if(manpower > 4 || manpower < 0)
+		{
+			manpower = 0;
+		}
+		this.manpower = manpower;
+		this.changeManpower = Util.turn;
 		results.updateInt(1, manpower);
 		results.updateInt(2, Util.turn);
 	}
 
 	public void setFood(int food) throws SQLException
 	{
+		if(food > 2 || food < 0)
+		{
+			food = 0;
+		}
+		this.food = food;
+		this.changeFood = Util.turn;
 		results.updateInt(3, food);
 		results.updateInt(4, Util.turn);
 	}
 
 	public void setEconomy(int economy) throws SQLException
 	{
+		if(economy > 4 || economy < 0)
+		{
+			economy = 0;
+		}
+		this.economy = economy;
+		this.changeEconomy = Util.turn;
 		results.updateInt(5, economy);
 		results.updateInt(6, Util.turn);
 	}

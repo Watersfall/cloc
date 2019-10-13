@@ -66,6 +66,7 @@ public class NationDomestic extends NationBase
 		{
 			government = 100;
 		}
+		this.government = government;
 		results.updateInt(2, government);
 	}
 
@@ -79,6 +80,7 @@ public class NationDomestic extends NationBase
 		{
 			approval = 100;
 		}
+		this.approval = approval;
 		results.updateInt(3, approval);
 	}
 
@@ -92,21 +94,25 @@ public class NationDomestic extends NationBase
 		{
 			stability = 100;
 		}
+		this.stability = stability;
 		results.updateInt(4, stability);
 	}
 
-	public void setPopulation(double population) throws SQLException
+	public void setPopulation(long population) throws SQLException
 	{
+		this.population = population;
 		results.updateDouble(5, population);
 	}
 
 	public void setRebels(int rebels) throws SQLException
 	{
+		this.rebels = rebels;
 		results.updateInt(6, rebels);
 	}
 
 	public void setManpowerLost(long lostManpower) throws SQLException
 	{
+		this.manpowerLost = lostManpower;
 		results.updateLong(7, lostManpower);
 	}
 }

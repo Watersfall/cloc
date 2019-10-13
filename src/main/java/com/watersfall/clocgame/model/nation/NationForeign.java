@@ -42,11 +42,13 @@ public class NationForeign extends NationBase
 
 	public void setRegion(Region region) throws SQLException
 	{
+		this.region = region;
 		results.updateString(1, region.getName());
 	}
 
 	public void setAlignment(int alignment) throws SQLException
 	{
+		this.alignment = alignment;
 		results.updateInt(2, alignment);
 	}
 }
