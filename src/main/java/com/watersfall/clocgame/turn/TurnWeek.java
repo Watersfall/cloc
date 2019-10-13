@@ -40,67 +40,56 @@ public class TurnWeek implements Runnable
 				HashMap<String, Double> oil = nation.getTotalOilProduction();
 				HashMap<String, Double> steel = nation.getTotalSteelProduction();
 				HashMap<String, Double> nitrogen = nation.getTotalNitrogenProduction();
-				if(coal.get("net") + economy.getCoal() >= coal.get("costs") && iron.get("net") + economy.getIron() >= iron.get("costs") && coal.get("net") + economy.getOil() >= oil.get("costs"))
+				HashMap<String, Double> weapons = nation.getTotalWeaponsProduction();
+				HashMap<String, Double> research = nation.getTotalResearchProduction();
+				HashMap<String, Integer> food = nation.getFoodProduction();
+				economy.setCoal(economy.getCoal() + coal.get("total"));
+				economy.setIron(economy.getIron() + iron.get("total"));
+				economy.setOil(economy.getOil() + oil.get("total"));
+				economy.setResearch(economy.getResearch() + research.get("total"));
+				economy.setFood(food.get("net"));
+				if(economy.getCoal() >= -coal.get("civilian factory demands") && economy.getIron() >= -iron.get("civilian factory demands"))
 				{
-					economy.setCoal(economy.getCoal() + coal.get("net"));
-					economy.setIron(economy.getIron() + iron.get("net"));
-					economy.setOil(economy.getOil() + oil.get("net"));
-					if(steel.get("net") + economy.getSteel() >= steel.get("costs"))
-					{
-						economy.setSteel(economy.getSteel() + steel.get("net"));
-					}
-					else
-					{
-						economy.setSteel(economy.getSteel() + steel.get("total"));
-					}
-					if(nitrogen.get("net") + economy.getNitrogen() >= nitrogen.get("costs"))
-					{
-						economy.setNitrogen(economy.getNitrogen() + nitrogen.get("net"));
-					}
-					else
-					{
-						economy.setNitrogen(economy.getNitrogen() + nitrogen.get("total"));
-					}
+					economy.setSteel(economy.getSteel() + steel.get("total"));
+					economy.setCoal(economy.getCoal() + coal.get("civilian factory demands"));
+					economy.setIron(economy.getIron() + iron.get("civilian factory demands"));
+					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("civilian industry"));
 				}
-				else
+				if(economy.getCoal() >= -coal.get("military factory demands") && economy.getIron() >= -iron.get("military factory demands"))
 				{
-					economy.setCoal(economy.getCoal() + coal.get("total"));
-					economy.setIron(economy.getIron() + iron.get("total"));
-					economy.setOil(economy.getOil() + oil.get("total"));
+					nation.getArmy().setMusket(nation.getArmy().getMusket() + weapons.get("total").intValue());
+					economy.setCoal(economy.getCoal() + coal.get("military factory demands"));
+					economy.setIron(economy.getIron() + iron.get("military factory demands"));
+					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("military industry"));
 				}
-				economy.setFood(economy.getFood() + nation.getFoodProduction().get("net"));
-
-				// Growth & GDP
+				if(economy.getCoal() >= -coal.get("nitrogen plant demands") && economy.getIron() >= -iron.get("nitrogen plant demands"))
+				{
+					economy.setNitrogen(economy.getNitrogen() + nitrogen.get("total"));
+					economy.setCoal(economy.getCoal() + coal.get("nitrogen plant demands"));
+					economy.setIron(economy.getIron() + iron.get("nitrogen plant demands"));
+					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("nitrogen industry"));
+				}
+				economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("army"));
 				economy.setGdp(economy.getGdp() + economy.getGrowth());
-				economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("net"));
-				if(economy.getGdp() < 0)
-				{
-					economy.setGdp(0);
-				}
 
 				/*
 				 ** Domestic
 				 */
-
-				if(economy.getFood() < 0)
-				{
-					economy.setFood(0);
-				}
-				else
-				{
-					domestic.setPopulation(domestic.getPopulation() + (domestic.getPopulation() * (nation.getPopulationGrowth().get("total") * 0.25)));
-				}
-
+				domestic.setPopulation(domestic.getPopulation() + (nation.getPopulationGrowth().get("total")).longValue());
 				domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get("total"));
 				domestic.setStability(domestic.getStability() + nation.getStabilityChange().get("total"));
-
 				nation.update();
+
+				/*
+				** Military
+				 */
+				nation.getArmy().setTraining(nation.getArmy().getTraining() - 1);
+				nation.getMilitary().setWarProtection(nation.getMilitary().getWarProtection() - 1);
 			}
 
 			/*
 			 ** Logs
 			 */
-
 			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
 
 			connection.commit();
