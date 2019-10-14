@@ -506,4 +506,9 @@ public class Responses
 	{
 		return "<p>You run a successful propaganda campaign demonizing a neighboring country, and idolizing your leader!</p>";
 	}
+
+	public static String declaration()
+	{
+		return "<p>Declaration posted!</p>";
+	}
 }

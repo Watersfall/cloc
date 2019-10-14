@@ -281,6 +281,12 @@ input:-webkit-autofill {
 	width: 40em;
 }
 
+#policy .imgSmall{
+	max-width: 2em;
+	max-height: 1em;
+	margin-right: 1em;
+}
+
 a:link {
 	color: white;
 	text-decoration: none;

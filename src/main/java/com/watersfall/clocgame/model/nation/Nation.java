@@ -1034,6 +1034,7 @@ public class Nation
 			case "align":
 			case "free":
 			case "crackdown":
+			case "post":
 				return 100;
 			case "training":
 				return this.army.getSize() * this.army.getSize() * this.army.getTraining() / 200;
