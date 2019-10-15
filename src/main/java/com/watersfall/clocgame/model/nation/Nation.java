@@ -378,15 +378,17 @@ public class Nation
 	/**
 	 * Calculates the growth change of this nation, returning a HashMap with keys:
 	 * <ul>
-	 *     <li>factories</li>
-	 *     <li>army</li>
+	 *     <li>civilian industry</li>
+	 *     <li>military industry</li>
+	 *     <li>nitrogen industry</li>
+	 *     <li>army upkeep</li>
 	 *     <li>net</li>
 	 * </ul>
 	 * @return A HashMap with the growth change of this Nation
 	 */
-	public HashMap<String, Integer> getGrowthChange()
+	public LinkedHashMap<String, Integer> getGrowthChange()
 	{
-		HashMap<String, Integer> map = new HashMap<>();
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 		int factoriesCiv = 0;
 		int factoriesMil = 0;
 		int factoriesNit = 0;
@@ -400,7 +402,7 @@ public class Nation
 		map.put("civilian industry", factoriesCiv);
 		map.put("military industry", factoriesMil);
 		map.put("nitrogen industry", factoriesNit);
-		map.put("army", army);
+		map.put("army upkeep", army);
 		map.put("net", factoriesCiv + factoriesMil + factoriesNit + army);
 		return map;
 	}

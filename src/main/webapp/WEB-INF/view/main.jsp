@@ -149,14 +149,24 @@
 					</div>
 					<div class="resourceTab" id="growth">
 						<c:set value="${home.growthChange}" var="growth"/>
-						<c:if test="${growth.factories != 0}">
-							<p class="positive">+${growth.factories} from factories</p><br>
+						<c:forEach items="${growth.entrySet()}" var="item" varStatus="status">
+							<c:if test="${item.key != 'net'}">
+								<c:if test="${item.value > 0.0}">
+									<p class="positive">+${item.value} from ${item.key}</p><br>
+								</c:if>
+								<c:if test="${item.value < 0.0}">
+									<p class="negative">${item.value} from ${item.key}</p><br>
+								</c:if>
+							</c:if>
+						</c:forEach>
+						<c:if test="${growth.net == 0}">
+							<p class="neutral"><br>No net change...</p>
 						</c:if>
-						<c:if test="${growth.army != 0}">
-							<p class="negative">-${growth.army} from army upkeep</p><br>
+						<c:if test="${growth.net > 0}">
+							<p class="positive"><br>+${growth.net} net gain</p>
 						</c:if>
-						<c:if test="${growth.factories == 0 && growth.army == 0}">
-							<p class="neutral">No change...</p>
+						<c:if test="${growth.net < 0}">
+							<p class="negative"><br>${growth.net} net loss</p>
 						</c:if>
 					</div>
 				</td>
