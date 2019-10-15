@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
+import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.math.Math;
@@ -308,15 +309,51 @@ public class Nation
 	}
 
 	/**
-	 * Checks whether this nation can declare war on the nation passed in
+	 * Checks whether this nation can declare war on the nation passed in, returning null if it can
+	 * If it cannot, returns the reason why
 	 * @param nation The Nation to check against
-	 * @return True if the nation can declare war on the other, false otherwise
+	 * @return null if the nation can declare war on the other, the reason why it cannot otherwise
 	 */
-	public boolean canDeclareWar(Nation nation)
+	public String canDeclareWar(Nation nation)
 	{
-		return (this.offensive == 0 && nation.getDefensive() == 0)
-				&& Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion())
-				&& nation.getMilitary().getWarProtection() <= Util.turn;
+		if(this.offensive != 0)
+		{
+			return Responses.cannotWar("alreadyAtWar");
+		}
+		else if(nation.defensive != 0)
+		{
+			return Responses.cannotWar("alreadyAtWar2");
+		}
+		else if(!Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion()))
+		{
+			return Responses.cannotWar("noBorder");
+		}
+		else if(nation.getMilitary().getWarProtection() > 0)
+		{
+			if(nation.getForeign().getAlignment() == 0)
+			{
+				return Responses.cannotWar("neutralProtection");
+			}
+			else
+			{
+				return (nation.getForeign().getAlignment() == -1) ? Responses.cannotWar("germanProtection") : Responses.cannotWar("frenchProtection");
+			}
+		}
+		else if(this.military.getWarProtection() > 0)
+		{
+			if(this.getForeign().getAlignment() == 0)
+			{
+				return Responses.cannotWar("youNeutralProtection");
+			}
+			else
+			{
+				return (this.getForeign().getAlignment() == -1) ? Responses.cannotWar("youGermanProtection") : Responses.cannotWar("youFrenchProtection");
+			}
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -326,7 +363,7 @@ public class Nation
 	 */
 	public void declareWar(Nation nation) throws SQLException
 	{
-		if(nation != null && canDeclareWar(nation))
+		if(nation != null && canDeclareWar(nation) == null)
 		{
 			Connection conn = Database.getDataSource().getConnection();
 			PreparedStatement declare = conn.prepareStatement("INSERT INTO cloc_war (attacker, defender, start) VALUES (?,?,?)");

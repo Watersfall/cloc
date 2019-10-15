@@ -287,9 +287,31 @@ public class Responses
 		return "<p>Sent!</p>";
 	}
 
-	public static String cannotWar()
+	public static String cannotWar(String cause)
 	{
-		return "<p>You can not declare war on this nation!</p>";
+		switch(cause)
+		{
+			case "germanProtection":
+				return "<p>This nation is currently under the protection of The German Empire! To attack them would be suicide!</p>";
+			case "frenchProtection":
+				return "<p>This nation is currently under the protection of the French! To attack would be suicide!</p>";
+			case "neutralProtection":
+				return "<p>Generic war protection message!</p>";
+			case "youGermanProtection":
+				return "<p>You are currently under the protection of The German Empire! They refuse to let you attack!</p>";
+			case "youFrenchProtection":
+				return "<p>You are currently under the protection of The French! They refuse to let you attack!</p>";
+			case "youNeutralProtection":
+				return "<p>Generic you are under war protection message!</p>";
+			case "noBorder":
+				return "<p>Not in your region or a bordering region!</p>";
+			case "alreadyAtWar":
+				return "<p>You are already at war with another nation!</p>";
+			case "alreadyAtWar2":
+				return "<p>They are already in a defensive war!</p>";
+			default:
+				return null;
+		}
 	}
 
 	public static String war()

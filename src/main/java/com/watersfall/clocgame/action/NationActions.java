@@ -165,9 +165,10 @@ public class NationActions
 
 	public static String declareWar(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException
 	{
-		if(!sender.canDeclareWar(receiver))
+		String message = sender.canDeclareWar(receiver);
+		if(message != null)
 		{
-			return Responses.cannotWar();
+			return message;
 		}
 		else
 		{
