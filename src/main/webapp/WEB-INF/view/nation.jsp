@@ -42,7 +42,7 @@
 				</tr>
 				<tr>
 					<td>Land</td>
-					<td><c:out value="${nation.domestic.land}"/>km<sup>2</sup></td>
+					<td><fmt:formatNumber value="${nation.domestic.land}"/>km<sup>2</sup></td>
 				</tr>
 				<tr>
 					<td>Rebel Threat</td>
@@ -50,7 +50,7 @@
 				</tr>
 				<tr>
 					<td>Population</td>
-					<td><c:out value="${nation.domestic.population}"/> People</td>
+					<td><fmt:formatNumber value="${nation.domestic.population}"/> People</td>
 				</tr>
 			</table>
 			<h1>Economy</h1>
@@ -61,11 +61,11 @@
 				</tr>
 				<tr>
 					<td>Gross Domestic Product</td>
-					<td>$<c:out value="${nation.economy.gdp}"/> Million</td>
+					<td>$<fmt:formatNumber value="${nation.economy.gdp}"/> Million</td>
 				</tr>
 				<tr>
 					<td>Growth</td>
-					<td>$<c:out value="${nation.economy.growth}"/> Million per Month</td>
+					<td>$<fmt:formatNumber value="${nation.economy.growth}"/> Million per Month</td>
 				</tr>
 			</table>
 			<h1>Foreign</h1>
@@ -95,15 +95,15 @@
 				<caption>Army</caption>
 				<tr>
 					<td>Size</td>
-					<td>${nation.army.size}</td>
+					<td><fmt:formatNumber value="${nation.army.size}"/></td>
 				</tr>
 				<tr>
 					<td>Training</td>
-					<td>${nation.army.training}/100</td>
+					<td>${nation.army.training}%</td>
 				</tr>
 				<tr>
 					<td>Equipment</td>
-					<td>${nation.army.musket} / ${nation.army.size * 1000} needed</td>
+					<td><fmt:formatNumber value="${nation.army.musket}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> needed</td>
 				</tr>
 			</table>
 			<br><br>
@@ -111,23 +111,23 @@
 				<caption>Navy</caption>
 				<tr>
 					<td>Destroyers</td>
-					<td><c:out value="${nation.military.destroyers}"/></td>
+					<td><fmt:formatNumber value="${nation.military.destroyers}"/></td>
 				</tr>
 				<tr>
 					<td>Cruisers</td>
-					<td><c:out value="${nation.military.cruisers}"/></td>
+					<td><fmt:formatNumber value="${nation.military.cruisers}"/></td>
 				</tr>
 				<tr>
 					<td>Battleships</td>
-					<td><c:out value="${nation.military.battleships}"/></td>
+					<td><fmt:formatNumber value="${nation.military.battleships}"/></td>
 				</tr>
 				<tr>
 					<td>Submarines</td>
-					<td><c:out value="${nation.military.submarines}"/></td>
+					<td><fmt:formatNumber value="${nation.military.submarines}"/></td>
 				</tr>
 				<tr>
 					<td>Troop Transports</td>
-					<td><c:out value="${nation.military.transports}"/></td>
+					<td><fmt:formatNumber value="${nation.military.transports}"/></td>
 				</tr>
 			</table>
 			<br><br>

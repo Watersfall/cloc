@@ -138,7 +138,7 @@
 			</tr>
 			<tr>
 				<td>Gross Domestic Product</td>
-				<td>$<c:out value="${home.economy.gdp}"/> Million</td>
+				<td>$<fmt:formatNumber value="${home.economy.gdp}"/> Million</td>
 			</tr>
 			<tr>
 				<td>Growth</td>
@@ -189,15 +189,15 @@
 			<caption>Army</caption>
 			<tr>
 				<td>Size</td>
-				<td>${home.army.size}</td>
+				<td><fmt:formatNumber value="${home.army.size}"/>k Personnel</td>
 			</tr>
 			<tr>
 				<td>Training</td>
-				<td>${home.army.training}/100</td>
+				<td>${home.army.training}%</td>
 			</tr>
 			<tr>
 				<td>Equipment</td>
-				<td>${home.army.musket} / ${home.army.size * 1000} needed</td>
+				<td><fmt:formatNumber value="${home.army.musket}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> needed</td>
 			</tr>
 		</table>
 		<br><br>
@@ -205,23 +205,23 @@
 			<caption>Navy</caption>
 			<tr>
 				<td>Destroyers</td>
-				<td><c:out value="${home.military.destroyers}"/></td>
+				<td><fmt:formatNumber value="${home.military.destroyers}"/></td>
 			</tr>
 			<tr>
 				<td>Cruisers</td>
-				<td><c:out value="${home.military.cruisers}"/></td>
+				<td><fmt:formatNumber value="${home.military.cruisers}"/></td>
 			</tr>
 			<tr>
 				<td>Battleships</td>
-				<td><c:out value="${home.military.battleships}"/></td>
+				<td><fmt:formatNumber value="${home.military.battleships}"/></td>
 			</tr>
 			<tr>
 				<td>Submarines</td>
-				<td><c:out value="${home.military.submarines}"/></td>
+				<td><fmt:formatNumber value="${home.military.submarines}"/></td>
 			</tr>
 			<tr>
 				<td>Troop Transports</td>
-				<td><c:out value="${home.military.transports}"/></td>
+				<td><fmt:formatNumber value="${home.military.transports}"/></td>
 			</tr>
 		</table>
 		<br><br>
@@ -229,11 +229,11 @@
 			<caption>Airforce</caption>
 			<tr>
 				<td>Fighters</td>
-				<td><c:out value="${home.military.fighters}"/></td>
+				<td><fmt:formatNumber value="${home.military.fighters}"/></td>
 			</tr>
 			<tr>
 				<td>Zeppelins</td>
-				<td><c:out value="${home.military.zeppelins}"/></td>
+				<td><fmt:formatNumber value="${home.military.zeppelins}"/></td>
 			</tr>
 		</table>
 		<h1>Wars</h1>
