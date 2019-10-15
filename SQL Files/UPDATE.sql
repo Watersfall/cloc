@@ -4,13 +4,18 @@ ALTER TABLE cloc_war
 	ADD COLUMN winner INT DEFAULT -1
 	AFTER end;
 
+ALTER TABLE cloc_domestic
+    ADD COLUMN lost_manpower BIGINT DEFAULT 0
+	AFTER rebels;
+
 ALTER TABLE cloc_economy
 	DROP COLUMN iron_mines,
 	DROP COLUMN coal_mines,
 	DROP COLUMN oil_wells,
 	DROP COLUMN civilian_industry,
 	DROP COLUMN military_industry,
-	DROP COLUMN universities;
+	DROP COLUMN universities,
+	ADD COLUMN steel DECIMAL(14,2) UNSIGNED DEFAULT 0.00 AFTER food;
 
 ALTER TABLE cloc_foreign
 	DROP COLUMN alliance;
@@ -150,6 +155,14 @@ CREATE TABLE cloc_treaties_members(
 	kick BIT DEFAULT 0,
 	invite BIT DEFAULT 0,
 	edit BIT DEFAULT 0,
+	FOREIGN KEY fk_alliance (alliance_id) REFERENCES cloc_treaties (id),
+	FOREIGN KEY fk_member (nation_id) REFERENCES cloc_login (id) ON DELETE CASCADE
+);
+
+CREATE TABLE cloc_treaty_invites(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    alliance_id INT,
+    nation_id INT,
 	FOREIGN KEY fk_alliance (alliance_id) REFERENCES cloc_treaties (id),
 	FOREIGN KEY fk_member (nation_id) REFERENCES cloc_login (id) ON DELETE CASCADE
 );

@@ -4,6 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationDomestic;
 import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.util.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -93,6 +94,7 @@ public class TurnWeek implements Runnable
 			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
 
 			connection.commit();
+			Util.turn++;
 
 		}
 		catch(SQLException e)

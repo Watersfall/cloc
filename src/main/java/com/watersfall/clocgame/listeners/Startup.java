@@ -25,6 +25,7 @@ public class Startup implements ServletContextListener
 		Connection conn = null;
 		try
 		{
+			Class.forName("com.mysql.jdbc.Driver");
 			WeekScheduler.startWeek();
 			DayScheduler.startDay();
 			event.getServletContext().setAttribute("database", Database.getDataSource());
@@ -36,6 +37,10 @@ public class Startup implements ServletContextListener
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e)
+		{
+			//Ignore
 		}
 		finally
 		{

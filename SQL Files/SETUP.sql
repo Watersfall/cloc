@@ -196,6 +196,14 @@ CREATE TABLE cloc_treaties_members(
 	FOREIGN KEY fk_member (nation_id) REFERENCES cloc_login (id) ON DELETE CASCADE
 );
 
+CREATE TABLE cloc_treaty_invites(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	alliance_id INT,
+	nation_id INT,
+	FOREIGN KEY fk_alliance (alliance_id) REFERENCES cloc_treaties (id),
+	FOREIGN KEY fk_member (nation_id) REFERENCES cloc_login (id) ON DELETE CASCADE
+);
+
 CREATE TABLE cloc_declarations(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	sender INT,
