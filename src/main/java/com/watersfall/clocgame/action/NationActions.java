@@ -195,10 +195,11 @@ public class NationActions
 			}
 			else if(defender.getArmy().getSize() <= 5)
 			{
-				PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=? WHERE attacker=? AND defender=?");
+				PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=?, winner=? WHERE attacker=? AND defender=?");
 				updateWar.setInt(1, Util.turn);
 				updateWar.setInt(2, attacker.getId());
-				updateWar.setInt(3, defender.getId());
+				updateWar.setInt(3, attacker.getId());
+				updateWar.setInt(4, defender.getId());
 				updateWar.execute();
 				defender.getMilitary().setWarProtection(4);
 				return Responses.warWon();
