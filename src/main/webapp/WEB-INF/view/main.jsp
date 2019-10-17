@@ -209,6 +209,10 @@
 				<td>Equipment</td>
 				<td><fmt:formatNumber value="${home.army.musket}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> needed</td>
 			</tr>
+			<tr>
+				<td>Artillery</td>
+				<td><fmt:formatNumber value="${home.army.artillery}"/> Pieces</td>
+			</tr>
 		</table>
 		<br><br>
 		<table id="nation">
