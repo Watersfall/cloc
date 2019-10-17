@@ -70,7 +70,7 @@ public class TurnWeek implements Runnable
 					economy.setIron(economy.getIron() + iron.get("nitrogen plant demands"));
 					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("nitrogen industry"));
 				}
-				economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("army"));
+				economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("army upkeep"));
 				economy.setGdp(economy.getGdp() + economy.getGrowth());
 
 				/*
