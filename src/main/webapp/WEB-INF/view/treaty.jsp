@@ -44,7 +44,7 @@
 				</c:if>
 			</c:if>
 			<br>
-			<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
+			<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder || home.invite || home.edit)}">
 				<script>
 					function display()
 					{
@@ -69,18 +69,22 @@
 				</style>
 				<button id="adminButton" onclick="display()">Show Admin Actions</button>
 				<div id="admin">
-					<label for="name">Alliance Name</label>
-					<input type="text" id="name" value="${treaty.name}"/>
-					<button onclick="updateTreaty('name', document.getElementById('name').value)">Set Name</button><br>
-					<label for="flag">Alliance Flag</label>
-					<input type="text" id="flag" value="${treaty.flag}"/>
-					<button onclick="updateTreaty('flag', document.getElementById('flag').value)">Set Flag</button><br>
-					<label for="description">Description<br></label>
-					<textarea style="width: 75%;" id="description">${treaty.description}</textarea><br>
-					<button onclick="updateTreaty('description', document.getElementById('description').value)">Set Description</button><br>
-					<label for="invite">Invite</label>
-					<input type="text" id="invite"/>
-					<button onclick="updateTreaty('invite', document.getElementById('invite').value)">>Invite</button>
+					<c:if test="${home.manage || home.founder || home.edit}">
+						<label for="name">Alliance Name</label>
+						<input type="text" id="name" value="${treaty.name}"/>
+						<button onclick="updateTreaty('name', document.getElementById('name').value)">Set Name</button><br>
+						<label for="flag">Alliance Flag</label>
+						<input type="text" id="flag" value="${treaty.flag}"/>
+						<button onclick="updateTreaty('flag', document.getElementById('flag').value)">Set Flag</button><br>
+						<label for="description">Description<br></label>
+						<textarea style="width: 75%;" id="description">${treaty.description}</textarea><br>
+						<button onclick="updateTreaty('description', document.getElementById('description').value)">Set Description</button><br>
+					</c:if>
+					<c:if test="${home.manage || home.founder || home.invite}">
+						<label for="invite">Invite</label>
+						<input type="text" id="invite"/>
+						<button onclick="updateTreaty('invite', document.getElementById('invite').value)">Invite</button>
+					</c:if>
 				</div>
 			</c:if>
 			<h3>Members</h3>
@@ -88,6 +92,7 @@
 				<tr>
 					<th>Name</th>
 					<th>Region</th>
+					<th>Roles</th>
 					<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
 						<th>Manage</th>
 					</c:if>
@@ -96,6 +101,7 @@
 					<tr>
 						<td>${member.cosmetic.nationName}</td>
 						<td>${member.foreign.region.name}</td>
+						<td>${member.roles}</td>
 						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
 							<td><button>Kick</button></td>
 						</c:if>

@@ -84,4 +84,41 @@ public class TreatyMember extends Nation
 			return Responses.kicked();
 		}
 	}
+
+	public String getRoles()
+	{
+		String roles = "";
+		if(founder)
+		{
+			return "Founder";
+		}
+		else if(manage)
+		{
+			return "Manage";
+		}
+		else if(kick && !invite && !edit)
+		{
+			return "Kick";
+		}
+		else if(invite || edit)
+		{
+			if(kick)
+			{
+				roles += "Kick, ";
+			}
+			if(invite && !edit)
+			{
+				roles += "Invite";
+			}
+			else if(!invite)
+			{
+				roles += "Edit";
+			}
+			else
+			{
+				roles += "Invite, Edit";
+			}
+		}
+		return roles;
+	}
 }
