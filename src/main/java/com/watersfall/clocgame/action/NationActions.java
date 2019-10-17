@@ -80,8 +80,8 @@ public class NationActions
 		}
 		else
 		{
-			sender.getEconomy().setSteel(sender.getEconomy().getOil() - amount);
-			receiver.getEconomy().setSteel(receiver.getEconomy().getOil() + amount);
+			sender.getEconomy().setOil(sender.getEconomy().getOil() - amount);
+			receiver.getEconomy().setOil(receiver.getEconomy().getOil() + amount);
 			sender.update();
 			receiver.update();
 			return Responses.sent();
