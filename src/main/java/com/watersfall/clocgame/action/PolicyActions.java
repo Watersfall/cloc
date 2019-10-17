@@ -519,7 +519,7 @@ public class PolicyActions
 
 	public static String unUniversity(Connection connection, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		String remove = remove(connection, idNation, idCity, 7);
+		String remove = remove(connection, idNation, idCity, 6);
 		return (remove == null) ? Responses.close("university") : remove;
 	}
 
