@@ -209,10 +209,20 @@ public class NationActions
 				String losses;
 				int attackLosses = attacker.getAttackingCasualties(defender);
 				int defenderLosses = defender.getDefendingCasualties(attacker);
+				if(attackLosses > attacker.getArmy().getSize())
+				{
+					attackLosses = attacker.getArmy().getSize();
+				}
+				if(defenderLosses > defender.getArmy().getSize())
+				{
+					defenderLosses = defender.getArmy().getSize();
+				}
 				attacker.getArmy().setSize(attacker.getArmy().getSize() - attackLosses);
 				attacker.getDomestic().setManpowerLost(attacker.getDomestic().getManpowerLost() + attackLosses * 1000);
+				attacker.getDomestic().setPopulation(attacker.getDomestic().getPopulation() - attackLosses * 1000);
 				defender.getArmy().setSize(defender.getArmy().getSize() - defenderLosses);
 				defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() + defenderLosses * 1000);
+				defender.getDomestic().setPopulation(defender.getDomestic().getPopulation() - defenderLosses * 1000);
 				attacker.update();
 				defender.update();
 				if(attacker.getPower() > defender.getPower())
