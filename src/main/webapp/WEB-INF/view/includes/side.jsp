@@ -143,7 +143,14 @@
 						<li>
 							<a href="${pageContext.request.contextPath}/map.jsp">
 								<div class="headerTabSmall">
-									<p>Regions</p>
+									<p>World Map</p>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="${pageContext.request.contextPath}/declarations.jsp">
+								<div class="headerTabSmall">
+									<p>Global Declarations</p>
 								</div>
 							</a>
 						</li>
