@@ -18,7 +18,7 @@
 	<c:if test="${home != null}">
 		<label for="post">Post Declaration</label>
 		<textarea style="width: 100%;" id="post"></textarea>
-		<button onclick="postDeclaration()">Post - $${home.getPolicyCost('post')}k</button>
+		<button onclick="postDeclaration()">Post - $${home.declarationCost}k</button>
 	</c:if>
 </div>
 </div>

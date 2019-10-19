@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class Declaration
 {
+	public static final int COST = 100;
 	private @Getter int id;
 	private @Getter NationCosmetic sender;
 	private @Getter int sent;
@@ -33,7 +34,7 @@ public class Declaration
 
 	public static String post(Nation nation, String message, Connection conn) throws SQLException
 	{
-		int cost = nation.getPolicyCost("post");
+		int cost = COST;
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();

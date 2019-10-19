@@ -6,6 +6,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.math.Math;
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.message.Declaration;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
@@ -1103,6 +1104,15 @@ public class Nation
 				break;
 		}
 		return map;
+	}
+
+	/**
+	 * Returns the cost of posting declarations
+	 * @return Declaration posting cost
+	 */
+	public int getDeclarationCost()
+	{
+		return Declaration.COST;
 	}
 
 	/**
