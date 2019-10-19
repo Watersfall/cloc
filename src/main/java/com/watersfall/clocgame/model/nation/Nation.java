@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
+import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
@@ -1057,25 +1058,24 @@ public class Nation
 	 * Returns the cash-cost of a policy<br>
 	 * This contains most policy costs that would show up under policies->category
 	 * but does not include any that cost another resource/other resources
-	 * @param policy The name of the policy
+	 * @param policy The ID of the policy
 	 * @return The cost of the policy
 	 */
-	public int getPolicyCost(String policy)
+	public int getPolicyCost(int policy)
 	{
 		switch(policy)
 		{
-			case "propaganda":
+			case PolicyActions.ID_PROPAGANDA:
 				return (int)(this.economy.getGdp() / 2 * (this.domestic.getApproval() / 100.0));
-			case "war_propaganda":
-				return getPolicyCost("propaganda") / 2;
-			case "land_clearance":
+			case PolicyActions.ID_WAR_PROPAGANDA:
+				return getPolicyCost(PolicyActions.ID_PROPAGANDA) / 2;
+			case PolicyActions.ID_LAND_CLEARANCE:
 				return (int)this.economy.getGdp() * 2;
-			case "align":
-			case "free":
-			case "crackdown":
-			case "post":
+			case PolicyActions.ID_ALIGN:
+			case PolicyActions.ID_FREE:
+			case PolicyActions.ID_ARREST:
 				return 100;
-			case "training":
+			case PolicyActions.ID_TRAIN:
 				return this.army.getSize() * this.army.getSize() * this.army.getTraining() / 200;
 			default:
 				return 0;
@@ -1086,19 +1086,19 @@ public class Nation
 	 * Returns the costs of a policy as a LinkedHashMap where the key is the resource and the value is the cost
 	 * for that resource<br>
 	 * Contains the cost of any policy that takes more than one resource, or a single resource that isn't cash
-	 * @param policy The name of the policy
+	 * @param policy The ID of the policy
 	 * @return A LinkedHashMap of the costs
 	 */
-	public LinkedHashMap<String, Integer> getPolicyCostMap(String policy)
+	public LinkedHashMap<String, Integer> getPolicyCostMap(int policy)
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 		switch(policy)
 		{
-			case "artillery":
+			case PolicyActions.ID_BUILD_ARTILLERY:
 				map.put("Steel", 15);
 				map.put("Nitrogen", 7);
 				break;
-			case "musket":
+			case PolicyActions.ID_BUILD_MUSKETS:
 				map.put("Steel", 5);
 				break;
 		}

@@ -4,25 +4,41 @@ import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.model.nation.*;
+import com.watersfall.clocgame.model.nation.City;
+import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.nation.NationArmy;
+import com.watersfall.clocgame.model.nation.NationEconomy;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class PolicyActions
 {
 	public PolicyActions(){}
 
 	//<editor-fold desc="Constants"
-	//<editor-fold desc="Costs"
-	private static final int CRACKDOWN_COST = 100;
-	private static final int FREE_COST = 100;
-	private static final int ALIGN_COST = 50;
-	private static final int ARTILLERY_STEEL = 15;
-	private static final int ARTILLERY_NITROGEN = 7;
-	private static final int WEAPONS_STEEL = 5;
-	private static final int LAND_CLEARANCE = 10000;
+	//<editor-fold desc="IDs">
+	public static final int ID_COAL_MINE = 0;
+	public static final int ID_IRON_MINE = 1;
+	public static final int ID_DRILL = 2;
+	public static final int ID_INDUSTRIALIZE = 3;
+	public static final int ID_MILITARIZE = 4;
+	public static final int ID_NITROGEN_PLANT = 5;
+	public static final int ID_UNIVERSITY = 6;
+	public static final int ID_PORT = 7;
+	public static final int ID_BARRACK = 8;
+	public static final int ID_RAILROAD = 9;
+	public static final int ID_ARREST = 10;
+	public static final int ID_FREE = 11;
+	public static final int ID_LAND_CLEARANCE = 12;
+	public static final int ID_PROPAGANDA = 13;
+	public static final int ID_WAR_PROPAGANDA = 14;
+	public static final int ID_ALIGN = 15;
+	public static final int ID_TRAIN = 16;
+	public static final int ID_BUILD_MUSKETS = 17;
+	public static final int ID_BUILD_ARTILLERY = 18;
 	//</editor-fold>
 	//<editor-fold desc="Modifiers"
 	private static final int CRACKDOWN_STAB = 5;
@@ -545,75 +561,75 @@ public class PolicyActions
 	//<editor-fold desc="Domestic Policies">
 	public static String arrest(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getBudget() < CRACKDOWN_COST)
+		Nation nation = new Nation(connection, idNation, true);
+		int cost = nation.getPolicyCost(ID_ARREST);
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(domestic.getGovernment() < 5)
+		else if(nation.getDomestic().getGovernment() < 5)
 		{
 			return Responses.noCriminals();
 		}
-		else if(domestic.getApproval() < 5)
+		else if(nation.getDomestic().getApproval() < 5)
 		{
 			return Responses.hated();
 		}
 		else
 		{
-			domestic.setStability(domestic.getStability() + CRACKDOWN_STAB);
-			domestic.setApproval(domestic.getApproval() + CRACKDOWN_APPROVAL);
-			domestic.setGovernment(domestic.getGovernment() + CRACKDOWN_GOV);
-			economy.setBudget(economy.getBudget() - CRACKDOWN_COST);
-			domestic.update();
-			economy.update();
+			nation.getDomestic().setStability(nation.getDomestic().getStability() + CRACKDOWN_STAB);
+			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + CRACKDOWN_APPROVAL);
+			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + CRACKDOWN_GOV);
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getDomestic().update();
+			nation.getEconomy().update();
 			return Responses.arrest();
 		}
 	}
 
 	public static String free(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getBudget() < FREE_COST)
+		Nation nation = new Nation(connection, idNation, true);
+		int cost = nation.getPolicyCost(ID_FREE);
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(domestic.getGovernment() > 95)
+		else if(nation.getDomestic().getGovernment() > 95)
 		{
 			return Responses.noPrisoners();
 		}
-		else if(domestic.getStability() < 5)
+		else if(nation.getDomestic().getStability() < 5)
 		{
 			return Responses.unstable();
 		}
 		else
 		{
-			domestic.setStability(domestic.getStability() + FREE_STAB);
-			domestic.setApproval(domestic.getApproval() + FREE_APPROVAL);
-			domestic.setGovernment(domestic.getGovernment() + FREE_GOV);
-			economy.setBudget(economy.getBudget() - FREE_COST);
-			domestic.update();
-			economy.update();
+			nation.getDomestic().setStability(nation.getDomestic().getStability() + FREE_STAB);
+			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + FREE_APPROVAL);
+			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + FREE_GOV);
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getDomestic().update();
+			nation.getEconomy().update();
 			return Responses.free();
 		}
 	}
 
 	public static String landClearance(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationDomestic domestic = new NationDomestic(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getBudget() < LAND_CLEARANCE)
+		Nation nation = new Nation(connection, idNation, true);
+		int cost = nation.getPolicyCost(ID_LAND_CLEARANCE);
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
 		else
 		{
 			int gain = (int)(Math.random() * 2500) + 500;
-			economy.setBudget(economy.getBudget() - FREE_COST);
-			domestic.setLand(domestic.getLand() + gain);
-			domestic.update();
-			economy.update();
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getDomestic().setLand(nation.getDomestic().getLand() + gain);
+			nation.getDomestic().update();
+			nation.getEconomy().update();
 			return Responses.landClearance(gain);
 		}
 	}
@@ -621,7 +637,7 @@ public class PolicyActions
 	public static String propaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, id, true);
-		int cost = nation.getPolicyCost("propaganda");
+		int cost = nation.getPolicyCost(ID_PROPAGANDA);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -642,7 +658,7 @@ public class PolicyActions
 	public static String warPropaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, id, true);
-		int cost = nation.getPolicyCost("war_propaganda");
+		int cost = nation.getPolicyCost(ID_WAR_PROPAGANDA);
 		if(nation.getOffensive() == 0 && nation.getDefensive() == 0)
 		{
 			return Responses.propagandaNoWar();
@@ -688,22 +704,22 @@ public class PolicyActions
 	//<editor-fold desc="Foreign Policies">
 	private static String align(Connection connection, int idNation, int align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationForeign foreign = new NationForeign(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getBudget() < ALIGN_COST)
+		Nation nation = new Nation(connection, idNation, true);
+		int cost = nation.getPolicyCost(ID_ALIGN);
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(foreign.getAlignment() == align)
+		else if(nation.getForeign().getAlignment() == align)
 		{
 			return Responses.alreadyYourAlignment();
 		}
 		else
 		{
-			foreign.setAlignment(align);
-			economy.setBudget(economy.getBudget() - ALIGN_COST);
-			foreign.update();
-			economy.update();
+			nation.getForeign().setAlignment(align);
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getForeign().update();
+			nation.getEconomy().update();
 			return Responses.align(align);
 		}
 	}
@@ -758,7 +774,8 @@ public class PolicyActions
 	public static String train(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
 		Nation nation = new Nation(conn, id, true);
-		if(nation.getEconomy().getBudget() < nation.getPolicyCost("training"))
+		int cost = nation.getPolicyCost(ID_TRAIN);
+		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
@@ -769,7 +786,7 @@ public class PolicyActions
 		else
 		{
 			nation.getArmy().setTraining(nation.getArmy().getTraining() + 5);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - nation.getPolicyCost("training"));
+			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			nation.update();
 			return Responses.train();
 		}
@@ -777,80 +794,43 @@ public class PolicyActions
 
 	public static String artillery(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationArmy army = new NationArmy(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getSteel() < ARTILLERY_STEEL)
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_ARTILLERY);
+		if(nation.getEconomy().getSteel() < costs.get("steel"))
 		{
 			return Responses.noSteel();
 		}
-		else if(economy.getNitrogen() < ARTILLERY_NITROGEN)
+		else if(nation.getEconomy().getNitrogen() < costs.get("nitrogen"))
 		{
 			return Responses.noNitrogen();
 		}
 		else
 		{
-			army.setArtillery(army.getArtillery() + ARTILLERY_GAIN);
-			economy.setSteel(economy.getSteel() - ARTILLERY_STEEL);
-			economy.setNitrogen(economy.getNitrogen() - ARTILLERY_NITROGEN);
-			army.update();
-			economy.update();
+			nation.getArmy().setArtillery(nation.getArmy().getArtillery() + ARTILLERY_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("steel"));
+			nation.getEconomy().setNitrogen(nation.getEconomy().getNitrogen() - costs.get("nitrogen"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
 			return Responses.artillery();
 		}
 	}
 
 	public static String weapons(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationArmy army = new NationArmy(connection, idNation, true);
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
-		if(economy.getSteel() < WEAPONS_STEEL)
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_MUSKETS);
+		if(nation.getEconomy().getSteel() < costs.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			army.setMusket(army.getMusket() + WEAPONS_GAIN);
-			economy.setSteel(economy.getSteel() - WEAPONS_STEEL);
-			army.update();
-			economy.update();
+			nation.getArmy().setMusket(nation.getArmy().getMusket() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
 			return Responses.weapons();
 		}
-	}
-	//</editor-fold>
-
-	//<editor-fold desc="EL Getters">
-	public int getCrackdownCost()
-	{
-		return CRACKDOWN_COST;
-	}
-
-	public int getFreeCost()
-	{
-		return FREE_COST;
-	}
-
-	public int getAlignCost()
-	{
-		return ALIGN_COST;
-	}
-
-	public int getArtillerySteel()
-	{
-		return ARTILLERY_STEEL;
-	}
-
-	public int getArtilleryNitrogen()
-	{
-		return ARTILLERY_NITROGEN;
-	}
-
-	public int getWeaponsSteel()
-	{
-		return WEAPONS_STEEL;
-	}
-
-	public int getLandClearance()
-	{
-		return LAND_CLEARANCE;
 	}
 	//</editor-fold>
 }
