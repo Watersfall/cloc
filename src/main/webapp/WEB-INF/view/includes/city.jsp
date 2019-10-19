@@ -14,7 +14,55 @@
 				<c:when test="${home != null && city.owner == home.id}">
 					<c:set var="unicost" value="${city.universityCost}"/>
 					<c:set var="factorycost" value="${city.factoryCost}"/>
-					<h1>${city.name}</h1>
+					<style>
+						.rename
+						{
+							font-size: 1em;
+							margin: 0 !important;
+							padding: 0 !important;
+							outline: transparent !important;
+							background: transparent !important;
+							color: white !important;
+							min-width: 1em !important;
+							width: auto !important;
+						}
+					</style>
+					<script>
+						function changeCityName()
+						{
+							let inputBox = "<input class=\"rename\" type=\"text\" name=\"name\" value=\"<c:out value='${city.name}'/>\" id=\"name\"/>" +
+								"  <img style=\"width: 0.5em;\" src=\"${pageContext.request.contextPath}/images/ui/checkmark.svg\" alt=\"submit\" onclick=\"submitCityName(\'${city.id}\');\"/>" +
+								"  <img style=\"width: 0.5em;\" src=\"${pageContext.request.contextPath}/images/ui/cancel.svg\" alt=\"submit\" onclick=\"cancelCityName()\"/>";
+							let city = document.getElementById("cityName");
+							city.innerHTML = inputBox;
+						}
+						function submitCityName(id)
+						{
+							document.getElementById('resultsContainer').style.visibility = "visible";
+							document.getElementById("result").innerHTML = "<p>Loading...</p>";
+							var xhttp = new XMLHttpRequest();
+							let params = "name=" + document.getElementById("name").value + "&id=" + id;
+							xhttp.open("POST", "city.do");
+							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhttp.send(params);
+							xhttp.onreadystatechange = function()
+							{
+								if(xhttp.readyState === 4 && xhttp.status === 200)
+								{
+									document.getElementById("result").innerHTML = xhttp.responseText;
+									if(xhttp.responseText.indexOf("updated") !== -1)
+									{
+										document.getElementById("cityName").innerHTML = document.getElementById("name").value + "<img style=\"width: 0.5em\" src=\"${pageContext.request.contextPath}/images/ui/edit.svg\" alt=\"edit\" onclick=\"changeCityName();\"/>";
+									}
+								}
+							};
+						}
+						function cancelCityName()
+						{
+							document.getElementById("cityName").innerHTML = "<c:out value="${city.name}  "/>  <img style=\"width: 0.5em\" src=\"${pageContext.request.contextPath}/images/ui/edit.svg\" alt=\"edit\" onclick=\"changeCityName();\"/>";
+						}
+					</script>
+					<h1 id="cityName"><c:out value="${city.name}  "/><img style="width: 0.5em" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit" onclick="changeCityName();"/></h1>
 					<ul>
 						<li class="cityElements">
 							<h3>Coal Mines</h3>

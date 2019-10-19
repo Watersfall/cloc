@@ -93,7 +93,7 @@ p {
 input[type=text]{
 	margin: 0.5em 0;
 	padding: 0.5em 0;
-	background-color: gainsboro !important;
+	background-color: gainsboro;
 	border: rgb(55, 55, 55) solid 2px;
 	color: black;
 }
@@ -101,7 +101,7 @@ input[type=text]{
 input[type=password]{
 	margin: 0.5em 0;
 	padding: 0.5em 0;
-	background-color: gainsboro !important;
+	background-color: gainsboro;
 	border: rgb(55, 55, 55) solid 2px;
 	color: black;
 }
@@ -555,7 +555,7 @@ textarea{
 	height: 5em;
 	margin: 0.5em 0;
 	padding: 0.5em 0;
-	background-color: gainsboro !important;
+	background-color: gainsboro;
 	border: rgb(55, 55, 55) solid 2px;
 	color: black;
 }
