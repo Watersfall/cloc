@@ -99,8 +99,8 @@
 				</tr>
 				<c:forEach items="${treaty.members}" var="member">
 					<tr>
-						<td>${member.cosmetic.nationName}</td>
-						<td>${member.foreign.region.name}</td>
+						<td><a href="${pageContext.request.contextPath}/nation.jsp?id=${member.id}">${member.cosmetic.nationName}</a></td>
+						<td><a href="${pageContext.request.contextPath}/map.jsp?region=${member.foreign.region.name}">${member.foreign.region.name}</a></td>
 						<td>${member.roles}</td>
 						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
 							<td><button>Kick</button></td>
