@@ -3,7 +3,7 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
-<%--@elvariable id="costs" type="com.watersfall.clocgame.action.PolicyActions"--%>
+<%--@elvariable id="policy" type="com.watersfall.clocgame.action.PolicyActions"--%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%-- POLICIES --%>
 <div class="container"><div class="main">
@@ -68,7 +68,7 @@
 						approval and moves your government to the right.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost('crackdown')}"/>k
+						$<c:out value="${home.getPolicyCost(policy.ID_ARREST)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('crackdown')">Crackdown</button>
@@ -83,7 +83,7 @@
 						your government to the left.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost('free')}"/>k
+						$<c:out value="${home.getPolicyCost(policy.ID_FREE)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('free')">Free</button>
@@ -97,7 +97,7 @@
 						Put up posters saying how great you are! Increases approval. Cost is based on GDP and current approval
 					</td>
 					<td>
-						$${home.getPolicyCost('propaganda')}k
+						$${home.getPolicyCost(policy.ID_PROPAGANDA)}k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('propaganda')">Propaganda</button>
@@ -112,7 +112,7 @@
 							Rallying war speeches will make anyone love you right? Increases approval, but only available when at war. Cost is based on GDP and current approval
 						</td>
 						<td>
-							$${home.getPolicyCost('war_propaganda')}k
+							$${home.getPolicyCost(policy.ID_WAR_PROPAGANDA)}k
 						</td>
 						<td>
 							<button class="policyButton" type="submit" onclick="decision('warpropaganda')">Propaganda</button>
@@ -127,7 +127,7 @@
 						Slash and burn some useless jungle to make room for our expanding economy
 					</td>
 					<td>
-						$${home.getPolicyCost('land_clearance')}k
+						$${home.getPolicyCost(policy.ID_LAND_CLEARANCE)}k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('landclearance')">Burn</button>
@@ -143,7 +143,7 @@
 						Praise France's Democracy, hoping to make them like you.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost('align')}"/>k
+						$<c:out value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('alignentente')">Praise</button>
@@ -157,7 +157,7 @@
 						Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost('align')}"/>k
+						$<c:out value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('aligncentral')">Admire</button>
@@ -171,7 +171,7 @@
 						Go out on stage and celebrate your people's strength!
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost('align')}"/>k
+						$<c:out value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('alignneutral')">Celebrate</button>
@@ -229,7 +229,7 @@
 						Train your army
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost('training')}"/>k
+						$<c:out value="${home.getPolicyCost(policy.ID_TRAIN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('train')">Train</button>
@@ -243,7 +243,7 @@
 						The finest of the 1850's, these muskets may not be "easy to load" or have fancy "rifled barrels" but they're better than nothing
 					</td>
 					<td>
-						<c:forEach var="cost" items="${home.getPolicyCostMap('musket').entrySet()}" varStatus="i">
+						<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_MUSKETS).entrySet()}" varStatus="i">
 							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
 							<c:if test="${i.last && i.count > 1}">, and </c:if>
 							<c:out value="${cost.value} ${cost.key}"/>
@@ -261,9 +261,10 @@
 						The most effective way to fight without fighting, artillery guns increase the strength of your army
 					</td>
 					<td>
-						<c:forEach var="cost" items="${home.getPolicyCostMap('artillery').entrySet()}" varStatus="i">
+						<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_ARTILLERY).entrySet()}" varStatus="i">
 							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-							<c:if test="${i.last && i.count > 1}">, and </c:if>
+							<c:if test="${i.last && i.count > 2}">, and </c:if>
+							<c:if test="${i.last && i.count == 2}"> and </c:if>
 							<c:out value="${cost.value} ${cost.key}"/>
 						</c:forEach>
 					</td>

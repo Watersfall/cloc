@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.CityActions;
 import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
@@ -66,64 +67,64 @@ public class DecisionController extends HttpServlet
 					switch(policy)
 					{
 						case "coalmine":
-							writer.append(PolicyActions.coalMine(conn, user, id));
+							writer.append(CityActions.coalMine(conn, user, id));
 							break;
 						case "ironmine":
-							writer.append(PolicyActions.ironMine(conn, user, id));
+							writer.append(CityActions.ironMine(conn, user, id));
 							break;
 						case "drill":
-							writer.append(PolicyActions.drill(conn, user, id));
+							writer.append(CityActions.drill(conn, user, id));
 							break;
 						case "industrialize":
-							writer.append(PolicyActions.industrialize(conn, user, id));
+							writer.append(CityActions.industrialize(conn, user, id));
 							break;
 						case "militarize":
-							writer.append(PolicyActions.militarize(conn, user, id));
+							writer.append(CityActions.militarize(conn, user, id));
 							break;
 						case "nitrogenplant":
-							writer.append(PolicyActions.nitrogen(conn, user, id));
+							writer.append(CityActions.nitrogen(conn, user, id));
 							break;
 						case "university":
-							writer.append(PolicyActions.university(conn, user, id));
+							writer.append(CityActions.university(conn, user, id));
 							break;
 						case "port":
-							writer.append(PolicyActions.port(conn, user, id));
+							writer.append(CityActions.port(conn, user, id));
 							break;
 						case "barrack":
-							writer.append(PolicyActions.barrack(conn, user, id));
+							writer.append(CityActions.barrack(conn, user, id));
 							break;
 						case "railroad":
-							writer.append(PolicyActions.railroad(conn, user, id));
+							writer.append(CityActions.railroad(conn, user, id));
 							break;
 						case "uncoalmine":
-							writer.append(PolicyActions.unCoalMine(conn, user, id));
+							writer.append(CityActions.unCoalMine(conn, user, id));
 							break;
 						case "unironmine":
-							writer.append(PolicyActions.unIronMine(conn, user, id));
+							writer.append(CityActions.unIronMine(conn, user, id));
 							break;
 						case "undrill":
-							writer.append(PolicyActions.unDrill(conn, user, id));
+							writer.append(CityActions.unDrill(conn, user, id));
 							break;
 						case "unindustrialize":
-							writer.append(PolicyActions.unIndustrialize(conn, user, id));
+							writer.append(CityActions.unIndustrialize(conn, user, id));
 							break;
 						case "unmilitarize":
-							writer.append(PolicyActions.unMilitarize(conn, user, id));
+							writer.append(CityActions.unMilitarize(conn, user, id));
 							break;
 						case "unnitrogenplant":
-							writer.append(PolicyActions.unNitrogen(conn, user, id));
+							writer.append(CityActions.unNitrogen(conn, user, id));
 							break;
 						case "ununiversity":
-							writer.append(PolicyActions.unUniversity(conn, user, id));
+							writer.append(CityActions.unUniversity(conn, user, id));
 							break;
 						case "unport":
-							writer.append(PolicyActions.unPort(conn, user, id));
+							writer.append(CityActions.unPort(conn, user, id));
 							break;
 						case "unbarrack":
-							writer.append(PolicyActions.unBarrack(conn, user, id));
+							writer.append(CityActions.unBarrack(conn, user, id));
 							break;
 						case "unrailroad":
-							writer.append(PolicyActions.unRailroad(conn, user, id));
+							writer.append(CityActions.unRailroad(conn, user, id));
 							break;
 						default:
 							super.doPost(req, resp);
