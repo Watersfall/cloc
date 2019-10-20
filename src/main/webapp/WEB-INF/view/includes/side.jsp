@@ -55,7 +55,7 @@
 			</a>
 			<ul>
 				<li>
-					<a style="cursor: pointer;" onclick="showHideCities()">
+					<a style="cursor: pointer;" onclick="toggle('cities')">
 						<div class="headerTab">
 							<p>Cities</p>
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
@@ -74,13 +74,13 @@
 					</ul>
 				</li>
 				<li>
-					<a style="cursor: pointer;" onclick="showHidePolicies()">
+					<a style="cursor: pointer;" onclick="toggle('decisions')">
 						<div class="headerTab">
 							<p>Decisions</p>
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
-					<ul id="policies" style="display: none">
+					<ul id="decisions" style="display: none">
 						<li>
 							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Economic">
 								<div class="headerTabSmall">
@@ -126,7 +126,7 @@
 					</a>
 				</li>
 				<li>
-					<a style="cursor: pointer;" onclick="showHideWorld()">
+					<a style="cursor: pointer;" onclick="toggle('world')">
 						<div class="headerTab">
 							<p>Realpolitik</p>
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
@@ -164,9 +164,9 @@
 					</a>
 				</li>
 				<li>
-					<a style="cursor: pointer;" onclick="showHideUser()">
+					<a style="cursor: pointer;" onclick="toggle('user')">
 						<div class="headerTab">
-							<p>User<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/></p>
+							<p>User</p>
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>

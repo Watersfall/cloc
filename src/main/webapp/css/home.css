@@ -536,10 +536,6 @@ ul {
 	background: rgb(55, 55, 55);
 }
 
-.noClose img{
-	max-width: 1em;
-}
-
 img {
 	max-width: 100%;
 	height: auto;

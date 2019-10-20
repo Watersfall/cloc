@@ -2,14 +2,14 @@
 <c:if test="${sessionScope.user != null}">
 	<script>
 		window.onload = function(){
-			document.getElementsByClassName("main")[0].addEventListener("click", test);
+			document.addEventListener("click", test);
 		};
 
 		function test(event)
 		{
-			if(event.target.className !== "noClose")
+			if(event.target.className.indexOf("noClose") === -1)
 			{
-				showHideTab(null);
+				toggleTab(null);
 			}
 		}
 	</script>
@@ -17,9 +17,9 @@
 		<ul>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('budget')">
-						<img src="${pageContext.request.contextPath}/images/ui/budget.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.budget * 1000}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('budget')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/budget.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.budget * 1000}"/></p>
 						<div id="budget" class="resourceTab">
 							<p class="neutral">$<fmt:formatNumber value="${home.economy.budget}"/>k Total<br></p>
 							<p class="positive">+<fmt:formatNumber value="${home.budgetChange}" maxFractionDigits="2"/>k from GDP</p>
@@ -29,9 +29,9 @@
 			</li>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('food')">
-						<img src="${pageContext.request.contextPath}/images/ui/food.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.food}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('food')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/food.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.food}"/></p>
 						<div id="food" class="resourceTab">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.food}"/> Total<br></p>
 							<p class="positive">+${home.foodProduction.farming} from farming<br></p>
@@ -42,9 +42,9 @@
 			</li>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('coal')">
-						<img src="${pageContext.request.contextPath}/images/ui/coal.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.coal}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('coal')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/coal.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.coal}"/></p>
 						<div id="coal" class="resourceTab">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.coal}"/> Total<br></p>
 							<c:forEach var="coal" items="${home.totalCoalProduction.entrySet()}">
@@ -72,9 +72,9 @@
 			</li>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('iron')">
-						<img src="${pageContext.request.contextPath}/images/ui/iron.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.iron}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('iron')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/iron.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.iron}"/></p>
 						<div id="iron" class="resourceTab">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.iron}"/> Total<br></p>
 							<c:forEach var="iron" items="${home.totalIronProduction.entrySet()}">
@@ -102,9 +102,9 @@
 			</li>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('oil')">
-						<img src="${pageContext.request.contextPath}/images/ui/oil.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.oil}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('oil')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/oil.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.oil}"/></p>
 						<div id="oil" class="resourceTab">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.oil}"/> Total<br></p>
 							<c:forEach var="oil" items="${home.totalOilProduction.entrySet()}">
@@ -132,9 +132,9 @@
 			</li>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('steel')">
-						<img src="${pageContext.request.contextPath}/images/ui/steel.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.steel}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('steel')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/steel.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.steel}"/></p>
 						<div id="steel" class="resourceTab">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.steel}"/> Total<br></p>
 							<c:forEach var="steel" items="${home.totalSteelProduction.entrySet()}">
@@ -162,9 +162,9 @@
 			</li>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('nitrogen')">
-						<img src="${pageContext.request.contextPath}/images/ui/nitrogen.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.nitrogen}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('nitrogen')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/nitrogen.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.nitrogen}"/></p>
 						<div id="nitrogen" class="resourceTab">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.nitrogen}"/> Total<br></p>
 							<c:forEach var="nitrogen" items="${home.totalNitrogenProduction.entrySet()}">
@@ -192,9 +192,9 @@
 			</li>
 			<li>
 				<a>
-					<div class="topTab" onclick="showHideTab('research')">
-						<img src="${pageContext.request.contextPath}/images/ui/research.svg" alt="budget"/>
-						<p><cloc:uiFormat value="${home.economy.research}"/></p>
+					<div class="topTab noClose" onclick="toggleTab('research')">
+						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/research.svg" alt="budget"/>
+						<p class="noClose"><cloc:uiFormat value="${home.economy.research}"/></p>
 						<div id="research" class="resourceTab">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.research}"/> Total<br></p>
 							<c:forEach var="research" items="${home.totalResearchProduction.entrySet()}">

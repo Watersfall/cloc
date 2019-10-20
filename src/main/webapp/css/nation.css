@@ -47,6 +47,10 @@
 	color: cornflowerblue;
 }
 
+#nation img{
+	max-width: 1em;
+}
+
 .flag {
 	display: block;
 	margin-left: auto;

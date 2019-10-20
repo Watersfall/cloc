@@ -1,6 +1,6 @@
-function showHidePolicies()
+function toggle(id)
 {
-	let div = document.getElementById("policies");
+	let div = document.getElementById(id);
 	if(div.style.display === "none")
 	{
 		div.style.display = "block";
@@ -11,46 +11,7 @@ function showHidePolicies()
 	}
 }
 
-function showHideWorld()
-{
-	let div = document.getElementById("world");
-	if(div.style.display === "none")
-	{
-		div.style.display = "block";
-	}
-	else
-	{
-		div.style.display = "none";
-	}
-}
-
-function showHideUser()
-{
-	let div = document.getElementById("user");
-	if(div.style.display === "none")
-	{
-		div.style.display = "block";
-	}
-	else
-	{
-		div.style.display = "none";
-	}
-}
-
-function showHideCities()
-{
-	let div = document.getElementById("cities");
-	if(div.style.display === "none")
-	{
-		div.style.display = "block";
-	}
-	else
-	{
-		div.style.display = "none";
-	}
-}
-
-function showHideTab(tab)
+function toggleTab(tab)
 {
 	let tabs = ["budget", "food", "coal", "iron", "oil", "steel", "nitrogen", "research", "approval", "stability", "land", "population", "growth", "manpower"];
 	if(tab !== null)

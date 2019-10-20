@@ -36,7 +36,7 @@
 			<tr>
 				<td>Approval</td>
 				<td>
-					<div class="noClose" onclick="showHideTab('approval')">
+					<div class="noClose" onclick="toggleTab('approval')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<cloc:approval value="${home.domestic.approval}"/>
 					</div>
@@ -60,7 +60,7 @@
 			<tr>
 				<td>Stability</td>
 				<td>
-					<div class="noClose" onclick="showHideTab('stability')">
+					<div class="noClose" onclick="toggleTab('stability')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<cloc:stability value="${home.domestic.stability}"/>
 					</div>
@@ -75,7 +75,7 @@
 			<tr>
 				<td>Land</td>
 				<td>
-					<div class="noClose" onclick="showHideTab('land')">
+					<div class="noClose" onclick="toggleTab('land')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<fmt:formatNumber value="${home.freeLand}"/> km<sup>2</sup> / <fmt:formatNumber value="${home.domestic.land}"/> km<sup>2</sup>
 					</div>
@@ -97,7 +97,7 @@
 			<tr>
 				<td>Population</td>
 				<td>
-					<div class="noClose" onclick="showHideTab('population')">
+					<div class="noClose" onclick="toggleTab('population')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<fmt:formatNumber value="${home.domestic.population}"/> People
 					</div>
@@ -112,7 +112,7 @@
 			<tr>
 				<td>Manpower</td>
 				<td>
-					<div class="noClose" onclick="showHideTab('manpower')">
+					<div class="noClose" onclick="toggleTab('manpower')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
  						<fmt:formatNumber value="${home.freeManpower}"/>
 					</div>
@@ -143,7 +143,7 @@
 			<tr>
 				<td>Growth</td>
 				<td>
-					<div class="noClose" onclick="showHideTab('growth')">
+					<div class="noClose" onclick="toggleTab('growth')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<fmt:formatNumber value="${home.economy.growth}"/> Million per Month
 					</div>
