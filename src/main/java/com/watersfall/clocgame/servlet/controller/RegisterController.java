@@ -83,52 +83,64 @@ public class RegisterController extends HttpServlet
 				{
 					password = Md5.md5(password);
 					connection = Database.getDataSource().getConnection();
-					PreparedStatement login = connection.prepareStatement("INSERT INTO cloc_login (username, password) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
-					PreparedStatement cosmetic = connection.prepareStatement("INSERT INTO cloc_cosmetic (nation_name, username, description) VALUES (?,?,?)");
-					PreparedStatement domestic = connection.prepareStatement("INSERT INTO cloc_domestic (government) VALUES(?)");
-					PreparedStatement economy = connection.prepareStatement("INSERT INTO cloc_economy (economic) VALUES(?)");
-					PreparedStatement foreign = connection.prepareStatement("INSERT INTO cloc_foreign (region) VALUES(?)");
-					PreparedStatement military = connection.prepareStatement("INSERT INTO cloc_military () VALUES ()");
-					PreparedStatement policy = connection.prepareStatement("INSERT INTO cloc_policy () VALUES ()");
-					PreparedStatement tech = connection.prepareStatement("INSERT INTO cloc_tech () VALUES ()");
-					PreparedStatement armies = connection.prepareStatement("INSERT INTO cloc_army () VALUES ()");
-					PreparedStatement cities = connection.prepareStatement("INSERT INTO cloc_cities (owner, capital, coastal, name, type) VALUES (?,?,?,?,?)");
-					login.setString(1, username);
-					login.setString(2, password);
-					cosmetic.setString(1, nation);
-					cosmetic.setString(2, username);
-					cosmetic.setString(3, "Welcome to Cloc! Please change me.");
-					domestic.setInt(1, gov);
-					economy.setInt(1, econ);
-					foreign.setString(1, region);
-					login.execute();
-					ResultSet results = login.getGeneratedKeys();
-					int id;
-					if(!results.first())
+					PreparedStatement check = connection.prepareStatement("SELECT id FROM cloc_cosmetic WHERE nation_name=? || username=?");
+					check.setString(1, nation);
+					check.setString(2, username);
+					ResultSet checkResults = check.executeQuery();
+					if(checkResults.first())
 					{
-						throw new SQLException();
+						writer.append(Responses.nameTaken());
 					}
 					else
 					{
-						id = results.getInt(1);
+						PreparedStatement login = connection.prepareStatement("INSERT INTO cloc_login (username, password) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
+						PreparedStatement cosmetic = connection.prepareStatement("INSERT INTO cloc_cosmetic (nation_name, username, description) VALUES (?,?,?)");
+						PreparedStatement domestic = connection.prepareStatement("INSERT INTO cloc_domestic (government) VALUES(?)");
+						PreparedStatement economy = connection.prepareStatement("INSERT INTO cloc_economy (economic) VALUES(?)");
+						PreparedStatement foreign = connection.prepareStatement("INSERT INTO cloc_foreign (region) VALUES(?)");
+						PreparedStatement military = connection.prepareStatement("INSERT INTO cloc_military () VALUES ()");
+						PreparedStatement policy = connection.prepareStatement("INSERT INTO cloc_policy () VALUES ()");
+						PreparedStatement tech = connection.prepareStatement("INSERT INTO cloc_tech () VALUES ()");
+						PreparedStatement armies = connection.prepareStatement("INSERT INTO cloc_army () VALUES ()");
+						PreparedStatement cities = connection.prepareStatement("INSERT INTO cloc_cities (owner, capital, coastal, name, type) VALUES (?,?,?,?,?)");
+						login.setString(1, username);
+						login.setString(2, password);
+						cosmetic.setString(1, nation);
+						cosmetic.setString(2, username);
+						cosmetic.setString(3, "Welcome to Cloc! Please change me.");
+						domestic.setInt(1, gov);
+						economy.setInt(1, econ);
+						foreign.setString(1, region);
+						login.execute();
+						ResultSet results = login.getGeneratedKeys();
+						int id;
+						if(!results.first())
+						{
+							throw new SQLException();
+						}
+						else
+						{
+							id = results.getInt(1);
+						}
+						cities.setInt(1, id);
+						cities.setBoolean(2, true);
+						cities.setBoolean(3, false);
+						cities.setString(4, capital);
+						cities.setString(5, CityType.DRILLING.getName());
+						cosmetic.execute();
+						domestic.execute();
+						economy.execute();
+						foreign.execute();
+						military.execute();
+						policy.execute();
+						tech.execute();
+						armies.execute();
+						cities.execute();
+						connection.commit();
+						writer.append(Responses.registered());
+						req.getSession().setAttribute("user", id);
+						resp.sendRedirect(req.getContextPath() + "/main.jsp");
 					}
-					cities.setInt(1, id);
-					cities.setBoolean(2, true);
-					cities.setBoolean(3, false);
-					cities.setString(4, capital);
-					cities.setString(5, CityType.DRILLING.getName());
-					cosmetic.execute();
-					domestic.execute();
-					economy.execute();
-					foreign.execute();
-					military.execute();
-					policy.execute();
-					tech.execute();
-					armies.execute();
-					cities.execute();
-					connection.commit();
-					writer.append(Responses.registered());
-					resp.sendRedirect(req.getContextPath() + "/main.jsp");
 				}
 				catch(SQLException e)
 				{

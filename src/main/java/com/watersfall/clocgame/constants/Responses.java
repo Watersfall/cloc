@@ -72,6 +72,11 @@ public class Responses
 		return "<p>You do not have permission to do this!</p>";
 	}
 
+	public static String nameTaken()
+	{
+		return "<p>That username or nation name is already being used!</p>";
+	}
+
 
 	/*
 	 ** MISSING REQUIREMENTS
