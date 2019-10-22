@@ -5,10 +5,29 @@ import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.TreatyMember;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class TreatyActions
 {
+	private static final String DIRECTORY = "/images";
+
+	private static void uploadImage(BufferedImage part, String path) throws IOException
+	{
+		ImageIO.write(part, "png", new File(path));
+	}
+
+	private static void uploadFlag(HttpServletRequest req, BufferedImage part, int user) throws IOException
+	{
+		String directory = req.getServletContext().getRealPath("") + DIRECTORY + File.separator + "treaty" + File.separator + user + ".png";
+		uploadImage(part, directory);
+	}
+
 	private static String check(TreatyMember member, String string, int length)
 	{
 		if(string == null)
@@ -29,16 +48,21 @@ public class TreatyActions
 		}
 	}
 
-	public static String updateFlag(TreatyMember member, String flag) throws SQLException
+	public static String updateFlag(HttpServletRequest req, TreatyMember member, Part flag) throws SQLException, IOException
 	{
-		String check = check(member, flag, 32);
-		if(check != null)
+		BufferedImage image = ImageIO.read(flag.getInputStream());
+		if(image.getWidth() > 2048)
 		{
-			return check;
+			return Responses.tooLong("Flag width", 2048);
+		}
+		else if(image.getHeight() > 768 * 2)
+		{
+			return Responses.tooLong("Flag height", 768 * 2);
 		}
 		else
 		{
-			member.getTreaty().setFlag(flag);
+			uploadFlag(req, image, member.getTreaty().getId());
+			member.getTreaty().setFlag(member.getTreaty().getId() + ".png");
 			member.getTreaty().update();
 			return Responses.updated("Flag");
 		}

@@ -12,6 +12,7 @@ import com.watersfall.clocgame.model.treaty.TreatyMember;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/treaty.jsp", "/treaty.do"})
+@MultipartConfig(maxFileSize = 1024 * 1024 * 4, fileSizeThreshold = 1024 * 1024 * 4)
 public class TreatyController extends HttpServlet
 {
 	@Override
@@ -66,6 +68,10 @@ public class TreatyController extends HttpServlet
 		Connection conn = null;
 		PrintWriter writer = resp.getWriter();
 		String attribute = req.getParameter("attribute");
+		if(req.getPart("flag") != null)
+		{
+			attribute = "flag";
+		}
 		String value = req.getParameter("value");
 		int user = 0;
 		try
@@ -80,7 +86,7 @@ public class TreatyController extends HttpServlet
 					writer.append(TreatyActions.updateName(member, value));
 					break;
 				case "flag":
-					writer.append(TreatyActions.updateFlag(member, value));
+					writer.append(TreatyActions.updateFlag(req, member, req.getPart("flag")));
 					break;
 				case "description":
 					writer.append(TreatyActions.updateDescription(member, value));

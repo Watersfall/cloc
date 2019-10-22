@@ -22,7 +22,7 @@
 			</c:if>
 			<h1><c:out value="${treaty.name}"/></h1>
 			<br>
-			<img style="width: 40%; height: auto;" src="${pageContext.request.contextPath}/images/flag/<c:out value="${treaty.flag}"/>" alt="flag"/>
+			<img style="width: 40%; height: auto;" src="${pageContext.request.contextPath}/images/treaty/<c:out value="${treaty.flag}"/>" alt="flag"/>
 			<br>
 			<p><c:out value="${treaty.description}"/></p>
 			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">
@@ -75,8 +75,10 @@
 						<input type="text" id="name" value="${treaty.name}"/>
 						<button onclick="updateTreaty('name', document.getElementById('name').value)">Set Name</button><br>
 						<label for="flag">Alliance Flag</label>
-						<input type="text" id="flag" value="${treaty.flag}"/>
-						<button onclick="updateTreaty('flag', document.getElementById('flag').value)">Set Flag</button><br>
+						<form id="flagForm" action="treaty.do" method="POST" enctype="multipart/form-data">
+							<input type="file" id="flag" name="flag" accept="image/png"/>
+						</form>
+						<button onclick="document.getElementById('flagForm').submit();">Set Flag</button><br>
 						<label for="description">Description<br></label>
 						<textarea style="width: 75%;" id="description">${treaty.description}</textarea><br>
 						<button onclick="updateTreaty('description', document.getElementById('description').value)">Set Description</button><br>
