@@ -68,9 +68,12 @@ public class TreatyController extends HttpServlet
 		Connection conn = null;
 		PrintWriter writer = resp.getWriter();
 		String attribute = req.getParameter("attribute");
-		if(req.getPart("flag") != null)
+		if(req.getContentType().contains("multipart/form-data"))
 		{
-			attribute = "flag";
+			if(req.getPart("flag") != null)
+			{
+				attribute = "flag";
+			}
 		}
 		String value = req.getParameter("value");
 		int user = 0;

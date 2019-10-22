@@ -14,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -35,19 +34,17 @@ public class SettingsController extends HttpServlet
 	{
 		PrintWriter writer = resp.getWriter();
 		String action = req.getParameter("action");
-		for(Part part : req.getParts())
+		if(req.getContentType().contains("multipart/form-data"))
 		{
-			System.out.println(part.getName());
+			if(req.getPart("flag") != null)
+			{
+				action = "flag";
+			}
+			else if(req.getPart("portrait") != null)
+			{
+				action = "portrait";
+			}
 		}
-		if(req.getPart("flag") != null)
-		{
-			action = "flag";
-		}
-		else if(req.getPart("portrait") != null)
-		{
-			action = "portrait";
-		}
-		System.out.println(action);
 		Connection connection = null;
 		try
 		{
