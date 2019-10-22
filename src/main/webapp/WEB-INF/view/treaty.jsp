@@ -22,7 +22,7 @@
 			</c:if>
 			<h1><c:out value="${treaty.name}"/></h1>
 			<br>
-			<img style="width: 40%; height: auto;" src="https://i.imgur.com/<c:out value="${treaty.flag}"/>" alt="flag"/>
+			<img style="width: 40%; height: auto;" src="${pageContext.request.contextPath}/images/flag/<c:out value="${treaty.flag}"/>" alt="flag"/>
 			<br>
 			<p><c:out value="${treaty.description}"/></p>
 			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">

@@ -10,7 +10,7 @@
 	<h1>Global Declarations</h1>
 		<c:forEach var="declaration" items="${declarations}">
 			<table id="nation">
-				<tr><td><a href="${pageContext.request.contextPath}/nation.jsp?id=${declaration.sender.id}"><img class="medium" style="margin-right: 1em;" src="https://i.imgur.com/<c:out value="${declaration.sender.flag}"/>" alt="flag"/><c:out value="${declaration.sender.nationName}"/></a></td></tr>
+				<tr><td><a href="${pageContext.request.contextPath}/nation.jsp?id=${declaration.sender.id}"><img class="medium" style="margin-right: 1em;" src="${pageContext.request.contextPath}/images/flag/<c:out value="${declaration.sender.flag}"/>" alt="flag"/><c:out value="${declaration.sender.nationName}"/></a></td></tr>
 				<tr><td><p class="neutral"><c:out value="${declaration.content}"/></p></td></tr>
 			</table>
 			<br>

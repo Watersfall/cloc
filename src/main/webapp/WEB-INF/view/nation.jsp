@@ -26,9 +26,9 @@
 		<c:otherwise>
 			<div class="nation">
 				<h1><c:out value="${nation.cosmetic.nationTitle}"/> <br> of <br><c:out value="${nation.cosmetic.nationName}"/></h1>
-				<img class="flag" src="https://imgur.com/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
+				<img class="flag" src="${pageContext.request.contextPath}/images/flag/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
 				<p><c:out value="${nation.cosmetic.description}"/></p>
-				<img class="leader" src="https://imgur.com/<c:out value="${nation.cosmetic.portrait}"/>" alt="flag">
+				<img class="leader" src="${pageContext.request.contextPath}/images/portrait/<c:out value="${nation.cosmetic.portrait}"/>" alt="flag">
 				<h1><c:out value="${nation.cosmetic.leaderTitle}"/>: <c:out value="${nation.cosmetic.username}"/></h1>
 			</div>
 			<h1>Domestic</h1>

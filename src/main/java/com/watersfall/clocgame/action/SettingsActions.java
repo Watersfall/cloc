@@ -3,19 +3,48 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class SettingsActions
 {
-	private static String checkFlag(String flag)
+	private static final String DIRECTORY = "/images";
+
+	private static void uploadImage(BufferedImage part, String path) throws IOException
+	{
+		ImageIO.write(part, "png", new File(path));
+	}
+
+	private static void uploadFlag(HttpServletRequest req, BufferedImage part, int user) throws IOException
+	{
+		String directory = req.getServletContext().getRealPath("") + DIRECTORY + File.separator + "flag" + File.separator + user + ".png";
+		uploadImage(part, directory);
+	}
+
+	private static void uploadPortrait(HttpServletRequest req, BufferedImage part, int user) throws IOException
+	{
+		String directory = req.getServletContext().getRealPath("") + DIRECTORY + File.separator + "portrait" + File.separator + user + ".png";
+		uploadImage(part, directory);
+	}
+
+	private static String checkFlag(BufferedImage flag)
 	{
 		if(flag == null)
 		{
 			return Responses.nullFields();
 		}
-		else if(flag.length() > 128)
+		else if(flag.getWidth() > 1024)
 		{
-			return Responses.tooLong("Flag", 128);
+			return Responses.tooLong("Flag width", 1024);
+		}
+		else if(flag.getHeight() > 768)
+		{
+			return Responses.tooLong("Flag height", 768);
 		}
 		else
 		{
@@ -23,15 +52,19 @@ public class SettingsActions
 		}
 	}
 
-	private static String checkPortrait(String portrait)
+	private static String checkPortrait(BufferedImage portrait)
 	{
 		if(portrait == null)
 		{
 			return Responses.nullFields();
 		}
-		else if(portrait.length() > 128)
+		else if(portrait.getWidth() > 768)
 		{
-			return Responses.tooLong("Portrait", 128);
+			return Responses.tooLong("Flag width", 768);
+		}
+		else if(portrait.getHeight() > 1024)
+		{
+			return Responses.tooLong("Flag height", 1024);
 		}
 		else
 		{
@@ -88,31 +121,35 @@ public class SettingsActions
 	}
 
 
-	public static String updateFlag(NationCosmetic cosmetic, String flag) throws SQLException
+	public static String updateFlag(HttpServletRequest req, NationCosmetic cosmetic, Part flag) throws SQLException, IOException
 	{
-		String check = checkFlag(flag);
+		BufferedImage image = ImageIO.read(flag.getInputStream());
+		String check = checkFlag(image);
 		if(check != null)
 		{
 			return check;
 		}
 		else
 		{
-			cosmetic.setFlag(flag);
+			uploadFlag(req, image, cosmetic.getId());
+			cosmetic.setFlag(cosmetic.getId() + ".png");
 			cosmetic.update();
 			return Responses.updated("Flag");
 		}
 	}
 
-	public static String updatePortrait(NationCosmetic cosmetic, String portrait) throws SQLException
+	public static String updatePortrait(HttpServletRequest req, NationCosmetic cosmetic, Part portrait) throws SQLException, IOException
 	{
-		String check = checkPortrait(portrait);
+		BufferedImage image = ImageIO.read(portrait.getInputStream());
+		String check = checkPortrait(image);
 		if(check != null)
 		{
 			return check;
 		}
 		else
 		{
-			cosmetic.setPortrait(portrait);
+			uploadPortrait(req, image, cosmetic.getId());
+			cosmetic.setPortrait(cosmetic.getId() + ".png");
 			cosmetic.update();
 			return Responses.updated("Portrait");
 		}
@@ -163,18 +200,8 @@ public class SettingsActions
 		}
 	}
 
-	public static String updateAll(NationCosmetic cosmetic, String flag, String portrait, String nationTitle, String leaderTitle, String description) throws SQLException
+	public static String updateAll(NationCosmetic cosmetic, String nationTitle, String leaderTitle, String description) throws SQLException
 	{
-		String checkFlag = checkFlag(flag);
-		if(checkFlag != null)
-		{
-			return checkFlag;
-		}
-		String checkPortrait = checkPortrait(portrait);
-		if(checkPortrait != null)
-		{
-			return checkPortrait;
-		}
 		String checkNationTitle = checkNationTitle(nationTitle);
 		if(checkNationTitle != null)
 		{
@@ -190,8 +217,6 @@ public class SettingsActions
 		{
 			return checkDescription;
 		}
-		cosmetic.setFlag(flag);
-		cosmetic.setPortrait(portrait);
 		cosmetic.setNationTitle(nationTitle);
 		cosmetic.setLeaderTitle(leaderTitle);
 		cosmetic.setDescription(description);

@@ -21,10 +21,13 @@
 						</label>
 					</td>
 					<td>
-						<input type="text" maxlength="128" name="flag" id="flag" value="<c:out value="${home.cosmetic.flag}"/>" placeholder="Flag"/>
+						<form id="flagForm" enctype="multipart/form-data" method="POST" action="settings.do" >
+							<input type="file" accept="image/png" max="1" name="flag" id="flag"/>
+							PNG Files only! 1024x768 max resolution, 1MB max file size
+						</form>
 					</td>
 					<td>
-						<button onclick="settings('flag', document.getElementById('flag').value)">Update Flag</button>
+						<button onclick="document.getElementById('flagForm').submit();">Update Flag</button>
 					</td>
 				</tr>
 				<tr>
@@ -34,10 +37,13 @@
 						</label>
 					</td>
 					<td>
-						<input type="text" maxlength="128" name="portrait" id="portrait" value="<c:out value="${home.cosmetic.portrait}"/>" placeholder="Portrait"/>
+						<form id="portraitForm" enctype="multipart/form-data" method="POST" action="settings.do">
+							<input type="file" accept="image/png" max="1" name="portrait" id="portrait"/>
+							PNG Files only! 768x1024 max resolution, 1MB max file size
+						</form>
 					</td>
 					<td>
-						<button onclick="settings('portrait', document.getElementById('portrait').value)">Update Portrait</button>
+						<button onclick="document.getElementById('portraitForm').submit();">Update Portrait</button>
 					</td>
 				</tr>
 				<tr>

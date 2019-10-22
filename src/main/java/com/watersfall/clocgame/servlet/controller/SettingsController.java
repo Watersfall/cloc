@@ -9,16 +9,19 @@ import com.watersfall.clocgame.model.nation.NationCosmetic;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/settings.jsp", "/settings.do"})
+@MultipartConfig(maxFileSize = 1024 * 1024, fileSizeThreshold = 1024 * 1024)
 public class SettingsController extends HttpServlet
 {
 	@Override
@@ -32,6 +35,19 @@ public class SettingsController extends HttpServlet
 	{
 		PrintWriter writer = resp.getWriter();
 		String action = req.getParameter("action");
+		for(Part part : req.getParts())
+		{
+			System.out.println(part.getName());
+		}
+		if(req.getPart("flag") != null)
+		{
+			action = "flag";
+		}
+		else if(req.getPart("portrait") != null)
+		{
+			action = "portrait";
+		}
+		System.out.println(action);
 		Connection connection = null;
 		try
 		{
@@ -41,10 +57,10 @@ public class SettingsController extends HttpServlet
 			switch(action)
 			{
 				case "flag":
-					writer.append(SettingsActions.updateFlag(cosmetic, req.getParameter("flag")));
+					writer.append(SettingsActions.updateFlag(req, cosmetic, req.getPart("flag")));
 					break;
 				case "portrait":
-					writer.append(SettingsActions.updatePortrait(cosmetic, req.getParameter("portrait")));
+					writer.append(SettingsActions.updatePortrait(req, cosmetic, req.getPart("portrait")));
 					break;
 				case "nationTitle":
 					writer.append(SettingsActions.updateNationTitle(cosmetic, req.getParameter("nationTitle")));
@@ -57,8 +73,6 @@ public class SettingsController extends HttpServlet
 					break;
 				case "all":
 					writer.append(SettingsActions.updateAll(cosmetic,
-							req.getParameter("flag"),
-							req.getParameter("portrait"),
 							req.getParameter("nationTitle"),
 							req.getParameter("leaderTitle"),
 							req.getParameter("description")

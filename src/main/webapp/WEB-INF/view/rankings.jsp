@@ -23,7 +23,7 @@
 			<tr>
 				<td style="width: 10em">
 					<a href="${pageContext.request.contextPath}/nation.jsp?id=${nation.id}">
-						<img class="large" src="https://imgur.com/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
+						<img class="large" src="${pageContext.request.contextPath}/images/flag/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
 					</a>
 				</td>
 				<td>
