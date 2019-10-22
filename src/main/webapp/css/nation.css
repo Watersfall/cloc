@@ -8,31 +8,38 @@
 #nation td, #nation th {
 	position: relative;
 	padding: 8px;
-	width: 33%;
+	text-align: left;
 }
 
 #nation tr:nth-child(even) {
-	background-color: rgb(50, 50, 50);
+	background-color: #424242;
+	border-bottom: #1b1b1b 1px solid;
 	color: white;
 }
 
 #nation tr:nth-child(odd) {
-	background-color: rgb(60, 60, 60);
+	background-color: #424242;
+	border-bottom: #1b1b1b 1px solid;
 	color: white;
 }
 
+#nation tr:last-child{
+	border: none;
+}
+
 #nation tr:hover {
-	background-color: rgb(35, 35, 35);
+	background-color: #1b1b1b;
 }
 
 #nation caption {
 	padding: 8px;
-	background-color: rgb(50, 50, 50);
+	background-color: #424242;
+	border-bottom: #1b1b1b 1px solid;
 	color: white;
 }
 
 #nation caption:hover {
-	background-color: rgb(35, 35, 35);
+	background-color: #1b1b1b;
 }
 
 #nation div.noClose{
@@ -47,8 +54,23 @@
 	color: cornflowerblue;
 }
 
-#nation img{
+#nation img.small{
 	max-width: 1em;
+}
+
+#nation img.medium{
+	height: 1em;
+	width: auto;
+	max-width: 2em;
+}
+
+#nation img.large{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	height: 5em;
+	width: auto;
+	max-width: 9em;
 }
 
 .flag {
@@ -63,27 +85,4 @@
 	margin-left: auto;
 	margin-right: auto;
 	width: 156px;
-}
-
-.dropdown {
-	position: relative;
-	display: inline-block;
-	width: 100%;
-}
-
-.dropdown-content {
-	top: 100%;
-	left: 0;
-	float: left;
-	display: none;
-	position: absolute;
-	background-color: black;
-	padding: 5px 5px;
-	margin: 1px 1px;
-	z-index: 1;
-	width: auto;
-}
-
-.dropdown:hover .dropdown-content {
-	display: inline-block;
 }

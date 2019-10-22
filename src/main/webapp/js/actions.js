@@ -1,7 +1,12 @@
+function displayResults()
+{
+	document.getElementById('resultsContainer').style.display = "block";
+	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+}
+
 function decision(policy)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", "/decision/" + policy, true);
 	xhttp.send();
@@ -16,8 +21,7 @@ function decision(policy)
 
 function cityDecision(policy, cityId)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", "/decision/city/" + policy + "?city=" + cityId, true);
 	xhttp.send();
@@ -32,8 +36,7 @@ function cityDecision(policy, cityId)
 
 function send(action, amount, id)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	var xhttp = new XMLHttpRequest();
 	var params;
 	if(action === null)
@@ -58,8 +61,7 @@ function send(action, amount, id)
 
 function declareWar(id)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	var xhttp = new XMLHttpRequest();
 	var params = "action=war&id=" + id;
 	xhttp.open("POST", "/nation.do", true);
@@ -81,8 +83,7 @@ function declareWar(id)
 
 function settings(name, value)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	var xhttp = new XMLHttpRequest();
 	var params = "action=" + name + "&" + name + "=" + value;
 	xhttp.open("POST", "/settings.do", true);
@@ -99,8 +100,7 @@ function settings(name, value)
 
 function settingsAll(flag, portrait, nationTitle, leaderTitle, description)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	var xhttp = new XMLHttpRequest();
 	var params = "action=all" + "&flag=" + flag +
 		"&portrait=" + portrait + "&nationTitle=" + nationTitle +
@@ -119,8 +119,7 @@ function settingsAll(flag, portrait, nationTitle, leaderTitle, description)
 
 function policy(policy)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...<p>";
+	displayResults();
 	let xhttp = new XMLHttpRequest();
 	let params = 'selection=' + document.getElementById(policy).selectedIndex + '&policy=' + policy;
 	xhttp.open('POST', '/policy.do', true);
@@ -156,8 +155,7 @@ function updateDesc(name)
 
 function createTreaty(name)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	var xhttp = new XMLHttpRequest();
 	var params = "name=" + name;
 	xhttp.open("POST", "createtreaty.do", true);
@@ -178,8 +176,7 @@ function createTreaty(name)
 
 function login(user, pass)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	let xhttp = new XMLHttpRequest();
 	let params = "username=" + user + "&password=" + pass;
 	xhttp.open("POST", "login.do", true);
@@ -203,8 +200,7 @@ function login(user, pass)
 
 function research(tech)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	let xhttp = new XMLHttpRequest();
 	let params = "tech=" + tech;
 	xhttp.open("POST", "technology.do", true);
@@ -243,8 +239,7 @@ function updateTechs()
 
 function updateTreaty(attribute, value)
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	let xhttp = new XMLHttpRequest();
 	let params = "attribute=" + attribute + "&value=" + value;
 	xhttp.open("POST", "treaty.do", true);
@@ -261,8 +256,7 @@ function updateTreaty(attribute, value)
 
 function postDeclaration()
 {
-	document.getElementById('resultsContainer').style.visibility = "visible";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	displayResults();
 	let message = document.getElementById("post").value;
 	let xhttp = new XMLHttpRequest();
 	let params = "message=" + message;

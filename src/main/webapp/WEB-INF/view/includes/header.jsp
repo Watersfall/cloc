@@ -20,7 +20,7 @@
 					<div class="topTab noClose" onclick="toggleTab('budget')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/budget.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.budget * 1000}"/></p>
-						<div id="budget" class="resourceTab">
+						<div id="budget" class="resourceTabUp">
 							<p class="neutral">$<fmt:formatNumber value="${home.economy.budget}"/>k Total<br></p>
 							<p class="positive">+<fmt:formatNumber value="${home.budgetChange}" maxFractionDigits="2"/>k from GDP</p>
 						</div>
@@ -32,7 +32,7 @@
 					<div class="topTab noClose" onclick="toggleTab('food')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/food.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.food}"/></p>
-						<div id="food" class="resourceTab">
+						<div id="food" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.food}"/> Total<br></p>
 							<p class="positive">+${home.foodProduction.farming} from farming<br></p>
 							<p class="negative">-${home.foodProduction.costs} from consumption</p>
@@ -45,7 +45,7 @@
 					<div class="topTab noClose" onclick="toggleTab('coal')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/coal.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.coal}"/></p>
-						<div id="coal" class="resourceTab">
+						<div id="coal" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.coal}"/> Total<br></p>
 							<c:forEach var="coal" items="${home.totalCoalProduction.entrySet()}">
 								<c:if test="${coal.key != 'total' && coal.key != 'net'}">
@@ -75,7 +75,7 @@
 					<div class="topTab noClose" onclick="toggleTab('iron')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/iron.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.iron}"/></p>
-						<div id="iron" class="resourceTab">
+						<div id="iron" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.iron}"/> Total<br></p>
 							<c:forEach var="iron" items="${home.totalIronProduction.entrySet()}">
 								<c:if test="${iron.key != 'total' && iron.key != 'net'}">
@@ -105,7 +105,7 @@
 					<div class="topTab noClose" onclick="toggleTab('oil')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/oil.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.oil}"/></p>
-						<div id="oil" class="resourceTab">
+						<div id="oil" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.oil}"/> Total<br></p>
 							<c:forEach var="oil" items="${home.totalOilProduction.entrySet()}">
 								<c:if test="${oil.key != 'total' && oil.key != 'net'}">
@@ -135,7 +135,7 @@
 					<div class="topTab noClose" onclick="toggleTab('steel')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/steel.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.steel}"/></p>
-						<div id="steel" class="resourceTab">
+						<div id="steel" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.steel}"/> Total<br></p>
 							<c:forEach var="steel" items="${home.totalSteelProduction.entrySet()}">
 								<c:if test="${steel.key != 'total' && steel.key != 'net'}">
@@ -165,7 +165,7 @@
 					<div class="topTab noClose" onclick="toggleTab('nitrogen')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/nitrogen.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.nitrogen}"/></p>
-						<div id="nitrogen" class="resourceTab">
+						<div id="nitrogen" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.nitrogen}"/> Total<br></p>
 							<c:forEach var="nitrogen" items="${home.totalNitrogenProduction.entrySet()}">
 								<c:if test="${nitrogen.key != 'total' && nitrogen.key != 'net'}">
@@ -195,7 +195,7 @@
 					<div class="topTab noClose" onclick="toggleTab('research')">
 						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/research.svg" alt="budget"/>
 						<p class="noClose"><cloc:uiFormat value="${home.economy.research}"/></p>
-						<div id="research" class="resourceTab">
+						<div id="research" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.research}"/> Total<br></p>
 							<c:forEach var="research" items="${home.totalResearchProduction.entrySet()}">
 								<c:if test="${research.key != 'total' && research.key != 'net'}">

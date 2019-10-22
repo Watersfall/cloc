@@ -5,8 +5,9 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+
 	<c:choose>
 		<c:when test="${empty param['id']}">
 			<p>You have visited this page incorrectly!</p>
@@ -19,11 +20,11 @@
 				<p>You have been invited to this alliance!</p>
 				<button onclick="updateTreaty('accept', '${treaty.id}')">Accept</button><button onclick="updateTreaty('decline', '${treaty.id}')">Reject</button>
 			</c:if>
-			<h1>${treaty.name}</h1>
+			<h1><c:out value="${treaty.name}"/></h1>
 			<br>
-			<img style="width: 40%; height: auto;" src="https://i.imgur.com/${treaty.flag}" alt="flag"/>
+			<img style="width: 40%; height: auto;" src="https://i.imgur.com/<c:out value="${treaty.flag}"/>" alt="flag"/>
 			<br>
-			<p>${treaty.description}</p>
+			<p><c:out value="${treaty.description}"/></p>
 			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">
 				<br>
 				<p>Your Permissions</p>
@@ -88,7 +89,7 @@
 				</div>
 			</c:if>
 			<h3>Members</h3>
-			<table id="policy">
+			<table id="nation">
 				<tr>
 					<th>Name</th>
 					<th>Region</th>
@@ -99,7 +100,7 @@
 				</tr>
 				<c:forEach items="${treaty.members}" var="member">
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/nation.jsp?id=${member.id}">${member.cosmetic.nationName}</a></td>
+						<td><a href="${pageContext.request.contextPath}/nation.jsp?id=${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></td>
 						<td><a href="${pageContext.request.contextPath}/map.jsp?region=${member.foreign.region.name}">${member.foreign.region.name}</a></td>
 						<td>${member.roles}</td>
 						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
@@ -115,6 +116,6 @@
 		</c:otherwise>
 	</c:choose>
 </div>
-</div>
+<%@ include file="includes/header.jsp" %></div>
 </body>
 </html>

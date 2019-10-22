@@ -3,6 +3,7 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <script>
 	function loadCity(id)
@@ -25,14 +26,13 @@
 		}
 	}
 </script>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
 	<div class="categories">
 		<ul>
 			<c:forEach var="i" items="${home.cities.cities}">
-				<li style="min-width: ${100 / home.cities.cities.size()}%" onclick="loadCity('${i.key}')">
+				<li onclick="loadCity('${i.key}')">
 					<a>
-						<div style="width: 100%">${i.value.name}</div>
+						<div style="width: 100%"><c:out value="${i.value.name}"/></div>
 					</a>
 				</li>
 			</c:forEach>
@@ -40,6 +40,6 @@
 	</div>
 	<%@include file="includes/city.jsp"%>
 </div>
-</div>
+<%@ include file="includes/header.jsp" %></div>
 </body>
 </html>

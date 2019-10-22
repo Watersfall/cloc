@@ -1,6 +1,8 @@
-<div class="top">
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<div class="top" id="top">
 	<c:choose>
 		<c:when test="${sessionScope.user == null}">
+			<div class="magic"></div>
 			<ul>
 				<li>
 					<a href="${pageContext.request.contextPath}/">
@@ -51,8 +53,9 @@
 		</c:when>
 		<c:otherwise>
 			<a href="${pageContext.request.contextPath}/main.jsp">
-				<img class="headerFlag" src="https://imgur.com/<c:out value="${home.cosmetic.flag}"/>" alt="Flag">
+				<img src="https://imgur.com/<c:out value="${home.cosmetic.flag}"/>" alt="Flag">
 			</a>
+			<div class="magic"></div>
 			<ul>
 				<li>
 					<a style="cursor: pointer;" onclick="toggle('cities')">
@@ -61,12 +64,12 @@
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
-					<ul id="cities" style="display: none">
+					<ul id="cities">
 						<c:forEach var="city" items="${home.cities.cities}">
 							<li>
 								<a href="${pageContext.request.contextPath}/cities.jsp?id=${city.value.id}">
 									<div class="headerTabSmall">
-										<p>${city.value.name}</p>
+										<p><c:out value="${city.value.name}"/></p>
 									</div>
 								</a>
 							</li>
@@ -80,7 +83,7 @@
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
-					<ul id="decisions" style="display: none">
+					<ul id="decisions">
 						<li>
 							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Economic">
 								<div class="headerTabSmall">
@@ -132,7 +135,7 @@
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
-					<ul id="world" style="display: none">
+					<ul id="world">
 						<li>
 							<a href="${pageContext.request.contextPath}/rankings.jsp">
 								<div class="headerTabSmall">
@@ -170,7 +173,7 @@
 							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						</div>
 					</a>
-					<ul id="user" style="display: none">
+					<ul id="user">
 						<li class="headerTabSmall">
 							<a href="${pageContext.request.contextPath}/settings.jsp">
 								<div class="headerTab">
@@ -191,4 +194,3 @@
 		</c:otherwise>
 	</c:choose>
 </div>
-<%@ include file="header.jsp" %>

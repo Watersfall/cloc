@@ -3,16 +3,17 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
-	<table id="policy">
-		<tr>
-			<th style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=researched"><div>Researched</div></a></th>
-			<th style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp"><div>Available</div></a></th>
-			<th style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=tree"><div>Tech Tree</div></a></th>
-		</tr>
-	</table>
-	<table id="policy">
+<%@ include file="includes/toggle.jsp"%>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+	<h1>Technology</h1>
+	<div class="categories">
+		<ul>
+			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=researched"><div>Researched</div></a></li>
+			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp"><div>Available</div></a></li>
+			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=tree"><div>Tech Tree</div></a></li>
+		</ul>
+	</div>
+	<table id="nation">
 		<%--@elvariable id="type" type="java.lang.String"--%>
 		<%--@elvariable id="category" type="java.lang.String"--%>
 		<%--@elvariable id="techs" type="java.util.List"--%>
@@ -95,7 +96,6 @@
 						width: 1em;
 						height: 100%;
 						border-left: gray solid 1em;
-						z-index: -1;
 					}
 
 					.horizontalLeft{
@@ -105,7 +105,6 @@
 						width: 100%;
 						height: 1em;
 						border-top: gray solid 1em;
-						z-index: -1;
 					}
 
 					.horizontalRight{
@@ -115,7 +114,6 @@
 						width: 100%;
 						height: 1em;
 						border-top: gray solid 1em;
-						z-index: -1;
 					}
 
 					.cornerBottomRight{
@@ -128,7 +126,6 @@
 						border-bottom: gray solid 1em;
 						border-left: transparent 0;
 						border-top: transparent 0;
-						z-index: -1;
 					}
 
 					.cornerBottomLeft{
@@ -142,24 +139,28 @@
 						border-bottom: gray solid 1em;
 						border-left: gray solid 1em;
 						border-top: transparent 0;
-						z-index: -1;
 					}
 					.tech {
+						position: relative;
 						text-align: center;
 						display: inline-block;
-						border: rgb(35,35,35) 0.25em solid;
+						border: #424242 0.25em solid;
 						padding: 1em;
 						border-radius: 0.1em;
-						background: rgb(55, 55, 55);
 						margin: 1em;
+						z-index: 1;
 					}
 
 					.researched {
-						background-color: darkgreen;
+						background-color: rgb(95,183,97);
+					}
+
+					.researched p{
+						color: black;
 					}
 
 					.available {
-						background-color: goldenrod;
+						background-color: rgb(250,189,41);
 						cursor: pointer;
 					}
 
@@ -168,10 +169,15 @@
 						-moz-user-select: none;
 						-ms-user-select: none;
 						user-select: none;
+						color: black;
 					}
 
 					.unavailable {
-						background-color: gray;
+						background-color: #6d6d6d;
+					}
+
+					.unavailable p{
+						color: black;
 					}
 				</style>
 				<script>
@@ -205,6 +211,6 @@
 		</c:choose>
 	</table>
 </div>
-</div>
+<%@ include file="includes/header.jsp" %></div>
 </body>
 </html>

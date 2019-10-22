@@ -3,11 +3,16 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="user" type="java.lang.Integer"--%>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+	<style>
+		#nation th{
+			width: 50% !important;
+		}
+	</style>
 	<c:choose>
 		<c:when test="${param['id'] == null}">
 			<p>You have visited this page incorrectly!</p>
@@ -82,7 +87,7 @@
 					<td>Treaty Membership</td>
 					<td>
 						<c:if test="${nation.treaty != null}">
-							<a href="${pageContext.request.contextPath}/treaty.jsp?id=${nation.treaty.id}">${nation.treaty.name}</a>
+							<a href="${pageContext.request.contextPath}/treaty.jsp?id=${nation.treaty.id}"><c:out value="${nation.treaty.name}"/></a>
 						</c:if>
 						<c:if test="${nation.treaty == null}">
 							None
@@ -195,8 +200,6 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
-	<p><br><br><br></p>
-</div></div>
-<p><br><br><br></p>
+</div><%@ include file="includes/header.jsp" %></div>
 </body>
 </html>

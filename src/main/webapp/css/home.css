@@ -1,11 +1,11 @@
 html {
-	height: 100%;
+	height: auto;
 }
 
 body {
-	height: 100%;
 	text-align: center;
-	background-color: rgb(14, 14, 14);
+	background-color: #eee;
+	height: auto;
 }
 
 h1 {
@@ -29,26 +29,32 @@ p {
 	color: white;
 }
 
+.toggle{
+	display: none;
+}
+
 .container{
 	position: absolute;
-	top: 3em;
-	left: 15%;
-	width: 85%;
-	z-index: 1;
+	left: 18em;
+	right: 0;
+	top: 0;
 	text-align: center;
-	margin-bottom: 3em;
+	margin: 0;
+	height: fit-content;
+	min-height: 100%;
 }
 
 .main {
-	min-height: 100%;
-	padding-top: 2em;
+	padding: 1em 0;
 	max-width: 75em;
-	margin: 0 auto;
+	min-height: 95vh;
+	margin: 0 auto auto;
+	background: #6d6d6d;
 }
 
 .top {
-	width: 15%;
-	background: rgb(75, 75, 75);
+	width: 18em;
+	background: #6d6d6d;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -56,8 +62,6 @@ p {
 	z-index: 3;
 	overflow-x: visible;
 	overflow-y: auto;
-	-ms-overflow-style: none;
-	overflow: -moz-scrollbars-none;
 }
 
 .top img {
@@ -70,6 +74,10 @@ p {
 .top ul {
 	padding: 0;
 	margin: 0;
+}
+
+.top ul ul{
+	display: none;
 }
 
 .top li{
@@ -86,54 +94,37 @@ p {
 }
 
 .login{
-	background-color: rgb(55, 55, 55);
+	background-color: #424242;
 }
 
 
 input[type=text]{
 	margin: 0.5em 0;
 	padding: 0.5em 0;
-	background-color: gainsboro;
-	border: rgb(55, 55, 55) solid 2px;
+	background-color: #eee;
+	border: #1b1b1b solid 2px;
 	color: black;
 }
 
 input[type=password]{
 	margin: 0.5em 0;
 	padding: 0.5em 0;
-	background-color: gainsboro;
-	border: rgb(55, 55, 55) solid 2px;
+	background-color: #eee;
+	border: #1b1b1b solid 2px;
 	color: black;
 }
 
 input:-webkit-autofill {
-	-webkit-box-shadow: 0 0 0 1000px gainsboro inset;
+	-webkit-box-shadow: 0 0 0 1000px #eee inset;
+	color: black;
 }
 
 .settings {
 	margin: auto;
 }
 
-.indexflag {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	height: 5em;
-	width: 9em;
-}
-
-.headerFlag {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	width: 85%;
-	padding-left: 15%;
-	float: right;
-	text-align: right;
-}
-
 .headerTab {
-	background-color: rgb(55, 55, 55);
+	background-color: #424242;
 	padding-left: 0;
 	margin-left: 0;
 	display: block;
@@ -144,7 +135,7 @@ input:-webkit-autofill {
 }
 
 .headerTab:hover{
-	background-color: rgb(33, 33, 33);
+	background-color: #1b1b1b;
 }
 
 .headerTab p{
@@ -161,7 +152,7 @@ input:-webkit-autofill {
 }
 
 .topTab {
-	background-color: rgb(55, 55, 55);
+	background-color: #424242;
 	padding: 0 1em;
 	display: inline;
 	float: left;
@@ -170,11 +161,11 @@ input:-webkit-autofill {
 }
 
 .topTab:hover{
-	background-color: rgb(33, 33, 33);
+	background-color: #1b1b1b;
 }
 
 .headerTabSmall {
-	background-color: rgb(55, 55, 55);
+	background-color: #424242;
 	display: block;
 	width: 80%;
 	margin-left: 0;
@@ -183,33 +174,31 @@ input:-webkit-autofill {
 }
 
 .headerTabSmall:hover{
-	background-color: rgb(33, 33, 33);
+	background-color: #1b1b1b;
 }
 
 .header{
 	width: 100%;
 	display: inline;
 	align-items: center;
-	top: 0;
-	left: 0;
-	position: fixed;
-	background: rgb(55, 55, 55);
-	vertical-align: center;
+	bottom: 0;
+	left: 18em;
+	position: sticky;
+	background: #424242;
 	z-index: 2;
 	line-height: 3em;
+	float: left;
 }
 
 .header ul{
-	margin: 0;
 	float: left;
-	padding-left: 15%;
+	margin: 0;
 	display: inline;
+	padding: 0;
 	width: 100%;
 }
 
 .header ul li{
-	padding-left: 10px;
-	padding-right: 10px;
 	margin: 0;
 	text-align: center;
 	color: white;
@@ -228,11 +217,20 @@ input:-webkit-autofill {
 	padding-right: 2px;
 }
 
-.resourceTab{
+.resourceTabUp{
+	position: absolute;
+	padding: 0.5em;
+	bottom: 100%;
+	background-color: #1b1b1b;
+	z-index: 4;
+	display: none;
+}
+
+.resourceTabDown{
 	position: absolute;
 	padding: 0.5em;
 	top: 100%;
-	background-color: rgb(33, 33, 33);
+	background-color: #1b1b1b;
 	z-index: 4;
 	display: none;
 }
@@ -308,8 +306,7 @@ a:active {
 }
 
 button {
-	background-color: rgb(42, 42, 42);
-	border: none;
+	background-color: #1b1b1b;
 	color: white;
 	padding: 15px 32px;
 	text-align: center;
@@ -317,27 +314,18 @@ button {
 	display: inline-block;
 	margin: 4px 2px;
 	cursor: pointer;
+	border: none;
 	border-radius: 5px;
 }
 
 button:hover {
-	background-color: rgb(49, 49, 49);
+	background-color: #424242;
 }
 
 button:disabled, button[disabled] {
-	background-color: rgb(21, 21, 21);
+	background-color: #1b1b1b;
 	color: rgb(42, 42, 42);
 	cursor: initial;
-}
-
-.result {
-	background-color: rgba(255, 0, 0, .5);
-	border: 1px solid rgb(255, 0, 0);
-	width: 50%;
-	padding: 12px;
-	color: black;
-	margin: 20px auto 20px auto;
-	border-radius: 10px;
 }
 
 #resources {
@@ -465,18 +453,24 @@ p.neutral {
 }
 
 .resultsContainer {
-	visibility: hidden;
-	position: fixed;
+	display: none;
+	position: sticky;
+	left: 0;
+	top: 0;
 	background-color: rgb(35, 35, 35);
-	width: 85%;
-	top: 3em;
-	left: 15%;
+	width: 100%;
 	z-index: 10;
 }
 
-.results {
+#result {
 	margin: auto;
+	height: auto;
 	width: 75%;
+}
+
+#result p{
+	padding: 1em 0;
+	margin: 0;
 }
 
 select {
@@ -492,7 +486,7 @@ select {
 
 select:hover {
 	outline: none;
-	background-color: rgb(33, 33, 33);
+	background-color: #1b1b1b;
 	border: 1px solid rgb(21, 21, 21);
 }
 
@@ -509,7 +503,7 @@ select:disabled {
 select option {
 	outline: none;
 	color: white;
-	background-color: rgb(33, 33, 33);
+	background-color: #1b1b1b;
 	border: 1px solid rgb(21, 21, 21);
 }
 
@@ -533,7 +527,7 @@ ul {
 	border: black 3px solid;
 	margin: 0;
 	padding: 1em;
-	background: rgb(55, 55, 55);
+	background: #424242;
 }
 
 img {
@@ -547,21 +541,20 @@ label{
 }
 
 textarea{
-	width: 40em;
 	height: 5em;
 	margin: 0.5em 0;
 	padding: 0.5em 0;
-	background-color: gainsboro;
-	border: rgb(55, 55, 55) solid 2px;
+	background-color: #eee;
+	border: #424242 solid 2px;
 	color: black;
 }
 
 #world path{
-	fill: gray;
+	fill: #424242;
 }
 
 #world path:hover{
-	fill: darkgray;
+	fill: #eee;
 }
 
 .categories{
@@ -575,7 +568,7 @@ textarea{
 	list-style-type: none;
 	padding: 0;
 	overflow: hidden;
-	background-color: #333333;
+	background-color: #424242;
 	margin: 0 0 1em auto;
 }
 
@@ -592,5 +585,116 @@ textarea{
 }
 
 .categories li a:hover {
-	background-color: #111111;
+	background-color: #1b1b1b;
+}
+
+.magic{
+	display: none;
+}
+
+@media screen and (max-width: 60em){
+
+	.toggle{
+		position: fixed;
+		display: block;
+		background: #424242;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 3em;
+		z-index: 100;
+	}
+
+	.toggleFlag {
+		height: 2em;
+		padding: 0.5em;
+		width: auto;
+		float: left;
+	}
+
+	.toggleButton {
+		width: 3em;
+	}
+
+	.top {
+		top: 3em;
+		display: none;
+		margin-top: -3em;
+		min-height: 100%;
+		width: 100%;
+	}
+
+	.top img {
+		display: none;
+	}
+
+	.top ul {
+		padding: 0;
+		margin: 0;
+	}
+
+	.top li{
+		font-size: 1.5em;
+	}
+
+	.top ul li img{
+		display: block;
+	}
+
+	.top li ul li{
+		font-size: 1em;
+	}
+
+	.top::-webkit-scrollbar {
+		width: 0;
+		background: transparent;
+	}
+
+	.headerTab p{
+		width: auto;
+		display: inline-block;
+	}
+
+	.headerTab img{
+		width: 1em;
+		height: auto;
+		position: absolute;
+		left: calc(100% - 1.5em);
+		top: calc(50% - 0.5em);
+	}
+
+	.container{
+		top: 3em;
+		left: 0;
+		height: fit-content;
+		min-height: 100%;
+	}
+
+	.main{
+	}
+
+	.header{
+		margin: 0;
+		font-size: 1rem;
+		width: 100%;
+		left: 0;
+	}
+
+	.header ul li p{
+		font-size: 1rem;
+	}
+
+	.topTab{
+		padding: 0 0.5rem;
+	}
+
+	.header ul li img{
+		height: 1rem;
+		width: auto;
+	}
+
+	.magic{
+		display: block;
+		height: 3em;
+	}
 }

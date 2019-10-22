@@ -3,13 +3,15 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="policy" type="com.watersfall.clocgame.action.PolicyActions"--%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%-- POLICIES --%>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<div class="container"><%@ include file="includes/results.jsp"%>
+
+	<div class="main">
 	<h1><c:out value="${param['policies']}"/> Policy</h1>
-	<table id="policy">
+	<table id="nation">
 		<tr>
 			<th style="width: 15%">
 				Policy
@@ -68,7 +70,7 @@
 						approval and moves your government to the right.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost(policy.ID_ARREST)}"/>k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ARREST)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('crackdown')">Crackdown</button>
@@ -83,7 +85,7 @@
 						your government to the left.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost(policy.ID_FREE)}"/>k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_FREE)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('free')">Free</button>
@@ -97,7 +99,7 @@
 						Put up posters saying how great you are! Increases approval. Cost is based on GDP and current approval
 					</td>
 					<td>
-						$${home.getPolicyCost(policy.ID_PROPAGANDA)}k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_PROPAGANDA)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('propaganda')">Propaganda</button>
@@ -112,7 +114,7 @@
 							Rallying war speeches will make anyone love you right? Increases approval, but only available when at war. Cost is based on GDP and current approval
 						</td>
 						<td>
-							$${home.getPolicyCost(policy.ID_WAR_PROPAGANDA)}k
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_WAR_PROPAGANDA)}"/>k
 						</td>
 						<td>
 							<button class="policyButton" type="submit" onclick="decision('warpropaganda')">Propaganda</button>
@@ -127,7 +129,7 @@
 						Slash and burn some useless jungle to make room for our expanding economy
 					</td>
 					<td>
-						$${home.getPolicyCost(policy.ID_LAND_CLEARANCE)}k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_LAND_CLEARANCE)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('landclearance')">Burn</button>
@@ -143,7 +145,7 @@
 						Praise France's Democracy, hoping to make them like you.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('alignentente')">Praise</button>
@@ -157,7 +159,7 @@
 						Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('aligncentral')">Admire</button>
@@ -171,7 +173,7 @@
 						Go out on stage and celebrate your people's strength!
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('alignneutral')">Celebrate</button>
@@ -229,7 +231,7 @@
 						Train your army
 					</td>
 					<td>
-						$<c:out value="${home.getPolicyCost(policy.ID_TRAIN)}"/>k
+						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_TRAIN)}"/>k
 					</td>
 					<td>
 						<button class="policyButton" type="submit" onclick="decision('train')">Train</button>
@@ -276,6 +278,7 @@
 		</c:choose>
 	</table>
 </div>
+<%@ include file="includes/header.jsp" %>
 </div>
 </body>
 </html>

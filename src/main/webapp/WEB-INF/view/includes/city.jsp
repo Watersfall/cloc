@@ -68,33 +68,33 @@
 							<h3>Coal Mines</h3>
 							<img src="${pageContext.request.contextPath}/images/city/coalmine.png" alt="coal mine"/>
 							<p>
-								${city.coalMines} coal mines producing <fmt:formatNumber value="${city.coalProduction.total}" maxFractionDigits="2"/> tons of coal per week
+								<fmt:formatNumber value="${city.coalMines}"/> coal mines producing <fmt:formatNumber value="${city.coalProduction.total}" maxFractionDigits="2"/> tons of coal per week
 								<br>
 								(<fmt:formatNumber value="${city.coalProduction.total / city.coalMines}" maxFractionDigits="2"/> tons per week per mine)
 							</p>
-							<button onclick="cityDecision('coalmine', '${city.id}')">Build - $${city.mineCost}k</button>
+							<button onclick="cityDecision('coalmine', '${city.id}')">Build - $<fmt:formatNumber value="${city.mineCost}"/>k</button>
 							<button ${city.coalMines <= 0 ? 'disabled' : ''} onclick="cityDecision('uncoalmine', '${city.id}')">Close</button>
 						</li>
 						<li class="cityElements">
 							<h3>Iron Mines</h3>
 							<img src="${pageContext.request.contextPath}/images/city/ironmine.png" alt="iron mine"/>
 							<p>
-								${city.ironMines} iron mines producing <fmt:formatNumber value="${city.ironProduction.total}" maxFractionDigits="2"/> tons of iron per week
+								<fmt:formatNumber value="${city.ironMines}"/> iron mines producing <fmt:formatNumber value="${city.ironProduction.total}" maxFractionDigits="2"/> tons of iron per week
 								<br>
 								(<fmt:formatNumber value="${city.ironProduction.total / city.ironMines}" maxFractionDigits="2"/> tons per week per mine)
 							</p>
-							<button onclick="cityDecision('ironmine', '${city.id}')">Build - $${city.mineCost}k</button>
+							<button onclick="cityDecision('ironmine', '${city.id}')">Build - $<fmt:formatNumber value="${city.mineCost}"/>k</button>
 							<button ${city.ironMines <= 0 ? 'disabled' : ''} onclick="cityDecision('unironmine', '${city.id}')">Close</button>
 						</li>
 						<li class="cityElements">
 							<h3>Oil Wells</h3>
 							<img src="${pageContext.request.contextPath}/images/city/oilwell.png" alt="iron mine"/>
 							<p>
-								${city.oilWells} oil wells producing <fmt:formatNumber value="${city.oilProduction.total}" maxFractionDigits="2"/> tons of oil per week
+								<fmt:formatNumber value="${city.oilWells}"/> oil wells producing <fmt:formatNumber value="${city.oilProduction.total}" maxFractionDigits="2"/> tons of oil per week
 								<br>
 								(<fmt:formatNumber value="${city.oilProduction.total / city.oilWells}" maxFractionDigits="2"/> tons per week per well)
 							</p>
-							<button onclick="cityDecision('drill', '${city.id}')">Build - $${city.wellCost}k</button>
+							<button onclick="cityDecision('drill', '${city.id}')">Build - $<fmt:formatNumber value="${city.wellCost}"/>k</button>
 							<button ${city.oilWells <= 0 ? 'disabled' : ''} onclick="cityDecision('undrill', '${city.id}')">Close</button>
 						</li>
 					</ul>
@@ -103,33 +103,39 @@
 							<h3>Civilian Factories</h3>
 							<img src="${pageContext.request.contextPath}/images/city/civ.png" alt="civilian factory"/>
 							<p>
-								${city.industryCivilian} civilian factories producing <fmt:formatNumber value="${city.steelProduction.total}" maxFractionDigits="2"/> tons of steel per week
+								<fmt:formatNumber value="${city.industryCivilian}"/> civilian factories producing <fmt:formatNumber value="${city.steelProduction.total}" maxFractionDigits="2"/> tons of steel per week
 								<br>
 								(<fmt:formatNumber value="${city.steelProduction.total / city.industryCivilian}" maxFractionDigits="2"/> tons per week per factory)
 							</p>
-							<button onclick="cityDecision('industrialize', '${city.id}')">Build - ${factorycost.iron} Iron, ${factorycost.coal} Coal, and ${factorycost.steel} Steel</button>
+							<button onclick="cityDecision('industrialize', '${city.id}')">
+								Build - <fmt:formatNumber value="${factorycost.iron}"/> Iron, <fmt:formatNumber value="${factorycost.coal}"/> Coal, and <fmt:formatNumber value="${factorycost.steel}"/> Steel
+							</button>
 							<button ${city.industryCivilian <= 0 ? 'disabled' : ''} onclick="cityDecision('unindustrialize', '${city.id}')">Close</button>
 						</li>
 						<li class="cityElements">
 							<h3>Military Factories</h3>
 							<img src="${pageContext.request.contextPath}/images/city/mil.png" alt="military factory"/>
 							<p>
-								${city.industryMilitary} military factories producing <fmt:formatNumber value="${city.weaponsProduction.total}" maxFractionDigits="2"/> weapons per week
+								<fmt:formatNumber value="${city.industryMilitary}"/> military factories producing <fmt:formatNumber value="${city.weaponsProduction.total}" maxFractionDigits="2"/> weapons per week
 								<br>
 								(<fmt:formatNumber value="${city.weaponsProduction.total / city.industryMilitary}" maxFractionDigits="2"/> weapons per week per factory)
 							</p>
-							<button onclick="cityDecision('militarize', '${city.id}')">Build - ${factorycost.iron} Iron, ${factorycost.coal} Coal, and ${factorycost.steel} Steel</button>
+							<button onclick="cityDecision('militarize', '${city.id}')">
+								Build - <fmt:formatNumber value="${factorycost.iron}"/> Iron, <fmt:formatNumber value="${factorycost.coal}"/> Coal, and <fmt:formatNumber value="${factorycost.steel}"/> Steel
+							</button>
 							<button ${city.industryMilitary <= 0 ? 'disabled' : ''} onclick="cityDecision('unmilitarize', '${city.id}')">Close</button>
 						</li>
 						<li class="cityElements">
 							<h3>Nitrogen Plants</h3>
 							<img src="${pageContext.request.contextPath}/images/city/civ.png" alt="nitrogen factory"/>
 							<p>
-								${city.industryNitrogen} nitrogen factories producing  <fmt:formatNumber value="${city.nitrogenProduction.total}" maxFractionDigits="2"/> tons of nitrogen per week
+								<fmt:formatNumber value="${city.industryNitrogen}"/> nitrogen factories producing  <fmt:formatNumber value="${city.nitrogenProduction.total}" maxFractionDigits="2"/> tons of nitrogen per week
 								<br>
 								(<fmt:formatNumber value="${city.nitrogenProduction.total / city.industryNitrogen}" maxFractionDigits="2"/> tons per week per factory)
 							</p>
-							<button onclick="cityDecision('nitrogenplant', '${city.id}')">Build - ${factorycost.iron} Iron, ${factorycost.coal} Coal, and ${factorycost.steel} Steel</button>
+							<button onclick="cityDecision('nitrogenplant', '${city.id}')">
+								Build - <fmt:formatNumber value="${factorycost.iron}"/> Iron, <fmt:formatNumber value="${factorycost.coal}"/> Coal, and <fmt:formatNumber value="${factorycost.steel}"/> Steel
+							</button>
 							<button ${city.industryNitrogen <= 0 ? 'disabled' : ''} onclick="cityDecision('unnitrogenplant', '${city.id}')">Close</button>
 						</li>
 					</ul>
@@ -138,11 +144,13 @@
 							<h3>Universities</h3>
 							<img src="${pageContext.request.contextPath}/images/city/uni.png" alt="university"/>
 							<p>
-								${city.universities} universities producing  <fmt:formatNumber value="${city.researchProduction.total}" maxFractionDigits="2"/> research per week
+								<fmt:formatNumber value="${city.universities}"/> universities producing  <fmt:formatNumber value="${city.researchProduction.total}" maxFractionDigits="2"/> research per week
 								<br>
 								(${1} research per week per university)
 							</p>
-							<button onclick="cityDecision('university', '${city.id}')">Build - ${unicost.iron} Iron, ${unicost.coal} Coal, and ${unicost.steel} Steel</button>
+							<button onclick="cityDecision('university', '${city.id}')">
+								Build - <fmt:formatNumber value="${unicost.iron}"/> Iron, <fmt:formatNumber value="${unicost.coal}"/> Coal, and <fmt:formatNumber value="${unicost.steel}"/> Steel
+							</button>
 							<button ${city.universities <= 0 ? 'disabled' : ''} onclick="cityDecision('ununiversity', '${city.id}')">Close</button>
 						</li>
 					</ul>
@@ -151,7 +159,7 @@
 							<h3>Railroads</h3>
 							<img src="${pageContext.request.contextPath}/images/city/railroad.png" alt="railroad"/>
 							<p>${city.railroads} / 10 Railroads</p>
-							<button ${city.railroads >= 10 ? 'disabled' : ''} onclick="cityDecision('railroad', '${city.id}')">Build - ${city.railCost}</button>
+							<button ${city.railroads >= 10 ? 'disabled' : ''} onclick="cityDecision('railroad', '${city.id}')">Build - <fmt:formatNumber value="${city.railCost}"/></button>
 							<button ${city.railroads <= 0 ? 'disabled' : ''} onclick="cityDecision('unrailroad', '${city.id}')">Close</button>
 
 						</li>
@@ -159,7 +167,7 @@
 							<h3>Military Barracks</h3>
 							<img src="${pageContext.request.contextPath}/images/city/barrack.png" alt="barrack"/>
 							<p>${city.barracks} / 10 Military Barracks</p>
-							<button ${city.barracks >= 10 ? 'disabled' : ''} onclick="cityDecision('barrack', '${city.id}')">Build - ${city.barrackCost}</button>
+							<button ${city.barracks >= 10 ? 'disabled' : ''} onclick="cityDecision('barrack', '${city.id}')">Build - <fmt:formatNumber value="${city.barrackCost}"/></button>
 							<button ${city.barracks <= 0 ? 'disabled' : ''} onclick="cityDecision('unbarrack', '${city.id}')">Close</button>
 						</li>
 						<c:if test="${city.coastal}">
@@ -167,7 +175,7 @@
 								<h3>Ports</h3>
 								<img src="${pageContext.request.contextPath}/images/city/port.png" alt="port"/>
 								<p>${city.ports} / 10 Ports</p>
-								<button ${city.ports >= 10 ? 'disabled' : ''} onclick="cityDecision('port', '${city.id}')">Build - ${city.portCost}</button>
+								<button ${city.ports >= 10 ? 'disabled' : ''} onclick="cityDecision('port', '${city.id}')">Build - <fmt:formatNumber value="${city.portCost}"/></button>
 								<button ${city.ports <= 0 ? 'disabled' : ''} onclick="cityDecision('unport', '${city.id}')">Close</button>
 							</li>
 						</c:if>
@@ -178,27 +186,27 @@
 					<table id="nation">
 						<tr>
 							<td>Coal Mines</td>
-							<td>${city.coalMines} Mines</td>
+							<td><fmt:formatNumber value="${city.coalMines}"/> Mines</td>
 						</tr>
 						<tr>
 							<td>Iron Mines</td>
-							<td>${city.ironMines} Mines</td>
+							<td><fmt:formatNumber value="${city.ironMines}"/> Mines</td>
 						</tr>
 						<tr>
 							<td>Oil Wells</td>
-							<td>${city.oilWells} Wells</td>
+							<td><fmt:formatNumber value="${city.oilWells}"/> Wells</td>
 						</tr>
 						<tr>
 							<td>Civilian Factories</td>
-							<td>${city.industryCivilian} Factories</td>
+							<td><fmt:formatNumber value="${city.industryCivilian}"/> Factories</td>
 						</tr>
 						<tr>
 							<td>Military Factories</td>
-							<td>${city.industryMilitary} Factories</td>
+							<td><fmt:formatNumber value="${city.industryMilitary}"/> Factories</td>
 						</tr>
 						<tr>
 							<td>Nitrogen Plants</td>
-							<td>${city.industryNitrogen} Factories</td>
+							<td><fmt:formatNumber value="${city.industryNitrogen}"/> Factories</td>
 						</tr>
 						<tr>
 							<td>Railroads</td>

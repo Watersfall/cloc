@@ -3,10 +3,11 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="turn" type="java.lang.Integer"--%>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+	<h1>State Policy</h1>
 	<table id="nation">
 		<tr>
 			<th>Decision</th>
@@ -82,6 +83,6 @@
 		</tr>
 	</table>
 </div>
-</div>
+<%@ include file="includes/header.jsp" %></div>
 </body>
 </html>

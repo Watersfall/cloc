@@ -3,14 +3,20 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="offensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="defensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="production" type="java.util.HashMap"--%>
 <%--@elvariable id="food" type="java.util.HashMap"--%>
 <%--@elvariable id="population" type="java.util.HashMap"--%>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<div class="container"><%@ include file="includes/results.jsp"%>
+	<style>
+		#nation td,th{
+			width: 50% !important;
+		}
+	</style>
+	<div class="main">
 	<c:if test="${sessionScope.user == null}">
 		<p>You must be logged in to view this page!</p>
 	</c:if>
@@ -22,9 +28,9 @@
 		</c:if>
 		<div class="nation">
 			<h1><c:out value="${home.cosmetic.nationTitle}"/><br> of <br><c:out value="${home.cosmetic.nationName}"/></h1>
-			<img class="flag" src="https://imgur.com/${home.cosmetic.flag}" alt="flag">
+			<img class="flag" src="https://imgur.com/<c:out value="${home.cosmetic.flag}"/>" alt="flag">
 			<p><c:out value="${home.cosmetic.description}"/></p>
-			<img class="leader" src="https://imgur.com/${home.cosmetic.portrait}" alt="flag">
+			<img class="leader" src="https://imgur.com/<c:out value="${home.cosmetic.portrait}"/>" alt="flag">
 			<h1><c:out value="${home.cosmetic.leaderTitle}"/>: <c:out value="${home.cosmetic.username}"/></h1>
 		</div>
 		<h1>Domestic</h1>
@@ -37,10 +43,10 @@
 				<td>Approval</td>
 				<td>
 					<div class="noClose" onclick="toggleTab('approval')">
-						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<cloc:approval value="${home.domestic.approval}"/>
 					</div>
-					<div class="resourceTab" id="approval">
+					<div class="resourceTabDown" id="approval">
 						<p class="neutral">${home.domestic.approval}% Approval</p>
 						<br>
 						<br>
@@ -61,10 +67,10 @@
 				<td>Stability</td>
 				<td>
 					<div class="noClose" onclick="toggleTab('stability')">
-						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<cloc:stability value="${home.domestic.stability}"/>
 					</div>
-					<div class="resourceTab" id="stability">
+					<div class="resourceTabDown" id="stability">
 						<p class="neutral">${home.domestic.stability}% Stability</p>
 						<br>
 						<br>
@@ -76,10 +82,10 @@
 				<td>Land</td>
 				<td>
 					<div class="noClose" onclick="toggleTab('land')">
-						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<fmt:formatNumber value="${home.freeLand}"/> km<sup>2</sup> / <fmt:formatNumber value="${home.domestic.land}"/> km<sup>2</sup>
 					</div>
-					<div class="resourceTab" id="land">
+					<div class="resourceTabDown" id="land">
 						<p class="neutral">Land Usage</p><br>
 						<c:forEach var="city" items="${home.landUsageByCityAndType}">
 							<p class="neutral">${city.key}</p>
@@ -98,10 +104,10 @@
 				<td>Population</td>
 				<td>
 					<div class="noClose" onclick="toggleTab('population')">
-						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<fmt:formatNumber value="${home.domestic.population}"/> People
 					</div>
-					<div class="resourceTab" id="population">
+					<div class="resourceTabDown" id="population">
 						<p class="positive">+<fmt:formatNumber value="${population.base}" maxFractionDigits="2"/>% from base growth<br></p>
 						<p class="${population.policies > 1 ? 'positive' : 'negative'}">Modified by <fmt:formatNumber value="${population.policies * 100}" maxFractionDigits="2"/>% from policies<br></p>
 						<p class="${population.unemployment > 1 ? 'positive' : 'negative'}">Modified by <fmt:formatNumber value="${population.unemployment * 100}" maxFractionDigits="2"/>% from ${population.unemployment > 0 ? 'unemployment' : 'over population'}<br></p>
@@ -113,10 +119,10 @@
 				<td>Manpower</td>
 				<td>
 					<div class="noClose" onclick="toggleTab('manpower')">
-						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
  						<fmt:formatNumber value="${home.freeManpower}"/>
 					</div>
-					<div class="resourceTab" id="manpower">
+					<div class="resourceTabDown" id="manpower">
 						<p class="neutral"><fmt:formatNumber value="${home.totalManpower}"/> Total</p><br><br>
 						<c:set var="manpower" value="${home.usedManpower}"/>
 						<c:forEach var="entry" items="${manpower}">
@@ -144,10 +150,10 @@
 				<td>Growth</td>
 				<td>
 					<div class="noClose" onclick="toggleTab('growth')">
-						<img class="noClose" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
 						<fmt:formatNumber value="${home.economy.growth}"/> Million per Month
 					</div>
-					<div class="resourceTab" id="growth">
+					<div class="resourceTabDown" id="growth">
 						<c:set value="${home.growthChange}" var="growth"/>
 						<c:forEach items="${growth.entrySet()}" var="item" varStatus="status">
 							<c:if test="${item.key != 'net'}">
@@ -186,7 +192,7 @@
 				<td>Treaty Membership</td>
 				<td>
 					<c:if test="${home.treaty != null}">
-						<a href="${pageContext.request.contextPath}/treaty.jsp?id=${home.treaty.id}">${home.treaty.name}</a>
+						<a href="${pageContext.request.contextPath}/treaty.jsp?id=${home.treaty.id}"><c:out value="${home.treaty.name}"/></a>
 					</c:if>
 					<c:if test="${home.treaty == null}">
 						None
@@ -261,7 +267,8 @@
 			<p>None</p>
 		</c:if>
 	</c:if>
-	<p><br><br><br></p>
-</div></div>
+</div>
+<%@ include file="includes/header.jsp" %>
+</div>
 </body>
 </html>

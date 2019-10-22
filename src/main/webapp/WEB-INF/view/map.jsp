@@ -3,11 +3,12 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="regions" type="java.util.HashMap"--%>
 <%--@elvariable id="nations" type="java.util.Collection"--%>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+
 	<c:if test="${empty param['region']}">
 		<svg id="world-map" width="85%" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
 			<g id="world">
@@ -56,7 +57,7 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${empty param['region']}">
-			<table id="policy">
+			<table id="nation">
 				<tr>
 					<th>Region</th>
 					<th>Total GDP</th>
@@ -65,8 +66,8 @@
 				<c:forEach items="${regions}" var="region">
 					<tr>
 						<td><a href="map.jsp?region=${region.key}">${region.key}</a> </td>
-						<td>$${region.value.gdp} Million</td>
-						<td>${region.value.army}k Active Personnel</td>
+						<td>$<fmt:formatNumber value="${region.value.gdp}"/> Million</td>
+						<td><fmt:formatNumber value="${region.value.army}"/>k Active Personnel</td>
 					</tr>
 				</c:forEach>
 			</table>
@@ -77,15 +78,34 @@
 			</form>
 			<table id="nation">
 				<tr>
-					<th>Flag</th>
-					<th>Nation Name</th>
-					<th>Leader Name</th>
+					<th style="width: 10em">Nation</th>
+					<th></th>
+					<th>Leader</th>
+					<th>Region</th>
+					<th>GDP</th>
+					<th>Treaty</th>
 				</tr>
 				<c:forEach items="${nations}" var="nation">
 					<tr>
-						<td><img class="indexflag" src="https://imgur.com/<c:out value="${nation.cosmetic.flag}"/>" alt="flag"></td>
-						<td><a href="${pageContext.request.contextPath}/nation.jsp?id=<c:out value="${nation.id}"/>"><c:out value="${nation.cosmetic.nationName}"/></a></td>
+						<td style="width: 10em">
+							<a href="${pageContext.request.contextPath}/nation.jsp?id=${nation.id}">
+								<img class="large" src="https://imgur.com/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
+							</a>
+						</td>
+						<td>
+							<a href="${pageContext.request.contextPath}/nation.jsp?id=${nation.id}">
+									${nation.cosmetic.nationName}
+							</a>
+						</td>
 						<td><c:out value="${nation.cosmetic.username}"/></td>
+						<td><c:out value="${nation.foreign.region.name}"/></td>
+						<td><fmt:formatNumber value="${nation.economy.gdp}"/></td>
+						<c:if test="${nation.treaty != null}">
+							<td><a href="${pageContext.request.contextPath}/treaty.jsp?id=${nation.treaty.id}"><c:out value="${nation.treaty.name}"/></a></td>
+						</c:if>
+						<c:if test="${nation.treaty == null}">
+							<td>None</td>
+						</c:if>
 					</tr>
 				</c:forEach>
 			</table>
@@ -99,6 +119,6 @@
 	</c:choose>
 
 </div>
-</div>
+<%@ include file="includes/header.jsp" %></div>
 </body>
 </html>

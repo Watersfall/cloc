@@ -3,9 +3,10 @@
 <%@ include file="includes/head.jsp" %>
 <body>
 <%@ include file="includes/side.jsp" %>
-<div class="container"><div class="main">
-	<%@ include file="includes/results.jsp" %>
+<%@ include file="includes/toggle.jsp"%>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+
 </div>
-</div>
+<%@ include file="includes/header.jsp" %></div>
 </body>
 </html>

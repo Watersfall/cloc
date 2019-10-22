@@ -35,7 +35,7 @@ public enum Technologies
 	BOLT_ACTION_CLIP(TechnologyBoltActionClip.getInstance(), Category.WEAPONS, 2, 4, "horizontalLeft"),
 	STRAIGHT_PULL_RIFLE(TechnologyStraightPullRifle.getInstance(), Category.WEAPONS, 3, 4, "horizontalLeft"),
 	SEMI_AUTOMATIC(TechnologySemiAutomatic.getInstance(), Category.WEAPONS, 3, 5, "vertical"),
-	MACHINE_GUN(TechnologyMachineGun.getInstance(), Category.WEAPONS, 2, 5, "vertical"),
+	MACHINE_GUN(TechnologyMachineGun.getInstance(), Category.WEAPONS, 1, 5, "vertical"),
 
 
 	TANK(TechnologyTank.getInstance(), Category.LAND, 1, 1, ""),

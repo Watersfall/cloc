@@ -13,15 +13,7 @@
 				<div id="${tech.name()}" onclick="tech('${tech.name()}', [])" class="tech ${home.tech.researchedTechs.contains(tech)? 'researched': tech.technology.isAvailable(home)? 'available' : 'unavailable'}">
 					<p>${tech.technology.name}</p>
 				</div>
-				<c:if test="${tech.cssClass.contains(',')}" var="multiple">
-					<c:set var="array" value="${fn:split(tech.cssClass, ',')}"/>
-					<c:forEach var="divClass" items="${array}">
-						<div class="${divClass}" style="${tech.technology.isAvailable(home) ? 'border-color: gold' : home.tech.researchedTechs.contains(tech) ? 'border-color: green' : 'border-color: gray'}"></div>
-					</c:forEach>
-				</c:if>
-				<c:if test="${multiple == false}">
-					<div class="${tech.cssClass}" style="${tech.technology.isAvailable(home) ? 'border-color: gold' : home.tech.researchedTechs.contains(tech) ? 'border-color: green' : 'border-color: gray'}"></div>
-				</c:if>
+				<div class="${tech.cssClass}" style="${tech.technology.isAvailable(home) ? 'border-color: rgb(250,189,41);' : home.tech.researchedTechs.contains(tech) ? 'border-color: rgb(95,183,97)' : 'border-color: #424242'}"></div>
 			</div>
 		</div>
 	</c:if>
