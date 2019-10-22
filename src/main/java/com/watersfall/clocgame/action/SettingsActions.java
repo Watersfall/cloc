@@ -60,11 +60,11 @@ public class SettingsActions
 		}
 		else if(portrait.getWidth() > 768)
 		{
-			return Responses.tooLong("Flag width", 768);
+			return Responses.tooLong("Portrait width", 768);
 		}
 		else if(portrait.getHeight() > 1024)
 		{
-			return Responses.tooLong("Flag height", 1024);
+			return Responses.tooLong("Portrait height", 1024);
 		}
 		else
 		{
