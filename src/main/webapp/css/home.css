@@ -69,6 +69,7 @@ p {
 	top: 0;
 	width: 100%;
 	height: auto;
+	max-height: 50%;
 }
 
 .top ul {

@@ -54,17 +54,17 @@
 	color: cornflowerblue;
 }
 
-#nation img.small{
+img.small{
 	max-width: 1em;
 }
 
-#nation img.medium{
+img.medium{
 	height: 1em;
 	width: auto;
 	max-width: 2em;
 }
 
-#nation img.large{
+img.large{
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -73,16 +73,18 @@
 	max-width: 9em;
 }
 
-.flag {
+img.extraLarge {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	width: 300px;
+	max-height: 300px;
 }
 
-.leader {
+img.extraLong {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	width: 156px;
+	max-height: 300px;
 }
