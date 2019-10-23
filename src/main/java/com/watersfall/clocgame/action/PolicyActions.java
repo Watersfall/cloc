@@ -292,19 +292,19 @@ public class PolicyActions
 	{
 		Nation nation = new Nation(connection, idNation, true);
 		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_ARTILLERY);
-		if(nation.getEconomy().getSteel() < costs.get("steel"))
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
 		{
 			return Responses.noSteel();
 		}
-		else if(nation.getEconomy().getNitrogen() < costs.get("nitrogen"))
+		else if(nation.getEconomy().getNitrogen() < costs.get("Nitrogen"))
 		{
 			return Responses.noNitrogen();
 		}
 		else
 		{
 			nation.getArmy().setArtillery(nation.getArmy().getArtillery() + ARTILLERY_GAIN);
-			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("steel"));
-			nation.getEconomy().setNitrogen(nation.getEconomy().getNitrogen() - costs.get("nitrogen"));
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getEconomy().setNitrogen(nation.getEconomy().getNitrogen() - costs.get("Nitrogen"));
 			nation.getArmy().update();
 			nation.getEconomy().update();
 			return Responses.artillery();
@@ -315,14 +315,14 @@ public class PolicyActions
 	{
 		Nation nation = new Nation(connection, idNation, true);
 		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_MUSKETS);
-		if(nation.getEconomy().getSteel() < costs.get("steel"))
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
 			nation.getArmy().setMusket(nation.getArmy().getMusket() + WEAPONS_GAIN);
-			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("steel"));
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
 			nation.getArmy().update();
 			nation.getEconomy().update();
 			return Responses.weapons();
