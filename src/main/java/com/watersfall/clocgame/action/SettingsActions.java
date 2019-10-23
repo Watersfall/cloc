@@ -2,6 +2,7 @@ package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
+import com.watersfall.clocgame.util.Util;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -13,23 +14,16 @@ import java.sql.SQLException;
 
 public class SettingsActions
 {
-	private static final String DIRECTORY = "/images";
-
-	private static void uploadImage(BufferedImage part, String path) throws IOException
-	{
-		ImageIO.write(part, "png", new File(path));
-	}
-
 	private static void uploadFlag(HttpServletRequest req, BufferedImage part, int user) throws IOException
 	{
-		String directory = req.getServletContext().getRealPath("") + DIRECTORY + File.separator + "flag" + File.separator + user + ".png";
-		uploadImage(part, directory);
+		String directory = Util.DIRECTORY + File.separator + "flag" + File.separator + user + ".png";
+		Util.uploadImage(part, directory);
 	}
 
 	private static void uploadPortrait(HttpServletRequest req, BufferedImage part, int user) throws IOException
 	{
-		String directory = req.getServletContext().getRealPath("") + DIRECTORY + File.separator + "portrait" + File.separator + user + ".png";
-		uploadImage(part, directory);
+		String directory = Util.DIRECTORY + File.separator + "portrait" + File.separator + user + ".png";
+		Util.uploadImage(part, directory);
 	}
 
 	private static String checkFlag(BufferedImage flag)

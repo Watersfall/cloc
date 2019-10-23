@@ -28,9 +28,9 @@
 		</c:if>
 		<div class="nation">
 			<h1><c:out value="${home.cosmetic.nationTitle}"/><br> of <br><c:out value="${home.cosmetic.nationName}"/></h1>
-			<img class="extraLarge" src="${pageContext.request.contextPath}/images/flag/<c:out value="${home.cosmetic.flag}"/>" alt="flag">
+			<img class="extraLarge" src="${pageContext.request.contextPath}/user/flag/<c:out value="${home.cosmetic.flag}"/>" alt="flag">
 			<p><c:out value="${home.cosmetic.description}"/></p>
-			<img class="extraLong" src="${pageContext.request.contextPath}/images/portrait/<c:out value="${home.cosmetic.portrait}"/>" alt="flag">
+			<img class="extraLong" src="${pageContext.request.contextPath}/user/portrait/<c:out value="${home.cosmetic.portrait}"/>" alt="flag">
 			<h1><c:out value="${home.cosmetic.leaderTitle}"/>: <c:out value="${home.cosmetic.username}"/></h1>
 		</div>
 		<h1>Domestic</h1>

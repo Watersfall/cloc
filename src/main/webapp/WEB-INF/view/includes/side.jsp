@@ -53,7 +53,7 @@
 		</c:when>
 		<c:otherwise>
 			<a href="${pageContext.request.contextPath}/main.jsp">
-				<img src="${pageContext.request.contextPath}/images/flag/<c:out value="${home.cosmetic.flag}"/>" alt="Flag">
+				<img src="${pageContext.request.contextPath}/user/flag/<c:out value="${home.cosmetic.flag}"/>" alt="Flag">
 			</a>
 			<div class="magic"></div>
 			<ul>

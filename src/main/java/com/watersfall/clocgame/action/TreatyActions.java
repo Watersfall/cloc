@@ -4,6 +4,7 @@ import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.TreatyMember;
+import com.watersfall.clocgame.util.Util;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -15,17 +16,10 @@ import java.sql.SQLException;
 
 public class TreatyActions
 {
-	private static final String DIRECTORY = "/images";
-
-	private static void uploadImage(BufferedImage part, String path) throws IOException
-	{
-		ImageIO.write(part, "png", new File(path));
-	}
-
 	private static void uploadFlag(HttpServletRequest req, BufferedImage part, int user) throws IOException
 	{
-		String directory = req.getServletContext().getRealPath("") + DIRECTORY + File.separator + "treaty" + File.separator + user + ".png";
-		uploadImage(part, directory);
+		String directory = Util.DIRECTORY + File.separator + "treaty" + File.separator + user + ".png";
+		Util.uploadImage(part, directory);
 	}
 
 	private static String check(TreatyMember member, String string, int length)
