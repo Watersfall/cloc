@@ -19,8 +19,8 @@ CREATE TABLE cloc_cosmetic(
 	username VARCHAR(32),
 	nation_title VARCHAR(128) DEFAULT 'Republic',
 	leader_title VARCHAR(128) DEFAULT 'President',
-	portrait VARCHAR(128) DEFAULT 'JUWOEe0.png',
-	flag VARCHAR(128) DEFAULT 'X3zWAyF.png',
+	portrait VARCHAR(128) DEFAULT '0.png',
+	flag VARCHAR(128) DEFAULT '0.png',
 	description TEXT,
 	FOREIGN KEY fk_cosmetic (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
@@ -174,6 +174,8 @@ CREATE TABLE cloc_news(
 	receiver INT,
 	content TEXT,
 	image TEXT DEFAULT NULL,
+	time BIGINT DEFAULT 0,
+	is_read BIT DEFAULT b'0',
 	FOREIGN KEY fk_news (receiver) REFERENCES cloc_login (id) ON DELETE CASCADE
 );
 
