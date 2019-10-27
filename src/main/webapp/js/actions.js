@@ -38,7 +38,7 @@ function cityDecision(policy, cityId)
 {
 	displayResults();
 	let url = "/decision/city/" + policy;
-	let params =  + "city=" + cityId;
+	let params = "city=" + cityId;
 	ajax(url, params);
 }
 
