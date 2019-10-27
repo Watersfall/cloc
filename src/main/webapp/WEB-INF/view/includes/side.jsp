@@ -58,6 +58,19 @@
 			<div class="magic"></div>
 			<ul>
 				<li>
+					<a href="${pageContext.request.contextPath}/news.jsp">
+						<div class="headerTab">
+							<p>News</p>
+							<div style="position: absolute; left: 0; top: 0; width: 100%;">
+								<p style="visibility: hidden">NewsNews</p>
+								<p class="newsBubble ${home.news.anyUnread ? 'unread' : 'read'}"><fmt:formatNumber value="${home.news.news.size()}"/></p>
+							</div>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<ul>
+				<li>
 					<a style="cursor: pointer;" onclick="toggle('cities')">
 						<div class="headerTab">
 							<p>Cities</p>

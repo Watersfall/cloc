@@ -1,3 +1,26 @@
+function ajax(url, params)
+{
+	let xhttp = new XMLHttpRequest();
+	xhttp.open("POST", url, true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	if(params != null)
+	{
+		xhttp.send(params);
+	}
+	else
+	{
+		xhttp.send();
+	}
+	xhttp.onreadystatechange = function()
+	{
+		if(xhttp.readyState === 4 && xhttp.status === 200)
+		{
+			document.getElementById("result").innerHTML = xhttp.responseText;
+			return xhttp.responseText;
+		}
+	};
+}
+
 function displayResults()
 {
 	document.getElementById('resultsContainer').style.display = "block";
@@ -7,38 +30,23 @@ function displayResults()
 function decision(policy)
 {
 	displayResults();
-	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "/decision/" + policy, true);
-	xhttp.send();
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	let url = "/decision/" + policy;
+	ajax(url, null);
 }
 
 function cityDecision(policy, cityId)
 {
 	displayResults();
-	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "/decision/city/" + policy + "?city=" + cityId, true);
-	xhttp.send();
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	let url = "/decision/city/" + policy;
+	let params =  + "city=" + cityId;
+	ajax(url, params);
 }
 
 function send(action, amount, id)
 {
 	displayResults();
-	var xhttp = new XMLHttpRequest();
-	var params;
+	let url = "nation.do";
+	let params;
 	if(action === null)
 	{
 		params = "action=" + action + "&id=" + id;
@@ -47,91 +55,41 @@ function send(action, amount, id)
 	{
 		params = "action=" + action + "&amount=" + amount + "&id=" + id;
 	}
-	xhttp.open("POST", "/nation.do", true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	ajax(url, params);
 }
 
 function declareWar(id)
 {
 	displayResults();
-	var xhttp = new XMLHttpRequest();
-	var params = "action=war&id=" + id;
-	xhttp.open("POST", "/nation.do", true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-			if(!(xhttp.responseText.indexOf("can not") > 0))
-			{
-				document.getElementById("decc").style.display = "none";
-				document.getElementById("land").style.display = "inline";
-			}
-		}
-	};
+	let url = "nation.do";
+	let params = "action=war&id=" + id;
+	ajax(url, params);
 }
 
 function settings(name, value)
 {
 	displayResults();
-	var xhttp = new XMLHttpRequest();
-	var params = "action=" + name + "&" + name + "=" + value;
-	xhttp.open("POST", "/settings.do", true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	let url = "settings.do";
+	let params = "action=" + name + "&" + name + "=" + value;
+	ajax(url, params);
 }
 
 function settingsAll(flag, portrait, nationTitle, leaderTitle, description)
 {
 	displayResults();
-	var xhttp = new XMLHttpRequest();
-	var params = "action=all" + "&flag=" + flag +
+	let url = "settings.do";
+	let params = "action=all" + "&flag=" + flag +
 		"&portrait=" + portrait + "&nationTitle=" + nationTitle +
 		"&leaderTitle=" + leaderTitle + "&description=" + description;
-	xhttp.open("POST", "/settings.do", true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	ajax(url, params);
 }
 
 function policy(policy)
 {
 	displayResults();
-	let xhttp = new XMLHttpRequest();
+	let url = "policy.do";
 	let params = 'selection=' + document.getElementById(policy).selectedIndex + '&policy=' + policy;
-	xhttp.open('POST', '/policy.do', true);
-	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	ajax(url, params);
 }
 
 function updateDesc(name)
@@ -156,8 +114,8 @@ function updateDesc(name)
 function createTreaty(name)
 {
 	displayResults();
-	var xhttp = new XMLHttpRequest();
-	var params = "name=" + name;
+	let xhttp = new XMLHttpRequest();
+	let params = "name=" + name;
 	xhttp.open("POST", "createtreaty.do", true);
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send(params);
@@ -240,34 +198,24 @@ function updateTechs()
 function updateTreaty(attribute, value)
 {
 	displayResults();
-	let xhttp = new XMLHttpRequest();
+	let url = "treaty.do";
 	let params = "attribute=" + attribute + "&value=" + value;
-	xhttp.open("POST", "treaty.do", true);
-	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	ajax(url, params);
 }
 
 function postDeclaration()
 {
 	displayResults();
 	let message = document.getElementById("post").value;
-	let xhttp = new XMLHttpRequest();
+	let url = "declarations.do";
 	let params = "message=" + message;
-	xhttp.open("POST", "declarations.do", true);
-	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
-	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
-		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-		}
-	};
+	ajax(url, params);
+}
+
+function newsDelete(id)
+{
+	displayResults();
+	let url = "news.do";
+	let params = "delete=" + id;
+	ajax(url, params);
 }

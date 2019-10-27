@@ -3,6 +3,7 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.nation.News;
 import com.watersfall.clocgame.model.war.Log;
 import com.watersfall.clocgame.util.Util;
 
@@ -32,6 +33,10 @@ public class NationActions
 		{
 			sender.getEconomy().setCoal(sender.getEconomy().getCoal() - amount);
 			receiver.getEconomy().setCoal(receiver.getEconomy().getCoal() + amount);
+			String message = News.createMessage(News.ID_SEND_COAL)
+					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
+					.replace("%AMOUNT%", Integer.toString(amount));
+			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
 			sender.update();
 			receiver.update();
 			return Responses.sent();
@@ -57,6 +62,10 @@ public class NationActions
 		{
 			sender.getEconomy().setIron(sender.getEconomy().getIron() - amount);
 			receiver.getEconomy().setIron(receiver.getEconomy().getIron() + amount);
+			String message = News.createMessage(News.ID_SEND_IRON)
+					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
+					.replace("%AMOUNT%", Integer.toString(amount));
+			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
 			sender.update();
 			receiver.update();
 			return Responses.sent();
@@ -82,6 +91,10 @@ public class NationActions
 		{
 			sender.getEconomy().setOil(sender.getEconomy().getOil() - amount);
 			receiver.getEconomy().setOil(receiver.getEconomy().getOil() + amount);
+			String message = News.createMessage(News.ID_SEND_OIL)
+					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
+					.replace("%AMOUNT%", Integer.toString(amount));
+			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
 			sender.update();
 			receiver.update();
 			return Responses.sent();
@@ -107,6 +120,10 @@ public class NationActions
 		{
 			sender.getEconomy().setSteel(sender.getEconomy().getSteel() - amount);
 			receiver.getEconomy().setSteel(receiver.getEconomy().getSteel() + amount);
+			String message = News.createMessage(News.ID_SEND_STEEL)
+					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
+					.replace("%AMOUNT%", Integer.toString(amount));
+			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
 			sender.update();
 			receiver.update();
 			return Responses.sent();
@@ -132,6 +149,10 @@ public class NationActions
 		{
 			sender.getEconomy().setNitrogen(sender.getEconomy().getNitrogen() - amount);
 			receiver.getEconomy().setNitrogen(receiver.getEconomy().getNitrogen() + amount);
+			String message = News.createMessage(News.ID_SEND_NITROGEN)
+					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
+					.replace("%AMOUNT%", Integer.toString(amount));
+			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
 			sender.update();
 			receiver.update();
 			return Responses.sent();
@@ -157,6 +178,10 @@ public class NationActions
 		{
 			sender.getEconomy().setBudget(sender.getEconomy().getBudget() - amount);
 			receiver.getEconomy().setBudget(receiver.getEconomy().getBudget() + amount);
+			String message = News.createMessage(News.ID_SEND_MONEY)
+					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
+					.replace("%AMOUNT%", Integer.toString(amount));
+			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
 			sender.update();
 			receiver.update();
 			return Responses.sent();
@@ -172,6 +197,9 @@ public class NationActions
 		}
 		else
 		{
+			String newsMessage = News.createMessage(News.ID_DECLARE_WAR)
+					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>");
+			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), newsMessage);
 			sender.declareWar(receiver);
 			return Responses.war();
 		}
@@ -202,6 +230,10 @@ public class NationActions
 				updateWar.setInt(4, defender.getId());
 				updateWar.execute();
 				defender.getMilitary().setWarProtection(4);
+				String message = News.createMessage(News.ID_WAR_LOST)
+						.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>");
+				News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
+				defender.update();
 				return Responses.warWon();
 			}
 			else
@@ -227,10 +259,20 @@ public class NationActions
 				defender.update();
 				if(attacker.getPower() > defender.getPower())
 				{
+					String message = News.createMessage(News.ID_DEFENSIVE_LOST)
+							.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
+							.replace("%LOST%", Integer.toString(defenderLosses))
+							.replace("%KILLED%", Integer.toString(attackLosses));
+					News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
 					losses =  Responses.offensiveVictory(attackLosses, defenderLosses);
 				}
 				else
 				{
+					String message = News.createMessage(News.ID_DEFENSIVE_WON)
+							.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
+							.replace("%LOST%", Integer.toString(defenderLosses))
+							.replace("%KILLED%", Integer.toString(attackLosses));
+					News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
 					losses = Responses.offensiveDefeat(attackLosses, defenderLosses);
 				}
 				Log.createLog(connection, attacker.getId(), defender.getForeign().getRegion(), LogType.LAND, 0);

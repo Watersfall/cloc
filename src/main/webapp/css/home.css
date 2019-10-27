@@ -152,6 +152,21 @@ input:-webkit-autofill {
 	top: calc(50% - 0.5em);
 }
 
+.headerTab .newsBubble {
+	width: auto;
+	height: auto;
+	border-radius: 2px;
+}
+
+.headerTab .read{
+	background-color: #1b1b1b;
+}
+
+.headerTab .unread
+{
+	background-color: red;
+}
+
 .topTab {
 	background-color: #424242;
 	padding: 0 1em;
@@ -344,9 +359,7 @@ button:disabled, button[disabled] {
 }
 
 .left {
-	text-align: left;
-	margin-top: 4%;
-	margin-bottom: 4%;
+	float: left;
 }
 
 p.positive {
@@ -371,7 +384,7 @@ p.neutral {
 }
 
 .right {
-	text-align: right;
+	float: right;
 }
 
 .resourceDropDown {

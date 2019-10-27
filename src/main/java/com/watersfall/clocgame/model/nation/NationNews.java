@@ -1,18 +1,18 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.exception.NationNotFoundException;
 import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NationNews extends NationBase
 {
 
-	private @Getter ArrayList<News> news;
+	private @Getter HashMap<Integer, News> news;
+	private @Getter boolean anyUnread = false;
 
 	public NationNews(Connection connection, int id, boolean safe) throws SQLException
 	{
@@ -20,39 +20,38 @@ public class NationNews extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT sender, receiver, content, image, id " + "FROM cloc_news " + "WHERE receiver=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT sender, receiver, content, image, id " + "FROM cloc_news " + "WHERE receiver=?");
+			read = connection.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
+		this.news = new HashMap<>();
+		this.connection = connection;
+		this.safe = safe;
+		this.id = id;
 		if(!results.first())
 		{
-			throw new NationNotFoundException("No nation with that id!");
+			return;
 		}
-		else
+		results.beforeFirst();
+		while(results.next())
 		{
-			results.beforeFirst();
-			this.news = new ArrayList<>();
-			this.connection = connection;
-			this.safe = safe;
-			this.id = id;
-			while(results.next())
+			News temp = new News(connection, results);
+			news.put(temp.getId(), temp);
+			if(!temp.isRead())
 			{
-				news.add(new News(results));
+				anyUnread = true;
 			}
 		}
 	}
 
-	public void updateAll() throws SQLException
+	public void deleteAll() throws SQLException
 	{
-		results.beforeFirst();
-		while(results.next())
-		{
-			results.updateRow();
-		}
+		PreparedStatement delete = connection.prepareStatement("DELETE FROM cloc_news WHERE receiver=?");
+		delete.setInt(1, this.id);
+		delete.execute();
 	}
-
 }

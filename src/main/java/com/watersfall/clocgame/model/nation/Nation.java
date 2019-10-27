@@ -30,6 +30,7 @@ public class Nation
 	private @Getter NationPolicy policy;
 	private @Getter NationTech tech;
 	private @Getter NationInvites invites;
+	private @Getter NationNews news;
 	private @Getter int defensive;
 	private @Getter int offensive;
 	private @Getter Treaty treaty;
@@ -174,6 +175,7 @@ public class Nation
 		policy = new NationPolicy(connection, id, safe);
 		tech = new NationTech(connection, id, safe);
 		invites = new NationInvites(connection, id, safe);
+		news = new NationNews(connection, id, safe);
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;

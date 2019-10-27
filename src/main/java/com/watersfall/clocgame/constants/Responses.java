@@ -538,4 +538,9 @@ public class Responses
 	{
 		return "<p>Declaration posted!</p>";
 	}
+
+	public static String deleted()
+	{
+		return "<p>Deleted!</p>";
+	}
 }
