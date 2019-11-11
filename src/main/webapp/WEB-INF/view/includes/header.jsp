@@ -34,8 +34,8 @@
 						<p class="noClose"><cloc:uiFormat value="${home.economy.food}"/></p>
 						<div id="food" class="resourceTabUp">
 							<p class="neutral"><fmt:formatNumber value="${home.economy.food}"/> Total<br></p>
-							<p class="positive">+${home.foodProduction.farming} from farming<br></p>
-							<p class="negative">-${home.foodProduction.costs} from consumption</p>
+							<p class="positive">+<fmt:formatNumber value="${home.foodProduction.farming}" maxFractionDigits="2"/> from farming<br></p>
+							<p class="negative">-<fmt:formatNumber value="${home.foodProduction.costs}" maxFractionDigits="2"/> from consumption</p>
 						</div>
 					</div>
 				</a>
@@ -50,10 +50,10 @@
 							<c:forEach var="coal" items="${home.totalCoalProduction.entrySet()}">
 								<c:if test="${coal.key != 'total' && coal.key != 'net'}">
 									<c:if test="${coal.value > 0.0}">
-										<p class="positive">+${coal.value} from ${coal.key}</p><br>
+										<p class="positive">+<fmt:formatNumber value="${coal.value}" maxFractionDigits="2"/> from ${coal.key}</p><br>
 									</c:if>
 									<c:if test="${coal.value < 0.0}">
-										<p class="negative">${coal.value} from ${coal.key}</p><br>
+										<p class="negative"><fmt:formatNumber value="${coal.value}" maxFractionDigits="2"/> from ${coal.key}</p><br>
 									</c:if>
 								</c:if>
 							</c:forEach>
@@ -61,10 +61,10 @@
 								<p class="neutral"><br>No net change...</p>
 							</c:if>
 							<c:if test="${home.totalCoalProduction.net > 0}">
-								<p class="positive"><br>+${home.totalCoalProduction.net} net gain</p>
+								<p class="positive"><br>+<fmt:formatNumber value="${home.totalCoalProduction.net}" maxFractionDigits="2"/> net gain</p>
 							</c:if>
 							<c:if test="${home.totalCoalProduction.net < 0}">
-								<p class="negative"><br>${home.totalCoalProduction.net} net loss</p>
+								<p class="negative"><br><fmt:formatNumber value="${home.totalCoalProduction.net}" maxFractionDigits="2"/> net loss</p>
 							</c:if>
 						</div>
 					</div>
@@ -80,10 +80,10 @@
 							<c:forEach var="iron" items="${home.totalIronProduction.entrySet()}">
 								<c:if test="${iron.key != 'total' && iron.key != 'net'}">
 									<c:if test="${iron.value > 0.0}">
-										<p class="positive">+${iron.value} from ${iron.key}</p><br>
+										<p class="positive">+<fmt:formatNumber value="${iron.value}" maxFractionDigits="2"/> from ${iron.key}</p><br>
 									</c:if>
 									<c:if test="${iron.value < 0.0}">
-										<p class="negative">${iron.value} from ${iron.key}</p><br>
+										<p class="negative"><fmt:formatNumber value="${iron.value}" maxFractionDigits="2"/> from ${iron.key}</p><br>
 									</c:if>
 								</c:if>
 							</c:forEach>
@@ -91,10 +91,10 @@
 								<p class="neutral"><br>No net change...</p>
 							</c:if>
 							<c:if test="${home.totalIronProduction.net > 0}">
-								<p class="positive"><br>+${home.totalIronProduction.net} net gain</p>
+								<p class="positive"><br>+<fmt:formatNumber value="${home.totalIronProduction.net}" maxFractionDigits="2"/> net gain</p>
 							</c:if>
 							<c:if test="${home.totalIronProduction.net < 0}">
-								<p class="negative"><br>${home.totalIronProduction.net} net loss</p>
+								<p class="negative"><br><fmt:formatNumber value="${home.totalIronProduction.net}" maxFractionDigits="2"/> net loss</p>
 							</c:if>
 						</div>
 					</div>
@@ -110,10 +110,10 @@
 							<c:forEach var="oil" items="${home.totalOilProduction.entrySet()}">
 								<c:if test="${oil.key != 'total' && oil.key != 'net'}">
 									<c:if test="${oil.value > 0.0}">
-										<p class="positive">+${oil.value} from ${oil.key}</p><br>
+										<p class="positive">+<fmt:formatNumber value="${oil.value}" maxFractionDigits="2"/> from ${oil.key}</p><br>
 									</c:if>
 									<c:if test="${oil.value < 0.0}">
-										<p class="negative">${oil.value} from ${oil.key}</p><br>
+										<p class="negative"><fmt:formatNumber value="${oil.value}" maxFractionDigits="2"/> from ${oil.key}</p><br>
 									</c:if>
 								</c:if>
 							</c:forEach>
@@ -121,10 +121,10 @@
 								<p class="neutral"><br>No net change...</p>
 							</c:if>
 							<c:if test="${home.totalOilProduction.net > 0}">
-								<p class="positive"><br>+${home.totalOilProduction.net} net gain</p>
+								<p class="positive"><br>+<fmt:formatNumber value="${home.totalOilProduction.net}" maxFractionDigits="2"/> net gain</p>
 							</c:if>
 							<c:if test="${home.totalOilProduction.net < 0}">
-								<p class="negative"><br>${home.totalOilProduction.net} net loss</p>
+								<p class="negative"><br><fmt:formatNumber value="${home.totalOilProduction.net}" maxFractionDigits="2"/> net loss</p>
 							</c:if>
 						</div>
 					</div>
@@ -140,10 +140,10 @@
 							<c:forEach var="steel" items="${home.totalSteelProduction.entrySet()}">
 								<c:if test="${steel.key != 'total' && steel.key != 'net'}">
 									<c:if test="${steel.value > 0.0}">
-										<p class="positive">+${steel.value} from ${steel.key}</p><br>
+										<p class="positive">+<fmt:formatNumber value="${steel.value}" maxFractionDigits="2"/> from ${steel.key}</p><br>
 									</c:if>
 									<c:if test="${steel.value < 0.0}">
-										<p class="negative">${steel.value} from ${steel.key}</p><br>
+										<p class="negative"><fmt:formatNumber value="${steel.value}" maxFractionDigits="2"/> from ${steel.key}</p><br>
 									</c:if>
 								</c:if>
 							</c:forEach>
@@ -151,10 +151,10 @@
 								<p class="neutral"><br>No net change...</p>
 							</c:if>
 							<c:if test="${home.totalSteelProduction.net > 0}">
-								<p class="positive"><br>+${home.totalSteelProduction.net} net gain</p>
+								<p class="positive"><br>+<fmt:formatNumber value="${home.totalSteelProduction.net}" maxFractionDigits="2"/> net gain</p>
 							</c:if>
 							<c:if test="${home.totalSteelProduction.net < 0}">
-								<p class="negative"><br>${home.totalSteelProduction.net} net loss</p>
+								<p class="negative"><br><fmt:formatNumber value="${home.totalSteelProduction.net}" maxFractionDigits="2"/> net loss</p>
 							</c:if>
 						</div>
 					</div>
@@ -170,10 +170,10 @@
 							<c:forEach var="nitrogen" items="${home.totalNitrogenProduction.entrySet()}">
 								<c:if test="${nitrogen.key != 'total' && nitrogen.key != 'net'}">
 									<c:if test="${nitrogen.value > 0.0}">
-										<p class="positive">+${nitrogen.value} from ${nitrogen.key}</p><br>
+										<p class="positive">+<fmt:formatNumber value="${nitrogen.value}" maxFractionDigits="2"/> from ${nitrogen.key}</p><br>
 									</c:if>
 									<c:if test="${nitrogen.value < 0.0}">
-										<p class="negative">${nitrogen.value} from ${nitrogen.key}</p><br>
+										<p class="negative"><fmt:formatNumber value="${nitrogen.value}" maxFractionDigits="2"/> from ${nitrogen.key}</p><br>
 									</c:if>
 								</c:if>
 							</c:forEach>
@@ -181,10 +181,10 @@
 								<p class="neutral"><br>No net change...</p>
 							</c:if>
 							<c:if test="${home.totalNitrogenProduction.net > 0}">
-								<p class="positive"><br>+${home.totalNitrogenProduction.net} net gain</p>
+								<p class="positive"><br>+<fmt:formatNumber maxFractionDigits="2" value="${home.totalNitrogenProduction.net}"/> net gain</p>
 							</c:if>
 							<c:if test="${home.totalNitrogenProduction.net < 0}">
-								<p class="negative"><br>${home.totalNitrogenProduction.net} net loss</p>
+								<p class="negative"><br><fmt:formatNumber maxFractionDigits="2" value="${home.totalNitrogenProduction.net}"/> net loss</p>
 							</c:if>
 						</div>
 					</div>
@@ -200,10 +200,10 @@
 							<c:forEach var="research" items="${home.totalResearchProduction.entrySet()}">
 								<c:if test="${research.key != 'total' && research.key != 'net'}">
 									<c:if test="${research.value > 0.0}">
-										<p class="positive">+${research.value} from ${research.key}</p><br>
+										<p class="positive">+<fmt:formatNumber value="${research.value}" maxFractionDigits="2"/> from ${research.key}</p><br>
 									</c:if>
 									<c:if test="${research.value < 0.0}">
-										<p class="negative">${research.value} from ${research.key}</p><br>
+										<p class="negative"><fmt:formatNumber value="${research.value}" maxFractionDigits="2"/> from ${research.key}</p><br>
 									</c:if>
 								</c:if>
 							</c:forEach>
@@ -211,10 +211,10 @@
 								<p class="neutral"><br>No net change...</p>
 							</c:if>
 							<c:if test="${home.totalResearchProduction.net > 0}">
-								<p class="positive"><br>+${home.totalResearchProduction.net} net gain</p>
+								<p class="positive"><br>+<fmt:formatNumber value="${home.totalResearchProduction.net}" maxFractionDigits="2"/> net gain</p>
 							</c:if>
 							<c:if test="${home.totalResearchProduction.net < 0}">
-								<p class="negative"><br>${home.totalResearchProduction.net} net loss</p>
+								<p class="negative"><br><fmt:formatNumber value="${home.totalResearchProduction.net}" maxFractionDigits="2"/> net loss</p>
 							</c:if>
 						</div>
 					</div>
