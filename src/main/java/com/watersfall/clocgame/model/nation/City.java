@@ -38,6 +38,7 @@ public class City
 	private @Getter int universities;
 	private @Getter String name;
 	private @Getter CityType type;
+	private @Getter int devastation;
 	private @Getter ResultSet results;
 
 	public City(Connection connection, int id, boolean safe) throws SQLException
@@ -45,11 +46,11 @@ public class City
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT owner, capital, coastal, railroads, ports, barracks, iron_mines, coal_mines, oil_wells, civilian_industry, military_industry, nitrogen_industry, universities, name, type, id " + "FROM cloc_cities " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT owner, capital, coastal, railroads, ports, barracks, iron_mines, coal_mines, oil_wells, civilian_industry, military_industry, nitrogen_industry, universities, name, type, devastation, id " + "FROM cloc_cities " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT owner, capital, coastal, railroads, ports, barracks, iron_mines, coal_mines, oil_wells, civilian_industry, military_industry, nitrogen_industry, universities, name, type, id " + "FROM cloc_cities " + "WHERE id=?");
+			read = connection.prepareStatement("SELECT owner, capital, coastal, railroads, ports, barracks, iron_mines, coal_mines, oil_wells, civilian_industry, military_industry, nitrogen_industry, universities, name, type, devastation, id " + "FROM cloc_cities " + "WHERE id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -73,7 +74,8 @@ public class City
 		this.universities = results.getInt(13);
 		this.name = results.getString(14);
 		this.type = CityType.getByName(results.getString(15));
-		this.id = results.getInt(16);
+		this.devastation = results.getInt(16);
+		this.id = results.getInt(17);
 	}
 
 	public void setCapital(boolean capital) throws SQLException
@@ -220,6 +222,20 @@ public class City
 		results.updateString(15, type.getName());
 	}
 
+	public void setDevastation(int devastation) throws SQLException
+	{
+		if(devastation > 100)
+		{
+			devastation = 100;
+		}
+		else if(devastation < 0)
+		{
+			devastation = 0;
+		}
+		this.devastation = devastation;
+		results.updateInt(16, devastation);
+	}
+
 	public void update() throws SQLException
 	{
 		results.updateRow();
@@ -328,6 +344,8 @@ public class City
 		double mines = this.getCoalMines() * ProductionConstants.MINE_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getCoalMines();
 		double total = mines + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
 		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_COAL_PER_WEEK;
 		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_COAL_PER_WEEK;
 		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_COAL_PER_WEEK;
@@ -335,6 +353,7 @@ public class City
 		map.put("total", total);
 		map.put("mines", mines);
 		map.put("infrastructure", bonus);
+		map.put("devastation", devastation2);
 		map.put("civilian factory demands", civilian);
 		map.put("military factory demands", military);
 		map.put("nitrogen plant demands", nitrogen);
@@ -361,6 +380,8 @@ public class City
 		double mines = this.getIronMines() * ProductionConstants.MINE_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIronMines();
 		double total = mines + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
 		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_IRON_PER_WEEK;
 		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_IRON_PER_WEEK;
 		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_IRON_PER_WEEK;
@@ -368,6 +389,7 @@ public class City
 		map.put("total", total);
 		map.put("mines", mines);
 		map.put("infrastructure", bonus);
+		map.put("devastation", devastation2);
 		map.put("civilian factory demands", civilian);
 		map.put("military factory demands", military);
 		map.put("nitrogen plant demands", nitrogen);
@@ -394,6 +416,8 @@ public class City
 		double wells = this.getOilWells() * ProductionConstants.MINE_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getOilWells();
 		double total = wells + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
 		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_OIL_PER_WEEK;
 		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_OIL_PER_WEEK;
 		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_OIL_PER_WEEK;
@@ -401,6 +425,7 @@ public class City
 		map.put("total", total);
 		map.put("wells", wells);
 		map.put("infrastructure", bonus);
+		map.put("devastation", devastation2);
 		map.put("civilian factory demands", civilian);
 		map.put("military factory demands", military);
 		map.put("nitrogen plant demands", nitrogen);
@@ -424,10 +449,13 @@ public class City
 		double factories = this.getIndustryCivilian() * ProductionConstants.STEEL_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryCivilian();
 		double total = factories + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
 		double net = total;
 		map.put("total", total);
 		map.put("factories", factories);
 		map.put("infrastructure", bonus);
+		map.put("devastation", devastation2);
 		map.put("net", net);
 		return map;
 	}
@@ -448,10 +476,13 @@ public class City
 		double factories = this.getIndustryNitrogen() * ProductionConstants.NITROGEN_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryNitrogen();
 		double total = factories + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
 		double net = total;
 		map.put("total", total);
 		map.put("factories", factories);
 		map.put("infrastructure", bonus);
+		map.put("devastation", devastation2);
 		map.put("net", net);
 		return map;
 	}
@@ -472,10 +503,13 @@ public class City
 		double factories = this.getIndustryMilitary() * ProductionConstants.WEAPONS_PER_WEEK;
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryMilitary();
 		double total = factories + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - devastation);
 		double net = total;
 		map.put("total", total);
 		map.put("factories", factories);
 		map.put("infrastructure", bonus);
+		map.put("devastation", devastation2);
 		map.put("net", net);
 		return map;
 	}
@@ -498,10 +532,13 @@ public class City
 		double standard = 2;
 		double universities = this.getUniversities() * ProductionConstants.RESEARCH_PER_WEEK;
 		double total = universities + standard;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
 		double net = total;
 		map.put("default", standard);
 		map.put("total", total);
 		map.put("universities", universities);
+		map.put("devastation", devastation2);
 		map.put("net", net);
 		return map;
 	}

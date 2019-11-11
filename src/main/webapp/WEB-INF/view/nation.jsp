@@ -195,8 +195,40 @@
 						</td>
 					</tr>
 				</table>
-				<button id="land" style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'inline' : 'none'}" onclick="send('land', null, '${nation.id}')">Attack!</button>
-				<button id="decc" style="display: ${home.offensive == nation.id || home.defensive == nation.id ? 'none' : 'inline'}" onclick="declareWar(${nation.id})">Declare War</button>
+				<h1>War</h1>
+				<c:if test="${home.canDeclareWar(nation) == null}">
+					<button id="decc" onclick="declareWar(${nation.id})">Declare War</button><br>
+				</c:if>
+				<c:if test="${home.isAtWarWith(nation)}">
+					<div class="categories">
+						<ul>
+							<li style="width: 33%;">
+								<a>
+									<div>Land</div>
+								</a>
+								<div>
+									<%@include file="includes/land.jsp"%>
+								</div>
+							</li>
+							<li style="width: 33%;">
+								<a>
+									<div>Navy</div>
+								</a>
+								<div>
+									<%@include file="includes/navy.jsp"%>
+								</div>
+							</li>
+							<li style="width: 33%;">
+								<a>
+									<div>Air</div>
+								</a>
+								<div>
+									<%@include file="includes/air.jsp"%>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</c:if>
 			</c:if>
 		</c:otherwise>
 	</c:choose>

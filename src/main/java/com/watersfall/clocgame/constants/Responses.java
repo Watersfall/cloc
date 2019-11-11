@@ -1,5 +1,7 @@
 package com.watersfall.clocgame.constants;
 
+import com.watersfall.clocgame.model.nation.City;
+
 public class Responses
 {
 
@@ -223,6 +225,11 @@ public class Responses
 		return "<p>Your army is still preparing!</p>";
 	}
 
+	public static String alreadyFortified()
+	{
+		return "<p>Your army is already fortified as much as can be!</p>";
+	}
+
 	public static String noLand()
 	{
 		return "<p>You do not have enough land!</p>";
@@ -271,6 +278,31 @@ public class Responses
 	public static String propagandaNoWar()
 	{
 		return "<p>You cannot do war propaganda while not at war!<p>";
+	}
+
+	public static String attackerNoNavy()
+	{
+		return "<p>You do not have a navy!</p>";
+	}
+
+	public static String attackerNoAirforce()
+	{
+		return "<p>You do not have an airforce!</p>";
+	}
+
+	public static String defenderNoNavy()
+	{
+		return "<p>They do not have a navy to attack</p>";
+	}
+
+	public static String defenderNoAirforce()
+	{
+		return "<p>They do not have an airforce to attack</p>";
+	}
+
+	public static String defenderAlreadyDevastated()
+	{
+		return "<p>Their cities are already completely devastated!</p>";
 	}
 
 	/*
@@ -474,6 +506,39 @@ public class Responses
 		return "<p>Defeat! You have lost " + attacker+ "k soldiers while only killing " + defender + "k enemy troops!</p>";
 	}
 
+	public static String offensiveCityVictory(City city, int attacker, int defender)
+	{
+		return "<p>Victory! You have occupied large amounts of " + city.getName() + " and killed " + defender + "k enemy defenders, while suffering " + attacker+ "k casualties in the assault!</p>";
+	}
+
+	public static String offensiveCityDefeat(City city, int attacker, int defender)
+	{
+		return "<p>Defeat! Although large amounts of damage was caused to " + city.getName() + " , your forces were not able to occupy it, losing" + attacker+ "k soldiers in the attempt while only killing " + defender + "k enemy troops!</p>";
+	}
+	
+	public static String navalBattle(int attackerBBLosses, int attackerPBLosses, int attackerCLLosses, int attackerDDLosses, int attackerSSLosses,
+									 int defenderBBLosses, int defenderPBLosses, int defenderCLLosses, int defenderDDLosses, int defenderSSLosses)
+	{
+		String message =  "<p>You have attacked the enemy navy! You have destroyed %DEFENDERBBLOSSES% enemy Battleships, " +
+				"%DEFENDERPBLOSSES% enemy Pre-Dreadnought Battleships, " +
+				"%DEFENDERCLLOSSES% enemy Cruisers, %DEFENDERDDLOSSES% enemy Destroyers, and %DEFENDERSSLOSSES% enemy submarines! " +
+				"The enemy managed to sink %ATTACKERBBLOSSES% Battleships, " +
+				"%ATTACKERPBLOSSES% Pre-Dreadnought Battleships, " +
+				"%ATTACKERCLLOSSES% Cruisers, %ATTACKERDDLOSSES% Destroyers, and %ATTACKERSSLOSSES% submarines!</p>";
+
+		return message
+				.replace("%ATTACKERBBLOSSES%", Integer.toString(attackerBBLosses))
+				.replace("%ATTACKERPBLOSSES%", Integer.toString(attackerPBLosses))
+				.replace("%ATTACKERCLLOSSES%", Integer.toString(attackerCLLosses))
+				.replace("%ATTACKERDDLOSSES%", Integer.toString(attackerDDLosses))
+				.replace("%ATTACKERSSLOSSES%", Integer.toString(attackerSSLosses))
+				.replace("%DEFENDERBBLOSSES%", Integer.toString(defenderBBLosses))
+				.replace("%DEFENDERPBLOSSES%", Integer.toString(defenderPBLosses))
+				.replace("%DEFENDERCLLOSSES%", Integer.toString(defenderCLLosses))
+				.replace("%DEFENDERDDLOSSES%", Integer.toString(defenderDDLosses))
+				.replace("%DEFENDERSSLOSSES%", Integer.toString(defenderSSLosses));
+	}
+
 	public static String warWon()
 	{
 		return "<p>You have won the war, winning absolutely nothing because I haven't written that part yet!</p>";
@@ -542,5 +607,25 @@ public class Responses
 	public static String deleted()
 	{
 		return "<p>Deleted!</p>";
+	}
+
+	public static String bombard()
+	{
+		return "<p>You have bombarded the enemy city!</p>";
+	}
+
+	public static String bombTroops(int casualties)
+	{
+		return "<p>You have bombarded the enemy, inflicting " + casualties + "k casualties!</p>";
+	}
+
+	public static String airBattle(int attack, int defense)
+	{
+		return "<p>You have attacked the enemy airforce, destroying " + defense + " enemy fighters and losing " + attack + " fighters!</p>";
+	}
+
+	public static String fortified()
+	{
+		return "<p>Your army dig's some trenches or something</p>";
 	}
 }

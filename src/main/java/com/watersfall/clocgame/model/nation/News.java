@@ -30,6 +30,14 @@ public class News
 	public static final int ID_DEFENSIVE_LOST = 8;
 	public static final int ID_DEFENSIVE_WON = 9;
 	public static final int ID_WAR_LOST = 10;
+	public static final int ID_NAVAL_BATTLE = 11;
+	public static final int ID_NAVAL_BOMBARD = 12;
+	public static final int ID_AIR_BATTLE = 13;
+	public static final int ID_AIR_BOMBARD = 14;
+	public static final int ID_DEFENSIVE_CITY_LOST = 15;
+	public static final int ID_DEFENSIVE_CITY_WON = 16;
+	public static final int ID_FORTIFICATION = 17;
+	public static final int ID_AIR_BOMB_TROOPS = 18;
 
 	private static String sendMessage(String resource)
 	{
@@ -57,9 +65,31 @@ public class News
 			case ID_DECLARE_WAR:
 				return "%SENDER% has declared war on us!";
 			case ID_DEFENSIVE_LOST:
-				return "%SENDER% has defeated our army in battle! We lost %LOST% soldiers and killed %KILLED% enemy soldiers!";
+				return "%SENDER% has defeated our army in battle! We lost %LOST%k soldiers and killed %KILLED%k enemy soldiers!";
 			case ID_DEFENSIVE_WON:
-				return "%SENDER% attacked our army, but has been defeated! We lose %LOST% soldiers and killed %KILLED% enemy soldiers!";
+				return "%SENDER% attacked our army, but has been defeated! We lost %LOST%k soldiers and killed %KILLED%k enemy soldiers!";
+			case ID_DEFENSIVE_CITY_LOST:
+				return "%SENDER% has attacked and occupied %CITY%! We lost %LOST%k soldiers and killed %KILLED%k enemy soldiers!";
+			case ID_DEFENSIVE_CITY_WON:
+				return "%SENDER% has attacked the city of %CITY%! We killed %KILLED%k enemy soldiers, with %LOST%k of our soldiers dying in the defense of the city!";
+			case ID_FORTIFICATION:
+				return "Our scouts report that %SENDER%'s army has further fortified their position";
+			case ID_NAVAL_BATTLE:
+				return "%SENDER% has attacked our navy! We have lost %DEFENDERBBLOSSES% Battleships, " +
+						"%DEFENDERPBLOSSES% Pre-Dreadnought Battleships, " +
+						"%DEFENDERCLLOSSES% Cruisers, %DEFENDERDDLOSSES% Destroyers, and %DEFENDERSSLOSSES% submarines. " +
+						"However, we managed to sink %ATTACKERBBLOSSES% Battleships, " +
+						"%ATTACKERPBLOSSES% Pre-Dreadnought Battleships, " +
+						"%ATTACKERCLLOSSES% Cruisers, %ATTACKERDDLOSSES% Destroyers, and %ATTACKERSSLOSSES% submarines.";
+			case ID_NAVAL_BOMBARD:
+				return "%SENDER% has bombarded the city of %CITY% with their navy!";
+			case ID_AIR_BATTLE:
+				return "%SENDER% has attacked our airforce! They have shot down %DEFENDERLOSSES% fighters, " +
+						"and we managed to shoot down %ATTACKERLOSSES% enemy fighters!";
+			case ID_AIR_BOMBARD:
+				return "%SENDER% has bombed the city of %CITY% with their airforce!";
+			case ID_AIR_BOMB_TROOPS:
+				return "%SENDER% has bombed our army with their airforce, killing %KILLS%k of our troops!";
 			case ID_WAR_LOST:
 				return "%SENDER% has defeated us in war, stealing nothing because I haven't written that part yet!";
 		}

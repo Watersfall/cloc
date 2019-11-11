@@ -1,15 +1,10 @@
 package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.constants.Responses;
-import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
-import com.watersfall.clocgame.model.war.Log;
-import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class NationActions
@@ -202,82 +197,6 @@ public class NationActions
 			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), newsMessage);
 			sender.declareWar(receiver);
 			return Responses.war();
-		}
-	}
-
-	public static String landOffensive(Connection connection, Nation attacker, Nation defender) throws SQLException
-	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
-		{
-			return Responses.noWar();
-		}
-		else if(Log.checkLog(connection, attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
-		{
-			return Responses.alreadyAttacked();
-		}
-		else
-		{
-			if(attacker.getArmy().getSize() <= 5)
-			{
-				return Responses.noTroopsForAttack();
-			}
-			else if(defender.getArmy().getSize() <= 5)
-			{
-				PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=?, winner=? WHERE attacker=? AND defender=?");
-				updateWar.setInt(1, Util.turn);
-				updateWar.setInt(2, attacker.getId());
-				updateWar.setInt(3, attacker.getId());
-				updateWar.setInt(4, defender.getId());
-				updateWar.execute();
-				defender.getMilitary().setWarProtection(4);
-				String message = News.createMessage(News.ID_WAR_LOST)
-						.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>");
-				News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
-				defender.update();
-				return Responses.warWon();
-			}
-			else
-			{
-				String losses;
-				int attackLosses = attacker.getAttackingCasualties(defender);
-				int defenderLosses = defender.getDefendingCasualties(attacker);
-				if(attackLosses > attacker.getArmy().getSize())
-				{
-					attackLosses = attacker.getArmy().getSize();
-				}
-				if(defenderLosses > defender.getArmy().getSize())
-				{
-					defenderLosses = defender.getArmy().getSize();
-				}
-				attacker.getArmy().setSize(attacker.getArmy().getSize() - attackLosses);
-				attacker.getDomestic().setManpowerLost(attacker.getDomestic().getManpowerLost() + attackLosses * 1000);
-				attacker.getDomestic().setPopulation(attacker.getDomestic().getPopulation() - attackLosses * 1000);
-				defender.getArmy().setSize(defender.getArmy().getSize() - defenderLosses);
-				defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() + defenderLosses * 1000);
-				defender.getDomestic().setPopulation(defender.getDomestic().getPopulation() - defenderLosses * 1000);
-				attacker.update();
-				defender.update();
-				if(attacker.getPower() > defender.getPower())
-				{
-					String message = News.createMessage(News.ID_DEFENSIVE_LOST)
-							.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-							.replace("%LOST%", Integer.toString(defenderLosses))
-							.replace("%KILLED%", Integer.toString(attackLosses));
-					News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
-					losses =  Responses.offensiveVictory(attackLosses, defenderLosses);
-				}
-				else
-				{
-					String message = News.createMessage(News.ID_DEFENSIVE_WON)
-							.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-							.replace("%LOST%", Integer.toString(defenderLosses))
-							.replace("%KILLED%", Integer.toString(attackLosses));
-					News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
-					losses = Responses.offensiveDefeat(attackLosses, defenderLosses);
-				}
-				Log.createLog(connection, attacker.getId(), defender.getForeign().getRegion(), LogType.LAND, 0);
-				return losses;
-			}
 		}
 	}
 }

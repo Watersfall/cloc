@@ -361,6 +361,25 @@ public class Nation
 	}
 
 	/**
+	 * Checks if this nation is at war with another nation
+	 * @param nation The nation to check
+	 * @return True if they are at war, false if they are not
+	 */
+	public boolean isAtWarWith(Nation nation)
+	{
+		return this.defensive == nation.getId() || this.offensive == nation.getId();
+	}
+
+	/**
+	 * Checks if this nation is in any war
+	 * @return True if the nation is at war, false otherwise
+	 */
+	public boolean isAtWar()
+	{
+		return defensive != 0 || offensive != 0;
+	}
+
+	/**
 	 * Declares war on the specified Nation
 	 * @param nation The Nation to declare war on
 	 * @throws SQLException If a database error occurs
@@ -992,6 +1011,51 @@ public class Nation
 	}
 
 	/**
+	 * Calculates the ability of this nation to shoot down other planes
+	 * @return The fighter power
+	 */
+	public double getFighterPower()
+	{
+		int power = 0;
+		power += this.military.getFighters();
+		return power;
+	}
+
+	/**
+	 * Calcultes the ability of this nation when bombing targets
+	 * @return The bomber power
+	 */
+	public double getBomberPower()
+	{
+		int power = 0;
+		power += this.military.getBombers();
+		power += (this.military.getZeppelins() * 0.5);
+		return power;
+	}
+
+	public int getTotalShipCount()
+	{
+		int power = 0;
+		power += this.military.getSubmarines();
+		power += this.military.getDestroyers();
+		power += this.military.getCruisers();
+		power += this.military.getPreBattleships();
+		power += this.military.getBattleships();
+		return power;
+	}
+
+	/**
+	 * Calculates the general naval power of this country
+	 * @return The naval power
+	 */
+	public double getNavalPower()
+	{
+		double power = getTotalShipCount();
+		power /= 10;
+		return power;
+	}
+
+	/**
 	 * Calculates the amount of casualties this army takes attacking a specified defender
 	 * @param defender The army this army is attacking
 	 * @return The casualties taken
@@ -999,7 +1063,7 @@ public class Nation
 	public int getAttackingCasualties(Nation defender)
 	{
 		double attackPower = this.getPower();
-		double defensePower = defender.getPower();
+		double defensePower = defender.getPower() * (1 + (double)defender.getArmy().getFortification() / 10);
 		if(attackPower > defensePower)
 		{
 			defensePower = java.lang.Math.pow(defensePower, 1.95);
@@ -1024,7 +1088,7 @@ public class Nation
 	public int getDefendingCasualties(Nation attacker)
 	{
 		double attackPower = attacker.getPower();
-		double defensePower = this.getPower();
+		double defensePower = this.getPower() * (1 + (double)this.getArmy().getFortification() / 10);;
 		if(attackPower > defensePower)
 		{
 			attackPower = java.lang.Math.pow(attackPower, 2.0);
@@ -1124,5 +1188,19 @@ public class Nation
 	public double getBudgetChange()
 	{
 		return this.economy.getGdp() / 7;
+	}
+
+	@Override
+	public boolean equals(Object object)
+	{
+		if(object instanceof Nation)
+		{
+			Nation nation = (Nation)object;
+			return nation.getId() == this.getId();
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

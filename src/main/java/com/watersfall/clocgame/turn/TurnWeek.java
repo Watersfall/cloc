@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationDomestic;
 import com.watersfall.clocgame.model.nation.NationEconomy;
@@ -79,13 +80,29 @@ public class TurnWeek implements Runnable
 				domestic.setPopulation(domestic.getPopulation() + (nation.getPopulationGrowth().get("total")).longValue());
 				domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get("total"));
 				domestic.setStability(domestic.getStability() + nation.getStabilityChange().get("total"));
-				nation.update();
 
 				/*
 				** Military
 				 */
 				nation.getArmy().setTraining(nation.getArmy().getTraining() - 1);
 				nation.getMilitary().setWarProtection(nation.getMilitary().getWarProtection() - 1);
+
+				if(nation.isAtWar())
+				{
+					for(City city : nation.getCities().getCities().values())
+					{
+						city.setDevastation(city.getDevastation() - (int)(Math.random() * 5));
+					}
+				}
+				else
+				{
+					for(City city : nation.getCities().getCities().values())
+					{
+						city.setDevastation(city.getDevastation() - (int)(Math.random() * 5) + 5);
+					}
+				}
+
+				nation.update();
 			}
 
 			/*

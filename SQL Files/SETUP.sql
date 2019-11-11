@@ -69,6 +69,7 @@ CREATE TABLE cloc_cities(
 	universities INT UNSIGNED DEFAULT 0,
 	name VARCHAR(64),
 	type ENUM('MINING', 'DRILLING', 'INDUSTRY', 'FARMING'),
+	devastation TINYINT DEFAULT 0,
 	FOREIGN KEY fk_cities (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
@@ -101,6 +102,7 @@ CREATE TABLE cloc_army(
 	semi_auto INT DEFAULT 0,
 	machine_gun INT DEFAULT 0,
 	artillery INT DEFAULT 0,
+	fortification INT DEFAULT 0,
 	FOREIGN KEY fk_army (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 

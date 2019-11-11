@@ -22,6 +22,7 @@ public class NationArmy extends NationBase
 	private @Getter int semiAuto;
 	private @Getter int machineGun;
 	private @Getter int artillery;
+	private @Getter int fortification;
 
 	public NationArmy(Connection connection, int id, boolean safe) throws SQLException
 	{
@@ -29,11 +30,11 @@ public class NationArmy extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT size, training, musket, rifled_musket, single_shot, needle_nose, bolt_action_manual, bolt_action_clip, straight_pull, semi_auto, machine_gun, artillery, id " + "FROM cloc_army " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT size, training, musket, rifled_musket, single_shot, needle_nose, bolt_action_manual, bolt_action_clip, straight_pull, semi_auto, machine_gun, artillery, fortification, id " + "FROM cloc_army " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT size, training, musket, rifled_musket, single_shot, needle_nose, bolt_action_manual, bolt_action_clip, straight_pull, semi_auto, machine_gun, artillery, id " + "FROM cloc_army " + "WHERE id=?");
+			read = connection.prepareStatement("SELECT size, training, musket, rifled_musket, single_shot, needle_nose, bolt_action_manual, bolt_action_clip, straight_pull, semi_auto, machine_gun, artillery, fortification, id " + "FROM cloc_army " + "WHERE id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -58,6 +59,7 @@ public class NationArmy extends NationBase
 			this.semiAuto = results.getInt(10);
 			this.machineGun = results.getInt(11);
 			this.artillery = results.getInt(12);
+			this.fortification = results.getInt(13);
 		}
 	}
 
@@ -183,5 +185,15 @@ public class NationArmy extends NationBase
 		}
 		this.artillery = artillery;
 		this.results.updateInt(12, artillery);
+	}
+
+	public void setFortification(int fortification) throws SQLException
+	{
+		if(fortification  > 10)
+		{
+			fortification = 10;
+		}
+		this.fortification = fortification;
+		this.results.updateInt(13, fortification);
 	}
 }

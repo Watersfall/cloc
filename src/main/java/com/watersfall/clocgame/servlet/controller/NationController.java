@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.NationActions;
+import com.watersfall.clocgame.action.WarActions;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
@@ -109,8 +110,28 @@ public class NationController extends HttpServlet
 					writer.append(NationActions.declareWar(sender, receiver, req));
 					break;
 				case "land":
-					writer.append(NationActions.landOffensive(connection, sender, receiver));
+					writer.append(WarActions.landOffensive(connection, sender, receiver));
 					break;
+				case "navy":
+					writer.append(WarActions.navyBattle(connection, sender, receiver));
+					break;
+				case "air":
+					writer.append(WarActions.airBattle(connection, sender, receiver));
+					break;
+				case "landCity":
+					writer.append(WarActions.cityBattle(connection, sender, receiver));
+					break;
+				case "navyCity":
+					writer.append(WarActions.navyBombard(connection, sender, receiver));
+					break;
+				case "airCity":
+					writer.append(WarActions.airBombard(connection, sender, receiver));
+					break;
+				case "fortify":
+					writer.append(WarActions.entrench(connection, sender, receiver));
+					break;
+				case "bomb":
+					writer.append(WarActions.airBombTroops(connection, sender, receiver));
 			}
 			connection.commit();
 		}

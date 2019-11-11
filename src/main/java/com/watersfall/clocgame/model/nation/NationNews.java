@@ -6,12 +6,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class NationNews extends NationBase
 {
 
-	private @Getter HashMap<Integer, News> news;
+	private @Getter LinkedHashMap<Integer, News> news;
 	private @Getter boolean anyUnread = false;
 
 	public NationNews(Connection connection, int id, boolean safe) throws SQLException
@@ -20,15 +20,15 @@ public class NationNews extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=? ORDER BY id DESC FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=?");
+			read = connection.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=? ORDER BY id DESC");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
-		this.news = new HashMap<>();
+		this.news = new LinkedHashMap<>();
 		this.connection = connection;
 		this.safe = safe;
 		this.id = id;
