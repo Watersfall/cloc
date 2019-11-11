@@ -4,5 +4,5 @@
 			<img class="toggleFlag" src="${pageContext.request.contextPath}/user/flag/<c:out value="${home.cosmetic.flag}"/>" alt="flag">
 		</a>
 	</c:if>
-	<img class="toggleButton" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="toggle"/>
+	<img class="toggleButton" src="${pageContext.request.contextPath}/images/ui/dropdown.svg" alt="toggle"/>
 </div>
