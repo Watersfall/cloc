@@ -684,9 +684,6 @@ textarea{
 		min-height: 100%;
 	}
 
-	.main{
-	}
-
 	.header{
 		margin: 0;
 		font-size: 1rem;
@@ -710,5 +707,15 @@ textarea{
 	.magic{
 		display: block;
 		height: 3em;
+	}
+
+	.resultsContainer {
+		display: none;
+		position: sticky;
+		left: 0;
+		top: 3em;
+		background-color: rgb(35, 35, 35);
+		width: 100%;
+		z-index: 10;
 	}
 }
