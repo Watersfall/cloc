@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.servlet.controller;
 
-import com.watersfall.clocgame.action.PolicyActions;
+import com.watersfall.clocgame.action.CityActions;
 import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
@@ -20,10 +20,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-@WebServlet(urlPatterns = "/decision/*")
-public class DecisionController extends HttpServlet
+@WebServlet(urlPatterns = "/decision/city/*")
+public class CityDecisionController extends HttpServlet
 {
-	public static final String URL = "/{decision}";
+	public static String URL = "/{id}/{decision}";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -35,7 +35,7 @@ public class DecisionController extends HttpServlet
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		if(url.get("decision") == null)
+		if(url.get("decision") == null || url.get("id") == null)
 		{
 			super.doPost(req, resp);
 		}
@@ -43,59 +43,76 @@ public class DecisionController extends HttpServlet
 		PrintWriter writer = resp.getWriter();
 		try
 		{
-			conn = Database.getDataSource().getConnection();
+			int id = Integer.parseInt(url.get("id"));
 			int user = UserUtils.getUser(req);
+			conn = Database.getDataSource().getConnection();
 			switch(url.get("decision"))
 			{
-				case "freemoneycapitalist":
-					writer.append(PolicyActions.freeMoneyCapitalist(conn, user));
+				case "coalmine":
+					writer.append(CityActions.coalMine(conn, user, id));
 					break;
-				case "freemoneycommunist":
-					writer.append(PolicyActions.freeMoneyCommunist(conn, user));
+				case "ironmine":
+					writer.append(CityActions.ironMine(conn, user, id));
 					break;
-				case "crackdown":
-					writer.append(PolicyActions.arrest(conn, user));
+				case "drill":
+					writer.append(CityActions.drill(conn, user, id));
 					break;
-				case "free":
-					writer.append(PolicyActions.free(conn, user));
+				case "industrialize":
+					writer.append(CityActions.industrialize(conn, user, id));
 					break;
-				case "landclearance":
-					writer.append(PolicyActions.landClearance(conn, user));
+				case "militarize":
+					writer.append(CityActions.militarize(conn, user, id));
 					break;
-				case "propaganda":
-					writer.append(PolicyActions.propaganda(conn, user));
+				case "nitrogenplant":
+					writer.append(CityActions.nitrogen(conn, user, id));
 					break;
-				case "warpropaganda":
-					writer.append(PolicyActions.warPropaganda(conn, user));
+				case "university":
+					writer.append(CityActions.university(conn, user, id));
 					break;
-				case "alignentente":
-					writer.append(PolicyActions.alignEntente(conn, user));
+				case "port":
+					writer.append(CityActions.port(conn, user, id));
 					break;
-				case "alignneutral":
-					writer.append(PolicyActions.alignNeutral(conn, user));
+				case "barrack":
+					writer.append(CityActions.barrack(conn, user, id));
 					break;
-				case "aligncentral":
-					writer.append(PolicyActions.alignCentralPowers(conn, user));
+				case "railroad":
+					writer.append(CityActions.railroad(conn, user, id));
 					break;
-				case "conscript":
-					writer.append(PolicyActions.conscript(conn, user));
+				case "uncoalmine":
+					writer.append(CityActions.unCoalMine(conn, user, id));
 					break;
-				case "train":
-					writer.append(PolicyActions.train(conn, user));
+				case "unironmine":
+					writer.append(CityActions.unIronMine(conn, user, id));
 					break;
-				case "deconscript":
-					writer.append(PolicyActions.deconscript(conn, user));
+				case "undrill":
+					writer.append(CityActions.unDrill(conn, user, id));
 					break;
-				case "buildartillery":
-					writer.append(PolicyActions.artillery(conn, user));
+				case "unindustrialize":
+					writer.append(CityActions.unIndustrialize(conn, user, id));
 					break;
-				case "buildweapons":
-					writer.append(PolicyActions.weapons(conn, user));
+				case "unmilitarize":
+					writer.append(CityActions.unMilitarize(conn, user, id));
+					break;
+				case "unnitrogenplant":
+					writer.append(CityActions.unNitrogen(conn, user, id));
+					break;
+				case "ununiversity":
+					writer.append(CityActions.unUniversity(conn, user, id));
+					break;
+				case "unport":
+					writer.append(CityActions.unPort(conn, user, id));
+					break;
+				case "unbarrack":
+					writer.append(CityActions.unBarrack(conn, user, id));
+					break;
+				case "unrailroad":
+					writer.append(CityActions.unRailroad(conn, user, id));
 					break;
 				default:
-					super.doGet(req, resp);
+					super.doPost(req, resp);
 					break;
 			}
+
 			conn.commit();
 		}
 		catch(SQLException e)

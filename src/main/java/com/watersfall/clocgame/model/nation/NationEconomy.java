@@ -22,6 +22,38 @@ public class NationEconomy extends NationBase
 	private @Getter double nitrogen;
 	private @Getter double research;
 
+	public NationEconomy(int economic, double gdp, double growth, double budget, double iron, double coal, double oil, double food, double steel, double nitrogen, double research)
+	{
+		this.economic = economic;
+		this.gdp = gdp;
+		this.growth = growth;
+		this.budget = budget;
+		this.iron = iron;
+		this.coal = coal;
+		this.oil = oil;
+		this.food = food;
+		this.steel = steel;
+		this.nitrogen = nitrogen;
+		this.research = research;
+	}
+
+	public NationEconomy(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		super(connection, id, safe);
+		this.results = results;
+		this.economic = results.getInt("economic");
+		this.gdp = results.getDouble("gdp");
+		this.growth = results.getDouble("growth");
+		this.budget = results.getDouble("budget");
+		this.iron = results.getDouble("iron");
+		this.coal = results.getDouble("coal");
+		this.oil = results.getDouble("oil");
+		this.food = results.getDouble("food");
+		this.steel = results.getDouble("steel");
+		this.nitrogen= results.getDouble("nitrogen");
+		this.research = results.getDouble("research");
+	}
+
 	public NationEconomy(Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);
@@ -70,7 +102,7 @@ public class NationEconomy extends NationBase
 			economic = 100;
 		}
 		this.economic = economic;
-		results.updateInt(1, economic);
+		results.updateInt("economic", economic);
 	}
 
 	public void setGdp(double gdp) throws SQLException
@@ -80,19 +112,19 @@ public class NationEconomy extends NationBase
 			gdp = 0;
 		}
 		this.gdp = gdp;
-		results.updateDouble(2, gdp);
+		results.updateDouble("gdp", gdp);
 	}
 
 	public void setGrowth(double growth) throws SQLException
 	{
 		this.growth = growth;
-		results.updateDouble(3, growth);
+		results.updateDouble("growth", growth);
 	}
 
 	public void setBudget(double budget) throws SQLException
 	{
 		this.budget = budget;
-		results.updateDouble(4, budget);
+		results.updateDouble("budget", budget);
 	}
 
 	public void setIron(double iron) throws SQLException
@@ -102,7 +134,7 @@ public class NationEconomy extends NationBase
 			iron = 0;
 		}
 		this.iron = iron;
-		results.updateDouble(5, iron);
+		results.updateDouble("iron", iron);
 	}
 
 	public void setCoal(double coal) throws SQLException
@@ -112,13 +144,13 @@ public class NationEconomy extends NationBase
 			coal = 0;
 		}
 		this.coal = coal;
-		results.updateDouble(6, coal);
+		results.updateDouble("coal", coal);
 	}
 
 	public void setOil(double oil) throws SQLException
 	{
 		this.oil = oil;
-		results.updateDouble(7, oil);
+		results.updateDouble("oil", oil);
 	}
 
 	public void setFood(double food) throws SQLException
@@ -128,7 +160,7 @@ public class NationEconomy extends NationBase
 			food = 0;
 		}
 		this.food = food;
-		results.updateDouble(8, food);
+		results.updateDouble("food", food);
 	}
 
 	public void setSteel(double steel) throws SQLException
@@ -138,7 +170,7 @@ public class NationEconomy extends NationBase
 			steel = 0;
 		}
 		this.steel = steel;
-		results.updateDouble(9, steel);
+		results.updateDouble("steel", steel);
 	}
 
 	public void setNitrogen(double nitrogen) throws SQLException
@@ -148,7 +180,7 @@ public class NationEconomy extends NationBase
 			nitrogen = 0;
 		}
 		this.nitrogen = nitrogen;
-		results.updateDouble(10, nitrogen);
+		results.updateDouble("nitrogen", nitrogen);
 	}
 
 	public void setResearch(double research) throws SQLException
@@ -158,6 +190,6 @@ public class NationEconomy extends NationBase
 			research = 0;
 		}
 		this.research = research;
-		results.updateDouble(11, research);
+		results.updateDouble("research", research);
 	}
 }

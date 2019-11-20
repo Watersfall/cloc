@@ -18,6 +18,31 @@ public class NationCosmetic extends NationBase
 	private @Getter String flag;
 	private @Getter String description;
 
+	public NationCosmetic(String nationName, String username, String nationTitle, String leaderTitle, String portrait, String flag, String description)
+	{
+		this.nationName = nationName;
+		this.username = username;
+		this.nationTitle = nationTitle;
+		this.leaderTitle = leaderTitle;
+		this.portrait = portrait;
+		this.flag = flag;
+		this.description = description;
+	}
+
+	public NationCosmetic(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		super(connection, id, safe);
+		this.id = results.getInt("id");
+		this.nationName = results.getString("nation_name");
+		this.username = results.getString("username");
+		this.nationTitle = results.getString("nation_title");
+		this.leaderTitle = results.getString("leader_title");
+		this.portrait = results.getString("portrait");
+		this.flag = results.getString("flag");
+		this.description = results.getString("description");
+		this.results = results;
+	}
+
 	public NationCosmetic(Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);
@@ -60,7 +85,7 @@ public class NationCosmetic extends NationBase
 		else
 		{
 			this.nationName = nationName;
-			results.updateString(1, nationName);
+			results.updateString("nation_name", nationName);
 		}
 	}
 
@@ -73,7 +98,7 @@ public class NationCosmetic extends NationBase
 		else
 		{
 			this.username = username;
-			results.updateString(2, username);
+			results.updateString("username", username);
 		}
 	}
 
@@ -86,7 +111,7 @@ public class NationCosmetic extends NationBase
 		else
 		{
 			this.nationTitle = nationTitle;
-			results.updateString(3, nationTitle);
+			results.updateString("nation_title", nationTitle);
 		}
 	}
 
@@ -99,7 +124,7 @@ public class NationCosmetic extends NationBase
 		else
 		{
 			this.leaderTitle = leaderTitle;
-			results.updateString(4, leaderTitle);
+			results.updateString("leader_title", leaderTitle);
 		}
 	}
 
@@ -112,7 +137,7 @@ public class NationCosmetic extends NationBase
 		else
 		{
 			this.portrait = portrait;
-			results.updateString(5, portrait);
+			results.updateString("portrait", portrait);
 		}
 	}
 
@@ -125,7 +150,7 @@ public class NationCosmetic extends NationBase
 		else
 		{
 			this.flag = flag;
-			results.updateString(6, flag);
+			results.updateString("flag", flag);
 		}
 	}
 
@@ -138,7 +163,7 @@ public class NationCosmetic extends NationBase
 		else
 		{
 			this.description = description;
-			results.updateString(7, description);
+			results.updateString("description", description);
 		}
 	}
 }

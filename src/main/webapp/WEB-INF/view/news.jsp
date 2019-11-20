@@ -14,7 +14,6 @@
 		<c:forEach items="${home.news.news.entrySet()}" var="news">
 			<jsp:useBean id="newsDate" class="java.util.Date" />
 			<jsp:setProperty name="newsDate" property="time" value="${news.value.time}" />
-			${news.value.read()}
 			<table id="nation" style="margin-bottom: 2em;">
 				<tr>
 					<td class="left">${news.value.content}</td>
@@ -26,8 +25,6 @@
 				</tr>
 			</table>
 		</c:forEach>
-		${home.connection.commit()}
-		${home.connection.close()}
 		<button onclick="newsDelete('all')">Delete All</button>
 	</c:if>
 </table>

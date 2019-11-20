@@ -19,7 +19,7 @@
 		<c:forEach var="treaty" items="${treaties}">
 			<tr>
 				<td><img class="large" src="${pageContext.request.contextPath}/user/treaty/<c:out value="${treaty.flag}"/>" alt="flag"/></td>
-				<td><a href="${pageContext.request.contextPath}/treaty.jsp?id=${treaty.id}"><c:out value="${treaty.name}"/></a></td>
+				<td><a href="${pageContext.request.contextPath}/treaty/${treaty.id}"><c:out value="${treaty.name}"/></a></td>
 				<td><c:out value="${treaty.description}"/></td>
 				<td>${treaty.memberCount}</td>
 			</tr>

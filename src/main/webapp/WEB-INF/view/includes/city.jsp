@@ -3,7 +3,7 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <div id="city">
 	<c:choose>
-		<c:when test="${empty param['id']}">
+		<c:when test="${empty id}">
 			<p>You have visited this page incorrectly!</p>
 		</c:when>
 		<c:otherwise>
@@ -41,8 +41,8 @@
 							document.getElementById('resultsContainer').style.visibility = "visible";
 							document.getElementById("result").innerHTML = "<p>Loading...</p>";
 							var xhttp = new XMLHttpRequest();
-							let params = "name=" + document.getElementById("name").value + "&id=" + id;
-							xhttp.open("POST", "city.do");
+							let params = "name=" + document.getElementById("name").value;
+							xhttp.open("POST", "/city/" + id);
 							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							xhttp.send(params);
 							xhttp.onreadystatechange = function()

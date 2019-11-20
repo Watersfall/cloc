@@ -49,6 +49,7 @@ CREATE TABLE cloc_domestic(
 	stability TINYINT UNSIGNED DEFAULT 50,
 	population BIGINT UNSIGNED DEFAULT 100000,
 	rebels INT UNSIGNED DEFAULT 0,
+	lost_manpower LONG DEFAULT 0,
 	FOREIGN KEY fk_domestic (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
@@ -215,3 +216,5 @@ CREATE TABLE cloc_declarations(
 	content VARCHAR(2048),
 	FOREIGN KEY fk_declarations (sender) REFERENCES cloc_login (id) ON DELETE CASCADE
 );
+
+INSERT INTO cloc_main (turn) VALUES (1);

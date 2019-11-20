@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
-@WebServlet(urlPatterns = {"/register.jsp", "/register.do"})
+@WebServlet(urlPatterns = {"/register/"})
 public class RegisterController extends HttpServlet
 {
 	@Override
@@ -139,7 +139,7 @@ public class RegisterController extends HttpServlet
 						connection.commit();
 						writer.append(Responses.registered());
 						req.getSession().setAttribute("user", id);
-						resp.sendRedirect(req.getContextPath() + "/main.jsp");
+						resp.sendRedirect(req.getContextPath() + "/main/");
 					}
 				}
 				catch(SQLException e)

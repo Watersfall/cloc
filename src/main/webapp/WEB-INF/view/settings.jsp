@@ -21,7 +21,7 @@
 						</label>
 					</td>
 					<td>
-						<form id="flagForm" enctype="multipart/form-data" method="POST" action="settings.do" >
+						<form id="flagForm" enctype="multipart/form-data" method="POST" action="${pageContext.request.contextPath}/settings/" >
 							<input type="file" accept="image/png" max="1" name="flag" id="flag"/>
 							PNG Files only! 1024x768 max resolution, 1MB max file size
 						</form>
@@ -37,7 +37,7 @@
 						</label>
 					</td>
 					<td>
-						<form id="portraitForm" enctype="multipart/form-data" method="POST" action="settings.do">
+						<form id="portraitForm" enctype="multipart/form-data" method="POST" action="${pageContext.request.contextPath}/settings/">
 							<input type="file" accept="image/png" max="1" name="portrait" id="portrait"/>
 							PNG Files only! 768x1024 max resolution, 1MB max file size
 						</form>

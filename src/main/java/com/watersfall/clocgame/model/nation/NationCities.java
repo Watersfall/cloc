@@ -20,11 +20,11 @@ public class NationCities extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT owner, id " + "FROM cloc_cities " + "WHERE owner=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT id " + "FROM cloc_cities " + "WHERE owner=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT owner, id " + "FROM cloc_cities " + "WHERE owner=?");
+			read = connection.prepareStatement("SELECT id " + "FROM cloc_cities " + "WHERE owner=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -41,7 +41,7 @@ public class NationCities extends NationBase
 			this.id = id;
 			while(results.next())
 			{
-				cities.put(results.getInt(2), new City(connection, results.getInt(2), safe));
+				cities.put(results.getInt("id"), new City(connection, results.getInt("id"), safe));
 			}
 		}
 	}

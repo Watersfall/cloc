@@ -36,7 +36,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="${pageContext.request.contextPath}/register.jsp">
+					<a href="${pageContext.request.contextPath}/register/">
 						<div class="headerTab">
 							<p>Register</p>
 						</div>
@@ -52,13 +52,13 @@
 			</ul>
 		</c:when>
 		<c:otherwise>
-			<a href="${pageContext.request.contextPath}/main.jsp">
+			<a href="${pageContext.request.contextPath}/main/">
 				<img src="${pageContext.request.contextPath}/user/flag/<c:out value="${home.cosmetic.flag}"/>" alt="Flag">
 			</a>
 			<div class="magic"></div>
 			<ul>
 				<li>
-					<a href="${pageContext.request.contextPath}/news.jsp">
+					<a href="${pageContext.request.contextPath}/news/">
 						<div class="headerTab">
 							<p>News</p>
 							<div style="position: absolute; left: 0; top: 0; width: 100%;">
@@ -80,7 +80,7 @@
 					<ul id="cities">
 						<c:forEach var="city" items="${home.cities.cities}">
 							<li>
-								<a href="${pageContext.request.contextPath}/cities.jsp?id=${city.value.id}">
+								<a href="${pageContext.request.contextPath}/cities/${city.value.id}/">
 									<div class="headerTabSmall">
 										<p><c:out value="${city.value.name}"/></p>
 									</div>
@@ -98,28 +98,28 @@
 					</a>
 					<ul id="decisions">
 						<li>
-							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Economic">
+							<a href="${pageContext.request.contextPath}/decisions/Economic/">
 								<div class="headerTabSmall">
 									<p>Economy</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Domestic">
+							<a href="${pageContext.request.contextPath}/decisions/Domestic/">
 								<div class="headerTabSmall">
 									<p>Domestic</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Foreign">
+							<a href="${pageContext.request.contextPath}/decisions/Foreign/">
 								<div class="headerTabSmall">
 									<p>Foreign</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/decisions.jsp?policies=Military">
+							<a href="${pageContext.request.contextPath}/decisions/Military/">
 								<div class="headerTabSmall">
 									<p>Military</p>
 								</div>
@@ -128,14 +128,14 @@
 					</ul>
 				</li>
 				<li>
-					<a href="${pageContext.request.contextPath}/policy.jsp">
+					<a href="${pageContext.request.contextPath}/policy/">
 						<div class="headerTab">
 							<p>State Policy</p>
 						</div>
 					</a>
 				</li>
 				<li>
-					<a href="${pageContext.request.contextPath}/technology.jsp">
+					<a href="${pageContext.request.contextPath}/technology/">
 						<div class="headerTab">
 							<p>Technology</p>
 						</div>
@@ -150,21 +150,21 @@
 					</a>
 					<ul id="world">
 						<li>
-							<a href="${pageContext.request.contextPath}/rankings.jsp">
+							<a href="${pageContext.request.contextPath}/rankings/">
 								<div class="headerTabSmall">
 									<p>World Rankings</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/map.jsp">
+							<a href="${pageContext.request.contextPath}/map/">
 								<div class="headerTabSmall">
 									<p>World Map</p>
 								</div>
 							</a>
 						</li>
 						<li>
-							<a href="${pageContext.request.contextPath}/declarations.jsp">
+							<a href="${pageContext.request.contextPath}/declarations/">
 								<div class="headerTabSmall">
 									<p>Global Declarations</p>
 								</div>
@@ -173,7 +173,7 @@
 					</ul>
 				</li>
 				<li>
-					<a href="${pageContext.request.contextPath}/treaties.jsp">
+					<a href="${pageContext.request.contextPath}/treaties/">
 						<div class="headerTab">
 							<p>Treaties</p>
 						</div>
@@ -188,14 +188,14 @@
 					</a>
 					<ul id="user">
 						<li class="headerTabSmall">
-							<a href="${pageContext.request.contextPath}/settings.jsp">
+							<a href="${pageContext.request.contextPath}/settings/">
 								<div class="headerTab">
 									<p>Settings</p>
 								</div>
 							</a>
 						</li>
 						<li class="headerTabSmall">
-							<a href="${pageContext.request.contextPath}/logout.jsp">
+							<a href="${pageContext.request.contextPath}/logout/">
 								<div class="headerTab">
 									<p>Log Out</p>
 								</div>

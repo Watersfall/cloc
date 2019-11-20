@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/air.jsp")
+@WebServlet(urlPatterns = "/air/")
 public class AirController extends HttpServlet
 {
 	@Override

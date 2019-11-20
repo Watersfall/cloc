@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = {"/settings.jsp", "/settings.do"})
+@WebServlet(urlPatterns = {"/settings/"})
 @MultipartConfig(maxFileSize = 1024 * 1024, fileSizeThreshold = 1024 * 1024)
 public class SettingsController extends HttpServlet
 {

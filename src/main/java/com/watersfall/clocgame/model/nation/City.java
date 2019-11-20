@@ -40,6 +40,30 @@ public class City
 	private @Getter CityType type;
 	private @Getter int devastation;
 	private @Getter ResultSet results;
+	private @Getter int row;
+
+	public City(ResultSet results) throws SQLException
+	{
+		this.owner = results.getInt("owner");
+		this.capital = results.getBoolean("capital");
+		this.coastal = results.getBoolean("coastal");
+		this.railroads = results.getInt("railroads");
+		this.ports = results.getInt("ports");
+		this.barracks = results.getInt("barracks");
+		this.ironMines = results.getInt("iron_mines");
+		this.coalMines = results.getInt("coal_mines");
+		this.oilWells = results.getInt("oil_wells");
+		this.industryCivilian = results.getInt("civilian_industry");
+		this.industryMilitary = results.getInt("military_industry");
+		this.industryNitrogen = results.getInt("nitrogen_industry");
+		this.universities = results.getInt("universities");
+		this.name = results.getString("name");
+		this.type = CityType.getByName(results.getString("type"));
+		this.devastation = results.getInt("devastation");
+		this.id = results.getInt("id");
+		this.results = results;
+		this.row = results.getRow();
+}
 
 	public City(Connection connection, int id, boolean safe) throws SQLException
 	{
@@ -59,35 +83,36 @@ public class City
 			throw new CityNotFoundException("No city with that id!");
 		}
 
-		this.owner = results.getInt(1);
-		this.capital = results.getBoolean(2);
-		this.coastal = results.getBoolean(3);
-		this.railroads = results.getInt(4);
-		this.ports = results.getInt(5);
-		this.barracks = results.getInt(6);
-		this.ironMines = results.getInt(7);
-		this.coalMines = results.getInt(8);
-		this.oilWells = results.getInt(9);
-		this.industryCivilian = results.getInt(10);
-		this.industryMilitary = results.getInt(11);
-		this.industryNitrogen = results.getInt(12);
-		this.universities = results.getInt(13);
-		this.name = results.getString(14);
-		this.type = CityType.getByName(results.getString(15));
-		this.devastation = results.getInt(16);
-		this.id = results.getInt(17);
+		this.owner = results.getInt("owner");
+		this.capital = results.getBoolean("capital");
+		this.coastal = results.getBoolean("coastal");
+		this.railroads = results.getInt("railroads");
+		this.ports = results.getInt("ports");
+		this.barracks = results.getInt("barracks");
+		this.ironMines = results.getInt("iron_mines");
+		this.coalMines = results.getInt("coal_mines");
+		this.oilWells = results.getInt("oil_wells");
+		this.industryCivilian = results.getInt("civilian_industry");
+		this.industryMilitary = results.getInt("military_industry");
+		this.industryNitrogen = results.getInt("nitrogen_industry");
+		this.universities = results.getInt("universities");
+		this.name = results.getString("name");
+		this.type = CityType.getByName(results.getString("type"));
+		this.devastation = results.getInt("devastation");
+		this.id = results.getInt("id");
+		this.row = results.getRow();
 	}
 
 	public void setCapital(boolean capital) throws SQLException
 	{
 		this.capital = capital;
-		results.updateBoolean(2, capital);
+		results.updateBoolean("capital", capital);
 	}
 
 	public void setCoastal(boolean coastal) throws SQLException
 	{
 		this.coastal = coastal;
-		results.updateBoolean(3, coastal);
+		results.updateBoolean("coastal", coastal);
 	}
 
 	public void setRailroads(int railroads) throws SQLException
@@ -101,7 +126,7 @@ public class City
 			railroads = 10;
 		}
 		this.railroads = railroads;
-		results.updateInt(4, railroads);
+		results.updateInt("railroads", railroads);
 	}
 
 	public void setPorts(int ports) throws SQLException
@@ -115,7 +140,7 @@ public class City
 			ports = 10;
 		}
 		this.ports = ports;
-		results.updateInt(5, ports);
+		results.updateInt("ports", ports);
 	}
 
 	public void setBarracks(int barracks) throws SQLException
@@ -129,7 +154,7 @@ public class City
 			barracks = 10;
 		}
 		this.barracks = barracks;
-		results.updateInt(6, barracks);
+		results.updateInt("barracks", barracks);
 	}
 
 	public void setIronMines(int mines) throws SQLException
@@ -139,7 +164,7 @@ public class City
 			mines = 0;
 		}
 		this.ironMines = mines;
-		results.updateInt(7, mines);
+		results.updateInt("iron_mines", mines);
 	}
 
 	public void setCoalMines(int mines) throws SQLException
@@ -149,7 +174,7 @@ public class City
 			mines = 0;
 		}
 		this.coalMines = mines;
-		results.updateInt(8, mines);
+		results.updateInt("coal_mines", mines);
 	}
 
 	public void setOilWells(int wells) throws SQLException
@@ -159,7 +184,7 @@ public class City
 			wells = 0;
 		}
 		this.oilWells = wells;
-		results.updateInt(9, wells);
+		results.updateInt("oil_wells", wells);
 	}
 
 	public void setIndustryCivilian(int industry) throws SQLException
@@ -169,7 +194,7 @@ public class City
 			industry = 0;
 		}
 		this.industryCivilian = industry;
-		results.updateInt(10, industry);
+		results.updateInt("civilian_industry", industry);
 	}
 
 	public void setIndustryMilitary(int industry) throws SQLException
@@ -179,7 +204,7 @@ public class City
 			industry = 0;
 		}
 		this.industryMilitary = industry;
-		results.updateInt(11, industry);
+		results.updateInt("military_industry", industry);
 	}
 
 	public void setIndustryNitrogen(int industry) throws SQLException
@@ -189,7 +214,7 @@ public class City
 			industry = 0;
 		}
 		this.industryNitrogen = industry;
-		results.updateInt(12, industry);
+		results.updateInt("nitrogen_industry", industry);
 	}
 
 	public void setUniversities(int universities) throws SQLException
@@ -199,7 +224,7 @@ public class City
 			universities = 0;
 		}
 		this.universities = universities;
-		results.updateInt(13, universities);
+		results.updateInt("universities", universities);
 	}
 
 	public void setName(String name) throws SQLException
@@ -213,13 +238,13 @@ public class City
 			throw new IllegalArgumentException("Can not be more than 64 characters!");
 		}
 		this.name = name;
-		results.updateString(14, name);
+		results.updateString("name", name);
 	}
 
 	public void setType(CityType type) throws SQLException
 	{
 		this.type = type;
-		results.updateString(15, type.getName());
+		results.updateString("type", type.getName());
 	}
 
 	public void setDevastation(int devastation) throws SQLException
@@ -233,7 +258,7 @@ public class City
 			devastation = 0;
 		}
 		this.devastation = devastation;
-		results.updateInt(16, devastation);
+		results.updateInt("devastation", devastation);
 	}
 
 	public void update() throws SQLException

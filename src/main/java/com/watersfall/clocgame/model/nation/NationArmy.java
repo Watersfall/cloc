@@ -24,6 +24,41 @@ public class NationArmy extends NationBase
 	private @Getter int artillery;
 	private @Getter int fortification;
 
+	public NationArmy(int size, int training, int musket, int rifledMusket, int singleShot, int needleNose, int boltActionManual, int boltActionClip, int straightPull, int semiAuto, int machineGun, int artillery, int fortification)
+	{
+		this.size = size;
+		this.training = training;
+		this.musket = musket;
+		this.rifledMusket = rifledMusket;
+		this.singleShot = singleShot;
+		this.needleNose = needleNose;
+		this.boltActionManual = boltActionManual;
+		this.boltActionClip = boltActionClip;
+		this.straightPull = straightPull;
+		this.semiAuto = semiAuto;
+		this.machineGun = machineGun;
+		this.artillery = artillery;
+		this.fortification = fortification;
+	}
+
+	public NationArmy(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		this.id = results.getInt("id");
+		this.size = results.getInt("size");
+		this.training = results.getInt("training");
+		this.musket = results.getInt("musket");
+		this.rifledMusket = results.getInt("rifled_musket");
+		this.singleShot = results.getInt("single_shot");
+		this.needleNose = results.getInt("needle_nose");
+		this.boltActionManual = results.getInt("bolt_action_manual");
+		this.boltActionClip = results.getInt("bolt_action_clip");
+		this.straightPull = results.getInt("straight_pull");
+		this.semiAuto = results.getInt("semi_auto");
+		this.machineGun = results.getInt("machine_gun");
+		this.artillery = results.getInt("artillery");
+		this.fortification = results.getInt("fortification");
+	}
+
 	public NationArmy(Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);
@@ -189,7 +224,11 @@ public class NationArmy extends NationBase
 
 	public void setFortification(int fortification) throws SQLException
 	{
-		if(fortification  > 10)
+		if(fortification < 0)
+		{
+			fortification = 0;
+		}
+		else if(fortification  > 10)
 		{
 			fortification = 10;
 		}

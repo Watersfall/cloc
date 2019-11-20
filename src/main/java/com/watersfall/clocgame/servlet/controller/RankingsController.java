@@ -13,33 +13,20 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 
-@WebServlet(urlPatterns = "/rankings.jsp")
+@WebServlet(urlPatterns = "/rankings/")
 public class RankingsController extends HttpServlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		Connection conn = null;
-		try
+		try(Connection conn = Database.getDataSource().getConnection();)
 		{
-			conn = Database.getDataSource().getConnection();
 			Collection<Nation> nations = Nation.getNations(conn, "cloc_login.id > 0", "cloc_login.id ASC");
 			req.setAttribute("nations", nations);
 		}
 		catch(SQLException e)
 		{
 			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception e)
-			{
-				//Ignore
-			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/rankings.jsp").forward(req, resp);
 	}

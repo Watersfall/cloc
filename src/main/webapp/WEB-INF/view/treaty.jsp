@@ -9,7 +9,7 @@
 <div class="container"><%@ include file="includes/results.jsp"%><div class="main">
 
 	<c:choose>
-		<c:when test="${empty param['id']}">
+		<c:when test="${empty id}">
 			<p>You have visited this page incorrectly!</p>
 		</c:when>
 		<c:when test="${treaty == null}">
@@ -75,7 +75,7 @@
 						<input type="text" id="name" value="${treaty.name}"/>
 						<button onclick="updateTreaty('name', document.getElementById('name').value)">Set Name</button><br>
 						<label for="flag">Alliance Flag</label>
-						<form id="flagForm" action="treaty.do" method="POST" enctype="multipart/form-data">
+						<form id="flagForm" action="${pageContext.request.contextPath}/treaty/${treaty.id}" method="POST" enctype="multipart/form-data">
 							<input type="file" id="flag" name="flag" accept="image/png"/>
 						</form>
 						<button onclick="document.getElementById('flagForm').submit();">Set Flag</button><br>
@@ -102,8 +102,8 @@
 				</tr>
 				<c:forEach items="${treaty.members}" var="member">
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/nation.jsp?id=${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></td>
-						<td><a href="${pageContext.request.contextPath}/map.jsp?region=${member.foreign.region.name}">${member.foreign.region.name}</a></td>
+						<td><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></td>
+						<td><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name}">${member.foreign.region.name}</a></td>
 						<td>${member.roles}</td>
 						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
 							<td><button>Kick</button></td>

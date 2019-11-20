@@ -9,18 +9,18 @@
 	function loadCity(id)
 	{
 		let url = new URL(window.location.href);
-		if((url.searchParams.get("id") !== id))
+		if(url.pathname.indexOf(id) === -1)
 		{
 			document.getElementById("city").innerHTML = "<p>Loading...</p>";
 			let xhttp = new XMLHttpRequest();
-			xhttp.open("GET", "/city.jsp?id=" + id, true);
+			xhttp.open("GET", "/city/" + id, true);
 			xhttp.send();
 			xhttp.onreadystatechange = function()
 			{
 				if(xhttp.readyState === 4 && xhttp.status === 200)
 				{
 					document.getElementById("city").innerHTML = xhttp.responseText;
-					window.history.replaceState("id: " + id, "", window.location.href.substring(0, window.location.href.indexOf("id=") + 3) + id);
+					window.history.replaceState("id: " + id, "", window.location.href.substring(0, window.location.href.indexOf("cities/") + 7) + id + "/");
 				}
 			};
 		}

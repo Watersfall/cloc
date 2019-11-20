@@ -49,6 +49,13 @@ public class NationTech extends NationBase
 		}
 	}
 
+	public NationTech(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		super(connection, id, safe);
+		this.results = results;
+		loadTechnologies();
+	}
+
 	private void loadTechnologies() throws SQLException
 	{
 		researchedTechs = new HashSet<>();

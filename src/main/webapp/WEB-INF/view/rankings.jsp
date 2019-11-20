@@ -22,12 +22,12 @@
 		<c:forEach items="${nations}" var="nation">
 			<tr>
 				<td style="width: 10em">
-					<a href="${pageContext.request.contextPath}/nation.jsp?id=${nation.id}">
+					<a href="${pageContext.request.contextPath}/nation/${nation.id}">
 						<img class="large" src="${pageContext.request.contextPath}/user/flag/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
 					</a>
 				</td>
 				<td>
-					<a href="${pageContext.request.contextPath}/nation.jsp?id=${nation.id}">
+					<a href="${pageContext.request.contextPath}/nation/${nation.id}">
 							${nation.cosmetic.nationName}
 					</a>
 				</td>
@@ -35,7 +35,7 @@
 				<td><c:out value="${nation.foreign.region.name}"/></td>
 				<td><fmt:formatNumber value="${nation.economy.gdp}"/></td>
 				<c:if test="${nation.treaty != null}">
-					<td><a href="${pageContext.request.contextPath}/treaty.jsp?id=${nation.treaty.id}"><c:out value="${nation.treaty.name}"/></a></td>
+					<td><a href="${pageContext.request.contextPath}/treaty/${nation.treaty.id}/"><c:out value="${nation.treaty.name}"/></a></td>
 				</c:if>
 				<c:if test="${nation.treaty == null}">
 					<td>None</td>

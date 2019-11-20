@@ -15,6 +15,20 @@ public class NationForeign extends NationBase
 	private @Getter Region region;
 	private @Getter int alignment;
 
+	public NationForeign(Region region, int alignment)
+	{
+		this.region = region;
+		this.alignment = alignment;
+	}
+
+	public NationForeign(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		super(connection, id, safe);
+		this.results = results;
+		this.region = Region.getFromName(results.getString("region"));
+		this.alignment = results.getInt("alignment");
+	}
+
 	public NationForeign(Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);

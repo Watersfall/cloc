@@ -108,6 +108,7 @@
 						<fmt:formatNumber value="${home.domestic.population}"/> People
 					</div>
 					<div class="resourceTabDown" id="population">
+						<c:set var="population" value="${home.populationGrowth}"/>
 						<p class="positive">+<fmt:formatNumber value="${population.base}" maxFractionDigits="2"/>% from base growth<br></p>
 						<p class="${population.policies > 1 ? 'positive' : 'negative'}">Modified by <fmt:formatNumber value="${population.policies * 100}" maxFractionDigits="2"/>% from policies<br></p>
 						<p class="${population.unemployment > 1 ? 'positive' : 'negative'}">Modified by <fmt:formatNumber value="${population.unemployment * 100}" maxFractionDigits="2"/>% from ${population.unemployment > 0 ? 'unemployment' : 'over population'}<br></p>
@@ -192,7 +193,7 @@
 				<td>Treaty Membership</td>
 				<td>
 					<c:if test="${home.treaty != null}">
-						<a href="${pageContext.request.contextPath}/treaty.jsp?id=${home.treaty.id}"><c:out value="${home.treaty.name}"/></a>
+						<a href="${pageContext.request.contextPath}/treaty/${home.treaty.id}/"><c:out value="${home.treaty.name}"/></a>
 					</c:if>
 					<c:if test="${home.treaty == null}">
 						None
@@ -258,10 +259,10 @@
 		</table>
 		<h1>Wars</h1>
 		<c:if test="${offensive != null}">
-			<p>Offensive: <a href="${pageContext.request.contextPath}/nation.jsp?id=${offensive.id}">${offensive.cosmetic.nationName}</a></p>
+			<p>Offensive: <a href="${pageContext.request.contextPath}/nation/${offensive.id}/">${offensive.cosmetic.nationName}</a></p>
 		</c:if>
 		<c:if test="${defensive != null}">
-			<p>Defensive: <a href="${pageContext.request.contextPath}/nation.jsp?id=${defensive.id}">${defensive.cosmetic.nationName}</a></p>
+			<p>Defensive: <a href="${pageContext.request.contextPath}/nation/${defensive.id}/">${defensive.cosmetic.nationName}</a></p>
 		</c:if>
 		<c:if test="${offensive == null && defensive == null}">
 			<p>None</p>

@@ -19,17 +19,40 @@ public class NationPolicy extends NationBase
 	private @Getter int economy;
 	private @Getter int changeEconomy;
 
+	public NationPolicy(int id, int manpower, int changeManpower, int food, int changeFood, int economy, int changeEconomy)
+	{
+		this.id = id;
+		this.manpower = manpower;
+		this.changeManpower = changeManpower;
+		this.food = food;
+		this.changeFood = changeFood;
+		this.economy = economy;
+		this.changeEconomy = changeEconomy;
+	}
+
+	public NationPolicy(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		super(connection, id, safe);
+		this.results = results;
+		this.manpower = results.getInt("manpower_policy");
+		this.changeManpower = results.getInt("manpower_change");
+		this.food = results.getInt("food_policy");
+		this.changeFood = results.getInt("food_change");
+		this.economy = results.getInt("economy_policy");
+		this.changeEconomy = results.getInt("economy_change");
+	}
+
 	public NationPolicy(Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT manpower, manpower_change, food, food_change, economy, economy_change, id " + "FROM cloc_policy " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT manpower_policy, manpower_change, food_policy, food_change, economy_policy, economy_change, id " + "FROM cloc_policy " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT manpower, manpower_change, food, food_change, economy, economy_change, id " + "FROM cloc_policy " + "WHERE id=?");
+			read = connection.prepareStatement("SELECT manpower_policy, manpower_change, food_policy, food_change, economy_policy, economy_change, id " + "FROM cloc_policy " + "WHERE id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();

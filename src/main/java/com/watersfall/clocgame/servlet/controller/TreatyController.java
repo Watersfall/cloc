@@ -10,6 +10,7 @@ import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.model.treaty.TreatyMember;
 import com.watersfall.clocgame.util.UserUtils;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -21,21 +22,24 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 
-@WebServlet(urlPatterns = {"/treaty.jsp", "/treaty.do"})
+@WebServlet(urlPatterns = "/treaty/*")
 @MultipartConfig(maxFileSize = 1024 * 1024 * 4, fileSizeThreshold = 1024 * 1024 * 4)
 public class TreatyController extends HttpServlet
 {
+	private static final String URL = "/{id}";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		Connection conn = null;
-		try
+		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+		try(Connection conn = Database.getDataSource().getConnection())
 		{
-			int id = Integer.parseInt(req.getParameter("id"));
-			conn = Database.getDataSource().getConnection();
+			int id = Integer.parseInt(url.get("id"));
 			Treaty treaty = new Treaty(conn, id, false, false);
 			req.setAttribute("treaty", treaty);
+			req.setAttribute("id", id);
 			Nation nation = (Nation)req.getAttribute("home");
 			if(nation != null && nation.getTreaty() != null && nation.getTreaty().getId() == treaty.getId())
 			{
@@ -46,18 +50,6 @@ public class TreatyController extends HttpServlet
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception e)
-			{
-				//Ignore
-				e.printStackTrace();
-			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
 	}

@@ -10,7 +10,7 @@
 <div class="container"><%@ include file="includes/results.jsp"%>
 
 	<div class="main">
-	<h1><c:out value="${param['policies']}"/> Policy</h1>
+	<h1><c:out value="${decisions}"/> Policy</h1>
 	<table id="nation">
 		<tr>
 			<th style="width: 15%">
@@ -28,7 +28,7 @@
 			<c:when test="${sessionScope.user == null}">
 				<p>You must be logged in to view this page!</p>
 			</c:when>
-			<c:when test="${param['policies'] == 'Economic'}">
+			<c:when test="${decisions == 'Economic'}">
 				<tr>
 					<td>
 						Free Money
@@ -60,7 +60,7 @@
 					</td>
 				</tr>
 			</c:when>
-			<c:when test="${param['policies'] == 'Domestic'}">
+			<c:when test="${decisions == 'Domestic'}">
 				<tr>
 					<td>
 						Increase Arrest Quotas
@@ -136,7 +136,7 @@
 					</td>
 				</tr>
 			</c:when>
-			<c:when test="${param['policies'] == 'Foreign'}">
+			<c:when test="${decisions == 'Foreign'}">
 				<tr>
 					<td>
 						Align With The Entente
@@ -190,11 +190,11 @@
 						$0k
 					</td>
 					<td>
-						<button class="policyButton" type="submit" onclick="window.location.href = '/createtreaty.jsp'">Create</button>
+						<button class="policyButton" type="submit" onclick="window.location.href = '/createtreaty/'">Create</button>
 					</td>
 				</tr>
 			</c:when>
-			<c:when test="${param['policies'] == 'Military'}">
+			<c:when test="${decisions == 'Military'}">
 				<tr>
 					<td>
 						Conscript

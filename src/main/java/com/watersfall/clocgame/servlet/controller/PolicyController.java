@@ -6,6 +6,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.util.UserUtils;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,10 +17,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 
-@WebServlet(urlPatterns = {"/policy.jsp", "/policy.do"})
+@WebServlet(urlPatterns = {"/policy/*"})
 public class PolicyController extends HttpServlet
 {
+	public static final String URL = "/{policy}";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
@@ -29,8 +33,9 @@ public class PolicyController extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
-		String decision = req.getParameter("policy");
+		String decision = url.get("policy");
 		Connection connection = null;
 		try
 		{

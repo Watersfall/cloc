@@ -14,14 +14,14 @@
 		}
 	</style>
 	<c:choose>
-		<c:when test="${param['id'] == null}">
+		<c:when test="${empty id}">
 			<p>You have visited this page incorrectly!</p>
 		</c:when>
 		<c:when test="${nation == null}">
 			<p>This nation does not exist!</p>
 		</c:when>
 		<c:when test="${not empty user and not empty nation and nation.id == user}">
-			<c:redirect url="/main.jsp"/>
+			<c:redirect url="/main/"/>
 		</c:when>
 		<c:otherwise>
 			<div class="nation">
@@ -87,7 +87,7 @@
 					<td>Treaty Membership</td>
 					<td>
 						<c:if test="${nation.treaty != null}">
-							<a href="${pageContext.request.contextPath}/treaty.jsp?id=${nation.treaty.id}"><c:out value="${nation.treaty.name}"/></a>
+							<a href="${pageContext.request.contextPath}/treaty/${nation.treaty.id}"><c:out value="${nation.treaty.name}"/></a>
 						</c:if>
 						<c:if test="${nation.treaty == null}">
 							None

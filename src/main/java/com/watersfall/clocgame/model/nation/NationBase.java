@@ -13,6 +13,8 @@ public abstract class NationBase
 	protected @Getter boolean safe;
 	protected @Getter ResultSet results;
 
+	public NationBase(){}
+
 	public NationBase(Connection connection, int id, boolean safe) throws SQLException
 	{
 		this.id = id;

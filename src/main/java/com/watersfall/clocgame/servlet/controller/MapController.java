@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,20 +18,21 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 
-@WebServlet(urlPatterns = "/map.jsp")
+@WebServlet(urlPatterns = {"/map/*"})
 public class MapController extends HttpServlet
 {
+	public static final String URL = "/region/{region}";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		String param = req.getParameter("region");
-		Connection conn = null;
-		try
+		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+		try(Connection conn = Database.getDataSource().getConnection())
 		{
-			conn = Database.getDataSource().getConnection();
-			if(param != null)
+			if(url.get("region") != null)
 			{
-				Region region = Region.getFromName(param);
+				req.setAttribute("region", url.get("region"));
+				Region region = Region.getFromName(url.get("region"));
 				if(region != null)
 				{
 					String where = "region='" + region.getName() + "'";
@@ -59,19 +61,6 @@ public class MapController extends HttpServlet
 		catch(SQLException | NullPointerException e)
 		{
 			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception e)
-			{
-
-				//Ignore
-				e.printStackTrace();
-			}
 		}
 
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/map.jsp").forward(req, resp);

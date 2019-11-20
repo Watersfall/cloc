@@ -7,4 +7,7 @@
 	<script src="${pageContext.request.contextPath}/js/actions.js"></script>
 	<meta name="description" content="Bad web game">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script>
+		setContext("${pageContext.request.contextPath}");
+	</script>
 </head>

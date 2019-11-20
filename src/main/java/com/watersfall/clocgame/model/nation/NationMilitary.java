@@ -10,7 +10,6 @@ import java.sql.SQLException;
 
 public class NationMilitary extends NationBase
 {
-	private @Getter int id;
 	private @Getter int fighters;
 	private @Getter int zeppelins;
 	private @Getter int bombers;
@@ -21,6 +20,36 @@ public class NationMilitary extends NationBase
 	private @Getter int battleships;
 	private @Getter int transports;
 	private @Getter int warProtection;
+
+	public NationMilitary(int fighters, int zeppelins, int bombers, int submarines, int destroyers, int cruisers, int preBattleships, int battleships, int transports, int warProtection)
+	{
+		this.fighters = fighters;
+		this.zeppelins = zeppelins;
+		this.bombers = bombers;
+		this.submarines = submarines;
+		this.destroyers = destroyers;
+		this.cruisers = cruisers;
+		this.preBattleships = preBattleships;
+		this.battleships = battleships;
+		this.transports = transports;
+		this.warProtection = warProtection;
+	}
+
+	public NationMilitary(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		super(connection, id, safe);
+		this.results = results;
+		this.fighters = results.getInt("fighters");
+		this.zeppelins = results.getInt("zeppelins");
+		this.bombers = results.getInt("bombers");
+		this.submarines = results.getInt("submarines");
+		this.destroyers = results.getInt("destroyers");
+		this.cruisers = results.getInt("cruisers");
+		this.preBattleships = results.getInt("pre_battleships");
+		this.battleships = results.getInt("battleships");
+		this.transports = results.getInt("transports");
+		this.warProtection = results.getInt("war_protection");
+	}
 
 	public NationMilitary(Connection connection, int id, boolean safe) throws SQLException
 	{

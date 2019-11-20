@@ -6,7 +6,7 @@
 <%@ include file="includes/toggle.jsp"%>
 <div class="container"><%@ include file="includes/results.jsp"%><div class="main">
 
-	<form class="registerForm" action="${pageContext.request.contextPath}/register.do" method="POST">
+	<form class="registerForm" action="${pageContext.request.contextPath}/register/" method="POST">
 		<label>
 			Username
 			<input class="RegisterText" type="text" name="username" maxlength="32" placeholder="Username">

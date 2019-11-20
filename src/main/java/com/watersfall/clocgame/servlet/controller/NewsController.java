@@ -11,13 +11,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = {"/news.jsp", "/news.do"})
+@WebServlet(urlPatterns = {"/news/"})
 public class NewsController extends HttpServlet
 {
 	@Override
@@ -26,18 +26,32 @@ public class NewsController extends HttpServlet
 		Connection connection = null;
 		try
 		{
-			HttpSession sess = req.getSession(true);
-			if(sess != null && sess.getAttribute("user") != null)
+			if(req.getAttribute("user") != null)
 			{
-				int user = Integer.parseInt(sess.getAttribute("user").toString());
+				int user = Integer.parseInt("user");
 				connection = Database.getDataSource().getConnection();
-				req.removeAttribute("home");
-				req.setAttribute("home", new Nation(connection, user, true));
+				PreparedStatement read = connection.prepareStatement("UPDATE cloc_news SET is_read=? WHERE receiver=?");
+				read.setBoolean(1, true);
+				read.setInt(2, user);
+				read.execute();
+				connection.commit();
 			}
+
 		}
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				connection.close();
+			}
+			catch(Exception e)
+			{
+				//Ignored
+			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/news.jsp").forward(req, resp);
 	}

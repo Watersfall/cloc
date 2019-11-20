@@ -20,33 +20,20 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet(urlPatterns = {"/declarations.jsp", "/declarations.do"})
+@WebServlet(urlPatterns = {"/declarations/"})
 public class DeclarationsController extends HttpServlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		Connection conn = null;
-		try
+		try(Connection conn = Database.getDataSource().getConnection())
 		{
-			conn = Database.getDataSource().getConnection();
 			ArrayList<Declaration> declarations = Declaration.getDeclarations(conn);
 			req.setAttribute("declarations", declarations);
 		}
 		catch(SQLException e)
 		{
 			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception e)
-			{
-				//Ignore
-			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/declarations.jsp").forward(req, resp);
 	}

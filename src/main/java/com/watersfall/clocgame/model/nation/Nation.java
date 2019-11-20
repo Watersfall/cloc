@@ -36,6 +36,7 @@ public class Nation
 	private @Getter Treaty treaty;
 	private @Getter Connection connection;
 	private @Getter boolean safe;
+	private @Getter ResultSet results;
 	private LinkedHashMap<String, Double> coalProduction = null;
 	private LinkedHashMap<String, Double> ironProduction = null;
 	private LinkedHashMap<String, Double> oilProduction = null;
@@ -165,22 +166,52 @@ public class Nation
 	 */
 	public Nation(Connection connection, int id, boolean safe) throws SQLException
 	{
-		cosmetic = new NationCosmetic(connection, id, safe);
-		domestic = new NationDomestic(connection, id, safe);
-		economy = new NationEconomy(connection, id, safe);
-		foreign = new NationForeign(connection, id, safe);
-		military = new NationMilitary(connection, id, safe);
-		army = new NationArmy(connection, id, safe);
-		cities = new NationCities(connection, id, safe);
-		policy = new NationPolicy(connection, id, safe);
-		tech = new NationTech(connection, id, safe);
-		invites = new NationInvites(connection, id, safe);
-		news = new NationNews(connection, id, safe);
+		PreparedStatement get;
+		if(safe)
+		{
+			this.cosmetic = new NationCosmetic(connection, id, safe);
+			this.domestic = new NationDomestic(connection, id, safe);
+			this.economy = new NationEconomy(connection, id, safe);
+			this.foreign = new NationForeign(connection, id, safe);
+			this.military = new NationMilitary(connection, id, safe);
+			this.army = new NationArmy(connection, id, safe);
+			this.cities = new NationCities(connection, id, safe);
+			this.policy = new NationPolicy(connection, id, safe);
+			this.tech = new NationTech(connection, id, safe);
+			this.invites = new NationInvites(connection, id, safe);
+			this.news = new NationNews(connection, id, safe);
+		}
+		else
+		{
+			get = connection.prepareStatement("SELECT * FROM cloc_login\n" +
+					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
+					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
+					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
+					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
+					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
+					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
+					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
+					"WHERE cloc_login.id=?");
+			get.setInt(1, id);
+			ResultSet main = get.executeQuery();
+			main.first();
+			this.results = main;
+			this.cosmetic = new NationCosmetic(main, connection, id, safe);
+			this.domestic = new NationDomestic(main, connection, id, safe);
+			this.economy = new NationEconomy(main, connection, id, safe);
+			this.foreign = new NationForeign(main, connection, id, safe);
+			this.military = new NationMilitary(main, connection, id, safe);
+			this.tech = new NationTech(main, connection, id, safe);
+			this.policy = new NationPolicy(main, connection, id, safe);
+			this.army = new NationArmy(main, connection, id, safe);
+			this.news = new NationNews(connection, id, safe);
+			this.invites = new NationInvites(connection, id, safe);
+			this.cities = new NationCities(connection, id, safe);
+		}
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;
-
-		//Wars
 		PreparedStatement attacker = connection.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1");
 		PreparedStatement defender = connection.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1");
 		attacker.setInt(1, this.id);
@@ -204,7 +235,6 @@ public class Nation
 			this.defensive = resultsDefender.getInt(1);
 		}
 
-		//Treaty
 		PreparedStatement treatyCheck = connection.prepareStatement("SELECT alliance_id FROM cloc_treaties_members " +
 				"WHERE nation_id=?");
 		treatyCheck.setInt(1, this.id);
@@ -1114,7 +1144,6 @@ public class Nation
 		military.update();
 		army.update();
 		policy.update();
-		tech.update();
 		for(City city : cities.getCities().values())
 		{
 			city.update();

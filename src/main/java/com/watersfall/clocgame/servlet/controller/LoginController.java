@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/login.do")
+@WebServlet(urlPatterns = "/login/")
 public class LoginController extends HttpServlet
 {
 	@Override
@@ -31,8 +31,7 @@ public class LoginController extends HttpServlet
 		PrintWriter writer = resp.getWriter();
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
-		Connection conn = null;
-		try
+		try(Connection conn = Database.getDataSource().getConnection())
 		{
 			if(username == null || password == null)
 			{
@@ -40,7 +39,6 @@ public class LoginController extends HttpServlet
 			}
 			else
 			{
-				conn = Database.getDataSource().getConnection();
 				password = Md5.md5(password);
 				PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_login WHERE username=? AND password=?");
 				check.setString(1, username);
@@ -58,20 +56,8 @@ public class LoginController extends HttpServlet
 		}
 		catch(SQLException e)
 		{
+			e.printStackTrace();
 			writer.append(Responses.genericException(e));
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception e)
-			{
-
-				//Ignore
-				e.printStackTrace();
-			}
 		}
 	}
 }

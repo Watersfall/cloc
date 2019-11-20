@@ -8,13 +8,15 @@ import lombok.Getter;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebFilter(urlPatterns = "*.jsp")
+@WebFilter(urlPatterns = {
+		"/air/*", "/cities/*", "/city/*", "/createtreaty/*", "/decisions/*", "/declarations/*", "/land/*", "/main/*",
+		"/map/*", "/nation/*", "/navy/*", "/news/*", "/policy/*", "/rankings/*", "/register/*", "/settings/*",
+		"/technology/*", "/techtree/*", "/treaties/*", "/treaty/*", "/index/", "/"})
 public class LoggedInFilter implements Filter
 {
 	private @Getter ServletContext context;
@@ -28,33 +30,22 @@ public class LoggedInFilter implements Filter
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
-		request.setAttribute("turn", Util.turn);
-		Connection connection = null;
-		try
+		HttpServletRequest req = (HttpServletRequest) request;
+		if(req.getMethod().equalsIgnoreCase("GET"));
 		{
-			HttpServletRequest req = (HttpServletRequest) request;
-			HttpServletResponse res = (HttpServletResponse) response;
-			HttpSession sess = req.getSession(true);
-			if(sess != null && sess.getAttribute("user") != null)
+			request.setAttribute("turn", Util.turn);
+			try(Connection connection = Database.getDataSource().getConnection())
 			{
-				int user = Integer.parseInt(sess.getAttribute("user").toString());
-				connection = Database.getDataSource().getConnection();
-				req.setAttribute("home", new Nation(connection, user, false));
+				HttpSession sess = req.getSession(true);
+				if(sess != null && sess.getAttribute("user") != null)
+				{
+					int user = Integer.parseInt(sess.getAttribute("user").toString());
+					req.setAttribute("home", new Nation(connection, user, false));
+				}
 			}
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
+			catch(SQLException e)
 			{
-				connection.close();
-			}
-			catch(Exception e)
-			{
-				//Ignore
+				e.printStackTrace();
 			}
 		}
 		chain.doFilter(request, response);

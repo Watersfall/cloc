@@ -6,6 +6,7 @@ import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,40 +17,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 
-@WebServlet(urlPatterns = {"/nation.jsp", "/nation.do"})
+@WebServlet(urlPatterns = {"/nation/*"})
 public class NationController extends HttpServlet
 {
+	public static final String URL = "/{id}";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-
-		if(req.getParameter("id") != null)
+		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+		if(url.get("id") != null)
 		{
-			int id = Integer.parseInt(req.getParameter("id"));
-			Connection connection = null;
-			try
+			req.setAttribute("id", url.get("id"));
+			int id = Integer.parseInt(url.get("id"));
+			try(Connection connection = Database.getDataSource().getConnection())
 			{
-				connection = Database.getDataSource().getConnection();
 				req.setAttribute("nation", new Nation(connection, id, false));
 			}
 			catch(Exception e)
 			{
 				//Ignore
 				e.printStackTrace();
-			}
-			finally
-			{
-				try
-				{
-					connection.close();
-				}
-				catch(Exception e)
-				{
-
-					//Ignore
-					e.printStackTrace();
-				}
 			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
@@ -60,13 +50,13 @@ public class NationController extends HttpServlet
 	{
 		String action = req.getParameter("action");
 		PrintWriter writer = resp.getWriter();
-
+		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		if(req.getSession().getAttribute("user") == null)
 		{
 			writer.append(Responses.noLogin());
 			return;
 		}
-		if(req.getParameter("id") == null)
+		if(url.get("id") == null)
 		{
 			writer.append(Responses.genericError());
 			return;
@@ -77,7 +67,7 @@ public class NationController extends HttpServlet
 			return;
 		}
 
-		int idReceiever = Integer.parseInt(req.getParameter("id"));
+		int idReceiever = Integer.parseInt(url.get("id"));
 		int idSender = Integer.parseInt(req.getSession().getAttribute("user").toString());
 		Connection connection = null;
 		try
@@ -85,7 +75,6 @@ public class NationController extends HttpServlet
 			connection = Database.getDataSource().getConnection();
 			Nation sender = new Nation(connection, idSender, true);
 			Nation receiver = new Nation(connection, idReceiever, true);
-			int amount;
 			switch(action)
 			{
 				case "sendcoal":

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/land.jsp")
+@WebServlet(urlPatterns = "/land/")
 public class LandController extends HttpServlet
 {
 	@Override

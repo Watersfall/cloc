@@ -12,32 +12,19 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/treaties.jsp")
+@WebServlet(urlPatterns = "/treaties/")
 public class TreatiesController extends HttpServlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		Connection conn = null;
-		try
+		try(Connection conn = Database.getDataSource().getConnection())
 		{
-			conn = Database.getDataSource().getConnection();
 			req.setAttribute("treaties", Treaty.getAllTreaties(conn));
 		}
 		catch(SQLException e)
 		{
 			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception e)
-			{
-				//Ignore
-			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaties.jsp").forward(req, resp);
 	}

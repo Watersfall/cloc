@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/main.jsp")
+@WebServlet(urlPatterns = "/main/")
 public class MainController extends HttpServlet
 {
 	@Override
@@ -20,15 +20,9 @@ public class MainController extends HttpServlet
 	{
 		if(req.getAttribute("home") != null)
 		{
-			Connection conn = null;
-			try
+			try(Connection conn = Database.getDataSource().getConnection())
 			{
 				Nation nation = (Nation) req.getAttribute("home");
-				req.setAttribute("growth", nation.getGrowthChange());
-				req.setAttribute("production", nation.getAllTotalProductions());
-				req.setAttribute("population", nation.getPopulationGrowth());
-				req.setAttribute("food", nation.getFoodProduction());
-				conn = Database.getDataSource().getConnection();
 				if(nation.getDefensive() != 0)
 				{
 					Nation defensive = new Nation(conn, nation.getDefensive(), false);
@@ -43,17 +37,6 @@ public class MainController extends HttpServlet
 			catch(SQLException e)
 			{
 				e.printStackTrace();
-			}
-			finally
-			{
-				try
-				{
-					conn.close();
-				}
-				catch(Exception e)
-				{
-					//Ignored
-				}
 			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);

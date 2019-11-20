@@ -121,6 +121,17 @@ public class News
 		this.id = results.getInt(7);
 	}
 
+	public News(ResultSet results) throws SQLException
+	{
+		this.sender = results.getInt("sender");
+		this.receiver = results.getInt("receiver");
+		this.content = results.getString("content");
+		this.image = results.getString("image");
+		this.time = results.getLong("time");
+		this.read = results.getBoolean("is_read");
+		this.id = results.getInt("id");
+	}
+
 	public News(Connection conn, int id, boolean safe) throws SQLException
 	{
 		this.conn = conn;

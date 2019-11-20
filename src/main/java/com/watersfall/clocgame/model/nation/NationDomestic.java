@@ -18,6 +18,30 @@ public class NationDomestic extends NationBase
 	private @Getter long manpowerLost;
 	private @Getter int rebels;
 
+	public NationDomestic(int land, int government, int approval, int stability, long population, long manpowerLost, int rebels)
+	{
+		this.land = land;
+		this.government = government;
+		this.approval = approval;
+		this.stability = stability;
+		this.population = population;
+		this.manpowerLost = manpowerLost;
+		this.rebels = rebels;
+	}
+
+	public NationDomestic(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
+	{
+		super(connection, id, safe);
+		this.results = results;
+		this.land = results.getInt("land");
+		this.government = results.getInt("government");
+		this.approval = results.getInt("approval");
+		this.stability = results.getInt("stability");
+		this.population = results.getLong("population");
+		this.manpowerLost = results.getLong("lost_manpower");
+		this.rebels = results.getInt("rebels");
+	}
+
 	public NationDomestic(Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);
@@ -53,6 +77,10 @@ public class NationDomestic extends NationBase
 
 	public void setLand(int land) throws SQLException
 	{
+		if(land < 0)
+		{
+			land = 0;
+		}
 		results.updateInt(1, land);
 	}
 
@@ -100,18 +128,34 @@ public class NationDomestic extends NationBase
 
 	public void setPopulation(long population) throws SQLException
 	{
+		if(population < 1)
+		{
+			population = 1;
+		}
 		this.population = population;
 		results.updateDouble(5, population);
 	}
 
 	public void setRebels(int rebels) throws SQLException
 	{
+		if(rebels < 0)
+		{
+			rebels = 0;
+		}
+		else if(rebels > 100)
+		{
+			rebels = 100;
+		}
 		this.rebels = rebels;
 		results.updateInt(6, rebels);
 	}
 
 	public void setManpowerLost(long lostManpower) throws SQLException
 	{
+		if(lostManpower < 0)
+		{
+			lostManpower = 0;
+		}
 		this.manpowerLost = lostManpower;
 		results.updateLong(7, lostManpower);
 	}

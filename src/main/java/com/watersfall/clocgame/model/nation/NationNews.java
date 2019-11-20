@@ -39,7 +39,7 @@ public class NationNews extends NationBase
 		results.beforeFirst();
 		while(results.next())
 		{
-			News temp = new News(connection, results);
+			News temp = new News(results);
 			news.put(temp.getId(), temp);
 			if(!temp.isRead())
 			{

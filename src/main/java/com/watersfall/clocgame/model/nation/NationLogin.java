@@ -17,6 +17,16 @@ public class NationLogin extends NationBase
 	private @Getter String ipRegister;
 	private @Getter String ipLast;
 
+	public NationLogin(int id, String username, String email, String password, String ipRegister, String ipLast)
+	{
+		this.id = id;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.ipRegister = ipRegister;
+		this.ipLast = ipLast;
+	}
+
 	public NationLogin(Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);

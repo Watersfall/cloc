@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = {"/createtreaty.jsp", "/createtreaty.do"})
+@WebServlet(urlPatterns = {"/createtreaty/"})
 public class CreateTreatyController extends HttpServlet
 {
 	@Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException

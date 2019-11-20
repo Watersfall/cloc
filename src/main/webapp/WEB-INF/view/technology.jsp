@@ -8,9 +8,9 @@
 	<h1>Technology</h1>
 	<div class="categories">
 		<ul>
-			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=researched"><div>Researched</div></a></li>
-			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp"><div>Available</div></a></li>
-			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology.jsp?type=tree"><div>Tech Tree</div></a></li>
+			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology/researched"><div>Researched</div></a></li>
+			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology/"><div>Available</div></a></li>
+			<li style="width: 33%"><a href="${pageContext.request.contextPath}/technology/tree/"><div>Tech Tree</div></a></li>
 		</ul>
 	</div>
 	<table id="nation">
@@ -74,7 +74,7 @@
 					<ul>
 						<c:forEach items="${categories}" var="cat">
 							<li>
-								<a href="${pageContext.request.contextPath}/technology.jsp?type=tree&category=${cat.name()}">
+								<a href="${pageContext.request.contextPath}/technology/tree/${cat.name()}/">
 									<div>${cat.name}</div>
 								</a>
 							</li>

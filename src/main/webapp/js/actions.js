@@ -1,3 +1,10 @@
+let context = "";
+
+function setContext(newContext)
+{
+	context = newContext;
+}
+
 function ajax(url, params)
 {
 	let xhttp = new XMLHttpRequest();
@@ -30,30 +37,29 @@ function displayResults()
 function decision(policy)
 {
 	displayResults();
-	let url = "/decision/" + policy;
+	let url = context + "/decision/" + policy;
 	ajax(url, null);
 }
 
 function cityDecision(policy, cityId)
 {
 	displayResults();
-	let url = "/decision/city/" + policy;
-	let params = "city=" + cityId;
-	ajax(url, params);
+	let url = context + "/decision/city/" + cityId + "/" + policy;
+	ajax(url, null);
 }
 
 function send(action, amount, id)
 {
 	displayResults();
-	let url = "nation.do";
+	let url = context + "/nation/" + id;
 	let params;
-	if(action === null)
+	if(amount === null)
 	{
-		params = "action=" + action + "&id=" + id;
+		params = "action=" + action;
 	}
 	else
 	{
-		params = "action=" + action + "&amount=" + amount + "&id=" + id;
+		params = "action=" + action + "&amount=" + amount;
 	}
 	ajax(url, params);
 }
@@ -61,15 +67,15 @@ function send(action, amount, id)
 function declareWar(id)
 {
 	displayResults();
-	let url = "nation.do";
-	let params = "action=war&id=" + id;
+	let url = context + "/nation/" + id;
+	let params = "action=war";
 	ajax(url, params);
 }
 
 function settings(name, value)
 {
 	displayResults();
-	let url = "settings.do";
+	let url = context + "/settings/";
 	let params = "action=" + name + "&" + name + "=" + value;
 	ajax(url, params);
 }
@@ -77,7 +83,7 @@ function settings(name, value)
 function settingsAll(flag, portrait, nationTitle, leaderTitle, description)
 {
 	displayResults();
-	let url = "settings.do";
+	let url = context + "/settings/";
 	let params = "action=all" + "&flag=" + flag +
 		"&portrait=" + portrait + "&nationTitle=" + nationTitle +
 		"&leaderTitle=" + leaderTitle + "&description=" + description;
@@ -87,8 +93,8 @@ function settingsAll(flag, portrait, nationTitle, leaderTitle, description)
 function policy(policy)
 {
 	displayResults();
-	let url = "policy.do";
-	let params = 'selection=' + document.getElementById(policy).selectedIndex + '&policy=' + policy;
+	let url = context + "/policy/" + policy;
+	let params = 'selection=' + document.getElementById(policy).selectedIndex;
 	ajax(url, params);
 }
 
@@ -116,7 +122,7 @@ function createTreaty(name)
 	displayResults();
 	let xhttp = new XMLHttpRequest();
 	let params = "name=" + name;
-	xhttp.open("POST", "createtreaty.do", true);
+	xhttp.open("POST", context + "/createtreaty/", true);
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send(params);
 	xhttp.onreadystatechange = function()
@@ -137,7 +143,7 @@ function login(user, pass)
 	displayResults();
 	let xhttp = new XMLHttpRequest();
 	let params = "username=" + user + "&password=" + pass;
-	xhttp.open("POST", "login.do", true);
+	xhttp.open("POST", context + "/login/", true);
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send(params);
 	xhttp.onreadystatechange = function()
@@ -161,7 +167,7 @@ function research(tech)
 	displayResults();
 	let xhttp = new XMLHttpRequest();
 	let params = "tech=" + tech;
-	xhttp.open("POST", "technology.do", true);
+	xhttp.open("POST", context + "/technology/", true);
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send(params);
 	xhttp.onreadystatechange = function()
@@ -177,13 +183,9 @@ function research(tech)
 function updateTechs()
 {
 	let url = new URL(window.location.href);
-	let params = "";
-	if(url.searchParams.get("category") !== null)
-	{
-		params = "category=" + url.searchParams.get("category");
-	}
+	let category = url.pathname.substring(url.pathname.indexOf("/tree/") + 6);
 	let xhttp = new XMLHttpRequest();
-	xhttp.open("GET", "techtree.jsp?" + params, true);
+	xhttp.open("GET", context + "/techtree/" + category, true);
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send();
 	xhttp.onreadystatechange = function()
@@ -198,7 +200,7 @@ function updateTechs()
 function updateTreaty(attribute, value)
 {
 	displayResults();
-	let url = "treaty.do";
+	let url = context + "/treaty/";
 	let params = "attribute=" + attribute + "&value=" + value;
 	ajax(url, params);
 }
@@ -207,7 +209,7 @@ function postDeclaration()
 {
 	displayResults();
 	let message = document.getElementById("post").value;
-	let url = "declarations.do";
+	let url = context + "/declarations/";
 	let params = "message=" + message;
 	ajax(url, params);
 }
@@ -215,7 +217,7 @@ function postDeclaration()
 function newsDelete(id)
 {
 	displayResults();
-	let url = "news.do";
+	let url = context + "/news/";
 	let params = "delete=" + id;
 	ajax(url, params);
 }

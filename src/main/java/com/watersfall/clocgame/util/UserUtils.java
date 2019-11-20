@@ -1,8 +1,12 @@
 package com.watersfall.clocgame.util;
 
+import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.model.nation.Nation;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class UserUtils
 {
@@ -23,5 +27,11 @@ public class UserUtils
 		{
 			throw new NotLoggedInException();
 		}
+	}
+
+	public static Nation getUserNation(Connection conn, boolean safe, HttpServletRequest request) throws NotLoggedInException, NationNotFoundException, SQLException
+	{
+		int user = getUser(request);
+		return new Nation(conn, user, safe);
 	}
 }

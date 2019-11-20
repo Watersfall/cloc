@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/navy.jsp")
+@WebServlet(urlPatterns = "/navy/")
 public class NavyController extends HttpServlet
 {
 	@Override
