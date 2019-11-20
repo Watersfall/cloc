@@ -144,11 +144,11 @@ CREATE TABLE cloc_tech(
 
 CREATE TABLE cloc_policy(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	manpower TINYINT UNSIGNED DEFAULT 2,
+	manpower_policy TINYINT UNSIGNED DEFAULT 2,
 	manpower_change INT DEFAULT 0,
-	food TINYINT DEFAULT 1,
+	food_policy TINYINT DEFAULT 1,
 	food_change INT DEFAULT 0,
-	economy TINYINT DEFAULT 2,
+	economy_policy TINYINT DEFAULT 2,
 	economy_change INT DEFAULT 0,
 	FOREIGN KEY fk_policy (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );

@@ -474,7 +474,7 @@ public class Nation
 	{
 		HashMap<String, Double> map = new HashMap<>();
 		double modifier = 1;
-		int employment = 0;
+		long employment = 0;
 		double unemployment = 0;
 		double growth = 0.2;
 		if(this.policy.getFood() == 2)

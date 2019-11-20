@@ -341,7 +341,7 @@ public class City
 		return 0;
 	}
 
-	public int getTotalEmployment()
+	public long getTotalEmployment()
 	{
 		int employment = 0;
 		employment += (this.coalMines + this.ironMines + this.oilWells) * City.EMPLOYMENT_MINE;
