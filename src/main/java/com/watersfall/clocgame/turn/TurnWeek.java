@@ -98,7 +98,7 @@ public class TurnWeek implements Runnable
 				{
 					for(City city : nation.getCities().getCities().values())
 					{
-						city.setDevastation(city.getDevastation() - (int)(Math.random() * 5) + 5);
+						city.setDevastation(city.getDevastation() - ((int)(Math.random() * 5) + 5));
 					}
 				}
 

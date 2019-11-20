@@ -529,7 +529,7 @@ public class City
 		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryMilitary();
 		double total = factories + bonus;
 		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 - devastation);
+		total = total * (1 -  (devastation / 100.0));
 		double net = total;
 		map.put("total", total);
 		map.put("factories", factories);
