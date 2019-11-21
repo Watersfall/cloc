@@ -7,6 +7,7 @@ import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.math.Math;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.message.Declaration;
+import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
@@ -247,6 +248,7 @@ public class Nation
 		{
 			treaty = new Treaty(connection, resultsTreaty.getInt(1), safe);
 		}
+		getPower();
 	}
 
 	/**
@@ -1024,19 +1026,97 @@ public class Nation
 	}
 
 	/**
+	 * Gets the total equipment of the army
+	 * @return The total equipment
+	 */
+	public int getTotalEquipment()
+	{
+		return army.getMusket() + army.getRifledMusket() + army.getSingleShot() + army.getNeedleNose() +
+				army.getBoltActionManual() + army.getBoltActionClip() + army.getStraightPull() +
+				army.getSemiAuto() + army.getMachineGun();
+	}
+
+	public LinkedHashMap<String, Integer> getEquipment()
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		map.put("Muskets", this.army.getMusket());
+		map.put("Rifled Muskets", this.army.getRifledMusket());
+		map.put("Single Shot Rifles", this.army.getSingleShot());
+		map.put("Needle Nose Rifles", this.army.getNeedleNose());
+		map.put("Manually Loaded Bolt Action Rifles", this.army.getBoltActionManual());
+		map.put("Clip Loaded Bolt Action Rifles", this.army.getBoltActionClip());
+		map.put("Straight Pull Rifles", this.army.getStraightPull());
+		map.put("Semi-Automatic Rifles", this.army.getSemiAuto());
+		map.put("Machine Guns", this.army.getMachineGun());
+		return map;
+	}
+
+	/**
 	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power
 	 */
 	public double getPower()
 	{
-		double power = army.getSize() * 1000;
-		if(power > this.army.getMusket())
+		double power = 0e0;
+		long equipment = army.getSize() * 1000;
+		if(equipment > 0)
 		{
-			power = power * (this.army.getMusket() / power);
+			long amount = (army.getMachineGun() > equipment) ? equipment : army.getMachineGun();
+			power += amount * 13.5;
+			equipment -= amount;
 		}
+		if(equipment > 0)
+		{
+			long amount = (army.getSemiAuto() > equipment) ? equipment : army.getSemiAuto();
+			power += amount * 12;
+			equipment -= amount;
+		}
+		if(equipment > 0)
+		{
+			long amount = (army.getStraightPull() > equipment) ? equipment : army.getStraightPull();
+			power += amount * 10.5;
+			equipment -= amount;
+		}
+		if(equipment > 0)
+		{
+			long amount = (army.getBoltActionClip() > equipment) ? equipment : army.getBoltActionClip();
+			power += amount * 9;
+			equipment -= amount;
+		}
+		if(equipment > 0)
+		{
+			long amount = (army.getBoltActionManual() > equipment) ? equipment : army.getBoltActionManual();
+			power += amount * 7.5;
+			equipment -= amount;
+		}
+		if(equipment > 0)
+		{
+			long amount = (army.getNeedleNose() > equipment) ? equipment : army.getNeedleNose();
+			power += amount * 6;
+			equipment -= amount;
+		}
+		if(equipment > 0)
+		{
+			long amount = (army.getSingleShot() > equipment) ? equipment : army.getSingleShot();
+			power += amount * 4.5;
+			equipment -= amount;
+		}
+		if(equipment > 0)
+		{
+			long amount = (army.getRifledMusket() > equipment) ? equipment : army.getRifledMusket();
+			power += amount * 3;
+			equipment -= amount;
+		}
+		if(equipment > 0)
+		{
+			long amount = (army.getMusket() > equipment) ? equipment : army.getMusket();
+			power += amount * 1.5;
+			equipment -= amount;
+		}
+		power += army.getArtillery() * 10;
+		power += equipment * 0.5;
 		power = java.lang.Math.sqrt(power / 1000);
 		power *= java.lang.Math.sqrt(army.getTraining() + 1);
-		power *= java.lang.Math.sqrt(army.getArtillery() + 1);
 		return java.lang.Math.sqrt(power);
 	}
 
@@ -1052,7 +1132,7 @@ public class Nation
 	}
 
 	/**
-	 * Calcultes the ability of this nation when bombing targets
+	 * Calculates the ability of this nation when bombing targets
 	 * @return The bomber power
 	 */
 	public double getBomberPower()
@@ -1197,8 +1277,43 @@ public class Nation
 			case PolicyActions.ID_BUILD_MUSKETS:
 				map.put("Steel", 5);
 				break;
+			case PolicyActions.ID_BUILD_RIFLED_MUSKETS:
+				map.put("Steel", 6);
+				break;
+			case PolicyActions.ID_BUILD_SINGLE_SHOT:
+				map.put("Steel", 7);
+				break;
+			case PolicyActions.ID_BUILD_NEEDLE_NOSE:
+				map.put("Steel", 8);
+				break;
+			case PolicyActions.ID_BUILD_BOLT_ACTION_MANUAL:
+				map.put("Steel", 9);
+				break;
+			case PolicyActions.ID_BUILD_BOLT_ACTION_CLIP:
+				map.put("Steel", 10);
+				break;
+			case PolicyActions.ID_BUILD_STRAIGHT_PULL:
+				map.put("Steel", 11);
+				break;
+			case PolicyActions.ID_BUILD_SEMI_AUTO:
+				map.put("Steel", 12);
+				break;
+			case PolicyActions.ID_BUILD_MACHINE_GUN:
+				map.put("Steel", 13);
+				break;
+
 		}
 		return map;
+	}
+
+	/**
+	 * Checks whether the nation has researched a tech
+	 * @param tech The String name of the tech
+	 * @return True if it's researched, false otherwise
+	 */
+	public boolean hasTech(String tech)
+	{
+		return this.tech.getResearchedTechs().contains(Technologies.valueOf(tech));
 	}
 
 	/**

@@ -81,7 +81,7 @@ public class NationDomestic extends NationBase
 		{
 			land = 0;
 		}
-		results.updateInt(1, land);
+		results.updateInt("land", land);
 	}
 
 	public void setGovernment(int government) throws SQLException
@@ -95,7 +95,7 @@ public class NationDomestic extends NationBase
 			government = 100;
 		}
 		this.government = government;
-		results.updateInt(2, government);
+		results.updateInt("government", government);
 	}
 
 	public void setApproval(int approval) throws SQLException
@@ -109,7 +109,7 @@ public class NationDomestic extends NationBase
 			approval = 100;
 		}
 		this.approval = approval;
-		results.updateInt(3, approval);
+		results.updateInt("approval", approval);
 	}
 
 	public void setStability(int stability) throws SQLException
@@ -123,7 +123,7 @@ public class NationDomestic extends NationBase
 			stability = 100;
 		}
 		this.stability = stability;
-		results.updateInt(4, stability);
+		results.updateInt("stability", stability);
 	}
 
 	public void setPopulation(long population) throws SQLException
@@ -133,7 +133,7 @@ public class NationDomestic extends NationBase
 			population = 1;
 		}
 		this.population = population;
-		results.updateDouble(5, population);
+		results.updateDouble("population", population);
 	}
 
 	public void setRebels(int rebels) throws SQLException
@@ -147,7 +147,7 @@ public class NationDomestic extends NationBase
 			rebels = 100;
 		}
 		this.rebels = rebels;
-		results.updateInt(6, rebels);
+		results.updateInt("rebels", rebels);
 	}
 
 	public void setManpowerLost(long lostManpower) throws SQLException
@@ -157,6 +157,6 @@ public class NationDomestic extends NationBase
 			lostManpower = 0;
 		}
 		this.manpowerLost = lostManpower;
-		results.updateLong(7, lostManpower);
+		results.updateLong("lost_manpower", lostManpower);
 	}
 }

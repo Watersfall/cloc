@@ -89,8 +89,32 @@ public class DecisionController extends HttpServlet
 				case "buildartillery":
 					writer.append(PolicyActions.artillery(conn, user));
 					break;
-				case "buildweapons":
-					writer.append(PolicyActions.weapons(conn, user));
+				case "buildmuskets":
+					writer.append(PolicyActions.muskets(conn, user));
+					break;
+				case "buildrifledmuskets":
+					writer.append(PolicyActions.rifledMuskets(conn, user));
+					break;
+				case "buildsingleshot":
+					writer.append(PolicyActions.singleShot(conn, user));
+					break;
+				case "buildneedlenose":
+					writer.append(PolicyActions.needleNose(conn, user));
+					break;
+				case "buildboltactionmanual":
+					writer.append(PolicyActions.boltActionManual(conn, user));
+					break;
+				case "buildboltactionclip":
+					writer.append(PolicyActions.boltActionClip(conn, user));
+					break;
+				case "buildstraightpull":
+					writer.append(PolicyActions.straightPull(conn, user));
+					break;
+				case "buildsemiauto":
+					writer.append(PolicyActions.semiAuto(conn, user));
+					break;
+				case "buildmachinegun":
+					writer.append(PolicyActions.machineGun(conn, user));
 					break;
 				default:
 					super.doGet(req, resp);

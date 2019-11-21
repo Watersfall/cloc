@@ -66,7 +66,7 @@ public class NationLogin extends NationBase
 		}
 		else
 		{
-			results.updateInt(username, 1);
+			results.updateString("username", username);
 		}
 	}
 
@@ -78,7 +78,7 @@ public class NationLogin extends NationBase
 		}
 		else
 		{
-			results.updateInt(email, 2);
+			results.updateString("email", email);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class NationLogin extends NationBase
 		}
 		else
 		{
-			results.updateInt(password, 3);
+			results.updateString("password", password);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class NationLogin extends NationBase
 		}
 		else
 		{
-			results.updateInt(ip, 4);
+			results.updateString("register_ip", ip);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class NationLogin extends NationBase
 		}
 		else
 		{
-			results.updateInt(ip, 4);
+			results.updateString("last_ip", ip);
 		}
 	}
 

@@ -237,24 +237,186 @@
 						<button class="policyButton" type="submit" onclick="decision('train')">Train</button>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						Build Muskets
-					</td>
-					<td>
-						The finest of the 1850's, these muskets may not be "easy to load" or have fancy "rifled barrels" but they're better than nothing
-					</td>
-					<td>
-						<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_MUSKETS).entrySet()}" varStatus="i">
-							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-							<c:if test="${i.last && i.count > 1}">, and </c:if>
-							<c:out value="${cost.value} ${cost.key}"/>
-						</c:forEach>
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('buildweapons')">Build</button>
-					</td>
-				</tr>
+				<c:if test="${home.hasTech('MUSKET')}">
+					<tr>
+						<td>
+							Build Muskets
+						</td>
+						<td>
+							The finest of the 1850's, these muskets may not be "easy to load" or have fancy "rifled barrels" but they're better than nothing
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_MUSKETS).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildmuskets')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('RIFLED_MUSKET')}">
+					<tr>
+						<td>
+							Build Rifled Muskets
+						</td>
+						<td>
+							The finest of the 1860's, these muskets may not be "easy to load" but they're better than nothing
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_RIFLED_MUSKETS).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildrifledmuskets')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('SINGLE_SHOT_RIFLE')}">
+					<tr>
+						<td>
+							Build Single Shot Rifles
+						</td>
+						<td>
+							The finest of the 1870's, these rifles are much easier to load than muskets
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_SINGLE_SHOT).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildsingleshot')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('NEEDLE_NOSE_RIFLE')}">
+					<tr>
+						<td>
+							Build Single Shot Rifles
+						</td>
+						<td>
+							The finest of the 1870's, these rifles are much easier to load than muskets
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_NEEDLE_NOSE).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildneedlenose')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('BOLT_ACTION_MANUAL')}">
+					<tr>
+						<td>
+							Build Bolt Action Rifles
+						</td>
+						<td>
+							The finest of the 1870's, these rifles are much easier to load than muskets
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_BOLT_ACTION_MANUAL).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildboltactionmanual')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('BOLT_ACTION_CLIP')}">
+					<tr>
+						<td>
+							Build Bolt Action Rifles
+						</td>
+						<td>
+							The finest of the 1870's, these rifles are much easier to load than muskets
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_BOLT_ACTION_CLIP).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildboltactionclip')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('STRAIGHT_PULL_RIFLE')}">
+					<tr>
+						<td>
+							Build Straight Pull Rifles
+						</td>
+						<td>
+							The finest of the 1870's, these rifles are much easier to load than muskets
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_STRAIGHT_PULL).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildstraightpull')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('SEMI_AUTOMATIC')}">
+					<tr>
+						<td>
+							Build Semi Automatic Rifles
+						</td>
+						<td>
+							The finest of the 1870's, these rifles are much easier to load than muskets
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_SEMI_AUTO).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildsemiauto')">Build</button>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${home.hasTech('MACHINE_GUN')}">
+					<tr>
+						<td>
+							Build Machine Guns
+						</td>
+						<td>
+							The finest of the 1870's, these rifles are much easier to load than muskets
+						</td>
+						<td>
+							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_MACHINE_GUN).entrySet()}" varStatus="i">
+								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
+								<c:if test="${i.last && i.count > 1}">, and </c:if>
+								<c:out value="${cost.value} ${cost.key}"/>
+							</c:forEach>
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('buildmachineguns')">Build</button>
+						</td>
+					</tr>
+				</c:if>
 				<tr>
 					<td>
 						Build Artillery

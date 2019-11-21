@@ -105,7 +105,7 @@ public class NationArmy extends NationBase
 			size = 0;
 		}
 		this.size = size;
-		this.results.updateInt(1, size);
+		this.results.updateInt("size", size);
 	}
 
 	public void setTraining(int training) throws SQLException
@@ -119,7 +119,7 @@ public class NationArmy extends NationBase
 			training = 100;
 		}
 		this.training = training;
-		this.results.updateInt(2, training);
+		this.results.updateInt("training", training);
 	}
 
 	public void setMusket(int musket) throws SQLException
@@ -129,7 +129,7 @@ public class NationArmy extends NationBase
 			musket = 0;
 		}
 		this.musket = musket;
-		this.results.updateInt(3, musket);
+		this.results.updateInt("musket", musket);
 	}
 
 	public void setRifledMusket(int rifledMusket) throws SQLException
@@ -139,7 +139,7 @@ public class NationArmy extends NationBase
 			rifledMusket = 0;
 		}
 		this.rifledMusket = rifledMusket;
-		this.results.updateInt(4, rifledMusket);
+		this.results.updateInt("rifled_musket", rifledMusket);
 	}
 
 	public void setSingleShot(int singleShot) throws SQLException
@@ -149,7 +149,7 @@ public class NationArmy extends NationBase
 			singleShot = 0;
 		}
 		this.singleShot = singleShot;
-		this.results.updateInt(5, singleShot);
+		this.results.updateInt("single_shot", singleShot);
 	}
 
 	public void setNeedleNose(int needleNose) throws SQLException
@@ -159,7 +159,7 @@ public class NationArmy extends NationBase
 			needleNose = 0;
 		}
 		this.needleNose = needleNose;
-		this.results.updateInt(6, needleNose);
+		this.results.updateInt("needle_nose", needleNose);
 	}
 
 	public void setBoltActionManual(int boltActionManual) throws SQLException
@@ -169,7 +169,7 @@ public class NationArmy extends NationBase
 			boltActionManual = 0;
 		}
 		this.boltActionManual = boltActionManual;
-		this.results.updateInt(7, boltActionManual);
+		this.results.updateInt("bolt_action_manual", boltActionManual);
 	}
 	
 	public void setBoltActionClip(int boltActionClip) throws SQLException
@@ -179,7 +179,7 @@ public class NationArmy extends NationBase
 			boltActionClip = 0;
 		}
 		this.boltActionClip = boltActionClip;
-		this.results.updateInt(8, boltActionClip);
+		this.results.updateInt("bolt_action_clip", boltActionClip);
 	}
 
 	public void setStraightPull(int straightPull) throws SQLException
@@ -189,7 +189,7 @@ public class NationArmy extends NationBase
 			straightPull = 0;
 		}
 		this.straightPull = straightPull;
-		this.results.updateInt(9, straightPull);
+		this.results.updateInt("straight_pull", straightPull);
 	}
 	
 	public void setSemiAuto(int semiAuto) throws SQLException
@@ -199,7 +199,7 @@ public class NationArmy extends NationBase
 			semiAuto = 0;
 		}
 		this.semiAuto = semiAuto;
-		this.results.updateInt(10, semiAuto);
+		this.results.updateInt("semi_auto", semiAuto);
 	}
 	
 	public void setMachineGun(int machineGun) throws SQLException
@@ -209,7 +209,7 @@ public class NationArmy extends NationBase
 			machineGun = 0;
 		}
 		this.machineGun = machineGun;
-		this.results.updateInt(11, machineGun);
+		this.results.updateInt("machine_gun", machineGun);
 	}
 
 	public void setArtillery(int artillery) throws SQLException
@@ -219,7 +219,7 @@ public class NationArmy extends NationBase
 			artillery = 0;
 		}
 		this.artillery = artillery;
-		this.results.updateInt(12, artillery);
+		this.results.updateInt("artillery", artillery);
 	}
 
 	public void setFortification(int fortification) throws SQLException
@@ -233,6 +233,6 @@ public class NationArmy extends NationBase
 			fortification = 10;
 		}
 		this.fortification = fortification;
-		this.results.updateInt(13, fortification);
+		this.results.updateInt("fortification", fortification);
 	}
 }

@@ -94,7 +94,7 @@ public class NationMilitary extends NationBase
 			fighters = 0;
 		}
 		this.fighters = fighters;
-		results.updateInt(1, fighters);
+		results.updateInt("fighters", fighters);
 	}
 
 	public void setZeppelins(int zeppelins) throws SQLException
@@ -104,7 +104,7 @@ public class NationMilitary extends NationBase
 			zeppelins = 0;
 		}
 		this.zeppelins = zeppelins;
-		results.updateInt(2, zeppelins);
+		results.updateInt("zeppelins", zeppelins);
 	}
 
 	public void setBombers(int bombers) throws SQLException
@@ -114,7 +114,7 @@ public class NationMilitary extends NationBase
 			bombers = 0;
 		}
 		this.bombers = bombers;
-		results.updateInt(3, bombers);
+		results.updateInt("bombers", bombers);
 	}
 
 	public void setSubmarines(int submarines) throws SQLException
@@ -124,7 +124,7 @@ public class NationMilitary extends NationBase
 			submarines = 0;
 		}
 		this.submarines = submarines;
-		results.updateInt(4, submarines);
+		results.updateInt("submarines", submarines);
 	}
 
 	public void setDestroyers(int destroyers) throws SQLException
@@ -134,7 +134,7 @@ public class NationMilitary extends NationBase
 			destroyers = 0;
 		}
 		this.destroyers = destroyers;
-		results.updateInt(5, destroyers);
+		results.updateInt("destroyers", destroyers);
 	}
 
 	public void setCruisers(int cruisers) throws SQLException
@@ -144,7 +144,7 @@ public class NationMilitary extends NationBase
 			cruisers = 0;
 		}
 		this.cruisers = cruisers;
-		results.updateInt(6, cruisers);
+		results.updateInt("cruisers", cruisers);
 	}
 
 	public void setPreBattleships(int preBattleships) throws SQLException
@@ -154,7 +154,7 @@ public class NationMilitary extends NationBase
 			preBattleships = 0;
 		}
 		this.preBattleships = preBattleships;
-		results.updateInt(7, preBattleships);
+		results.updateInt("pre_battleships", preBattleships);
 	}
 
 	public void setBattleships(int battleships) throws SQLException
@@ -164,7 +164,7 @@ public class NationMilitary extends NationBase
 			battleships = 0;
 		}
 		this.battleships = battleships;
-		results.updateInt(8, battleships);
+		results.updateInt("battleships", battleships);
 	}
 
 	public void setTransports(int transports) throws SQLException
@@ -174,7 +174,7 @@ public class NationMilitary extends NationBase
 			transports = 0;
 		}
 		this.transports = transports;
-		results.updateInt(9, transports);
+		results.updateInt("transports", transports);
 	}
 
 	public void setWarProtection(int warProtection) throws SQLException
@@ -184,7 +184,7 @@ public class NationMilitary extends NationBase
 			warProtection = 0;
 		}
 		this.warProtection = warProtection;
-		results.updateInt(10, warProtection);
+		results.updateInt("war_protection", warProtection);
 	}
 
 }

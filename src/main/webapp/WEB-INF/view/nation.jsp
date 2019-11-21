@@ -100,7 +100,7 @@
 				<caption>Army</caption>
 				<tr>
 					<td>Size</td>
-					<td><fmt:formatNumber value="${nation.army.size}"/></td>
+					<td><fmt:formatNumber value="${nation.army.size}"/>k Personnel</td>
 				</tr>
 				<tr>
 					<td>Training</td>
@@ -108,7 +108,7 @@
 				</tr>
 				<tr>
 					<td>Equipment</td>
-					<td><fmt:formatNumber value="${nation.army.musket}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> needed</td>
+					<td><fmt:formatNumber value="${nation.totalEquipment}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> needed</td>
 				</tr>
 				<tr>
 					<td>Artillery</td>

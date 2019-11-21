@@ -214,7 +214,21 @@
 			</tr>
 			<tr>
 				<td>Equipment</td>
-				<td><fmt:formatNumber value="${home.army.musket}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> needed</td>
+				<td>
+					<div class="noClose" onclick="toggleTab('equipment')">
+						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						<fmt:formatNumber value="${home.totalEquipment}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> needed
+					</div>
+					<div class="resourceTabDown" id="equipment">
+						<c:forEach var="equipment" items="${home.equipment}">
+							<ul style="margin: 0; padding: 0 0 0 2em; list-style: circle">
+								<c:if test="${equipment.value > 0}">
+									<li class="neutral"><fmt:formatNumber value="${equipment.value}"/> <c:out value=" ${equipment.key}"/></li>
+								</c:if>
+							</ul>
+						</c:forEach>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<td>Artillery</td>

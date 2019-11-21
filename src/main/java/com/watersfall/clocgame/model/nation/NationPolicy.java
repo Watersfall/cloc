@@ -82,8 +82,8 @@ public class NationPolicy extends NationBase
 		}
 		this.manpower = manpower;
 		this.changeManpower = Util.turn;
-		results.updateInt(1, manpower);
-		results.updateInt(2, Util.turn);
+		results.updateInt("manpower_policy", manpower);
+		results.updateInt("manpower_change", Util.turn);
 	}
 
 	public void setFood(int food) throws SQLException
@@ -94,8 +94,8 @@ public class NationPolicy extends NationBase
 		}
 		this.food = food;
 		this.changeFood = Util.turn;
-		results.updateInt(3, food);
-		results.updateInt(4, Util.turn);
+		results.updateInt("food_policy", food);
+		results.updateInt("food_change", Util.turn);
 	}
 
 	public void setEconomy(int economy) throws SQLException
@@ -106,7 +106,7 @@ public class NationPolicy extends NationBase
 		}
 		this.economy = economy;
 		this.changeEconomy = Util.turn;
-		results.updateInt(5, economy);
-		results.updateInt(6, Util.turn);
+		results.updateInt("economy_policy", economy);
+		results.updateInt("economy_change", Util.turn);
 	}
 }

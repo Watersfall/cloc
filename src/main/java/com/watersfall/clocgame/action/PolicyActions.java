@@ -36,6 +36,14 @@ public class PolicyActions
 	public static final int ID_ALIGN = 15;
 	public static final int ID_TRAIN = 16;
 	public static final int ID_BUILD_MUSKETS = 17;
+	public static final int ID_BUILD_RIFLED_MUSKETS = 19;
+	public static final int ID_BUILD_SINGLE_SHOT = 20;
+	public static final int ID_BUILD_NEEDLE_NOSE = 21;
+	public static final int ID_BUILD_BOLT_ACTION_MANUAL = 22;
+	public static final int ID_BUILD_BOLT_ACTION_CLIP = 23;
+	public static final int ID_BUILD_STRAIGHT_PULL = 24;
+	public static final int ID_BUILD_SEMI_AUTO = 25;
+	public static final int ID_BUILD_MACHINE_GUN = 26;
 	public static final int ID_BUILD_ARTILLERY = 18;
 	//</editor-fold>
 	//<editor-fold desc="Modifiers"
@@ -311,7 +319,7 @@ public class PolicyActions
 		}
 	}
 
-	public static String weapons(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String muskets(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, idNation, true);
 		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_MUSKETS);
@@ -328,7 +336,152 @@ public class PolicyActions
 			return Responses.weapons();
 		}
 	}
+
+	public static String rifledMuskets(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_RIFLED_MUSKETS);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setRifledMusket(nation.getArmy().getRifledMusket() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
+
+	public static String singleShot(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_SINGLE_SHOT);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setSingleShot(nation.getArmy().getSingleShot() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
+
+	public static String needleNose(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_NEEDLE_NOSE);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setNeedleNose(nation.getArmy().getNeedleNose() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
+
+	public static String boltActionManual(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_BOLT_ACTION_MANUAL);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setBoltActionManual(nation.getArmy().getBoltActionManual() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
+
+	public static String boltActionClip(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_BOLT_ACTION_CLIP);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setBoltActionClip(nation.getArmy().getBoltActionClip() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
+
+	public static String straightPull(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_STRAIGHT_PULL);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setStraightPull(nation.getArmy().getStraightPull() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
+
+	public static String semiAuto(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_SEMI_AUTO);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setSemiAuto(nation.getArmy().getSemiAuto() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
+
+	public static String machineGun(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	{
+		Nation nation = new Nation(connection, idNation, true);
+		Map<String, Integer> costs = nation.getPolicyCostMap(ID_BUILD_MACHINE_GUN);
+		if(nation.getEconomy().getSteel() < costs.get("Steel"))
+		{
+			return Responses.noSteel();
+		}
+		else
+		{
+			nation.getArmy().setMachineGun(nation.getArmy().getMachineGun() + WEAPONS_GAIN);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - costs.get("Steel"));
+			nation.getArmy().update();
+			nation.getEconomy().update();
+			return Responses.weapons();
+		}
+	}
 	//</editor-fold>
+
 
 	public int getID_COAL_MINE()
 	{
@@ -418,6 +571,46 @@ public class PolicyActions
 	public int getID_BUILD_MUSKETS()
 	{
 		return ID_BUILD_MUSKETS;
+	}
+
+	public int getID_BUILD_RIFLED_MUSKETS()
+	{
+		return ID_BUILD_RIFLED_MUSKETS;
+	}
+
+	public int getID_BUILD_SINGLE_SHOT()
+	{
+		return ID_BUILD_SINGLE_SHOT;
+	}
+
+	public int getID_BUILD_NEEDLE_NOSE()
+	{
+		return ID_BUILD_NEEDLE_NOSE;
+	}
+
+	public int getID_BUILD_BOLT_ACTION_MANUAL()
+	{
+		return ID_BUILD_BOLT_ACTION_MANUAL;
+	}
+
+	public int getID_BUILD_BOLT_ACTION_CLIP()
+	{
+		return ID_BUILD_BOLT_ACTION_CLIP;
+	}
+
+	public int getID_BUILD_STRAIGHT_PULL()
+	{
+		return ID_BUILD_STRAIGHT_PULL;
+	}
+
+	public int getID_BUILD_SEMI_AUTO()
+	{
+		return ID_BUILD_SEMI_AUTO;
+	}
+
+	public int getID_BUILD_MACHINE_GUN()
+	{
+		return ID_BUILD_MACHINE_GUN;
 	}
 
 	public int getID_BUILD_ARTILLERY()
