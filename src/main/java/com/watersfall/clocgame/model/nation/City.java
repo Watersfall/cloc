@@ -343,10 +343,10 @@ public class City
 
 	public long getTotalEmployment()
 	{
-		int employment = 0;
-		employment += (this.coalMines + this.ironMines + this.oilWells) * City.EMPLOYMENT_MINE;
-		employment += (this.industryCivilian + this.industryMilitary + this.industryNitrogen) * City.EMPLOYMENT_FACTORY;
-		employment += (this.universities) * City.EMPLOYMENT_UNIVERSITY;
+		long employment = 0;
+		employment += (long)(this.coalMines + this.ironMines + this.oilWells) * City.EMPLOYMENT_MINE;
+		employment += (long)(this.industryCivilian + this.industryMilitary + this.industryNitrogen) * City.EMPLOYMENT_FACTORY;
+		employment += (long)(this.universities) * City.EMPLOYMENT_UNIVERSITY;
 		return employment;
 	}
 
