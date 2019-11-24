@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.model.technology.technologies.single.vehicles;
+package com.watersfall.clocgame.model.technology.technologies.single.vehicles.air;
 
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
@@ -21,6 +21,8 @@ public class TechnologyBombers extends SingleTechnology
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
+		prerequisites.add(Technologies.BIPLANE_FIGHTERS);
+		prerequisites.add(Technologies.ZEPPELIN_BOMBERS);
 		costs.put("research", 100);
 		costs.put("steel", 50);
 		costs.put("oil", 50);

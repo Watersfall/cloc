@@ -128,6 +128,19 @@
 						border-top: transparent 0;
 					}
 
+					.cornerBottomLeftHalf{
+						position:absolute;
+						left: calc(0% - 0.5em);
+						width: 50%;
+						top: -50%;
+						height: 100%;
+						border-style: solid;
+						border-right: transparent 0;
+						border-bottom: gray solid 1em;
+						border-left: gray solid 1em;
+						border-top: transparent 0;
+					}
+
 					.cornerBottomLeft{
 						position:absolute;
 						left: calc(-50% - 0.5em);
@@ -179,9 +192,17 @@
 					.unavailable p{
 						color: black;
 					}
+
+					#tech{
+						display: none;
+						max-width: 38em;
+						margin: auto;
+						padding: 0.25em 1em;
+						background-color: #424242;
+					}
 				</style>
 				<script>
-					function tech(tech, next)
+					function tech(tech)
 					{
 						document.getElementById('resultsContainer').style.visibility = "visible";
 						document.getElementById("result").innerHTML = "<p>Loading...</p>";
@@ -203,7 +224,26 @@
 							research(tech);
 						}
 					}
+
+					function loadTech(tech)
+					{
+						document.getElementById("tech").style.display = "block";
+						let xhttp = new XMLHttpRequest();
+						xhttp.open("GET", "${pageContext.request.contextPath}/tech/" + tech, true);
+						xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						xhttp.send();
+						xhttp.onreadystatechange = function()
+						{
+							if(xhttp.readyState === 4 && xhttp.status === 200)
+							{
+								document.getElementById("tech").innerHTML = xhttp.responseText;
+							}
+						};
+					}
 				</script>
+				<div id="tech">
+
+				</div>
 				<div class="wrapper" id="techTree">
 					<%@include file="includes/techtree.jsp"%>
 				</div>

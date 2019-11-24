@@ -10,10 +10,12 @@
 	<c:if test="${tech.category == category}">
 		<div style="grid-column: ${tech.x};grid-row: ${tech.y};">
 			<div style="position:relative;">
-				<div id="${tech.name()}" onclick="tech('${tech.name()}', [])" class="tech ${home.tech.researchedTechs.contains(tech)? 'researched': tech.technology.isAvailable(home)? 'available' : 'unavailable'}">
+				<div id="${tech.name()}" onclick="loadTech('${tech.name()}')" class="tech ${home.tech.researchedTechs.contains(tech)? 'researched': tech.technology.isAvailable(home)? 'available' : 'unavailable'}">
 					<p>${tech.technology.name}</p>
 				</div>
-				<div class="${tech.cssClass}" style="${tech.technology.isAvailable(home) ? 'border-color: rgb(250,189,41);' : home.tech.researchedTechs.contains(tech) ? 'border-color: rgb(95,183,97)' : 'border-color: #424242'}"></div>
+				<c:forEach items="${tech.cssClass}" var="name">
+					<div class="${name}" style="${tech.technology.isAvailable(home) ? 'border-color: rgb(250,189,41);' : home.tech.researchedTechs.contains(tech) ? 'border-color: rgb(95,183,97)' : 'border-color: #424242'}"></div>
+				</c:forEach>
 			</div>
 		</div>
 	</c:if>
