@@ -139,7 +139,7 @@ function createTreaty(name)
 		}
 		if(xhttp.readyState === 4 && xhttp.status === 201)
 		{
-			window.location.href = "treaty.jsp?id=" + xhttp.responseText;
+			window.location.href = "/treaty/" + xhttp.responseText;
 		}
 	};
 }
