@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology.technologies.single.vehicles;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class TechnologyTank extends SingleTechnology
 	public static final String DESC = "Tanks";
 	public static final String COLUMN_NAME = "tank_tech";
 	public static final String FIELD_NAME = "Tank";
+	private @Getter String productionName = "tanks";
 
 	private TechnologyTank()
 	{
@@ -33,6 +35,18 @@ public class TechnologyTank extends SingleTechnology
 			technologyTank = new TechnologyTank();
 		}
 		return technologyTank;
+	}
+
+	@Override
+	public boolean isProducible()
+	{
+		return true;
+	}
+
+	@Override
+	public double getProductionCost()
+	{
+		return 30.0;
 	}
 
 	@Override

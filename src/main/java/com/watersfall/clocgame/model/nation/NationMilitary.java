@@ -3,15 +3,16 @@ package com.watersfall.clocgame.model.nation;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import lombok.Getter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class NationMilitary extends NationBase
 {
-	private @Getter int fighters;
+	private @Getter int reconBalloons;
 	private @Getter int zeppelins;
+	private @Getter int reconPlanes;
+	private @Getter int biplaneFighters;
+	private @Getter int triplaneFighters;
+	private @Getter int monoplaneFighters;
 	private @Getter int bombers;
 	private @Getter int submarines;
 	private @Getter int destroyers;
@@ -21,25 +22,15 @@ public class NationMilitary extends NationBase
 	private @Getter int transports;
 	private @Getter int warProtection;
 
-	public NationMilitary(int fighters, int zeppelins, int bombers, int submarines, int destroyers, int cruisers, int preBattleships, int battleships, int transports, int warProtection)
-	{
-		this.fighters = fighters;
-		this.zeppelins = zeppelins;
-		this.bombers = bombers;
-		this.submarines = submarines;
-		this.destroyers = destroyers;
-		this.cruisers = cruisers;
-		this.preBattleships = preBattleships;
-		this.battleships = battleships;
-		this.transports = transports;
-		this.warProtection = warProtection;
-	}
-
 	public NationMilitary(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
 	{
 		super(connection, id, safe);
 		this.results = results;
-		this.fighters = results.getInt("fighters");
+		this.reconBalloons = results.getInt("recon_balloons");
+		this.reconPlanes = results.getInt("recon_planes");
+		this.triplaneFighters = results.getInt("triplane_fighters");
+		this.monoplaneFighters = results.getInt("monoplane_fighters");
+		this.biplaneFighters = results.getInt("biplane_fighters");
 		this.zeppelins = results.getInt("zeppelins");
 		this.bombers = results.getInt("bombers");
 		this.submarines = results.getInt("submarines");
@@ -57,11 +48,11 @@ public class NationMilitary extends NationBase
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT fighters, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, war_protection, id " + "FROM cloc_military " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT id, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, war_protection, recon_balloons, recon_planes, biplane_fighters, triplane_fighters, monoplane_fighters " + "FROM cloc_military " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT fighters, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, war_protection, id " + "FROM cloc_military " + "WHERE id=?");
+			read = connection.prepareStatement("SELECT id, zeppelins, bombers, submarines, destroyers, cruisers, pre_battleships, battleships, transports, war_protection, recon_balloons, recon_planes, biplane_fighters, triplane_fighters, monoplane_fighters " + "FROM cloc_military " + "WHERE id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -74,27 +65,107 @@ public class NationMilitary extends NationBase
 			this.connection = connection;
 			this.id = id;
 			this.safe = safe;
-			this.fighters = results.getInt(1);
-			this.zeppelins = results.getInt(2);
-			this.bombers = results.getInt(3);
-			this.submarines = results.getInt(4);
-			this.destroyers = results.getInt(5);
-			this.cruisers = results.getInt(6);
-			this.preBattleships = results.getInt(7);
-			this.battleships = results.getInt(8);
-			this.transports = results.getInt(9);
-			this.warProtection = results.getInt(10);
+			this.reconBalloons = results.getInt("recon_balloons");
+			this.reconPlanes = results.getInt("recon_planes");
+			this.triplaneFighters = results.getInt("triplane_fighters");
+			this.monoplaneFighters = results.getInt("monoplane_fighters");
+			this.biplaneFighters = results.getInt("biplane_fighters");
+			this.zeppelins = results.getInt("zeppelins");
+			this.bombers = results.getInt("bombers");
+			this.submarines = results.getInt("submarines");
+			this.destroyers = results.getInt("destroyers");
+			this.cruisers = results.getInt("cruisers");
+			this.preBattleships = results.getInt("pre_battleships");
+			this.battleships = results.getInt("battleships");
+			this.transports = results.getInt("transports");
+			this.warProtection = results.getInt("war_protection");
 		}
 	}
 
-	public void setFighters(int fighters) throws SQLException
+	public <T> T getByName(String name) throws SQLException
 	{
-		if(fighters < 0)
+		int column = results.findColumn(name);
+		T value;
+		switch (results.getMetaData().getColumnType(column))
 		{
-			fighters = 0;
+			case Types.INTEGER:
+			case Types.TINYINT:
+			case Types.SMALLINT:
+				value = (T) new Integer(results.getInt(name));
+				break;
+			case Types.VARCHAR:
+			case Types.CHAR:
+				value = (T) results.getString(name);
+				break;
+			case Types.BIGINT:
+				value = (T) new Long(results.getLong(name));
+				break;
+			case Types.FLOAT:
+			case Types.DECIMAL:
+			case Types.DOUBLE:
+				value = (T) new Double(results.getDouble(name));
+			default:
+				value = (T) results.getString(name);
 		}
-		this.fighters = fighters;
-		results.updateInt("fighters", fighters);
+		return value;
+	}
+
+	public <T> void setByName(String name, T value) throws SQLException
+	{
+		int column = results.findColumn(name);
+		switch (results.getMetaData().getColumnType(column))
+		{
+			case Types.INTEGER:
+			case Types.TINYINT:
+			case Types.SMALLINT:
+				results.updateInt(name, (Integer)value);
+				break;
+			case Types.VARCHAR:
+			case Types.CHAR:
+				results.updateString(name, (String)value);
+				break;
+			case Types.BIGINT:
+				results.updateLong(name, (Long)value);
+				break;
+			case Types.FLOAT:
+			case Types.DECIMAL:
+			case Types.DOUBLE:
+				results.updateDouble(name, (Double)value);
+			default:
+				results.updateString(name, (String)value);
+		}
+	}
+
+	public <T> void updateByName(String name, T value) throws SQLException
+	{
+		int column = results.findColumn(name);
+		switch (results.getMetaData().getColumnType(column))
+		{
+			case Types.INTEGER:
+			case Types.TINYINT:
+			case Types.SMALLINT:
+				results.updateInt(name, results.getInt(name) + (Integer)value);
+				break;
+			case Types.BIGINT:
+				results.updateLong(name, results.getLong(name) + (Long)value);
+				break;
+			case Types.FLOAT:
+			case Types.DECIMAL:
+			case Types.DOUBLE:
+				results.updateDouble(name, results.getDouble(name) + (Double)value);
+			default:
+				results.updateString(name, (String)value);
+		}
+	}
+
+	public void setReconBalloons(int reconBalloons) throws SQLException
+	{
+		if(reconBalloons < 0)
+		{
+			reconBalloons = 0;
+		}
+		this.reconBalloons = reconBalloons;
+		results.updateInt("recon_balloons", reconBalloons);
 	}
 
 	public void setZeppelins(int zeppelins) throws SQLException
@@ -105,6 +176,46 @@ public class NationMilitary extends NationBase
 		}
 		this.zeppelins = zeppelins;
 		results.updateInt("zeppelins", zeppelins);
+	}
+
+	public void setReconPlanes(int reconPlanes) throws SQLException
+	{
+		if(reconPlanes < 0)
+		{
+			reconPlanes = 0;
+		}
+		this.reconPlanes = reconPlanes;
+		results.updateInt("recon_planes", reconPlanes);
+	}
+	
+	public void setBiplaneFighters(int biplaneFighters) throws SQLException
+	{
+		if(biplaneFighters < 0)
+		{
+			biplaneFighters = 0;
+		}
+		this.biplaneFighters = biplaneFighters;
+		results.updateInt("biplane_fighters", biplaneFighters);
+	}
+
+	public void setTriplaneFighters(int triplaneFighters) throws SQLException
+	{
+		if(triplaneFighters < 0)
+		{
+			triplaneFighters = 0;
+		}
+		this.triplaneFighters = triplaneFighters;
+		results.updateInt("triplane_fighters", triplaneFighters);
+	}
+
+	public void setMonoplaneFighters(int monoplaneFighters) throws SQLException
+	{
+		if(monoplaneFighters < 0)
+		{
+			monoplaneFighters = 0;
+		}
+		this.monoplaneFighters = monoplaneFighters;
+		results.updateInt("monoplane_fighters", monoplaneFighters);
 	}
 
 	public void setBombers(int bombers) throws SQLException

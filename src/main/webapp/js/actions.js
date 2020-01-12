@@ -1,8 +1,14 @@
 let context = "";
+let freeFactories = 0;
 
 function setContext(newContext)
 {
 	context = newContext;
+}
+
+function setFreeFactories(newFreeFactories)
+{
+	freeFactories = newFreeFactories;
 }
 
 function ajax(url, params)
@@ -220,4 +226,149 @@ function newsDelete(id)
 	let url = context + "/news/";
 	let params = "delete=" + id;
 	ajax(url, params);
+}
+
+function processProduction(hover)
+{
+	/*let temp = freeFactories;
+	let id = hover.classList.item(0).substring(3);
+	let classes = document.getElementsByClassName("id=" + id);
+	let index = hover.classList.item(1).substring(7);
+	let old = hover.classList.item(2).substring(8);
+	temp = freeFactories + (old - index);
+	for(let i = 0; i < 15; i++)
+	{
+		if(i < index && (freeFactories + (old - i)) > 0)
+		{
+			classes[i].src = "/images/production/factory.svg";
+		}
+		else
+		{
+			classes[i].src = "/images/production/blank.svg";
+		}
+	}
+	updateFreeFactories(temp);*/
+}
+
+function resetProduction(event, id, num)
+{
+	/*if(event.target.classList.contains("cityElements"))
+	{
+		let classes = document.getElementsByClassName("id=" + id);
+		for(let i = 0; i < 15; i++)
+		{
+			if(i < classes[i].classList.item(2).substring(8))
+			{
+				classes[i].src = "/images/production/factory.svg";
+			}
+			else
+			{
+				classes[i].src = "/images/production/blank.svg";
+			}
+		}
+		updateFreeFactories();
+	}*/
+}
+
+function clickProduction(event, id, num)
+{
+	let element = document.getElementsByClassName("id=" + id);
+	let old = element[0].classList.item(2).substring(8);
+	let temp = freeFactories + (old - num);
+	console.log(temp);
+	if(temp < 0)
+	{
+		num += temp;
+		temp = 0;
+	}
+	if(temp >= 0)
+	{
+		for(let i = 0; i < 15; i++)
+		{
+			element[i].classList.remove(element[i].classList.item(2));
+			element[i].classList.add("default=" + num);
+			if(i < element[i].classList.item(2).substring(8))
+			{
+				element[i].src = "/images/production/factory.svg";
+			}
+			else
+			{
+				element[i].src = "/images/production/blank.svg";
+			}
+		}
+		freeFactories += (old - num);
+	}
+	updateFreeFactories();
+}
+
+function updateFreeFactories(num)
+{
+	if(num !== undefined)
+	{
+		document.getElementById("factories").innerHTML = num + " Free Factories";
+	}
+	else
+	{
+		document.getElementById("factories").innerHTML = freeFactories + " Free Factories";
+	}
+}
+
+function sendProduction(id, num)
+{
+	displayResults();
+	let production = document.getElementById("change" + id).value;
+	let url = context + "/production/" + id;
+	let params = "factories=" + num + "&production=" + production;
+	ajax(url, params);
+}
+
+function deleteProduction(id)
+{
+	displayResults();
+	let url = context + "/production/" + id;
+	let params = "delete=" + id;
+	ajax(url, params);
+	let element = document.getElementsByClassName("id=" + id);
+	element[0].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = 'none';
+}
+
+function createProduction()
+{
+	let url = context + "/production/0";
+	let params = "new=1";
+	let xhttp = new XMLHttpRequest();
+	xhttp.open("POST", url, true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send(params);
+	xhttp.onreadystatechange = function()
+	{
+		if(xhttp.readyState === 4 && xhttp.status === 200)
+		{
+			updateProduction();
+			freeFactories--;
+			updateFreeFactories();
+		}
+	};
+}
+
+function changeProduction(id)
+{
+	toggle("change" + id)
+}
+
+function updateProduction()
+{
+	let url = context + "/production/all";
+	let xhttp = new XMLHttpRequest();
+	let element = document.getElementById("production");
+	xhttp.open("GET", url, true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send();
+	xhttp.onreadystatechange = function()
+	{
+		if(xhttp.readyState === 4 && xhttp.status === 200)
+		{
+			element.innerHTML = xhttp.responseText;
+		}
+	};
 }

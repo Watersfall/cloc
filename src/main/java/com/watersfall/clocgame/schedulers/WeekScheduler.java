@@ -23,4 +23,13 @@ public class WeekScheduler
 			new WeekScheduler();
 		}
 	}
+
+	public static void stopWeek()
+	{
+		if(scheduler != null)
+		{
+			scheduler.stop();
+			scheduler = null;
+		}
+	}
 }

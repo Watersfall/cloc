@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology.technologies.single.weapons;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class TechnologySemiAutomatic extends SingleTechnology
 	public static final String DESC = "Semi Automatic Rifles";
 	public static final String COLUMN_NAME = "semi_automatic_tech";
 	public static final String FIELD_NAME = "SemiAutomatic";
+	private @Getter String productionName = "semi_auto";
 
 	private TechnologySemiAutomatic()
 	{
@@ -34,6 +36,18 @@ public class TechnologySemiAutomatic extends SingleTechnology
 			technologySemiAutomatic = new TechnologySemiAutomatic();
 		}
 		return technologySemiAutomatic;
+	}
+
+	@Override
+	public boolean isProducible()
+	{
+		return true;
+	}
+
+	@Override
+	public double getProductionCost()
+	{
+		return 0.16;
 	}
 
 	@Override

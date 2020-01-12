@@ -38,6 +38,7 @@ public class Nation
 	private @Getter Connection connection;
 	private @Getter boolean safe;
 	private @Getter ResultSet results;
+	private @Getter int freeFactories;
 	private LinkedHashMap<String, Double> coalProduction = null;
 	private LinkedHashMap<String, Double> ironProduction = null;
 	private LinkedHashMap<String, Double> oilProduction = null;
@@ -45,6 +46,7 @@ public class Nation
 	private LinkedHashMap<String, Double> nitrogenProduction = null;
 	private LinkedHashMap<String, Double> weaponProduction = null;
 	private LinkedHashMap<String, Double> researchProduction = null;
+	private @Getter LinkedHashMap<Integer, Production>production;
 	private HashMap<String, LinkedHashMap<String, Double>> allProductions = null;
 	private int landUsage = -1;
 
@@ -167,6 +169,7 @@ public class Nation
 	 */
 	public Nation(Connection connection, int id, boolean safe) throws SQLException
 	{
+		production = new LinkedHashMap<>();
 		PreparedStatement get;
 		if(safe)
 		{
@@ -210,6 +213,23 @@ public class Nation
 			this.invites = new NationInvites(connection, id, safe);
 			this.cities = new NationCities(connection, id, safe);
 		}
+		PreparedStatement getProduction = connection.prepareStatement("SELECT * FROM production WHERE owner=?");
+		getProduction.setInt(1, id);
+		ResultSet resultsProduction = getProduction.executeQuery();
+		int usedFactories = 0;
+		while(resultsProduction.next())
+		{
+			production.put(resultsProduction.getInt("id"), new Production(
+					resultsProduction.getInt("id"),
+					resultsProduction.getInt("owner"),
+					resultsProduction.getInt("factories"),
+					resultsProduction.getInt("efficiency"),
+					resultsProduction.getString("production"),
+					resultsProduction.getInt("progress")
+			));
+			usedFactories += resultsProduction.getInt("factories");
+		}
+		this.freeFactories = getTotalMilitaryFactories() - usedFactories;
 		this.id = id;
 		this.connection = connection;
 		this.safe = safe;
@@ -560,6 +580,20 @@ public class Nation
 	}
 
 	/**
+	 * Gets the total amount of military factories
+	 * @return The total military factories
+	 */
+	public int getTotalMilitaryFactories()
+	{
+		int sum = 0;
+		for(City city : cities.getCities().values())
+		{
+			sum += city.getIndustryMilitary();
+		}
+		return sum;
+	}
+
+	/**
 	 * Calculates the land usage by type of each city in this Nation,
 	 * returning a HashMap where each Key is the name of a city,
 	 * and the Value is a HashMap where each key is a type, and it's value
@@ -697,7 +731,11 @@ public class Nation
 				this.military.getDestroyers() +
 				this.military.getSubmarines();
 		navy *= 500;
-		long airforce = this.military.getFighters() +
+		long airforce = this.military.getBiplaneFighters() +
+				this.military.getTriplaneFighters() +
+				this.military.getMonoplaneFighters() +
+				this.military.getReconBalloons() +
+				this.military.getReconPlanes() +
 				this.military.getBombers() +
 				this.military.getZeppelins();
 		airforce *= 50;
@@ -1127,7 +1165,9 @@ public class Nation
 	public double getFighterPower()
 	{
 		int power = 0;
-		power += this.military.getFighters();
+		power += this.military.getBiplaneFighters() +
+				this.military.getTriplaneFighters() +
+				this.military.getMonoplaneFighters();
 		return power;
 	}
 
@@ -1228,6 +1268,7 @@ public class Nation
 		{
 			city.update();
 		}
+		updateAllProduction();
 	}
 
 	/**
@@ -1270,37 +1311,6 @@ public class Nation
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 		switch(policy)
 		{
-			case PolicyActions.ID_BUILD_ARTILLERY:
-				map.put("Steel", 15);
-				map.put("Nitrogen", 7);
-				break;
-			case PolicyActions.ID_BUILD_MUSKETS:
-				map.put("Steel", 5);
-				break;
-			case PolicyActions.ID_BUILD_RIFLED_MUSKETS:
-				map.put("Steel", 6);
-				break;
-			case PolicyActions.ID_BUILD_SINGLE_SHOT:
-				map.put("Steel", 7);
-				break;
-			case PolicyActions.ID_BUILD_NEEDLE_NOSE:
-				map.put("Steel", 8);
-				break;
-			case PolicyActions.ID_BUILD_BOLT_ACTION_MANUAL:
-				map.put("Steel", 9);
-				break;
-			case PolicyActions.ID_BUILD_BOLT_ACTION_CLIP:
-				map.put("Steel", 10);
-				break;
-			case PolicyActions.ID_BUILD_STRAIGHT_PULL:
-				map.put("Steel", 11);
-				break;
-			case PolicyActions.ID_BUILD_SEMI_AUTO:
-				map.put("Steel", 12);
-				break;
-			case PolicyActions.ID_BUILD_MACHINE_GUN:
-				map.put("Steel", 13);
-				break;
 
 		}
 		return map;
@@ -1332,6 +1342,61 @@ public class Nation
 	public double getBudgetChange()
 	{
 		return this.economy.getGdp() / 7;
+	}
+
+	/**
+	 * Runs the daily production tick
+	 * @throws SQLException if a database error occurs
+	 */
+	public void processProduction() throws SQLException
+	{
+		if(this.production.size() == 0)
+		{
+			return;
+		}
+		String statement = "UPDATE cloc_army, cloc_military SET ";
+		for(Production production : this.production.values())
+		{
+			double ic = production.getIc() + (production.getProgress() / 100.0);
+			int amount = (int)(ic / production.getProductionAsTechnology().getTechnology().getProductionCost());
+			int leftover = (int)((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionCost())) * 100);
+			production.setProgress(leftover);
+			statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "=" + production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
+			int efficiencyGain = (int)(0.1 * (10000.0 / (production.getEfficiency() / 100.0)));
+			production.setEfficiency(production.getEfficiency() + efficiencyGain);
+			if(production.getEfficiency() > 10000)
+			{
+				production.setEfficiency(10000);
+			}
+		}
+		statement += "WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id";
+		statement = statement.replace(", WHERE", " WHERE");
+		PreparedStatement update = connection.prepareStatement(statement);
+		update.setInt(1, this.id);
+		update.setInt(2, this.id);
+		update.execute();
+	}
+
+	/**
+	 * Gets one of the nations productions by id
+	 * @param id the id of the production
+	 * @return The production
+	 */
+	public Production getProductionById(int id)
+	{
+		return production.get(id);
+	}
+
+	/**
+	 * Saved all this nation's productions in the database
+	 * @throws SQLException If a database error occurs
+	 */
+	public void updateAllProduction() throws SQLException
+	{
+		for(Production production : production.values())
+		{
+			production.update(this.connection);
+		}
 	}
 
 	@Override

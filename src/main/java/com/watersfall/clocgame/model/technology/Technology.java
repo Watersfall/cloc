@@ -15,6 +15,18 @@ public interface Technology
 	boolean isAvailable(Nation nation);
 
 	/**
+	 * Returns whether this technology is something producible
+	 * @return true if it can be produced, false otherwise
+	 */
+	boolean isProducible();
+
+	/**
+	 * Gets the production cost of this technology if it is producible, or -1.0 if it is not
+	 * @return The production cost
+	 */
+	default double getProductionCost() {return -1.0;}
+
+	/**
 	 * @param nation The nation to get the success chance for
 	 * @return The calculated success chance of researching this technology
 	 */
@@ -44,6 +56,11 @@ public interface Technology
 	 * @return The SQL column name for this technology
 	 */
 	String getTableName();
+
+	/**
+	 * @return The SQL column name of this technologies production, or null if it isn't producible
+	 */
+	default String getProductionName() { return null; }
 
 	/**
 	 * @return A collection containing all required technologies for researching this technology

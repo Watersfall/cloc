@@ -3,6 +3,16 @@ CREATE TABLE cloc_main(
 	turn INT UNSIGNED DEFAULT 0
 );
 
+CREATE TABLE production(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	owner INT,
+	factories INT DEFAULT 1,
+	efficiency INT DEFAULT 2500,
+	production TEXT,
+	progress INT DEFAULT 0,
+	FOREIGN KEY fk_production (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
+);	
+
 CREATE TABLE cloc_login(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(32),
@@ -139,6 +149,12 @@ CREATE TABLE cloc_tech(
 	rifled_musket_tech TINYINT UNSIGNED DEFAULT 0,
 	single_shot_rifle_tech TINYINT UNSIGNED DEFAULT 0,
 	straight_pull_rifle_tech TINYINT UNSIGNED DEFAULT 0,
+	recon_balloon_tech TINYINT UNSIGNED DEFAULT 0,
+	recon_plane_tech TINYINT UNSIGNED DEFAULT 0,
+	zeppelin_bombers_tech TINYINT UNSIGNED DEFAULT 0,
+	biplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
+	triplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
+	monoplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
 	FOREIGN KEY fk_tech (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 

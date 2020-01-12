@@ -84,8 +84,8 @@ public class News
 			case ID_NAVAL_BOMBARD:
 				return "%SENDER% has bombarded the city of %CITY% with their navy!";
 			case ID_AIR_BATTLE:
-				return "%SENDER% has attacked our airforce! They have shot down %DEFENDERLOSSES% fighters, " +
-						"and we managed to shoot down %ATTACKERLOSSES% enemy fighters!";
+				return "%s has attacked our airforce! They have shot down %s ," +
+						"and we managed to shoot down %s !";
 			case ID_AIR_BOMBARD:
 				return "%SENDER% has bombed the city of %CITY% with their airforce!";
 			case ID_AIR_BOMB_TROOPS:

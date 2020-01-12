@@ -109,6 +109,11 @@ public class Responses
 		return "<p>You do not have enough steel!</p>";
 	}
 
+	public static String noOil()
+	{
+		return "<p>You do not have enough oil!</p>";
+	}
+
 	public static String noNitrogen()
 	{
 		return "<p>You do not have enough nitrogen!</p>";
@@ -619,9 +624,9 @@ public class Responses
 		return "<p>You have bombarded the enemy, inflicting " + casualties + "k casualties!</p>";
 	}
 
-	public static String airBattle(int attack, int defense)
+	public static String airBattle(String attack, String defense)
 	{
-		return "<p>You have attacked the enemy airforce, destroying " + defense + " enemy fighters and losing " + attack + " fighters!</p>";
+		return "<p>You have attacked the enemy airforce, destroying " + defense + ", while losing " + attack + "!</p>";
 	}
 
 	public static String fortified()

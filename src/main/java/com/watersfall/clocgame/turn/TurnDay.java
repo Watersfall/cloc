@@ -27,6 +27,7 @@ public class TurnDay implements Runnable
 				nation.getEconomy().setBudget(nation.getEconomy().getBudget() + nation.getBudgetChange());
 				nation.getDomestic().setPopulation(nation.getDomestic().getPopulation()
 						+ (long)(nation.getDomestic().getPopulation() * nation.getPopulationGrowth().get("total") / 7));
+				nation.processProduction();
 				nation.update();
 			}
 
@@ -35,6 +36,7 @@ public class TurnDay implements Runnable
 		}
 		catch(SQLException e)
 		{
+			e.printStackTrace();
 			try
 			{
 				connection.rollback();

@@ -37,6 +37,18 @@ public class TechnologyStrategicBombers extends SingleTechnology
 	}
 
 	@Override
+	public boolean isProducible()
+	{
+		return false;
+	}
+
+	@Override
+	public double getProductionCost()
+	{
+		return 30.0;
+	}
+
+	@Override
 	public int getSuccessChance(Nation nation)
 	{
 		return 100;

@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology.technologies.single.vehicles.ai
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class TechnologyZeppelinBombers extends SingleTechnology
 	public static final String DESC = "Zeppelin Bombers";
 	public static final String COLUMN_NAME = "zeppelin_bombers_tech";
 	public static final String FIELD_NAME = "ZeppelinBombers";
+	private @Getter String productionName = "zeppelins";
 
 	private TechnologyZeppelinBombers()
 	{
@@ -34,6 +36,18 @@ public class TechnologyZeppelinBombers extends SingleTechnology
 			technologyZeppelinBombers = new TechnologyZeppelinBombers();
 		}
 		return technologyZeppelinBombers;
+	}
+
+	@Override
+	public boolean isProducible()
+	{
+		return true;
+	}
+
+	@Override
+	public double getProductionCost()
+	{
+		return 20.0;
 	}
 
 	@Override

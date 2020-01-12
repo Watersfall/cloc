@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology.technologies.single.weapons;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class TechnologyBoltActionManual extends SingleTechnology
 	public static final String DESC = "Manually Loaded Bolt Action Rifles";
 	public static final String COLUMN_NAME = "bolt_action_manual_tech";
 	public static final String FIELD_NAME = "BoltActionManual";
+	private @Getter String productionName = "bolt_action_manual";
 
 	private TechnologyBoltActionManual()
 	{
@@ -33,6 +35,18 @@ public class TechnologyBoltActionManual extends SingleTechnology
 			technologyBoltActionManual = new TechnologyBoltActionManual();
 		}
 		return technologyBoltActionManual;
+	}
+
+	@Override
+	public boolean isProducible()
+	{
+		return true;
+	}
+
+	@Override
+	public double getProductionCost()
+	{
+		return 0.08;
 	}
 
 	@Override

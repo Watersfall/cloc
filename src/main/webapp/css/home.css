@@ -33,6 +33,10 @@ p {
 	display: none;
 }
 
+.toggleClass{
+	display: none;
+}
+
 .container{
 	position: absolute;
 	left: 18em;

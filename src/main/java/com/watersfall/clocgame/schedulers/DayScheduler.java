@@ -23,4 +23,13 @@ public class DayScheduler
 			new DayScheduler();
 		}
 	}
+
+	public static void stopDay()
+	{
+		if(scheduler != null)
+		{
+			scheduler.stop();
+			scheduler = null;
+		}
+	}
 }

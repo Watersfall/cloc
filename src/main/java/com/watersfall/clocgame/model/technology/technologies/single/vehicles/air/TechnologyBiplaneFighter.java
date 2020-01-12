@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology.technologies.single.vehicles.ai
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class TechnologyBiplaneFighter extends SingleTechnology
 	public static final String DESC = "Biplane Fighter";
 	public static final String COLUMN_NAME = "biplane_fighter_tech";
 	public static final String FIELD_NAME = "BiplaneFighter";
+	private @Getter String productionName = "biplane_fighters";
 
 	private TechnologyBiplaneFighter()
 	{
@@ -34,6 +36,18 @@ public class TechnologyBiplaneFighter extends SingleTechnology
 			technologyBiplaneFighter = new TechnologyBiplaneFighter();
 		}
 		return technologyBiplaneFighter;
+	}
+
+	@Override
+	public boolean isProducible()
+	{
+		return true;
+	}
+
+	@Override
+	public double getProductionCost()
+	{
+		return 12.0;
 	}
 
 	@Override

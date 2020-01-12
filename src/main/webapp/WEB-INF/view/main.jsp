@@ -263,10 +263,6 @@
 		<table id="nation">
 			<caption>Airforce</caption>
 			<tr>
-				<td>Fighters</td>
-				<td><fmt:formatNumber value="${home.military.fighters}"/></td>
-			</tr>
-			<tr>
 				<td>Zeppelins</td>
 				<td><fmt:formatNumber value="${home.military.zeppelins}"/></td>
 			</tr>

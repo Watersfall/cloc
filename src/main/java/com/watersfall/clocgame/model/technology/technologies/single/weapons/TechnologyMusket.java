@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology.technologies.single.weapons;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class TechnologyMusket extends SingleTechnology
 	public static final String DESC = "Muskets";
 	public static final String COLUMN_NAME = "musket_tech";
 	public static final String FIELD_NAME = "Musket";
+	private @Getter String productionName = "musket";
 
 	private TechnologyMusket()
 	{
@@ -32,6 +34,18 @@ public class TechnologyMusket extends SingleTechnology
 			technologyMusket = new TechnologyMusket();
 		}
 		return technologyMusket;
+	}
+
+	@Override
+	public boolean isProducible()
+	{
+		return true;
+	}
+
+	@Override
+	public double getProductionCost()
+	{
+		return 0.01;
 	}
 
 	@Override

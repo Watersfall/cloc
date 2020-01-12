@@ -406,29 +406,75 @@ public class WarActions
 		}
 		else
 		{
-			int attackLosses = (int)defender.getFighterPower() / 10;
-			int defenseLosses = (int)attacker.getFighterPower() / 10;
-			if(attackLosses > attacker.getMilitary().getFighters())
+			int attackTotalLosses = (int)Math.sqrt(defender.getFighterPower());
+			int defenseTotalLosses = (int)Math.sqrt(attacker.getFighterPower());
+			HashMap<String, Integer> attackLosses = new HashMap<>();
+			HashMap<String, Integer> defenseLosses = new HashMap<>();
+
+			String[] planes = {"biplane_fighters", "triplane_fighters", "monoplane_fighters"};
+			for(String string : planes)
 			{
-				defenseLosses = (int)((double)attacker.getMilitary().getFighters() / (double)attackLosses * defenseLosses);
-				attackLosses = attacker.getMilitary().getFighters();
+				int losses = (int)(Math.random() * (attackTotalLosses / 2));
+				if(losses > (int)attacker.getMilitary().getByName(string))
+				{
+					losses = attacker.getMilitary().getByName(string);
+				}
+				System.out.println(losses);
+				attackTotalLosses -= losses;
+				attackLosses.put(string.substring(0, string.indexOf("_")).concat("s"), losses);
+				attacker.getMilitary().updateByName(string, -losses);
+				losses = (int)(Math.random() * (defenseTotalLosses / 2)) + (defenseTotalLosses / 2);
+				if((int)defender.getMilitary().getByName(string) < losses)
+				{
+					losses = defender.getMilitary().getByName(string);
+				}
+				System.out.println(losses);
+				defenseTotalLosses -= losses;
+				defenseLosses.put(string.substring(0, string.indexOf("_")).concat("s"), losses);
+				defender.getMilitary().updateByName(string, -losses);
 			}
-			if(defenseLosses > defender.getMilitary().getFighters())
-			{
-				attackLosses = (int)((double)defender.getMilitary().getFighters() / (double)defenseLosses * attackLosses);
-				defenseLosses = defender.getMilitary().getFighters();
-			}
-			attacker.getMilitary().setFighters(attacker.getMilitary().getFighters() - attackLosses);
-			defender.getMilitary().setFighters(defender.getMilitary().getFighters() - defenseLosses);
 			attacker.update();
 			defender.update();
-			String news = News.createMessage(News.ID_AIR_BATTLE)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-					.replace("%DEFENDERLOSSES%", Integer.toString(defenseLosses))
-					.replace("%ATTACKERLOSSES%", Integer.toString(attackLosses));
+			String attack = "";
+			String defense = "";
+			int i = 0;
+			for(Map.Entry<String, Integer> entry : attackLosses.entrySet())
+			{
+				if(attackLosses.size() <= 2 && i == 0)
+				{
+					attack = entry.getValue() + " " + entry.getKey();
+				}
+				else if(attackLosses.size() >= 2 && i == attackLosses.size() - 1)
+				{
+					attack += " and " + entry.getValue() + " " + entry.getKey();
+				}
+				else
+				{
+					attack += entry.getValue() + " " + entry.getKey() + ", ";
+				}
+				i++;
+			}
+			for(Map.Entry<String, Integer> entry : defenseLosses.entrySet())
+			{
+				if(attackLosses.size() <= 2 && i == 0)
+				{
+					defense = entry.getValue() + " " + entry.getKey();
+				}
+				else if(attackLosses.size() >= 2 && i == attackLosses.size() - 1)
+				{
+					defense += " and " + entry.getValue() + " " + entry.getKey();
+				}
+				else
+				{
+					defense += entry.getValue() + " " + entry.getKey() + ", ";
+				}
+				i++;
+			}
+			String news = String.format(News.createMessage(News.ID_AIR_BATTLE),
+					"<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>", attack, defense);
 			News.sendNews(conn, attacker.getId(), defender.getId(), news);
 			Log.createLog(conn, attacker.getId(), defender.getForeign().getRegion(), LogType.NAVY, 0);
-			return Responses.airBattle(attackLosses, defenseLosses);
+			return Responses.airBattle(attack, defense);
 		}
 	}
 

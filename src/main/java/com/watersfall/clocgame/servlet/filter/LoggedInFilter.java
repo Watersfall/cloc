@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebFilter(urlPatterns = {
-		"/air/*", "/cities/*", "/city/*", "/createtreaty/*", "/decisions/*", "/declarations/*", "/land/*", "/main/*",
-		"/map/*", "/nation/*", "/navy/*", "/news/*", "/policy/*", "/rankings/*", "/register/*", "/settings/*",
-		"/technology/*", "/techtree/*", "/treaties/*", "/treaty/*", "/index/", "/"})
+@WebFilter(urlPatterns = {"/*"})
 public class LoggedInFilter implements Filter
 {
 	private @Getter ServletContext context;
@@ -26,12 +23,15 @@ public class LoggedInFilter implements Filter
 	{
 		this.context = config.getServletContext();
 	}
+	
+	@Override
+	public void destroy(){}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		HttpServletRequest req = (HttpServletRequest) request;
-		if(req.getMethod().equalsIgnoreCase("GET"));
+		if(req.getMethod().equalsIgnoreCase("GET"))
 		{
 			request.setAttribute("turn", Util.turn);
 			try(Connection connection = Database.getDataSource().getConnection())

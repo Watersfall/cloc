@@ -35,6 +35,12 @@ public class TechnologyAdvancedChemicalWeapons extends SingleTechnology
 	}
 
 	@Override
+	public boolean isProducible()
+	{
+		return false;
+	}
+
+	@Override
 	public int getSuccessChance(Nation nation)
 	{
 		return 100;

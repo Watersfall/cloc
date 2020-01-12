@@ -16,7 +16,17 @@ public class Startup implements ServletContextListener
 	@Override
 	public void contextDestroyed(ServletContextEvent event)
 	{
-
+		try
+		{
+			Database.getDataSource().close();
+			WeekScheduler.stopWeek();
+			DayScheduler.stopDay();
+		}
+		catch(Exception e)
+		{
+			//Ignore
+			e.printStackTrace();
+		}
 	}
 
 	@Override
