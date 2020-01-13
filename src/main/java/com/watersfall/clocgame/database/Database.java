@@ -1,28 +1,25 @@
 package com.watersfall.clocgame.database;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 public class Database
 {
 
-	private static BasicDataSource database;
+	private static HikariDataSource database;
 
-	private static BasicDataSource createDatabase()
+	private static HikariDataSource createDatabase()
 	{
-		database = new BasicDataSource();
-		database.setUrl("jdbc:mysql://localhost/cloc");
+		database = new HikariDataSource();
+		database.setJdbcUrl("jdbc:mysql://localhost/cloc");
 		database.setUsername("root");
 		database.setPassword(System.getenv("CLOC_PASS"));
-		database.setInitialSize(1);
-		database.setMinIdle(10);
-		database.setMaxIdle(25);
-		database.setMaxTotal(50);
-		database.setMaxOpenPreparedStatements(100);
-		database.setDefaultAutoCommit(false);
+		database.setMaximumPoolSize(12);
+		database.setAutoCommit(false);
 		return database;
 	}
 
-	public static BasicDataSource getDataSource()
+	public static HikariDataSource getDataSource()
 	{
 		if(database == null)
 		{
