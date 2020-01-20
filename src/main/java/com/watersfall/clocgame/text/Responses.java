@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.constants;
+package com.watersfall.clocgame.text;
 
 import com.watersfall.clocgame.model.nation.City;
 
@@ -14,11 +14,6 @@ public class Responses
 		return "<p>You must be logged in to do this!</p>";
 	}
 
-	public static String notYourNation()
-	{
-		return "<p>Not your nation!</p>";
-	}
-
 	public static String notYourTreaty()
 	{
 		return "<p>Not your treaty!</p>";
@@ -27,11 +22,6 @@ public class Responses
 	public static String notYourCity()
 	{
 		return "<p>Not your city!</p>";
-	}
-
-	public static String notYourArmy()
-	{
-		return "<p>Not your army!</p>";
 	}
 
 	public static String genericError()
@@ -83,6 +73,11 @@ public class Responses
 	/*
 	 ** MISSING REQUIREMENTS
 	 */
+
+	public static String noFactories()
+	{
+		return "<p>You do not have enough factories!</p>";
+	}
 
 	public static String nullFields()
 	{
@@ -421,11 +416,6 @@ public class Responses
 		return "<p>You build the army some shiny new barracks!<p>";
 	}
 
-	public static String artillery()
-	{
-		return "<p>You build some new artillery guns!</p>";
-	}
-
 	public static String weapons()
 	{
 		return "<p>You manufacture some new uniforms and rifles for your conscripts!</p>";
@@ -464,26 +454,6 @@ public class Responses
 	public static String close(String type)
 	{
 		return "<p>You close down a " + type + " and thousands of workers lose their jobs!</p>";
-	}
-
-	public static String closeN(String type)
-	{
-		return "<p>You close down an " + type + " and thousands of workers lose their jobs!</p>";
-	}
-
-	public static String closePort()
-	{
-		return "<p>You close down a port and thousands of boats lose their homes!</p>";
-	}
-
-	public static String closeBarrack()
-	{
-		return "<p>You close down a barrack and thousands of soldiers lose their homes!</p>";
-	}
-
-	public static String closeRailroad()
-	{
-		return "<p>You tear up a railroad and thousands of railroad cars lose their homes!</p>";
 	}
 
 	public static String conscript()
@@ -632,5 +602,10 @@ public class Responses
 	public static String fortified()
 	{
 		return "<p>Your army dig's some trenches or something</p>";
+	}
+
+	public static String created()
+	{
+		return "<p>Created!</p>";
 	}
 }

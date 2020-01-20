@@ -1,182 +1,46 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.text.Responses;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 
 public class NationActions
 {
-	public static String sendCoal(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException, NumberFormatException
+	public static String sendResource(String resource, double amount, Nation sender, Nation receiver) throws SQLException
 	{
-		if(req.getParameter("amount") == null)
-		{
-			return Responses.genericError();
-		}
-		int amount = Integer.parseInt(req.getParameter("amount"));
 		if(amount <= 0)
 		{
 			return Responses.negative();
 		}
-		else if(amount > sender.getEconomy().getCoal())
+		if(amount > 999999999998.00)
+		{
+			throw new NumberFormatException();
+		}
+		else if((Double)sender.getEconomy().getByName(resource) < amount)
 		{
 			return Responses.notEnough();
 		}
-		else
-		{
-			sender.getEconomy().setCoal(sender.getEconomy().getCoal() - amount);
-			receiver.getEconomy().setCoal(receiver.getEconomy().getCoal() + amount);
-			String message = News.createMessage(News.ID_SEND_COAL)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
-					.replace("%AMOUNT%", Integer.toString(amount));
-			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
-			sender.update();
-			receiver.update();
-			return Responses.sent();
-		}
-	}
-
-	public static String sendIron(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException, NumberFormatException
-	{
-		if(req.getParameter("amount") == null)
+		else if(sender.getId() == receiver.getId())
 		{
 			return Responses.genericError();
 		}
-		int amount = Integer.parseInt(req.getParameter("amount"));
-		if(amount <= 0)
-		{
-			return Responses.negative();
-		}
-		else if(amount > sender.getEconomy().getIron())
-		{
-			return Responses.notEnough();
-		}
 		else
 		{
-			sender.getEconomy().setIron(sender.getEconomy().getIron() - amount);
-			receiver.getEconomy().setIron(receiver.getEconomy().getIron() + amount);
-			String message = News.createMessage(News.ID_SEND_IRON)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
-					.replace("%AMOUNT%", Integer.toString(amount));
-			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
-			sender.update();
-			receiver.update();
-			return Responses.sent();
-		}
-	}
-
-	public static String sendOil(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException, NumberFormatException
-	{
-		if(req.getParameter("amount") == null)
-		{
-			return Responses.genericError();
-		}
-		int amount = Integer.parseInt(req.getParameter("amount"));
-		if(amount <= 0)
-		{
-			return Responses.negative();
-		}
-		else if(amount > sender.getEconomy().getOil())
-		{
-			return Responses.notEnough();
-		}
-		else
-		{
-			sender.getEconomy().setOil(sender.getEconomy().getOil() - amount);
-			receiver.getEconomy().setOil(receiver.getEconomy().getOil() + amount);
-			String message = News.createMessage(News.ID_SEND_OIL)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
-					.replace("%AMOUNT%", Integer.toString(amount));
-			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
-			sender.update();
-			receiver.update();
-			return Responses.sent();
-		}
-	}
-
-	public static String sendSteel(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException, NumberFormatException
-	{
-		if(req.getParameter("amount") == null)
-		{
-			return Responses.genericError();
-		}
-		int amount = Integer.parseInt(req.getParameter("amount"));
-		if(amount <= 0)
-		{
-			return Responses.negative();
-		}
-		else if(amount > sender.getEconomy().getSteel())
-		{
-			return Responses.notEnough();
-		}
-		else
-		{
-			sender.getEconomy().setSteel(sender.getEconomy().getSteel() - amount);
-			receiver.getEconomy().setSteel(receiver.getEconomy().getSteel() + amount);
-			String message = News.createMessage(News.ID_SEND_STEEL)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
-					.replace("%AMOUNT%", Integer.toString(amount));
-			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
-			sender.update();
-			receiver.update();
-			return Responses.sent();
-		}
-	}
-
-	public static String sendNitrogen(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException, NumberFormatException
-	{
-		if(req.getParameter("amount") == null)
-		{
-			return Responses.genericError();
-		}
-		int amount = Integer.parseInt(req.getParameter("amount"));
-		if(amount <= 0)
-		{
-			return Responses.negative();
-		}
-		else if(amount > sender.getEconomy().getNitrogen())
-		{
-			return Responses.notEnough();
-		}
-		else
-		{
-			sender.getEconomy().setNitrogen(sender.getEconomy().getNitrogen() - amount);
-			receiver.getEconomy().setNitrogen(receiver.getEconomy().getNitrogen() + amount);
-			String message = News.createMessage(News.ID_SEND_NITROGEN)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
-					.replace("%AMOUNT%", Integer.toString(amount));
-			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
-			sender.update();
-			receiver.update();
-			return Responses.sent();
-		}
-	}
-
-	public static String sendMoney(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException, NumberFormatException
-	{
-		if(req.getParameter("amount") == null)
-		{
-			return Responses.genericError();
-		}
-		int amount = Integer.parseInt(req.getParameter("amount"));
-		if(amount <= 0)
-		{
-			return Responses.negative();
-		}
-		else if(amount > sender.getEconomy().getBudget())
-		{
-			return Responses.notEnough();
-		}
-		else
-		{
-			sender.getEconomy().setBudget(sender.getEconomy().getBudget() - amount);
-			receiver.getEconomy().setBudget(receiver.getEconomy().getBudget() + amount);
-			String message = News.createMessage(News.ID_SEND_MONEY)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>")
-					.replace("%AMOUNT%", Integer.toString(amount));
-			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), message);
+			sender.getEconomy().setByName(resource, (Double)sender.getEconomy().getByName(resource) - amount);
+			receiver.getEconomy().setByName(resource, (Double)receiver.getEconomy().getByName(resource) + amount);
+			if(resource.equalsIgnoreCase("budget"))
+			{
+				News.sendNews(sender.getConn(), sender.getId(), receiver.getId(),
+						News.createMessage(News.ID_SEND_MONEY, sender.getNationUrl(), Double.toString(amount)));
+			}
+			else
+			{
+				News.sendNews(sender.getConn(), sender.getId(), receiver.getId(),
+						News.createMessage(News.ID_SEND_RESOURCE, sender.getNationUrl(), Double.toString(amount), resource));
+			}
 			sender.update();
 			receiver.update();
 			return Responses.sent();
@@ -192,9 +56,8 @@ public class NationActions
 		}
 		else
 		{
-			String newsMessage = News.createMessage(News.ID_DECLARE_WAR)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + sender.getId() + "\">" + sender.getCosmetic().getNationName() + "</a>");
-			News.sendNews(sender.getConnection(), sender.getId(), receiver.getId(), newsMessage);
+			News.sendNews(sender.getConn(), sender.getId(), receiver.getId(),
+					News.createMessage(News.ID_DECLARE_WAR, sender.getNationUrl()));
 			sender.declareWar(receiver);
 			return Responses.war();
 		}

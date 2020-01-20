@@ -116,9 +116,7 @@
 							<h3>Military Factories</h3>
 							<img src="${pageContext.request.contextPath}/images/city/mil.png" alt="military factory"/>
 							<p>
-								<fmt:formatNumber value="${city.industryMilitary}"/> military factories producing <fmt:formatNumber value="${city.weaponsProduction.total}" maxFractionDigits="2"/> weapons per week
-								<br>
-								(<fmt:formatNumber value="${city.weaponsProduction.total / city.industryMilitary}" maxFractionDigits="2"/> weapons per week per factory)
+
 							</p>
 							<button onclick="cityDecision('militarize', '${city.id}')">
 								Build - <fmt:formatNumber value="${factorycost.iron}"/> Iron, <fmt:formatNumber value="${factorycost.coal}"/> Coal, and <fmt:formatNumber value="${factorycost.steel}"/> Steel

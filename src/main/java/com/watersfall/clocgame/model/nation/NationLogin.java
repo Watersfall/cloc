@@ -8,8 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NationLogin extends NationBase
+public class NationLogin
 {
+	private @Getter Connection conn;
+	private @Getter ResultSet results;
+	private @Getter boolean safe;
 	private @Getter int id;
 	private @Getter String username;
 	private @Getter String email;
@@ -27,17 +30,16 @@ public class NationLogin extends NationBase
 		this.ipLast = ipLast;
 	}
 
-	public NationLogin(Connection connection, int id, boolean safe) throws SQLException
+	public NationLogin(Connection conn, int id, boolean safe) throws SQLException
 	{
-		super(connection, id, safe);
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT username, email, password, register_ip, last_ip, id " + "FROM cloc_login " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = conn.prepareStatement("SELECT username, email, password, register_ip, last_ip, id " + "FROM cloc_login " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT username, email, password, register_ip, last_ip, id " + "FROM cloc_login " + "WHERE id=?");
+			read = conn.prepareStatement("SELECT username, email, password, register_ip, last_ip, id " + "FROM cloc_login " + "WHERE id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -47,7 +49,7 @@ public class NationLogin extends NationBase
 		}
 		else
 		{
-			this.connection = connection;
+			this.conn = conn;
 			this.id = id;
 			this.safe = safe;
 			this.username = results.getString(1);

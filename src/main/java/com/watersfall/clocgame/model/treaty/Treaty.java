@@ -2,14 +2,22 @@ package com.watersfall.clocgame.model.treaty;
 
 import com.watersfall.clocgame.exception.TreatyNotFoundException;
 import com.watersfall.clocgame.exception.TreatyPermissionException;
-import com.watersfall.clocgame.model.nation.NationBase;
+import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class Treaty extends NationBase
+public class Treaty extends Updatable
 {
+	public static final String TABLE_NAME = "cloc_treaties";
+	private @Getter Connection conn;
+	private @Getter String name;
+	private @Getter String flag;
+	private @Getter String description;
+	private @Getter int memberCount;
+	private ArrayList<TreatyMember> members = null;
+
 	/**
 	 * Returns an Array of all treaties in the database <i>without</i> their members
 	 * @param conn The SQL Connection to use
@@ -23,7 +31,7 @@ public class Treaty extends NationBase
 		ResultSet results = treaties.executeQuery();
 		while(results.next())
 		{
-			array.add(new Treaty(conn, results.getInt(1), false, true));
+			array.add(new Treaty(conn, results.getInt(1), false));
 		}
 		return array;
 	}
@@ -42,27 +50,7 @@ public class Treaty extends NationBase
 		create.executeUpdate();
 		ResultSet results = create.getGeneratedKeys();
 		results.first();
-		return new Treaty(conn, results.getInt(1), true, true);
-	}
-
-	private @Getter int id;
-	private @Getter String name;
-	private @Getter String flag;
-	private @Getter String description;
-	private @Getter int memberCount;
-	private @Getter ArrayList<TreatyMember> members;
-
-
-	/**
-	 * Creates a Treaty object without the member list
-	 * @param connection The SQL Connection
-	 * @param id         The treaty ID
-	 * @param safe       Whether the results should be writable
-	 * @throws SQLException if an SQL error occurs
-	 */
-	public Treaty(Connection connection, int id, boolean safe) throws SQLException
-	{
-		this(connection, id, safe, true);
+		return new Treaty(conn, results.getInt(1), true);
 	}
 
 	/**
@@ -70,23 +58,22 @@ public class Treaty extends NationBase
 	 * @param connection The connection object to use
 	 * @param id         The Treaty id
 	 * @param safe       Whether the results should be writable
-	 * @param lazyLoad   Controls how much of the Treaty is loaded.
-	 *                   On <i>true</i>, only loads the Treaty,
-	 *                   on <i>false</i>, loads the Treaty as well as all it's members
 	 * @throws SQLException if an SQL error occurs
 	 */
-	public Treaty(Connection connection, int id, boolean safe, boolean lazyLoad) throws SQLException
+	public Treaty(Connection connection, int id, boolean safe) throws SQLException
 	{
-		super(connection, id, safe);
-		ResultSet resultsMembers;
+		super(TABLE_NAME, id, null);
+		this.conn = connection;
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT name, flag, description, id " + "FROM cloc_treaties " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = connection.prepareStatement("SELECT name, flag, description, id, COUNT(nation_id)" +
+					"FROM cloc_treaties, cloc_treaties_members " + "WHERE id=? AND id=alliance_id FOR UPDATE ");
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT name, flag, description, id " + "FROM cloc_treaties " + "WHERE id=?");
+			read = connection.prepareStatement("SELECT name, flag, description, id, COUNT(nation_id)" +
+					"FROM cloc_treaties, cloc_treaties_members " + "WHERE id=? AND id=alliance_id");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -96,31 +83,11 @@ public class Treaty extends NationBase
 		}
 		else
 		{
-			PreparedStatement nations = connection.prepareStatement("SELECT nation_id FROM cloc_treaties_members WHERE alliance_id=?");
-			nations.setInt(1, id);
-			resultsMembers = nations.executeQuery();
 			this.id = id;
 			this.name = results.getString(1);
 			this.flag = results.getString(2);
 			this.description = results.getString(3);
-		}
-		if(!lazyLoad)
-		{
-			members = new ArrayList<>();
-			while(resultsMembers.next())
-			{
-				members.add(new TreatyMember(connection, resultsMembers.getInt(1), false));
-			}
-			this.memberCount = members.size();
-		}
-		else
-		{
-			int i = 0;
-			while(resultsMembers.next())
-			{
-				i++;
-			}
-			memberCount = i;
+			this.memberCount = results.getInt(5);
 		}
 	}
 
@@ -132,7 +99,8 @@ public class Treaty extends NationBase
 		}
 		else
 		{
-			results.updateString(1, name);
+			this.addField("name", name);
+			this.name = name;
 		}
 	}
 
@@ -144,13 +112,41 @@ public class Treaty extends NationBase
 		}
 		else
 		{
-			results.updateString(2, flag);
+			this.addField("flag", flag);
+			this.flag = flag;
 		}
 	}
 
 	public void setDescription(String description) throws SQLException
 	{
-		results.updateString(3, description);
+		this.addField("description", description);
+		this.description = description;
+	}
+
+	public ArrayList<TreatyMember> getMembers() throws SQLException
+	{
+		if(members == null)
+		{
+			members = new ArrayList<>(memberCount);
+			PreparedStatement getMembers = conn.prepareStatement("SELECT * FROM cloc_login\n" +
+					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
+					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
+					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
+					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
+					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
+					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
+					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
+					"JOIN cloc_treaties_members ON cloc_login.id = nation_id\n" +
+					"WHERE alliance_id=?");
+			getMembers.setInt(1, this.id);
+			ResultSet results = getMembers.executeQuery();
+			while(results.next())
+			{
+				members.add(new TreatyMember(results.getInt("cloc_login.id"), results));
+			}
+		}
+		return members;
 	}
 
 	/**
@@ -176,8 +172,8 @@ public class Treaty extends NationBase
 	 */
 	public void delete() throws SQLException
 	{
-		PreparedStatement deleteMembers = connection.prepareStatement("DELETE FROM cloc_treaties_members WHERE alliance_id=?");
-		PreparedStatement deleteAlliance = connection.prepareStatement("DELETE FROM cloc_treaties WHERE id=?");
+		PreparedStatement deleteMembers = conn.prepareStatement("DELETE FROM cloc_treaties_members WHERE alliance_id=?");
+		PreparedStatement deleteAlliance = conn.prepareStatement("DELETE FROM cloc_treaties WHERE id=?");
 		deleteMembers.setInt(1, this.id);
 		deleteAlliance.setInt(1, this.id);
 		deleteMembers.execute();

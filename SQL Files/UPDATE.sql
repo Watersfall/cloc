@@ -25,4 +25,3 @@ CREATE TABLE production(
 	progress INT DEFAULT 0,
 	FOREIGN KEY fk_production (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
-	

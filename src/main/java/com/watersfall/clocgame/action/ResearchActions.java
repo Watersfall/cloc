@@ -1,9 +1,9 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.Technology;
+import com.watersfall.clocgame.text.Responses;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -25,7 +25,7 @@ public class ResearchActions
 			{
 				String methodName = "get" + entry.getKey().substring(0, 1).toUpperCase().concat(entry.getKey().substring(1));
 				Method method = nation.getEconomy().getClass().getMethod(methodName);
-				Double amount = (double)method.invoke(nation.getEconomy());
+				double amount = (double)method.invoke(nation.getEconomy());
 				if(amount < entry.getValue())
 				{
 					return Responses.no(entry.getKey());
@@ -93,8 +93,11 @@ public class ResearchActions
 		}
 		else
 		{
-			doCosts(nation, tech.getTechnology());
-			String response;
+			String response = doCosts(nation, tech.getTechnology());
+			if(response != null)
+			{
+				return response;
+			}
 			if((int)(Math.random() * 100) <= tech.getTechnology().getSuccessChance(nation))
 			{
 				nation.getTech().setTechnology(tech, nation.getTech().getTechnology(tech) + 1);
@@ -104,8 +107,7 @@ public class ResearchActions
 			{
 				response = Responses.researchFailed();
 			}
-			nation.getTech().update();
-			nation.getEconomy().update();
+			nation.update();
 			return response;
 		}
 	}

@@ -1,9 +1,10 @@
 package com.watersfall.clocgame.servlet.controller;
 
-import com.watersfall.clocgame.constants.Responses;
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -23,35 +24,22 @@ public class NewsController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		Connection connection = null;
-		try
+
+		try(Connection connection = Database.getDataSource().getConnection())
 		{
-			if(req.getAttribute("user") != null)
+			if(req.getSession().getAttribute("user") != null)
 			{
-				int user = Integer.parseInt("user");
-				connection = Database.getDataSource().getConnection();
+				int user = Integer.parseInt(req.getSession().getAttribute("user").toString());
 				PreparedStatement read = connection.prepareStatement("UPDATE cloc_news SET is_read=? WHERE receiver=?");
 				read.setBoolean(1, true);
 				read.setInt(2, user);
 				read.execute();
 				connection.commit();
 			}
-
 		}
 		catch(SQLException e)
 		{
 			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				connection.close();
-			}
-			catch(Exception e)
-			{
-				//Ignored
-			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/news.jsp").forward(req, resp);
 	}
@@ -60,75 +48,21 @@ public class NewsController extends HttpServlet
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		PrintWriter writer = resp.getWriter();
-		String delete = req.getParameter("delete");
-		if(req.getSession().getAttribute("user") == null)
-		{
-			writer.append(Responses.noLogin());
-			return;
-		}
-		Connection connection = null;
-		try
-		{
+		Executor executor = (conn) -> {
 			int user = UserUtils.getUser(req);
-			connection = Database.getDataSource().getConnection();
-			if(delete != null && (delete.equalsIgnoreCase("all") || delete.matches("\\d+")))
+			String delete = req.getParameter("delete");
+			Nation nation = new Nation(conn, user, true);
+			if(delete.equalsIgnoreCase("all"))
 			{
-				Nation nation = new Nation(connection, user, true);
-				if(delete.equalsIgnoreCase("all"))
-				{
-					nation.getNews().deleteAll();
-					writer.append(Responses.deleted());
-				}
-				else
-				{
-					int id = Integer.parseInt(delete);
-					if(nation.getNews().getNews().get(id) != null)
-					{
-						nation.getNews().getNews().get(id).delete();
-						writer.append(Responses.deleted());
-					}
-					else
-					{
-						writer.append(Responses.genericError());
-					}
-				}
+				nation.getNews().deleteAll();
 			}
 			else
 			{
-				writer.append(Responses.genericError());
+				int id = Integer.parseInt(delete);
+				nation.getNews().getNews().get(id).delete();
 			}
-			connection.commit();
-		}
-		catch(SQLException e)
-		{
-			writer.append(Responses.genericException(e));
-			try
-			{
-				connection.rollback();
-			}
-			catch(Exception ex)
-			{
-				//Ignored
-			}
-		}
-		catch(NationNotFoundException e)
-		{
-			writer.append(Responses.noNation());
-		}
-		catch(NumberFormatException e)
-		{
-			writer.append(Responses.genericError());
-		}
-		finally
-		{
-			try
-			{
-				connection.close();
-			}
-			catch(Exception e)
-			{
-				//Ignored
-			}
-		}
+			return Responses.deleted();
+		};
+		writer.append(Action.doAction(executor));
 	}
 }

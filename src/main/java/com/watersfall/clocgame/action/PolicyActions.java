@@ -1,12 +1,11 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.NationArmy;
 import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.text.Responses;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -46,8 +45,6 @@ public class PolicyActions
 	//</editor-fold>
 	//<editor-fold desc="Gain">
 	private static final int FREE_MONEY_GAIN = 1000;
-	private static final int ARTILLERY_GAIN = 3;
-	private static final int WEAPONS_GAIN = 1000;
 	//</editor-fold>
 	//</editor-fold>
 
@@ -74,8 +71,7 @@ public class PolicyActions
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + CRACKDOWN_APPROVAL);
 			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + CRACKDOWN_GOV);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.getDomestic().update();
-			nation.getEconomy().update();
+			nation.update();
 			return Responses.arrest();
 		}
 	}
@@ -102,8 +98,7 @@ public class PolicyActions
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + FREE_APPROVAL);
 			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + FREE_GOV);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.getDomestic().update();
-			nation.getEconomy().update();
+			nation.update();
 			return Responses.free();
 		}
 	}
@@ -121,8 +116,7 @@ public class PolicyActions
 			int gain = (int)(Math.random() * 2500) + 500;
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			nation.getDomestic().setLand(nation.getDomestic().getLand() + gain);
-			nation.getDomestic().update();
-			nation.getEconomy().update();
+			nation.update();
 			return Responses.landClearance(gain);
 		}
 	}
@@ -177,19 +171,21 @@ public class PolicyActions
 	//<editor-fold desc="Economic Policies">
 	public static String freeMoneyCapitalist(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
+		Nation nation = new Nation(connection, idNation, true);
+		NationEconomy economy = nation.getEconomy();
 		economy.setBudget(economy.getBudget() + FREE_MONEY_GAIN);
 		economy.setEconomic(economy.getEconomic() + FREE_MONEY_ECON);
-		economy.update();
+		nation.update();
 		return Responses.freeMoneyCapitalist();
 	}
 
 	public static String freeMoneyCommunist(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = new NationEconomy(connection, idNation, true);
+		Nation nation = new Nation(connection, idNation, true);
+		NationEconomy economy = nation.getEconomy();
 		economy.setBudget(economy.getBudget() + FREE_MONEY_GAIN);
 		economy.setEconomic(economy.getEconomic() - FREE_MONEY_ECON);
-		economy.update();
+		nation.update();
 		return Responses.freeMoneyCommunist();
 	}
 	//</editor-fold>
@@ -211,8 +207,7 @@ public class PolicyActions
 		{
 			nation.getForeign().setAlignment(align);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.getForeign().update();
-			nation.getEconomy().update();
+			nation.update();
 			return Responses.align(align);
 		}
 	}
@@ -244,22 +239,22 @@ public class PolicyActions
 		else
 		{
 			nation.getArmy().setSize(nation.getArmy().getSize() + 2);
-			nation.getArmy().update();
+			nation.update();
 			return Responses.conscript();
 		}
 	}
 
 	public static String deconscript(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		NationArmy army = new NationArmy(conn, id, true);
-		if(army.getSize() <= 5)
+		Nation nation = new Nation(conn, id, true);
+		if(nation.getArmy().getSize() <= 5)
 		{
 			return Responses.noTroops();
 		}
 		else
 		{
-			army.setSize(army.getSize() - 2);
-			army.update();
+			nation.getArmy().setSize(nation.getArmy().getSize() - 2);
+			nation.update();
 			return Responses.deconscript();
 		}
 	}

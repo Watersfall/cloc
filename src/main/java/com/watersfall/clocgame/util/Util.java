@@ -14,7 +14,6 @@ public class Util
 
 	public static void uploadImage(BufferedImage part, String path) throws IOException
 	{
-		System.out.println(System.getenv("CLOC_FILE_PATH"));
 		ImageIO.write(part, "png", new File(path));
 	}
 

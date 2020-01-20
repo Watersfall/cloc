@@ -1,14 +1,16 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.action.PolicyActions;
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.math.Math;
+import com.watersfall.clocgame.math.BadMath;
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.message.Declaration;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.treaty.Treaty;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.SqlBuilder;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 
@@ -20,6 +22,7 @@ import java.util.*;
 
 public class Nation
 {
+	private HashSet<Updatable> updatables;
 	private @Getter int id;
 	private @Getter NationCosmetic cosmetic;
 	private @Getter NationDomestic domestic;
@@ -35,7 +38,7 @@ public class Nation
 	private @Getter int defensive;
 	private @Getter int offensive;
 	private @Getter Treaty treaty;
-	private @Getter Connection connection;
+	private @Getter Connection conn;
 	private @Getter boolean safe;
 	private @Getter ResultSet results;
 	private @Getter int freeFactories;
@@ -44,7 +47,6 @@ public class Nation
 	private LinkedHashMap<String, Double> oilProduction = null;
 	private LinkedHashMap<String, Double> steelProduction = null;
 	private LinkedHashMap<String, Double> nitrogenProduction = null;
-	private LinkedHashMap<String, Double> weaponProduction = null;
 	private LinkedHashMap<String, Double> researchProduction = null;
 	private @Getter LinkedHashMap<Integer, Production>production;
 	private HashMap<String, LinkedHashMap<String, Double>> allProductions = null;
@@ -52,7 +54,7 @@ public class Nation
 
 	/**
 	 *
-	 * @param conn The SQL connection to use
+	 * @param conn The SQL conn to use
 	 * @param name The nation name to get
 	 * @param safe Whether the returned nation should be safe to write to
 	 * @return A nation object of the nation with the specified name
@@ -75,7 +77,7 @@ public class Nation
 
 	/**
 	 * Returns an unordered Collection of all Nations in the database matching the where clause fed into the method
-	 * @param conn  The SQL connection to use
+	 * @param conn  The SQL conn to use
 	 * @param where the SQL where clause
 	 * @return Collection of nations matching where
 	 * @throws SQLException if a database issue occurs
@@ -91,18 +93,19 @@ public class Nation
 				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
 				"WHERE " + where);
 		ResultSet results = get.executeQuery();
 		while(results.next())
 		{
-			nations.add(new Nation(conn, results.getInt(1), false));
+			nations.add(new Nation(results.getInt("cloc_login.id"), results));
 		}
 		return nations;
 	}
 
 	/**
 	 * Returns an ordered Collection of all nations matching the where clause, sorted by the order clause
-	 * @param conn  the SQL connection to use
+	 * @param conn  the SQL conn to use
 	 * @param where the SQL where clause
 	 * @param order the SQL order by clause
 	 * @return Collection of nations matching where
@@ -119,19 +122,20 @@ public class Nation
 				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
 				"WHERE " + where + "\n" +
 				"ORDER BY " + order);
 		ResultSet results = get.executeQuery();
 		while(results.next())
 		{
-			nations.add(new Nation(conn, results.getInt(1), false));
+			nations.add(new Nation(results.getInt("cloc_login.id"), results));
 		}
 		return nations;
 	}
 
 	/**
 	 * Returns an ordered Collection of all nations matching the where clause, sorted by the order clause, with a specified limit
-	 * @param conn  the SQL connection to use
+	 * @param conn  the SQL conn to use
 	 * @param where the SQL where clause
 	 * @param order the SQL order by clause
 	 * @param limit The SQL limit clause
@@ -149,45 +153,52 @@ public class Nation
 				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
 				"WHERE " + where + "\n" +
 				"ORDER BY " + order + "\n" +
 				"LIMIT " + limit);
 		ResultSet results = get.executeQuery();
 		while(results.next())
 		{
-			nations.add(new Nation(conn, results.getInt(1), false));
+			nations.add(new Nation(results.getInt("cloc_login.id"), results));
 		}
 		return nations;
 	}
 
 	/**
 	 * Primary Nation constructor that creates a Nation from an ID
-	 * @param connection The connection object to use
+	 * @param conn The conn object to use
 	 * @param id         The id of the nation being loaded
 	 * @param safe       Whether the contents of the returned Nation object should be editable
 	 * @throws SQLException if something SQL related goes wrong
 	 */
-	public Nation(Connection connection, int id, boolean safe) throws SQLException
+	public Nation(Connection conn, int id, boolean safe) throws SQLException
 	{
 		production = new LinkedHashMap<>();
+		updatables = new HashSet<>();
 		PreparedStatement get;
+		PreparedStatement getProduction;
+		PreparedStatement attacker;
+		PreparedStatement defender;
 		if(safe)
 		{
-			this.cosmetic = new NationCosmetic(connection, id, safe);
-			this.domestic = new NationDomestic(connection, id, safe);
-			this.economy = new NationEconomy(connection, id, safe);
-			this.foreign = new NationForeign(connection, id, safe);
-			this.military = new NationMilitary(connection, id, safe);
-			this.army = new NationArmy(connection, id, safe);
-			this.cities = new NationCities(connection, id, safe);
-			this.policy = new NationPolicy(connection, id, safe);
-			this.tech = new NationTech(connection, id, safe);
-			this.invites = new NationInvites(connection, id, safe);
-			this.news = new NationNews(connection, id, safe);
+			get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
+					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
+					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
+					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
+					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
+					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
+					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
+					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
+					"WHERE cloc_login.id=? FOR UPDATE");
+			getProduction = conn.prepareStatement("SELECT * FROM production WHERE owner=? FOR UPDATE");
+			attacker = conn.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1 FOR UPDATE");
+			defender = conn.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1 FOR UPDATE");
 		}
 		else
 		{
-			get = connection.prepareStatement("SELECT * FROM cloc_login\n" +
+			get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
 					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
 					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
 					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
@@ -197,23 +208,33 @@ public class Nation
 					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
 					"WHERE cloc_login.id=?");
-			get.setInt(1, id);
-			ResultSet main = get.executeQuery();
-			main.first();
-			this.results = main;
-			this.cosmetic = new NationCosmetic(main, connection, id, safe);
-			this.domestic = new NationDomestic(main, connection, id, safe);
-			this.economy = new NationEconomy(main, connection, id, safe);
-			this.foreign = new NationForeign(main, connection, id, safe);
-			this.military = new NationMilitary(main, connection, id, safe);
-			this.tech = new NationTech(main, connection, id, safe);
-			this.policy = new NationPolicy(main, connection, id, safe);
-			this.army = new NationArmy(main, connection, id, safe);
-			this.news = new NationNews(connection, id, safe);
-			this.invites = new NationInvites(connection, id, safe);
-			this.cities = new NationCities(connection, id, safe);
+			getProduction = conn.prepareStatement("SELECT * FROM production WHERE owner=?");
+			attacker = conn.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1");
+			defender = conn.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1");
 		}
-		PreparedStatement getProduction = connection.prepareStatement("SELECT * FROM production WHERE owner=?");
+		get.setInt(1, id);
+		ResultSet main = get.executeQuery();
+		main.first();
+		this.results = main;
+		this.cosmetic = new NationCosmetic(id, main);
+		this.domestic = new NationDomestic(id, main);
+		this.economy = new NationEconomy(id, main);
+		this.foreign = new NationForeign(id, main);
+		this.military = new NationMilitary(id, main);
+		this.tech = new NationTech(id, main);
+		this.policy = new NationPolicy(id, main);
+		this.army = new NationArmy(id, main);
+		this.news = new NationNews(conn, id, safe);
+		this.invites = new NationInvites(conn, id, safe);
+		this.cities = new NationCities(conn, id, safe);
+		updatables.add(cosmetic);
+		updatables.add(domestic);
+		updatables.add(economy);
+		updatables.add(foreign);
+		updatables.add(military);
+		updatables.add(tech);
+		updatables.add(policy);
+		updatables.add(army);
 		getProduction.setInt(1, id);
 		ResultSet resultsProduction = getProduction.executeQuery();
 		int usedFactories = 0;
@@ -231,10 +252,8 @@ public class Nation
 		}
 		this.freeFactories = getTotalMilitaryFactories() - usedFactories;
 		this.id = id;
-		this.connection = connection;
+		this.conn = conn;
 		this.safe = safe;
-		PreparedStatement attacker = connection.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1");
-		PreparedStatement defender = connection.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1");
 		attacker.setInt(1, this.id);
 		defender.setInt(1, this.id);
 		ResultSet resultsAttacker = attacker.executeQuery();
@@ -256,7 +275,7 @@ public class Nation
 			this.defensive = resultsDefender.getInt(1);
 		}
 
-		PreparedStatement treatyCheck = connection.prepareStatement("SELECT alliance_id FROM cloc_treaties_members " +
+		PreparedStatement treatyCheck = conn.prepareStatement("SELECT alliance_id FROM cloc_treaties_members " +
 				"WHERE nation_id=?");
 		treatyCheck.setInt(1, this.id);
 		ResultSet resultsTreaty = treatyCheck.executeQuery();
@@ -266,20 +285,36 @@ public class Nation
 		}
 		else
 		{
-			treaty = new Treaty(connection, resultsTreaty.getInt(1), safe);
+			treaty = new Treaty(conn, resultsTreaty.getInt(1), safe);
 		}
-		getPower();
+	}
+
+	/**
+	 * Constructs a partial nation from a ResultSet
+	 * @param results The ResultSet to build the nation from
+	 */
+	public Nation(int id, ResultSet results) throws SQLException
+	{
+		this.id = id;
+		this.economy = new NationEconomy(id, results);
+		this.domestic = new NationDomestic(id, results);
+		this.cosmetic = new NationCosmetic(id, results);
+		this.foreign = new NationForeign(id, results);
+		this.military = new NationMilitary(id, results);
+		this.tech = new NationTech(id, results);
+		this.policy = new NationPolicy(id, results);
+		this.army = new NationArmy(id, results);
 	}
 
 	/**
 	 * Commits all changes made to this object
-	 * Put in the main Nation class instead of in the subclasses since they all share the same connection
+	 * Put in the main Nation class instead of in the subclasses since they all share the same conn
 	 *
 	 * @throws SQLException if something TQL related goes wrong
 	 */
 	public void commit() throws SQLException
 	{
-		connection.commit();
+		conn.commit();
 	}
 
 	/**
@@ -329,18 +364,18 @@ public class Nation
 	{
 		if((ignoreInvite) || (this.invites.getInvites().contains(id)))
 		{
-			PreparedStatement check = connection.prepareStatement("SELECT * FROM cloc_treaties_members WHERE nation_id=?");
+			PreparedStatement check = conn.prepareStatement("SELECT * FROM cloc_treaties_members WHERE nation_id=?");
 			check.setInt(1, this.id);
 			if(check.executeQuery().first())
 			{
 				leaveTreaty();
 			}
-			PreparedStatement join = connection.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
+			PreparedStatement join = conn.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
 			join.setInt(1, id);
 			join.setInt(2, this.id);
 			join.setBoolean(3, founder);
 			join.execute();
-			PreparedStatement deleteInvite = connection.prepareStatement("DELETE FROM cloc_treaty_invites WHERE nation_id=?");
+			PreparedStatement deleteInvite = conn.prepareStatement("DELETE FROM cloc_treaty_invites WHERE nation_id=?");
 			deleteInvite.setInt(1, this.id);
 			deleteInvite.execute();
 		}
@@ -352,10 +387,10 @@ public class Nation
 	 */
 	public void leaveTreaty() throws SQLException
 	{
-		PreparedStatement leave = connection.prepareStatement("DELETE FROM cloc_treaties_members WHERE nation_id=?");
+		PreparedStatement leave = conn.prepareStatement("DELETE FROM cloc_treaties_members WHERE nation_id=?");
 		leave.setInt(1, this.id);
 		leave.execute();
-		PreparedStatement emptyCheck = connection.prepareStatement("SELECT nation_id FROM cloc_treaties_members WHERE alliance_id=?");
+		PreparedStatement emptyCheck = conn.prepareStatement("SELECT nation_id FROM cloc_treaties_members WHERE alliance_id=?");
 		emptyCheck.setInt(1, this.treaty.getId());
 		ResultSet results = emptyCheck.executeQuery();
 		if(!results.first() && this.treaty != null)
@@ -532,7 +567,7 @@ public class Nation
 			employment += city.getTotalEmployment();
 		}
 		modifier += unemployment;
-		unemployment = Math.log((double) (employment - this.domestic.getPopulation()) / (double) this.domestic.getPopulation());
+		unemployment = BadMath.log((double) (employment - this.domestic.getPopulation()) / (double) this.domestic.getPopulation());
 		map.put("base", growth);
 		map.put("policies", modifier);
 		map.put("unemployment", unemployment);
@@ -937,37 +972,6 @@ public class Nation
 	}
 
 	/**
-	 * Calculates the total weapons production of all cities
-	 * Return value cached to save performance on multiple calls
-	 * LinkedHashMap contains the following keys:
-	 * <ul>
-	 *     <li>total (used exclusively for turn change)</li>
-	 *     <li>factories</li>
-	 *     <li>infrastructure</li>
-	 *     <li>net</li>
-	 * </ul>
-	 * @return A LinkedHashMap containing the total weapons production of this Nation
-	 */
-	public LinkedHashMap<String, Double> getTotalWeaponsProduction()
-	{
-		if(weaponProduction == null)
-		{
-			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			for(City city : this.getCities().getCities().values())
-			{
-				LinkedHashMap<String, Double> cityMap = city.getWeaponsProduction();
-				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
-				{
-					map.putIfAbsent(entry.getKey(), 0e0);
-					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
-				}
-			}
-			weaponProduction = map;
-		}
-		return weaponProduction;
-	}
-
-	/**
 	 * Calculates the total research production of all cities
 	 * Return value cached to save performance on multiple calls
 	 * LinkedHashMap contains the following keys:
@@ -1036,7 +1040,6 @@ public class Nation
 			map.put("steel", this.getTotalSteelProduction());
 			map.put("nitrogen", this.getTotalNitrogenProduction());
 			map.put("research", this.getTotalResearchProduction());
-			map.put("weapons", this.getTotalWeaponsProduction());
 			allProductions = map;
 		}
 		return allProductions;
@@ -1090,7 +1093,7 @@ public class Nation
 	}
 
 	/**
-	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
+	 * Calculates the power of an army based on it's size, technology level, training, and artillery
 	 * @return The army's power
 	 */
 	public double getPower()
@@ -1257,18 +1260,42 @@ public class Nation
 
 	public void update() throws SQLException
 	{
-		cosmetic.update();
-		domestic.update();
-		economy.update();
-		foreign.update();
-		military.update();
-		army.update();
-		policy.update();
-		for(City city : cities.getCities().values())
+		PreparedStatement statement;
+		String sql;
+		SqlBuilder builder = new SqlBuilder();
+		ArrayList<Object> values = new ArrayList<>();
+		for(Updatable updatable : updatables)
 		{
-			city.update();
+			if(!updatable.getFields().isEmpty())
+			{
+				builder.addTables(updatable.getTableName());
+				builder.addWheres(updatable.getTableName());
+				for(HashMap.Entry<String, Object> entry : updatable.getFields().entrySet())
+				{
+					builder.addFields(entry.getKey());
+					values.add(entry.getValue());
+				}
+			}
 		}
+		sql = builder.build();
+		statement = conn.prepareStatement(sql);
+		int index = 1;
+		for(Object object : values)
+		{
+			if(object instanceof Integer)
+				statement.setInt(index, (Integer) object);
+			else if(object instanceof Double)
+				statement.setDouble(index, (Double) object);
+			else if(object instanceof Long)
+				statement.setLong(index, (Long)object);
+			else
+				statement.setString(index, object.toString());
+			index++;
+		}
+		statement.setInt(index, id);
+		cities.update();
 		updateAllProduction();
+		statement.execute();
 	}
 
 	/**
@@ -1371,10 +1398,15 @@ public class Nation
 		}
 		statement += "WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id";
 		statement = statement.replace(", WHERE", " WHERE");
-		PreparedStatement update = connection.prepareStatement(statement);
+		PreparedStatement update = conn.prepareStatement(statement);
 		update.setInt(1, this.id);
 		update.setInt(2, this.id);
 		update.execute();
+	}
+
+	public String getNationUrl()
+	{
+		return "<a href=\"/nation/" + id + "\">" + this.cosmetic.getNationName() + "</a>";
 	}
 
 	/**
@@ -1395,7 +1427,7 @@ public class Nation
 	{
 		for(Production production : production.values())
 		{
-			production.update(this.connection);
+			production.update(this.conn);
 		}
 	}
 

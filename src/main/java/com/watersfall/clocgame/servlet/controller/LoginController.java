@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Md5;
 
 import javax.servlet.ServletException;

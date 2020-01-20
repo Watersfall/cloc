@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
 import java.sql.Connection;
@@ -45,7 +45,7 @@ public class DecisionActions
 	 */
 	public static String economy(Connection connection, int user, int value) throws SQLException
 	{
-		if(value > 4 || value < 0)
+		if(value > TOTAL_WAR_ECONOMY || value < SOCIALIST_ECONOMY)
 		{
 			return Responses.genericError();
 		}
@@ -67,7 +67,7 @@ public class DecisionActions
 			else
 			{
 				nation.getPolicy().setEconomy(value);
-				nation.getPolicy().update();
+				nation.update();
 				return Responses.policyUpdated();
 			}
 		}
@@ -84,7 +84,7 @@ public class DecisionActions
 	 */
 	public static String manpower(Connection connection, int user, int value) throws SQLException
 	{
-		if(value > 4 || value < 0)
+		if(value > SCRAPING_THE_BARREL_MANPOWER || value < DISARMED_MANPOWER)
 		{
 			return Responses.genericError();
 		}
@@ -106,7 +106,7 @@ public class DecisionActions
 			else
 			{
 				nation.getPolicy().setManpower(value);
-				nation.getPolicy().update();
+				nation.update();
 				return Responses.policyUpdated();
 			}
 		}
@@ -123,7 +123,7 @@ public class DecisionActions
 	 */
 	public static String food(Connection connection, int user, int value) throws SQLException
 	{
-		if(value > 2 || value < 0)
+		if(value > FREE_FOOD || value < RATIONING_FOOD)
 		{
 			return Responses.genericError();
 		}
@@ -141,7 +141,7 @@ public class DecisionActions
 			else
 			{
 				nation.getPolicy().setFood(value);
-				nation.getPolicy().update();
+				nation.update();
 				return Responses.policyUpdated();
 			}
 		}

@@ -5,7 +5,7 @@ package com.watersfall.clocgame.math;
  *
  * ...Doesn't mean I'm gonna stop though
  */
-public class Math
+public class BadMath
 {
 	/**
 	 * A log function that does the wrong thing with negatives
@@ -18,9 +18,9 @@ public class Math
 		if(x <= 1 && x >= -1)
 			return 0;
 		else if(x < 0)
-			return -(java.lang.Math.log(java.lang.Math.abs(x)));
+			return -(Math.log(Math.abs(x)));
 		else
-			return java.lang.Math.log(x);
+			return Math.log(x);
 	}
 
 	/**
@@ -34,9 +34,9 @@ public class Math
 		if(x <= 1 && x >= -1)
 			return 0;
 		else if(x < 0)
-			return -(java.lang.Math.log10(java.lang.Math.abs(x)));
+			return -(Math.log10(Math.abs(x)));
 		else
-			return java.lang.Math.log10(x);
+			return Math.log10(x);
 	}
 
 	/**
@@ -48,9 +48,9 @@ public class Math
 	public static double sqrt(double x)
 	{
 		if(x < 0)
-			return -java.lang.Math.sqrt(abs(x));
+			return -Math.sqrt(abs(x));
 		else
-			return java.lang.Math.sqrt(x);
+			return Math.sqrt(x);
 	}
 
 	/**
@@ -76,9 +76,9 @@ public class Math
 	public static double pow(double e, double x)
 	{
 		if(e < 0 && x % 2 == 0)
-			return -java.lang.Math.pow(e, x);
+			return -Math.pow(e, x);
 		else
-			return java.lang.Math.pow(e, x);
+			return Math.pow(e, x);
 	}
 
 }

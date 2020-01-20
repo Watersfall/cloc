@@ -1,15 +1,14 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NationDomestic extends NationBase
+public class NationDomestic extends Updatable
 {
+	public static final String TABLE_NAME = "cloc_domestic";
 	private @Getter int land;
 	private @Getter int government;
 	private @Getter int approval;
@@ -18,21 +17,9 @@ public class NationDomestic extends NationBase
 	private @Getter long manpowerLost;
 	private @Getter int rebels;
 
-	public NationDomestic(int land, int government, int approval, int stability, long population, long manpowerLost, int rebels)
+	public NationDomestic(int id, ResultSet results) throws SQLException
 	{
-		this.land = land;
-		this.government = government;
-		this.approval = approval;
-		this.stability = stability;
-		this.population = population;
-		this.manpowerLost = manpowerLost;
-		this.rebels = rebels;
-	}
-
-	public NationDomestic(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
-	{
-		super(connection, id, safe);
-		this.results = results;
+		super(TABLE_NAME, id, results);
 		this.land = results.getInt("land");
 		this.government = results.getInt("government");
 		this.approval = results.getInt("approval");
@@ -42,121 +29,73 @@ public class NationDomestic extends NationBase
 		this.rebels = results.getInt("rebels");
 	}
 
-	public NationDomestic(Connection connection, int id, boolean safe) throws SQLException
-	{
-		super(connection, id, safe);
-		PreparedStatement read;
-		if(safe)
-		{
-			read = connection.prepareStatement("SELECT land, government, approval, stability, population, rebels, lost_manpower, id " + "FROM cloc_domestic " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			read = connection.prepareStatement("SELECT land, government, approval, stability, population, rebels, lost_manpower, id " + "FROM cloc_domestic " + "WHERE id=?");
-		}
-		read.setInt(1, id);
-		this.results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new NationNotFoundException("No nation with that id!");
-		}
-		else
-		{
-			this.connection = connection;
-			this.id = id;
-			this.safe = safe;
-			this.land = results.getInt(1);
-			this.government = results.getInt(2);
-			this.approval = results.getInt(3);
-			this.stability = results.getInt(4);
-			this.population = results.getLong(5);
-			this.rebels = results.getInt(6);
-			this.manpowerLost = results.getInt(7);
-		}
-	}
-
-	public void setLand(int land) throws SQLException
+	public void setLand(int land)
 	{
 		if(land < 0)
-		{
 			land = 0;
-		}
-		results.updateInt("land", land);
+		else if(land > 2000000000)
+			land = 2000000000;
+		this.addField("land", land);
+		this.land = land;
 	}
 
-	public void setGovernment(int government) throws SQLException
+	public void setGovernment(int government)
 	{
 		if(government < 0)
-		{
 			government = 0;
-		}
 		else if(government > 100)
-		{
 			government = 100;
-		}
+		this.addField("government", government);
 		this.government = government;
-		results.updateInt("government", government);
 	}
 
-	public void setApproval(int approval) throws SQLException
+	public void setApproval(int approval)
 	{
 		if(approval < 0)
-		{
 			approval = 0;
-		}
 		else if(approval > 100)
-		{
 			approval = 100;
-		}
+		this.addField("approval", approval);
 		this.approval = approval;
-		results.updateInt("approval", approval);
 	}
 
-	public void setStability(int stability) throws SQLException
+	public void setStability(int stability)
 	{
 		if(stability < 0)
-		{
 			stability = 0;
-		}
 		else if(stability > 100)
-		{
 			stability = 100;
-		}
+		this.addField("stability", stability);
 		this.stability = stability;
-		results.updateInt("stability", stability);
 	}
 
-	public void setPopulation(long population) throws SQLException
+	public void setPopulation(long population)
 	{
-		if(population < 1)
-		{
-			population = 1;
-		}
+		if(population < 10000)
+			population = 10000;
+		else if(population > 1000000000000000L)
+			population = 1000000000000000L;
+		this.addField("population", population);
 		this.population = population;
-		results.updateDouble("population", population);
 	}
 
-	public void setRebels(int rebels) throws SQLException
+	public void setManpowerLost(long manpowerLost)
+	{
+		if(manpowerLost < 0)
+			manpowerLost = 0;
+		else if(manpowerLost > 1000000000000000L)
+			manpowerLost = 1000000000000000L;
+		this.addField("lost_manpower", manpowerLost);
+		this.manpowerLost = manpowerLost;
+	}
+
+	public void setRebels(int rebels)
 	{
 		if(rebels < 0)
-		{
 			rebels = 0;
-		}
 		else if(rebels > 100)
-		{
 			rebels = 100;
-		}
+		this.addField("rebels", rebels);
 		this.rebels = rebels;
-		results.updateInt("rebels", rebels);
-	}
-
-	public void setManpowerLost(long lostManpower) throws SQLException
-	{
-		if(lostManpower < 0)
-		{
-			lostManpower = 0;
-		}
-		this.manpowerLost = lostManpower;
-		results.updateLong("lost_manpower", lostManpower);
 	}
 }

@@ -1,68 +1,34 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NationForeign extends NationBase
+public class NationForeign extends Updatable
 {
-
+	public static final String TABLE_NAME = "cloc_foreign";
 	private @Getter Region region;
 	private @Getter int alignment;
 
-	public NationForeign(Region region, int alignment)
+	public NationForeign(int id, ResultSet results) throws SQLException
 	{
-		this.region = region;
-		this.alignment = alignment;
-	}
-
-	public NationForeign(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
-	{
-		super(connection, id, safe);
-		this.results = results;
+		super(TABLE_NAME, id, results);
 		this.region = Region.getFromName(results.getString("region"));
 		this.alignment = results.getInt("alignment");
 	}
 
-	public NationForeign(Connection connection, int id, boolean safe) throws SQLException
+	public void setRegion(Region region)
 	{
-		super(connection, id, safe);
-		PreparedStatement read;
-		if(safe)
-		{
-			read = connection.prepareStatement("SELECT region, alignment, id " + "FROM cloc_foreign " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			read = connection.prepareStatement("SELECT region, alignment, id " + "FROM cloc_foreign " + "WHERE id=?");
-		}
-		read.setInt(1, id);
-		this.results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new NationNotFoundException("No nation with that id!");
-		}
-		else
-		{
-			this.region = Region.getFromName(results.getString(1));
-			this.alignment = results.getInt(2);
-		}
-	}
-
-	public void setRegion(Region region) throws SQLException
-	{
+		this.addField("region", region);
 		this.region = region;
-		results.updateString("region", region.getName());
 	}
 
-	public void setAlignment(int alignment) throws SQLException
+	public void setAlignment(int alignment)
 	{
+		this.addField("alignment", alignment);
 		this.alignment = alignment;
-		results.updateInt("alignment", alignment);
 	}
 }

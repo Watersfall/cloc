@@ -24,15 +24,24 @@ public class TurnDay implements Runnable
 			{
 				int id = results.getInt(1);
 				Nation nation = new Nation(connection, id, true);
-				nation.getEconomy().setBudget(nation.getEconomy().getBudget() + nation.getBudgetChange());
-				nation.getDomestic().setPopulation(nation.getDomestic().getPopulation()
-						+ (long)(nation.getDomestic().getPopulation() * nation.getPopulationGrowth().get("total") / 7));
-				nation.processProduction();
-				nation.update();
+				try
+				{
+					nation.getEconomy().setBudget(nation.getEconomy().getBudget() + nation.getBudgetChange());
+					nation.getDomestic().setPopulation(nation.getDomestic().getPopulation()
+							+ (long)(nation.getDomestic().getPopulation() * nation.getPopulationGrowth().get("total") / 7));
+					nation.processProduction();
+					nation.update();
+				}
+				catch(SQLException e)
+				{
+					e.printStackTrace();
+					PreparedStatement statement = connection.prepareStatement("INSERT INTO cloc_news (sender, receiver, content, image) VALUES (1, ?, ?, '')");
+					statement.setInt(1, nation.getId());
+					statement.setString(2, e.getLocalizedMessage());
+					statement.execute();
+				}
 			}
-
 			connection.commit();
-
 		}
 		catch(SQLException e)
 		{

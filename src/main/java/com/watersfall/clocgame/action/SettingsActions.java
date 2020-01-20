@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
+import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
 import javax.imageio.ImageIO;
@@ -10,6 +10,7 @@ import javax.servlet.http.Part;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class SettingsActions
@@ -115,7 +116,7 @@ public class SettingsActions
 	}
 
 
-	public static String updateFlag(HttpServletRequest req, NationCosmetic cosmetic, Part flag) throws SQLException, IOException
+	public static String updateFlag(HttpServletRequest req, NationCosmetic cosmetic, Part flag, Connection conn) throws SQLException, IOException
 	{
 		BufferedImage image = ImageIO.read(flag.getInputStream());
 		String check = checkFlag(image);
@@ -127,12 +128,12 @@ public class SettingsActions
 		{
 			uploadFlag(req, image, cosmetic.getId());
 			cosmetic.setFlag(cosmetic.getId() + ".png");
-			cosmetic.update();
+			cosmetic.update(conn);
 			return Responses.updated("Flag");
 		}
 	}
 
-	public static String updatePortrait(HttpServletRequest req, NationCosmetic cosmetic, Part portrait) throws SQLException, IOException
+	public static String updatePortrait(HttpServletRequest req, NationCosmetic cosmetic, Part portrait, Connection conn) throws SQLException, IOException
 	{
 		BufferedImage image = ImageIO.read(portrait.getInputStream());
 		String check = checkPortrait(image);
@@ -144,12 +145,12 @@ public class SettingsActions
 		{
 			uploadPortrait(req, image, cosmetic.getId());
 			cosmetic.setPortrait(cosmetic.getId() + ".png");
-			cosmetic.update();
+			cosmetic.update(conn);
 			return Responses.updated("Portrait");
 		}
 	}
 
-	public static String updateNationTitle(NationCosmetic cosmetic, String title) throws SQLException
+	public static String updateNationTitle(NationCosmetic cosmetic, String title, Connection conn) throws SQLException
 	{
 		String check = checkNationTitle(title);
 		if(check != null)
@@ -159,12 +160,12 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setNationTitle(title);
-			cosmetic.update();
+			cosmetic.update(conn);
 			return Responses.updated("Nation Title");
 		}
 	}
 
-	public static String updateLeaderTitle(NationCosmetic cosmetic, String title) throws SQLException
+	public static String updateLeaderTitle(NationCosmetic cosmetic, String title, Connection conn) throws SQLException
 	{
 		String check = checkLeaderTitle(title);
 		if(check != null)
@@ -174,12 +175,12 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setLeaderTitle(title);
-			cosmetic.update();
+			cosmetic.update(conn);
 			return Responses.updated("Leader Title");
 		}
 	}
 
-	public static String updateDescription(NationCosmetic cosmetic, String description) throws SQLException
+	public static String updateDescription(NationCosmetic cosmetic, String description, Connection conn) throws SQLException
 	{
 		String check = checkDescription(description);
 		if(check != null)
@@ -189,12 +190,12 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setDescription(description);
-			cosmetic.update();
+			cosmetic.update(conn);
 			return Responses.updated("Description");
 		}
 	}
 
-	public static String updateAll(NationCosmetic cosmetic, String nationTitle, String leaderTitle, String description) throws SQLException
+	public static String updateAll(NationCosmetic cosmetic, String nationTitle, String leaderTitle, String description, Connection conn) throws SQLException
 	{
 		String checkNationTitle = checkNationTitle(nationTitle);
 		if(checkNationTitle != null)
@@ -214,7 +215,7 @@ public class SettingsActions
 		cosmetic.setNationTitle(nationTitle);
 		cosmetic.setLeaderTitle(leaderTitle);
 		cosmetic.setDescription(description);
-		cosmetic.update();
+		cosmetic.update(conn);
 		return Responses.updated();
 	}
 }

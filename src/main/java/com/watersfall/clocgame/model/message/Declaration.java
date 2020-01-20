@@ -1,8 +1,8 @@
 package com.watersfall.clocgame.model.message;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
+import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 
@@ -23,11 +23,17 @@ public class Declaration
 	public static ArrayList<Declaration> getDeclarations(Connection conn) throws SQLException
 	{
 		ArrayList<Declaration> list = new ArrayList<>();
-		PreparedStatement statement = conn.prepareStatement("SELECT id FROM cloc_declarations ORDER BY id DESC");
+		PreparedStatement statement = conn.prepareStatement(
+				"SELECT cloc_declarations.id, sender, sent, content, cloc_cosmetic.* " +
+				"FROM cloc_declarations, cloc_cosmetic WHERE cloc_cosmetic.id=sender " +
+				"ORDER BY cloc_declarations.id DESC");
 		ResultSet results = statement.executeQuery();
 		while(results.next())
 		{
-			list.add(new Declaration(conn, results.getInt(1)));
+			NationCosmetic cosmetic = new NationCosmetic(results.getInt("cloc_cosmetic.id"), results);
+			Declaration declaration = new Declaration(results.getInt("cloc_declarations.id"), cosmetic,
+					results.getInt("sent"), results.getString("content"));
+			list.add(declaration);
 		}
 		return list;
 	}
@@ -68,6 +74,14 @@ public class Declaration
 		this.id = results.getInt("id");
 		this.sent = results.getInt("sent");
 		this.content = results.getString("content");
-		this.sender = new NationCosmetic(conn, results.getInt("sender"), false);
+		this.sender = new NationCosmetic(results.getInt("sender"), results);
+	}
+
+	public Declaration(int id, NationCosmetic sender, int sent, String content)
+	{
+		this.id = id;
+		this.sender = sender;
+		this.sent = sent;
+		this.content = content;
 	}
 }

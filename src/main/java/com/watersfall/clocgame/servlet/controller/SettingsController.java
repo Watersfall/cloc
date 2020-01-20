@@ -1,11 +1,10 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.SettingsActions;
-import com.watersfall.clocgame.constants.Responses;
-import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -16,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/settings/"})
 @MultipartConfig(maxFileSize = 1024 * 1024, fileSizeThreshold = 1024 * 1024)
@@ -33,87 +30,44 @@ public class SettingsController extends HttpServlet
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		PrintWriter writer = resp.getWriter();
-		String action = req.getParameter("action");
+		String temp = req.getParameter("action");
 		if(req.getContentType().contains("multipart/form-data"))
 		{
 			if(req.getPart("flag") != null)
 			{
-				action = "flag";
+				temp = "flag";
 			}
 			else if(req.getPart("portrait") != null)
 			{
-				action = "portrait";
+				temp = "portrait";
 			}
 		}
-		Connection connection = null;
-		try
-		{
-			connection = Database.getDataSource().getConnection();
+		String action = temp;
+		Executor exec = (conn) -> {
 			int user = UserUtils.getUser(req);
-			NationCosmetic cosmetic = new NationCosmetic(connection, user, true);
+			NationCosmetic cosmetic = NationCosmetic.getNationCosmetic(user, conn);
 			switch(action)
 			{
 				case "flag":
-					writer.append(SettingsActions.updateFlag(req, cosmetic, req.getPart("flag")));
-					break;
+					return SettingsActions.updateFlag(req, cosmetic, req.getPart("flag"), conn);
 				case "portrait":
-					writer.append(SettingsActions.updatePortrait(req, cosmetic, req.getPart("portrait")));
-					break;
+					return SettingsActions.updatePortrait(req, cosmetic, req.getPart("portrait"), conn);
 				case "nationTitle":
-					writer.append(SettingsActions.updateNationTitle(cosmetic, req.getParameter("nationTitle")));
-					break;
+					return SettingsActions.updateNationTitle(cosmetic, req.getParameter("nationTitle"), conn);
 				case "leaderTitle":
-					writer.append(SettingsActions.updateLeaderTitle(cosmetic, req.getParameter("leaderTitle")));
-					break;
+					return SettingsActions.updateLeaderTitle(cosmetic, req.getParameter("leaderTitle"), conn);
 				case "description":
-					writer.append(SettingsActions.updateDescription(cosmetic, req.getParameter("description")));
-					break;
+					return SettingsActions.updateDescription(cosmetic, req.getParameter("description"), conn);
 				case "all":
-					writer.append(SettingsActions.updateAll(cosmetic,
+					return SettingsActions.updateAll(cosmetic,
 							req.getParameter("nationTitle"),
 							req.getParameter("leaderTitle"),
-							req.getParameter("description")
-					));
-					break;
+							req.getParameter("description"),
+							conn);
 				default:
-					writer.append(Responses.genericError());
+					return Responses.genericError();
 			}
-			connection.commit();
-		}
-		catch(SQLException e)
-		{
-			try
-			{
-				connection.rollback();
-				writer.append(Responses.genericException(e));
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-		}
-		catch(NotLoggedInException e)
-		{
-			writer.append(Responses.noLogin());
-		}
-		catch(NullPointerException e)
-		{
-			writer.append(Responses.genericError());
-		}
-		catch(NationNotFoundException e)
-		{
-			writer.append(Responses.noNation());
-		}
-		finally
-		{
-			try
-			{
-				connection.close();
-			}
-			catch(Exception e)
-			{
-				//Ignore
-			}
-		}
+		};
+		writer.append(Action.doAction(exec));
 	}
 }

@@ -1,11 +1,9 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.CityActions;
-import com.watersfall.clocgame.constants.Responses;
-import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.CityNotFoundException;
-import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -16,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = "/decision/city/*")
@@ -35,126 +31,56 @@ public class CityDecisionController extends HttpServlet
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		if(url.get("decision") == null || url.get("id") == null)
-		{
-			super.doPost(req, resp);
-		}
-		Connection conn = null;
 		PrintWriter writer = resp.getWriter();
-		try
-		{
-			int id = Integer.parseInt(url.get("id"));
+		Executor executor = (conn) -> {
 			int user = UserUtils.getUser(req);
-			conn = Database.getDataSource().getConnection();
+			int id = Integer.parseInt(url.get("id"));
 			switch(url.get("decision"))
 			{
 				case "coalmine":
-					writer.append(CityActions.coalMine(conn, user, id));
-					break;
+					return CityActions.coalMine(conn, user, id);
 				case "ironmine":
-					writer.append(CityActions.ironMine(conn, user, id));
-					break;
+					return CityActions.ironMine(conn, user, id);
 				case "drill":
-					writer.append(CityActions.drill(conn, user, id));
-					break;
+					return CityActions.drill(conn, user, id);
 				case "industrialize":
-					writer.append(CityActions.industrialize(conn, user, id));
-					break;
+					return CityActions.industrialize(conn, user, id);
 				case "militarize":
-					writer.append(CityActions.militarize(conn, user, id));
-					break;
+					return CityActions.militarize(conn, user, id);
 				case "nitrogenplant":
-					writer.append(CityActions.nitrogen(conn, user, id));
-					break;
+					return CityActions.nitrogen(conn, user, id);
 				case "university":
-					writer.append(CityActions.university(conn, user, id));
-					break;
+					return CityActions.university(conn, user, id);
 				case "port":
-					writer.append(CityActions.port(conn, user, id));
-					break;
+					return CityActions.port(conn, user, id);
 				case "barrack":
-					writer.append(CityActions.barrack(conn, user, id));
-					break;
+					return CityActions.barrack(conn, user, id);
 				case "railroad":
-					writer.append(CityActions.railroad(conn, user, id));
-					break;
+					return CityActions.railroad(conn, user, id);
 				case "uncoalmine":
-					writer.append(CityActions.unCoalMine(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "coal_mines");
 				case "unironmine":
-					writer.append(CityActions.unIronMine(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "iron_mines");
 				case "undrill":
-					writer.append(CityActions.unDrill(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "oil_wells");
 				case "unindustrialize":
-					writer.append(CityActions.unIndustrialize(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "civilian_industry");
 				case "unmilitarize":
-					writer.append(CityActions.unMilitarize(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "military_industry");
 				case "unnitrogenplant":
-					writer.append(CityActions.unNitrogen(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "nitrogen_industry");
 				case "ununiversity":
-					writer.append(CityActions.unUniversity(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "universities");
 				case "unport":
-					writer.append(CityActions.unPort(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "ports");
 				case "unbarrack":
-					writer.append(CityActions.unBarrack(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "barracks");
 				case "unrailroad":
-					writer.append(CityActions.unRailroad(conn, user, id));
-					break;
+					return CityActions.remove(conn, user, id, "railroads");
 				default:
-					super.doPost(req, resp);
-					break;
+					return Responses.genericError();
 			}
-
-			conn.commit();
-		}
-		catch(SQLException e)
-		{
-			try
-			{
-				conn.rollback();
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-			writer.append(Responses.genericException(e));
-			e.printStackTrace();
-		}
-		catch(NotLoggedInException e)
-		{
-			writer.append(Responses.noLogin());
-		}
-		catch(NumberFormatException | NullPointerException e)
-		{
-			writer.append(Responses.genericError());
-			e.printStackTrace();
-		}
-		catch(NationNotFoundException e)
-		{
-			writer.append(Responses.noNation());
-		}
-		catch(CityNotFoundException e)
-		{
-			writer.append(Responses.noCity());
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-		}
+		};
+		writer.append(Action.doAction(executor));
 	}
 }

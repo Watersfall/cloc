@@ -11,7 +11,7 @@ public class Database
 	private static HikariDataSource createDatabase()
 	{
 		database = new HikariDataSource();
-		database.setJdbcUrl("jdbc:mysql://localhost/cloc");
+		database.setJdbcUrl("jdbc:mysql://localhost/cloc?allowMultiQueries=true&rewriteBatchedStatements=true");
 		database.setUsername("root");
 		database.setPassword(System.getenv("CLOC_PASS"));
 		database.setMaximumPoolSize(12);

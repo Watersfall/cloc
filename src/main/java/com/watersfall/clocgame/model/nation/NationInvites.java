@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.constants.Responses;
+import com.watersfall.clocgame.text.Responses;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -9,22 +9,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class NationInvites extends NationBase
+public class NationInvites
 {
+	private @Getter Connection conn;
+	private @Getter int id;
+	private @Getter boolean safe;
+	private @Getter ResultSet results;
 	private @Getter ArrayList<Integer> invites;
 
 	public NationInvites(Connection conn, int id, boolean safe) throws SQLException
 	{
-		super(conn, id, safe);
+		this.conn = conn;
+		this.id = id;
+		this.safe = safe;
 		invites = new ArrayList<>();
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT alliance_id, id " + "FROM cloc_treaty_invites " + "WHERE nation_id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = conn.prepareStatement("SELECT alliance_id, id " + "FROM cloc_treaty_invites " + "WHERE nation_id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT alliance_id, id " + "FROM cloc_treaty_invites " + "WHERE nation_id=?");
+			read = conn.prepareStatement("SELECT alliance_id, id " + "FROM cloc_treaty_invites " + "WHERE nation_id=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -42,7 +48,7 @@ public class NationInvites extends NationBase
 	 */
 	public String reject(Integer alliance) throws SQLException
 	{
-		PreparedStatement delete = connection.prepareStatement("DELETE FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
+		PreparedStatement delete = conn.prepareStatement("DELETE FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
 		delete.setInt(1, this.id);
 		delete.setInt(2, alliance);
 		int deleted = delete.executeUpdate();
@@ -84,7 +90,7 @@ public class NationInvites extends NationBase
 	 */
 	public String invite(Integer id) throws SQLException
 	{
-		PreparedStatement check = connection.prepareStatement("SELECT id FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
+		PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
 		check.setInt(1, this.id);
 		check.setInt(2, id);
 		ResultSet results = check.executeQuery();
@@ -94,7 +100,7 @@ public class NationInvites extends NationBase
 		}
 		else
 		{
-			PreparedStatement invite = connection.prepareStatement("INSERT INTO cloc_treaty_invites (alliance_id, nation_id) VALUES (?,?)");
+			PreparedStatement invite = conn.prepareStatement("INSERT INTO cloc_treaty_invites (alliance_id, nation_id) VALUES (?,?)");
 			invite.setInt(1, id);
 			invite.setInt(2, this.id);
 			invite.execute();

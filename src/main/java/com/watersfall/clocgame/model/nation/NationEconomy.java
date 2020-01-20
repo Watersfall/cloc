@@ -1,15 +1,14 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NationEconomy extends NationBase
+public class NationEconomy extends Updatable
 {
+	public static final String TABLE_NAME = "cloc_economy";
 	private @Getter int economic;
 	private @Getter double gdp;
 	private @Getter double growth;
@@ -22,25 +21,9 @@ public class NationEconomy extends NationBase
 	private @Getter double nitrogen;
 	private @Getter double research;
 
-	public NationEconomy(int economic, double gdp, double growth, double budget, double iron, double coal, double oil, double food, double steel, double nitrogen, double research)
+	public NationEconomy(int id, ResultSet results) throws SQLException
 	{
-		this.economic = economic;
-		this.gdp = gdp;
-		this.growth = growth;
-		this.budget = budget;
-		this.iron = iron;
-		this.coal = coal;
-		this.oil = oil;
-		this.food = food;
-		this.steel = steel;
-		this.nitrogen = nitrogen;
-		this.research = research;
-	}
-
-	public NationEconomy(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
-	{
-		super(connection, id, safe);
-		this.results = results;
+		super(TABLE_NAME, id, results);
 		this.economic = results.getInt("economic");
 		this.gdp = results.getDouble("gdp");
 		this.growth = results.getDouble("growth");
@@ -54,142 +37,105 @@ public class NationEconomy extends NationBase
 		this.research = results.getDouble("research");
 	}
 
-	public NationEconomy(Connection connection, int id, boolean safe) throws SQLException
+	public void setEconomic(int economic)
 	{
-		super(connection, id, safe);
-		PreparedStatement read;
-		if(safe)
-		{
-			read = connection.prepareStatement("SELECT economic, gdp, growth, budget, iron, coal, oil, food, steel, nitrogen, research, id " + "FROM cloc_economy " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			read = connection.prepareStatement("SELECT economic, gdp, growth, budget, iron, coal, oil, food, steel, nitrogen, research, id " + "FROM cloc_economy " + "WHERE id=?");
-		}
-		read.setInt(1, id);
-		this.results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new NationNotFoundException("No nation with that id!");
-		}
-		else
-		{
-			this.connection = connection;
-			this.id = id;
-			this.safe = safe;
-			this.economic = results.getInt(1);
-			this.gdp = results.getDouble(2);
-			this.growth = results.getDouble(3);
-			this.budget = results.getDouble(4);
-			this.iron = results.getDouble(5);
-			this.coal = results.getDouble(6);
-			this.oil = results.getDouble(7);
-			this.food = results.getDouble(8);
-			this.steel = results.getDouble(9);
-			this.nitrogen = results.getDouble(10);
-			this.research = results.getDouble(11);
-		}
-	}
-
-	public void setEconomic(int economic) throws SQLException
-	{
-		if(economic < 0)
-		{
-			economic = 0;
-		}
-		else if(economic > 100)
-		{
-			economic = 100;
-		}
+		this.addField("economic", economic);
 		this.economic = economic;
-		results.updateInt("economic", economic);
 	}
 
-	public void setGdp(double gdp) throws SQLException
+	public void setGdp(double gdp)
 	{
-		if(gdp < 0)
-		{
-			gdp = 0;
-		}
+		if(gdp < 100)
+			gdp = 100;
+		else if(gdp >= 999999999999.00)
+			gdp = 999999999999.00;
+		this.addField("gdp", gdp);
 		this.gdp = gdp;
-		results.updateDouble("gdp", gdp);
 	}
 
-	public void setGrowth(double growth) throws SQLException
+	public void setGrowth(double growth)
 	{
+		if(growth >= 999999999999.00)
+			growth = 999999999999.00;
+		this.addField("growth", growth);
 		this.growth = growth;
-		results.updateDouble("growth", growth);
 	}
 
-	public void setBudget(double budget) throws SQLException
+	public void setBudget(double budget)
 	{
+		if(budget >= 999999999999.00)
+			budget = 999999999999.00;
+		this.addField("budget", budget);
 		this.budget = budget;
-		results.updateDouble("budget", budget);
 	}
 
-	public void setIron(double iron) throws SQLException
+	public void setIron(double iron)
 	{
 		if(iron < 0)
-		{
 			iron = 0;
-		}
+		else if(iron >= 999999999999.00)
+			iron = 999999999999.00;
+		this.addField("iron", iron);
 		this.iron = iron;
-		results.updateDouble("iron", iron);
 	}
 
-	public void setCoal(double coal) throws SQLException
+	public void setCoal(double coal)
 	{
 		if(coal < 0)
-		{
 			coal = 0;
-		}
+		else if(coal >= 999999999999.00)
+			coal = 999999999999.00;
+		this.addField("coal", coal);
 		this.coal = coal;
-		results.updateDouble("coal", coal);
 	}
 
-	public void setOil(double oil) throws SQLException
+	public void setOil(double oil)
 	{
+		if(oil < 0)
+			oil = 0;
+		else if(oil >= 999999999999.00)
+			oil = 999999999999.00;
+		this.addField("oil", oil);
 		this.oil = oil;
-		results.updateDouble("oil", oil);
 	}
 
-	public void setFood(double food) throws SQLException
+	public void setFood(double food)
 	{
 		if(food < 0)
-		{
 			food = 0;
-		}
+		else if(food >= 999999999999.00)
+			food = 999999999999.00;
+		this.addField("food", food);
 		this.food = food;
-		results.updateDouble("food", food);
 	}
 
-	public void setSteel(double steel) throws SQLException
+	public void setSteel(double steel)
 	{
 		if(steel < 0)
-		{
 			steel = 0;
-		}
+		else if(steel >= 999999999999.00)
+			steel = 999999999999.00;
+		this.addField("steel", steel);
 		this.steel = steel;
-		results.updateDouble("steel", steel);
 	}
 
-	public void setNitrogen(double nitrogen) throws SQLException
+	public void setNitrogen(double nitrogen)
 	{
 		if(nitrogen < 0)
-		{
 			nitrogen = 0;
-		}
+		else if(nitrogen >= 999999999999.00)
+			nitrogen = 999999999999.00;
+		this.addField("nitrogen", nitrogen);
 		this.nitrogen = nitrogen;
-		results.updateDouble("nitrogen", nitrogen);
 	}
 
-	public void setResearch(double research) throws SQLException
+	public void setResearch(double research)
 	{
 		if(research < 0)
-		{
 			research = 0;
-		}
+		if(research >= 999999999999.00)
+			research = 999999999999.00;
+		this.addField("research", research);
 		this.research = research;
-		results.updateDouble("research", research);
 	}
 }

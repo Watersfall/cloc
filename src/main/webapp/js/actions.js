@@ -189,18 +189,21 @@ function research(tech)
 function updateTechs()
 {
 	let url = new URL(window.location.href);
-	let category = url.pathname.substring(url.pathname.indexOf("/tree/") + 6);
-	let xhttp = new XMLHttpRequest();
-	xhttp.open("GET", context + "/techtree/" + category, true);
-	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	xhttp.send();
-	xhttp.onreadystatechange = function()
+	if(url.pathname.indexOf("/tree/") !== -1)
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		let category = url.pathname.substring(url.pathname.indexOf("/tree/") + 6);
+		let xhttp = new XMLHttpRequest();
+		xhttp.open("GET", context + "/techtree/" + category, true);
+		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhttp.send();
+		xhttp.onreadystatechange = function()
 		{
-			document.getElementById("techTree").innerHTML = xhttp.responseText;
-		}
-	};
+			if(xhttp.readyState === 4 && xhttp.status === 200)
+			{
+				document.getElementById("techTree").innerHTML = xhttp.responseText;
+			}
+		};
+	}
 }
 
 function updateTreaty(attribute, value)
@@ -318,7 +321,7 @@ function sendProduction(id, num)
 	displayResults();
 	let production = document.getElementById("change" + id).value;
 	let url = context + "/production/" + id;
-	let params = "factories=" + num + "&production=" + production;
+	let params = "action=update&factories=" + num + "&production=" + production;
 	ajax(url, params);
 }
 
@@ -326,7 +329,7 @@ function deleteProduction(id)
 {
 	displayResults();
 	let url = context + "/production/" + id;
-	let params = "delete=" + id;
+	let params = "action=delete&delete=" + id;
 	ajax(url, params);
 	let element = document.getElementsByClassName("id=" + id);
 	element[0].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = 'none';
@@ -335,7 +338,7 @@ function deleteProduction(id)
 function createProduction()
 {
 	let url = context + "/production/0";
-	let params = "new=1";
+	let params = "action=new";
 	let xhttp = new XMLHttpRequest();
 	xhttp.open("POST", url, true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

@@ -1,11 +1,9 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.PolicyActions;
-import com.watersfall.clocgame.constants.Responses;
-import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.CityNotFoundException;
-import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -16,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = "/decision/*")
@@ -35,103 +31,41 @@ public class DecisionController extends HttpServlet
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		if(url.get("decision") == null)
-		{
-			super.doPost(req, resp);
-		}
-		Connection conn = null;
 		PrintWriter writer = resp.getWriter();
-		try
-		{
-			conn = Database.getDataSource().getConnection();
+		Executor executor = (conn) -> {
 			int user = UserUtils.getUser(req);
 			switch(url.get("decision"))
 			{
 				case "freemoneycapitalist":
-					writer.append(PolicyActions.freeMoneyCapitalist(conn, user));
-					break;
+					return PolicyActions.freeMoneyCapitalist(conn, user);
 				case "freemoneycommunist":
-					writer.append(PolicyActions.freeMoneyCommunist(conn, user));
-					break;
+					return PolicyActions.freeMoneyCommunist(conn, user);
 				case "crackdown":
-					writer.append(PolicyActions.arrest(conn, user));
-					break;
+					return PolicyActions.arrest(conn, user);
 				case "free":
-					writer.append(PolicyActions.free(conn, user));
-					break;
+					return PolicyActions.free(conn, user);
 				case "landclearance":
-					writer.append(PolicyActions.landClearance(conn, user));
-					break;
+					return PolicyActions.landClearance(conn, user);
 				case "propaganda":
-					writer.append(PolicyActions.propaganda(conn, user));
-					break;
+					return PolicyActions.propaganda(conn, user);
 				case "warpropaganda":
-					writer.append(PolicyActions.warPropaganda(conn, user));
-					break;
+					return PolicyActions.warPropaganda(conn, user);
 				case "alignentente":
-					writer.append(PolicyActions.alignEntente(conn, user));
-					break;
+					return PolicyActions.alignEntente(conn, user);
 				case "alignneutral":
-					writer.append(PolicyActions.alignNeutral(conn, user));
-					break;
+					return PolicyActions.alignNeutral(conn, user);
 				case "aligncentral":
-					writer.append(PolicyActions.alignCentralPowers(conn, user));
-					break;
+					return PolicyActions.alignCentralPowers(conn, user);
 				case "conscript":
-					writer.append(PolicyActions.conscript(conn, user));
-					break;
+					return PolicyActions.conscript(conn, user);
 				case "train":
-					writer.append(PolicyActions.train(conn, user));
-					break;
+					return PolicyActions.train(conn, user);
 				case "deconscript":
-					writer.append(PolicyActions.deconscript(conn, user));
-					break;
+					return PolicyActions.deconscript(conn, user);
 				default:
-					super.doGet(req, resp);
-					break;
+					return Responses.genericError();
 			}
-			conn.commit();
-		}
-		catch(SQLException e)
-		{
-			try
-			{
-				conn.rollback();
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-			writer.append(Responses.genericException(e));
-			e.printStackTrace();
-		}
-		catch(NotLoggedInException e)
-		{
-			writer.append(Responses.noLogin());
-		}
-		catch(NumberFormatException | NullPointerException e)
-		{
-			writer.append(Responses.genericError());
-			e.printStackTrace();
-		}
-		catch(NationNotFoundException e)
-		{
-			writer.append(Responses.noNation());
-		}
-		catch(CityNotFoundException e)
-		{
-			writer.append(Responses.noCity());
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-		}
+		};
+		writer.append(Action.doAction(executor));
 	}
 }

@@ -1,9 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.constants.Costs;
-import com.watersfall.clocgame.constants.ProductionConstants;
-import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.model.CityType;
+import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -13,7 +11,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class City
+public class City extends Updatable
 {
 	public static final int EMPLOYMENT_MINE = 10000;
 	public static final int EMPLOYMENT_FACTORY = 100000;
@@ -21,8 +19,8 @@ public class City
 	public static final int LAND_MINE = 100;
 	public static final int LAND_FACTORY = 500;
 	public static final int LAND_UNIVERSITY = 750;
+	public static final String TABLE_NAME = "cloc_cities";
 
-	private @Getter int id;
 	private @Getter int owner;
 	private @Getter boolean capital;
 	private @Getter boolean coastal;
@@ -39,11 +37,19 @@ public class City
 	private @Getter String name;
 	private @Getter CityType type;
 	private @Getter int devastation;
-	private @Getter ResultSet results;
-	private @Getter int row;
 
-	public City(ResultSet results) throws SQLException
+	public static City getCity(Connection conn, int id) throws SQLException
 	{
+		PreparedStatement statement = conn.prepareStatement("SELECT * FROM cloc_cities WHERE id=?");
+		statement.setInt(1, id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return new City(id, results);
+	}
+
+	public City(int id, ResultSet results) throws SQLException
+	{
+		super(TABLE_NAME, id, results);
 		this.owner = results.getInt("owner");
 		this.capital = results.getBoolean("capital");
 		this.coastal = results.getBoolean("coastal");
@@ -58,212 +64,144 @@ public class City
 		this.industryNitrogen = results.getInt("nitrogen_industry");
 		this.universities = results.getInt("universities");
 		this.name = results.getString("name");
-		this.type = CityType.getByName(results.getString("type"));
+		this.type = CityType.valueOf(results.getString("type"));
 		this.devastation = results.getInt("devastation");
 		this.id = results.getInt("id");
 		this.results = results;
-		this.row = results.getRow();
-}
-
-	public City(Connection connection, int id, boolean safe) throws SQLException
-	{
-		PreparedStatement read;
-		if(safe)
-		{
-			read = connection.prepareStatement("SELECT owner, capital, coastal, railroads, ports, barracks, iron_mines, coal_mines, oil_wells, civilian_industry, military_industry, nitrogen_industry, universities, name, type, devastation, id " + "FROM cloc_cities " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			read = connection.prepareStatement("SELECT owner, capital, coastal, railroads, ports, barracks, iron_mines, coal_mines, oil_wells, civilian_industry, military_industry, nitrogen_industry, universities, name, type, devastation, id " + "FROM cloc_cities " + "WHERE id=?");
-		}
-		read.setInt(1, id);
-		this.results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new CityNotFoundException("No city with that id!");
-		}
-
-		this.owner = results.getInt("owner");
-		this.capital = results.getBoolean("capital");
-		this.coastal = results.getBoolean("coastal");
-		this.railroads = results.getInt("railroads");
-		this.ports = results.getInt("ports");
-		this.barracks = results.getInt("barracks");
-		this.ironMines = results.getInt("iron_mines");
-		this.coalMines = results.getInt("coal_mines");
-		this.oilWells = results.getInt("oil_wells");
-		this.industryCivilian = results.getInt("civilian_industry");
-		this.industryMilitary = results.getInt("military_industry");
-		this.industryNitrogen = results.getInt("nitrogen_industry");
-		this.universities = results.getInt("universities");
-		this.name = results.getString("name");
-		this.type = CityType.getByName(results.getString("type"));
-		this.devastation = results.getInt("devastation");
-		this.id = results.getInt("id");
-		this.row = results.getRow();
 	}
 
-	public void setCapital(boolean capital) throws SQLException
+	public void setCapital(boolean capital)
 	{
+		this.addField("capital", capital);
 		this.capital = capital;
-		results.updateBoolean("capital", capital);
 	}
 
-	public void setCoastal(boolean coastal) throws SQLException
+	public void setCoastal(boolean coastal)
 	{
+		this.addField("coastal", coastal);
 		this.coastal = coastal;
-		results.updateBoolean("coastal", coastal);
 	}
 
-	public void setRailroads(int railroads) throws SQLException
+	public void setRailroads(int railroads)
 	{
 		if(railroads < 0)
-		{
 			railroads = 0;
-		}
 		else if(railroads > 10)
-		{
 			railroads = 10;
-		}
+		this.addField("railroads", railroads);
 		this.railroads = railroads;
-		results.updateInt("railroads", railroads);
 	}
 
-	public void setPorts(int ports) throws SQLException
+	public void setPorts(int ports)
 	{
 		if(ports < 0)
-		{
 			ports = 0;
-		}
 		else if(ports > 10)
-		{
 			ports = 10;
-		}
+		this.addField("ports", ports);
 		this.ports = ports;
-		results.updateInt("ports", ports);
 	}
 
-	public void setBarracks(int barracks) throws SQLException
+	public void setBarracks(int barracks)
 	{
 		if(barracks < 0)
-		{
 			barracks = 0;
-		}
 		else if(barracks > 10)
-		{
 			barracks = 10;
-		}
+		this.addField("barracks", barracks);
 		this.barracks = barracks;
-		results.updateInt("barracks", barracks);
 	}
 
-	public void setIronMines(int mines) throws SQLException
+	public void setIronMines(int ironMines)
 	{
-		if(mines < 0)
-		{
-			mines = 0;
-		}
-		this.ironMines = mines;
-		results.updateInt("iron_mines", mines);
+		if(ironMines < 0)
+			ironMines = 0;
+		else if(ironMines > 2000000000)
+			ironMines = 2000000000;
+		this.addField("iron_mines", ironMines);
+		this.ironMines = ironMines;
 	}
 
-	public void setCoalMines(int mines) throws SQLException
+	public void setCoalMines(int coalMines)
 	{
-		if(mines < 0)
-		{
-			mines = 0;
-		}
-		this.coalMines = mines;
-		results.updateInt("coal_mines", mines);
+		if(coalMines < 0)
+			coalMines = 0;
+		else if(coalMines > 2000000000)
+			coalMines = 2000000000;
+		this.addField("coal_mines", coalMines);
+		this.coalMines = coalMines;
 	}
 
-	public void setOilWells(int wells) throws SQLException
+	public void setOilWells(int oilWells)
 	{
-		if(wells < 0)
-		{
-			wells = 0;
-		}
-		this.oilWells = wells;
-		results.updateInt("oil_wells", wells);
+		if(oilWells < 0)
+			oilWells = 0;
+		else if(oilWells > 2000000000)
+			oilWells = 2000000000;
+		this.addField("oil_wells", oilWells);
+		this.oilWells = oilWells;
 	}
 
-	public void setIndustryCivilian(int industry) throws SQLException
+	public void setIndustryCivilian(int industryCivilian)
 	{
-		if(industry < 0)
-		{
-			industry = 0;
-		}
-		this.industryCivilian = industry;
-		results.updateInt("civilian_industry", industry);
+		if(industryCivilian < 0)
+			industryCivilian = 0;
+		else if(industryCivilian > 2000000000)
+			industryCivilian = 2000000000;
+		this.addField("civilian_industry", industryCivilian);
+		this.industryCivilian = industryCivilian;
 	}
 
-	public void setIndustryMilitary(int industry) throws SQLException
+	public void setIndustryMilitary(int industryMilitary)
 	{
-		if(industry < 0)
-		{
-			industry = 0;
-		}
-		this.industryMilitary = industry;
-		results.updateInt("military_industry", industry);
+		if(industryMilitary < 0)
+			industryMilitary = 0;
+		else if(industryMilitary > 2000000000)
+			industryMilitary = 2000000000;
+		this.addField("military_industry", industryMilitary);
+		this.industryMilitary = industryMilitary;
 	}
 
-	public void setIndustryNitrogen(int industry) throws SQLException
+	public void setIndustryNitrogen(int industryNitrogen)
 	{
-		if(industry < 0)
-		{
-			industry = 0;
-		}
-		this.industryNitrogen = industry;
-		results.updateInt("nitrogen_industry", industry);
+		if(industryNitrogen < 0)
+			industryNitrogen = 0;
+		else if(industryNitrogen > 2000000000)
+			industryNitrogen = 2000000000;
+		this.addField("nitrogen_industry", industryNitrogen);
+		this.industryNitrogen = industryNitrogen;
 	}
 
-	public void setUniversities(int universities) throws SQLException
+	public void setUniversities(int universities)
 	{
 		if(universities < 0)
-		{
 			universities = 0;
-		}
+		else if(universities > 2000000000)
+			universities = 2000000000;
+		this.addField("universities", universities);
 		this.universities = universities;
-		results.updateInt("universities", universities);
 	}
 
-	public void setName(String name) throws SQLException
+	public void setName(String name)
 	{
-		if(name == null)
-		{
-			throw new NullPointerException();
-		}
-		else if(name.length() > 64)
-		{
-			throw new IllegalArgumentException("Can not be more than 64 characters!");
-		}
+		this.addField("name", name);
 		this.name = name;
-		results.updateString("name", name);
 	}
 
-	public void setType(CityType type) throws SQLException
+	public void setType(CityType type)
 	{
+		this.addField("type", type);
 		this.type = type;
-		results.updateString("type", type.getName());
 	}
 
-	public void setDevastation(int devastation) throws SQLException
+	public void setDevastation(int devastation)
 	{
-		if(devastation > 100)
-		{
-			devastation = 100;
-		}
-		else if(devastation < 0)
-		{
+		if(devastation < 0)
 			devastation = 0;
-		}
+		else if(devastation > 100)
+			devastation = 100;
+		this.addField("devastation", devastation);
 		this.devastation = devastation;
-		results.updateInt("devastation", devastation);
-	}
-
-	public void update() throws SQLException
-	{
-		results.updateRow();
 	}
 
 	/**
@@ -278,12 +216,9 @@ public class City
 	public HashMap<String, Integer> getFactoryCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("coal", Costs.FACTORY_BASE_COAL + (Costs.FACTORY_MULT_COAL
-				* (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("iron", Costs.FACTORY_BASE_IRON + (Costs.FACTORY_MULT_IRON
-				* (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("steel", Costs.FACTORY_BASE_STEEL + (Costs.FACTORY_MULT_STEEL
-				* (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
+		map.put("coal", 25 + (50 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
+		map.put("iron", 25 + (50 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
+		map.put("steel", 5 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen()));
 		return map;
 	}
 
@@ -299,12 +234,9 @@ public class City
 	public HashMap<String, Integer> getUniversityCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("coal", Costs.UNIVERSITY_BASE_COAL + (Costs.UNIVERSITY_MULT_COAL
-				* (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("iron", Costs.UNIVERSITY_BASE_IRON + (Costs.UNIVERSITY_MULT_IRON
-				* (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("steel", Costs.UNIVERSITY_BASE_STEEL + (Costs.UNIVERSITY_MULT_STEEL
-				* (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
+		map.put("coal", 50 + (100 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
+		map.put("iron", 50 + (100 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
+		map.put("steel", 5 + (10 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
 		return map;
 	}
 
@@ -314,7 +246,7 @@ public class City
 	 */
 	public int getMineCost()
 	{
-		return Costs.MINE_BASE + (Costs.MINE_MULT * (this.getIronMines() + this.getCoalMines()));
+		return 500 + (50 * (this.getIronMines() + this.getCoalMines()));
 	}
 
 	/**
@@ -323,7 +255,7 @@ public class City
 	 */
 	public int getWellCost()
 	{
-		return Costs.OIL_BASE + (Costs.OIL_MULT * this.getOilWells());
+		return 500 + (100 * this.getOilWells());
 	}
 
 	public int getRailCost()
@@ -366,14 +298,14 @@ public class City
 	public LinkedHashMap<String, Double> getCoalProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double mines = this.getCoalMines() * ProductionConstants.MINE_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getCoalMines();
+		double mines = this.getCoalMines();
+		double bonus = this.getRailroads() * 0.1 * this.getCoalMines();
 		double total = mines + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
-		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_COAL_PER_WEEK;
-		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_COAL_PER_WEEK;
-		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_COAL_PER_WEEK;
+		double civilian = -this.getIndustryCivilian();
+		double military = -this.getIndustryMilitary();
+		double nitrogen = -this.getIndustryNitrogen();
 		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
 		map.put("mines", mines);
@@ -402,14 +334,14 @@ public class City
 	public LinkedHashMap<String, Double> getIronProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double mines = this.getIronMines() * ProductionConstants.MINE_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIronMines();
+		double mines = this.getIronMines();
+		double bonus = this.getRailroads() * 0.1 * this.getIronMines();
 		double total = mines + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
-		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_IRON_PER_WEEK;
-		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_IRON_PER_WEEK;
-		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_IRON_PER_WEEK;
+		double civilian = -this.getIndustryCivilian();
+		double military = -this.getIndustryMilitary();
+		double nitrogen = -this.getIndustryNitrogen();
 		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
 		map.put("mines", mines);
@@ -438,14 +370,14 @@ public class City
 	public LinkedHashMap<String, Double> getOilProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double wells = this.getOilWells() * ProductionConstants.MINE_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getOilWells();
+		double wells = this.getOilWells();
+		double bonus = this.getRailroads() * 0.1 * this.getOilWells();
 		double total = wells + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
-		double civilian = -this.getIndustryCivilian() * ProductionConstants.FACTORY_OIL_PER_WEEK;
-		double military = -this.getIndustryMilitary() * ProductionConstants.FACTORY_OIL_PER_WEEK;
-		double nitrogen = -this.getIndustryNitrogen() * ProductionConstants.FACTORY_OIL_PER_WEEK;
+		double civilian = -this.getIndustryCivilian();
+		double military = -this.getIndustryMilitary();
+		double nitrogen = -this.getIndustryNitrogen();
 		double net = total + civilian + military + nitrogen;
 		map.put("total", total);
 		map.put("wells", wells);
@@ -471,8 +403,8 @@ public class City
 	public LinkedHashMap<String, Double> getSteelProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double factories = this.getIndustryCivilian() * ProductionConstants.STEEL_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryCivilian();
+		double factories = this.getIndustryCivilian();
+		double bonus = this.getRailroads() * 0.1 * this.getIndustryCivilian();
 		double total = factories + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
@@ -498,38 +430,11 @@ public class City
 	public LinkedHashMap<String, Double> getNitrogenProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double factories = this.getIndustryNitrogen() * ProductionConstants.NITROGEN_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryNitrogen();
+		double factories = this.getIndustryNitrogen();
+		double bonus = this.getRailroads() * 0.1 * this.getIndustryNitrogen();
 		double total = factories + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
-		double net = total;
-		map.put("total", total);
-		map.put("factories", factories);
-		map.put("infrastructure", bonus);
-		map.put("devastation", devastation2);
-		map.put("net", net);
-		return map;
-	}
-
-	/**
-	 * Returns a LinkedHashMap with the weapons production of this city with keys:
-	 * <ul>
-	 *     <li>total (used exclusively for turn change)</li>
-	 *     <li>factories</li>
-	 *     <li>infrastructure</li>
-	 *     <li>net</li>
-	 * </ul>
-	 * @return A LinkedHashMap of weapons production in this city
-	 */
-	public LinkedHashMap<String, Double> getWeaponsProduction()
-	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double factories = this.getIndustryMilitary() * ProductionConstants.WEAPONS_PER_WEEK;
-		double bonus = this.getRailroads() * ProductionConstants.RAILROAD_BOOST * this.getIndustryMilitary();
-		double total = factories + bonus;
-		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 -  (devastation / 100.0));
 		double net = total;
 		map.put("total", total);
 		map.put("factories", factories);
@@ -555,7 +460,7 @@ public class City
 		//I can't name it default...
 		//Damn reserved keywords >:(
 		double standard = 2;
-		double universities = this.getUniversities() * ProductionConstants.RESEARCH_PER_WEEK;
+		double universities = this.getUniversities();
 		double total = universities + standard;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));

@@ -68,14 +68,6 @@ public @Data @AllArgsConstructor class Production
 		return production;
 	}
 
-	public static void deleteProductionById(int id) throws SQLException
-	{
-		Connection conn = Database.getDataSource().getConnection();
-		deleteProductionById(id, conn);
-		conn.commit();
-		conn.close();
-	}
-
 	public static void deleteProductionById(int id, Connection conn) throws SQLException
 	{
 		PreparedStatement delete = conn.prepareStatement("DELETE FROM production WHERE id=?");

@@ -1,15 +1,14 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NationArmy extends NationBase
+public class NationArmy extends Updatable
 {
+	public static final String TABLE_NAME = "cloc_army";
 	private @Getter int size;
 	private @Getter int training;
 	private @Getter int musket;
@@ -24,26 +23,9 @@ public class NationArmy extends NationBase
 	private @Getter int artillery;
 	private @Getter int fortification;
 
-	public NationArmy(int size, int training, int musket, int rifledMusket, int singleShot, int needleNose, int boltActionManual, int boltActionClip, int straightPull, int semiAuto, int machineGun, int artillery, int fortification)
+	public NationArmy(int id, ResultSet results) throws SQLException
 	{
-		this.size = size;
-		this.training = training;
-		this.musket = musket;
-		this.rifledMusket = rifledMusket;
-		this.singleShot = singleShot;
-		this.needleNose = needleNose;
-		this.boltActionManual = boltActionManual;
-		this.boltActionClip = boltActionClip;
-		this.straightPull = straightPull;
-		this.semiAuto = semiAuto;
-		this.machineGun = machineGun;
-		this.artillery = artillery;
-		this.fortification = fortification;
-	}
-
-	public NationArmy(ResultSet results, Connection connection, int id, boolean safe) throws SQLException
-	{
-		this.id = results.getInt("id");
+		super(TABLE_NAME, id, results);
 		this.size = results.getInt("size");
 		this.training = results.getInt("training");
 		this.musket = results.getInt("musket");
@@ -59,180 +41,131 @@ public class NationArmy extends NationBase
 		this.fortification = results.getInt("fortification");
 	}
 
-	public NationArmy(Connection connection, int id, boolean safe) throws SQLException
-	{
-		super(connection, id, safe);
-		PreparedStatement read;
-		if(safe)
-		{
-			read = connection.prepareStatement("SELECT size, training, musket, rifled_musket, single_shot, needle_nose, bolt_action_manual, bolt_action_clip, straight_pull, semi_auto, machine_gun, artillery, fortification, id " + "FROM cloc_army " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			read = connection.prepareStatement("SELECT size, training, musket, rifled_musket, single_shot, needle_nose, bolt_action_manual, bolt_action_clip, straight_pull, semi_auto, machine_gun, artillery, fortification, id " + "FROM cloc_army " + "WHERE id=?");
-		}
-		read.setInt(1, id);
-		this.results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new NationNotFoundException("No nation with that id!");
-		}
-		else
-		{
-			this.connection = connection;
-			this.id = id;
-			this.safe = safe;
-			this.size = results.getInt(1);
-			this.training = results.getInt(2);
-			this.musket = results.getInt(3);
-			this.rifledMusket = results.getInt(4);
-			this.singleShot = results.getInt(5);
-			this.needleNose = results.getInt(6);
-			this.boltActionManual = results.getInt(7);
-			this.boltActionClip = results.getInt(8);
-			this.straightPull = results.getInt(9);
-			this.semiAuto = results.getInt(10);
-			this.machineGun = results.getInt(11);
-			this.artillery = results.getInt(12);
-			this.fortification = results.getInt(13);
-		}
-	}
-
-	public void setSize(int size) throws SQLException
+	public void setSize(int size)
 	{
 		if(size < 0)
-		{
 			size = 0;
-		}
+		this.addField("size", size);
 		this.size = size;
-		this.results.updateInt("size", size);
 	}
 
-	public void setTraining(int training) throws SQLException
+	public void setTraining(int training)
 	{
 		if(training < 0)
-		{
 			training = 0;
-		}
-		else if(training > 100)
-		{
+		else if (training > 100)
 			training = 100;
-		}
+		this.addField("training", training);
 		this.training = training;
-		this.results.updateInt("training", training);
 	}
 
-	public void setMusket(int musket) throws SQLException
+	public void setMusket(int musket)
 	{
 		if(musket < 0)
-		{
 			musket = 0;
-		}
+		else if(musket > 2000000000)
+			musket = 2000000000;
+		this.addField("musket", musket);
 		this.musket = musket;
-		this.results.updateInt("musket", musket);
 	}
 
-	public void setRifledMusket(int rifledMusket) throws SQLException
+	public void setRifledMusket(int rifledMusket)
 	{
 		if(rifledMusket < 0)
-		{
 			rifledMusket = 0;
-		}
+		else if(rifledMusket > 2000000000)
+			rifledMusket = 2000000000;
+		this.addField("rifled_musket", rifledMusket);
 		this.rifledMusket = rifledMusket;
-		this.results.updateInt("rifled_musket", rifledMusket);
 	}
 
-	public void setSingleShot(int singleShot) throws SQLException
+	public void setSingleShot(int singleShot)
 	{
 		if(singleShot < 0)
-		{
 			singleShot = 0;
-		}
+		else if(singleShot > 2000000000)
+			singleShot = 2000000000;
+		this.addField("single_shot", singleShot);
 		this.singleShot = singleShot;
-		this.results.updateInt("single_shot", singleShot);
 	}
 
-	public void setNeedleNose(int needleNose) throws SQLException
+	public void setNeedleNose(int needleNose)
 	{
 		if(needleNose < 0)
-		{
 			needleNose = 0;
-		}
+		else if(needleNose > 2000000000)
+			needleNose = 2000000000;
+		this.addField("needle_nose", needleNose);
 		this.needleNose = needleNose;
-		this.results.updateInt("needle_nose", needleNose);
 	}
 
-	public void setBoltActionManual(int boltActionManual) throws SQLException
+	public void setBoltActionManual(int boltActionManual)
 	{
 		if(boltActionManual < 0)
-		{
 			boltActionManual = 0;
-		}
+		else if(boltActionManual > 2000000000)
+			boltActionManual = 2000000000;
+		this.addField("bolt_action_manual", boltActionManual);
 		this.boltActionManual = boltActionManual;
-		this.results.updateInt("bolt_action_manual", boltActionManual);
 	}
-	
-	public void setBoltActionClip(int boltActionClip) throws SQLException
+
+	public void setBoltActionClip(int boltActionClip)
 	{
 		if(boltActionClip < 0)
-		{
 			boltActionClip = 0;
-		}
+		else if(boltActionClip > 2000000000)
+			boltActionClip = 2000000000;
+		this.addField("bolt_action_clip", boltActionClip);
 		this.boltActionClip = boltActionClip;
-		this.results.updateInt("bolt_action_clip", boltActionClip);
 	}
 
-	public void setStraightPull(int straightPull) throws SQLException
+	public void setStraightPull(int straightPull)
 	{
 		if(straightPull < 0)
-		{
 			straightPull = 0;
-		}
+		else if(straightPull > 2000000000)
+			straightPull = 2000000000;
+		this.addField("straight_pull", straightPull);
 		this.straightPull = straightPull;
-		this.results.updateInt("straight_pull", straightPull);
 	}
-	
-	public void setSemiAuto(int semiAuto) throws SQLException
+
+	public void setSemiAuto(int semiAuto)
 	{
 		if(semiAuto < 0)
-		{
 			semiAuto = 0;
-		}
+		else if(semiAuto > 2000000000)
+			semiAuto = 2000000000;
+		this.addField("semi_auto", semiAuto);
 		this.semiAuto = semiAuto;
-		this.results.updateInt("semi_auto", semiAuto);
 	}
-	
-	public void setMachineGun(int machineGun) throws SQLException
+
+	public void setMachineGun(int machineGun)
 	{
 		if(machineGun < 0)
-		{
 			machineGun = 0;
-		}
+		else if(machineGun > 2000000000)
+			machineGun = 2000000000;
+		this.addField("machine_gun", machineGun);
 		this.machineGun = machineGun;
-		this.results.updateInt("machine_gun", machineGun);
 	}
 
-	public void setArtillery(int artillery) throws SQLException
+	public void setArtillery(int artillery)
 	{
 		if(artillery < 0)
-		{
 			artillery = 0;
-		}
+		else if(artillery > 2000000000)
+			artillery = 2000000000;
+		this.addField("artillery", artillery);
 		this.artillery = artillery;
-		this.results.updateInt("artillery", artillery);
 	}
 
-	public void setFortification(int fortification) throws SQLException
+	public void setFortification(int fortification)
 	{
 		if(fortification < 0)
-		{
 			fortification = 0;
-		}
-		else if(fortification  > 10)
-		{
-			fortification = 10;
-		}
+		if(fortification > 5)
+			fortification = 5;
+		this.addField("fortification", fortification);
 		this.fortification = fortification;
-		this.results.updateInt("fortification", fortification);
 	}
 }

@@ -9,22 +9,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class NationCities extends NationBase
+public class NationCities
 {
-
+	private @Getter Connection conn;
+	private @Getter int id;
+	private @Getter ResultSet results;
+	private @Getter boolean safe;
 	private @Getter HashMap<Integer, City> cities;
 
-	public NationCities(Connection connection, int id, boolean safe) throws SQLException
+	public NationCities(Connection conn, int id, boolean safe) throws SQLException
 	{
-		super(connection, id, safe);
+		this.conn = conn;
 		PreparedStatement read;
 		if(safe)
 		{
-			read = connection.prepareStatement("SELECT id " + "FROM cloc_cities " + "WHERE owner=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			read = conn.prepareStatement("SELECT * FROM cloc_cities WHERE owner=? FOR UPDATE ");
 		}
 		else
 		{
-			read = connection.prepareStatement("SELECT id " + "FROM cloc_cities " + "WHERE owner=?");
+			read = conn.prepareStatement("SELECT * FROM cloc_cities WHERE owner=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -36,12 +39,22 @@ public class NationCities extends NationBase
 		{
 			results.beforeFirst();
 			this.cities = new HashMap<>();
-			this.connection = connection;
 			this.safe = safe;
 			this.id = id;
 			while(results.next())
 			{
-				cities.put(results.getInt("id"), new City(connection, results.getInt("id"), safe));
+				cities.put(results.getInt("id"), new City(results.getInt("id"), results));
+			}
+		}
+	}
+
+	public void update() throws SQLException
+	{
+		for(City city : cities.values())
+		{
+			if(!city.getFields().isEmpty())
+			{
+				city.update(conn);
 			}
 		}
 	}

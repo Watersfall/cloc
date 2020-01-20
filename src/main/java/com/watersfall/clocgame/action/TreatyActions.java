@@ -1,9 +1,9 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.TreatyMember;
+import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
 import javax.imageio.ImageIO;
@@ -44,6 +44,10 @@ public class TreatyActions
 
 	public static String updateFlag(HttpServletRequest req, TreatyMember member, Part flag) throws SQLException, IOException
 	{
+		if(!(member.isFounder() || member.isEdit() || member.isManage()))
+		{
+			return Responses.noPermission();
+		}
 		BufferedImage image = ImageIO.read(flag.getInputStream());
 		if(image.getWidth() > 2048)
 		{
@@ -57,7 +61,7 @@ public class TreatyActions
 		{
 			uploadFlag(req, image, member.getTreaty().getId());
 			member.getTreaty().setFlag(member.getTreaty().getId() + ".png");
-			member.getTreaty().update();
+			member.getTreaty().update(member.getConn());
 			return Responses.updated("Flag");
 		}
 	}
@@ -72,7 +76,7 @@ public class TreatyActions
 		else
 		{
 			member.getTreaty().setName(name);
-			member.getTreaty().update();
+			member.getTreaty().update(member.getConn());
 			return Responses.updated("Name");
 		}
 	}
@@ -87,7 +91,7 @@ public class TreatyActions
 		else
 		{
 			member.getTreaty().setDescription(description);
-			member.getTreaty().update();
+			member.getTreaty().update(member.getConn());
 			return Responses.updated("Description");
 		}
 	}
@@ -99,7 +103,7 @@ public class TreatyActions
 		{
 			if(member.isInvite() || member.isManage() || member.isFounder())
 			{
-				nation = Nation.getNationByName(member.getConnection(), name, member.isSafe());
+				nation = Nation.getNationByName(member.getConn(), name, member.isSafe());
 				return nation.getInvites().invite(member.getTreaty().getId());
 			}
 			else
@@ -116,7 +120,7 @@ public class TreatyActions
 
 	public static String kick(TreatyMember member, String name) throws SQLException
 	{
-		TreatyMember nation = new TreatyMember(member.getConnection(), Nation.getNationByName(member.getConnection(), name, member.isSafe()).getId(), member.isSafe());
+		TreatyMember nation = new TreatyMember(member.getConn(), Nation.getNationByName(member.getConn(), name, member.isSafe()).getId(), member.isSafe());
 		return member.kick(nation);
 	}
 }

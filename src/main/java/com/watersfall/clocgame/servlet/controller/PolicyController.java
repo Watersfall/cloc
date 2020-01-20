@@ -1,10 +1,9 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.DecisionActions;
-import com.watersfall.clocgame.constants.Responses;
-import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = {"/policy/*"})
@@ -35,66 +32,22 @@ public class PolicyController extends HttpServlet
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
-		String decision = url.get("policy");
-		Connection connection = null;
-		try
-		{
-			connection = Database.getDataSource().getConnection();
+		Executor executor = (conn) -> {
+			String decision = url.get("policy");
 			int user = UserUtils.getUser(req);
 			int selection = Integer.parseInt(req.getParameter("selection"));
 			switch(decision)
 			{
 				case "manpower":
-					writer.append(DecisionActions.manpower(connection, user, selection));
-					break;
+					return DecisionActions.manpower(conn, user, selection);
 				case "food2":
-					writer.append(DecisionActions.food(connection, user, selection));
-					break;
+					return DecisionActions.food(conn, user, selection);
 				case "economy":
-					writer.append(DecisionActions.economy(connection, user, selection));
-					break;
+					return DecisionActions.economy(conn, user, selection);
 				default:
-					writer.append(Responses.genericError());
-					break;
+					return Responses.genericError();
 			}
-			connection.commit();
-		}
-		catch(SQLException e)
-		{
-			try
-			{
-				e.printStackTrace();
-				connection.rollback();
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-		}
-		catch(NumberFormatException | NullPointerException e)
-		{
-			writer.append(Responses.genericError());
-			e.printStackTrace();
-		}
-		catch(NotLoggedInException e)
-		{
-			writer.append(Responses.noLogin());
-		}
-		catch(NationNotFoundException e)
-		{
-			writer.append(Responses.noNation());
-		}
-		finally
-		{
-			try
-			{
-				connection.close();
-			}
-			catch(Exception e)
-			{
-				//Ignore
-				e.printStackTrace();
-			}
-		}
+		};
+		writer.append(Action.doAction(executor));
 	}
 }

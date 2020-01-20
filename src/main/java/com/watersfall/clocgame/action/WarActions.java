@@ -1,11 +1,11 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.constants.Responses;
 import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
 import com.watersfall.clocgame.model.war.Log;
+import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
 import java.sql.Connection;
@@ -50,9 +50,8 @@ public class WarActions
 				}
 				updateWar.execute();
 				defender.getMilitary().setWarProtection(4);
-				String message = News.createMessage(News.ID_WAR_LOST)
-						.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>");
-				News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
+				String message = News.createMessage(News.ID_WAR_LOST, attacker.getNationUrl());
+				News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 				attacker.getArmy().setFortification(0);
 				defender.getArmy().setFortification(0);
 				attacker.update();
@@ -84,20 +83,16 @@ public class WarActions
 				defender.update();
 				if(attacker.getPower() > defender.getPower())
 				{
-					String message = News.createMessage(News.ID_DEFENSIVE_LOST)
-							.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-							.replace("%LOST%", Integer.toString(defenderLosses))
-							.replace("%KILLED%", Integer.toString(attackLosses));
-					News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
+					String message = News.createMessage(News.ID_DEFENSIVE_LOST
+							, attacker.getNationUrl(), Integer.toString(defenderLosses), Integer.toString(attackLosses));
+					News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 					losses =  Responses.offensiveVictory(attackLosses, defenderLosses);
 				}
 				else
 				{
-					String message = News.createMessage(News.ID_DEFENSIVE_WON)
-							.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-							.replace("%LOST%", Integer.toString(defenderLosses))
-							.replace("%KILLED%", Integer.toString(attackLosses));
-					News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
+					String message = News.createMessage(News.ID_DEFENSIVE_WON
+							, attacker.getNationUrl(), Integer.toString(defenderLosses), Integer.toString(attackLosses));
+					News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 					losses = Responses.offensiveDefeat(attackLosses, defenderLosses);
 				}
 				Log.createLog(connection, attacker.getId(), defender.getForeign().getRegion(), LogType.LAND, 0);
@@ -158,23 +153,17 @@ public class WarActions
 					City city = (City)entry.getValue();
 					if(attacker.getPower() > defender.getPower())
 					{
-						String message = News.createMessage(News.ID_DEFENSIVE_CITY_LOST)
-								.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-								.replace("%CITY%", city.getName())
-								.replace("%LOST%", Integer.toString(defenderLosses))
-								.replace("%KILLED%", Integer.toString(attackLosses));
-						News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
+						String message = News.createMessage(News.ID_DEFENSIVE_CITY_LOST
+								, attacker.getNationUrl(), city.getName(), Integer.toString(defenderLosses), Integer.toString(attackLosses));
+						News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 						losses =  Responses.offensiveCityVictory(city, attackLosses, defenderLosses);
 						city.setDevastation(city.getDevastation() + damage);
 					}
 					else
 					{
-						String message = News.createMessage(News.ID_DEFENSIVE_CITY_WON)
-								.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-								.replace("%CITY%", city.getName())
-								.replace("%LOST%", Integer.toString(defenderLosses))
-								.replace("%KILLED%", Integer.toString(attackLosses));
-						News.sendNews(attacker.getConnection(), attacker.getId(), defender.getId(), message);
+						String message = News.createMessage(News.ID_DEFENSIVE_CITY_WON
+								, attacker.getNationUrl(), city.getName(), Integer.toString(defenderLosses), Integer.toString(attackLosses));
+						News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 						losses = Responses.offensiveCityDefeat(city, attackLosses, defenderLosses);
 						city.setDevastation(city.getDevastation() + damage / 2);
 					}
@@ -208,8 +197,7 @@ public class WarActions
 			attacker.getArmy().setFortification(attacker.getArmy().getFortification() + 1);
 			Log.createLog(conn, attacker.getId(), defender.getForeign().getRegion(), LogType.LAND, 0);
 			attacker.update();
-			String news = News.createMessage(News.ID_FORTIFICATION);
-			news = news.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>");
+			String news = News.createMessage(News.ID_FORTIFICATION, attacker.getNationUrl());
 			News.sendNews(conn, attacker.getId(), defender.getId(), news);
 			return Responses.fortified();
 		}
@@ -237,8 +225,6 @@ public class WarActions
 		{
 			final double attackPower = attacker.getNavalPower();
 			final double defensePower = defender.getNavalPower();
-			System.out.println(attackPower);
-			System.out.println(defensePower);
 			int attackerBBLosses = (int)Math.ceil(defensePower * ((double)defender.getMilitary().getBattleships() / defender.getTotalShipCount()));
 			int attackerPBLosses = (int)Math.ceil(defensePower * ((double)defender.getMilitary().getPreBattleships() / defender.getTotalShipCount()));
 			int attackerCLLosses = (int)Math.ceil(defensePower * ((double)defender.getMilitary().getCruisers() / defender.getTotalShipCount()));
@@ -324,18 +310,8 @@ public class WarActions
 			defender.update();
 			String losses = Responses.navalBattle(attackerBBLosses, attackerPBLosses, attackerCLLosses, attackerDDLosses, attackerSSLosses,
 					defenderBBLosses, defenderPBLosses, defenderCLLosses, defenderDDLosses, defenderSSLosses);
-			String news = News.createMessage(News.ID_NAVAL_BATTLE)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-					.replace("%ATTACKERBBLOSSES%", Integer.toString(attackerBBLosses))
-					.replace("%ATTACKERPBLOSSES%", Integer.toString(attackerPBLosses))
-					.replace("%ATTACKERCLLOSSES%", Integer.toString(attackerCLLosses))
-					.replace("%ATTACKERDDLOSSES%", Integer.toString(attackerDDLosses))
-					.replace("%ATTACKERSSLOSSES%", Integer.toString(attackerSSLosses))
-					.replace("%DEFENDERBBLOSSES%", Integer.toString(defenderBBLosses))
-					.replace("%DEFENDERPBLOSSES%", Integer.toString(defenderPBLosses))
-					.replace("%DEFENDERCLLOSSES%", Integer.toString(defenderCLLosses))
-					.replace("%DEFENDERDDLOSSES%", Integer.toString(defenderDDLosses))
-					.replace("%DEFENDERSSLOSSES%", Integer.toString(defenderSSLosses));
+			String news = News.createMessage(News.ID_NAVAL_BATTLE, attackerBBLosses, attackerPBLosses, attackerCLLosses, attackerDDLosses,
+					attackerSSLosses, defenderBBLosses, defenderPBLosses, defenderCLLosses, defenderDDLosses, defenderSSLosses);
 			News.sendNews(conn, attacker.getId(), defender.getId(), news);
 			Log.createLog(conn, attacker.getId(), defender.getForeign().getRegion(), LogType.NAVY, 0);
 			return losses;
@@ -374,9 +350,7 @@ public class WarActions
 				HashMap.Entry entry = (HashMap.Entry)cities.toArray()[(int)(Math.random() * cities.size())];
 				City city = (City)entry.getValue();
 				city.setDevastation(city.getDevastation() + damage);
-				String news = News.createMessage(News.ID_NAVAL_BOMBARD)
-						.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-						.replace("%CITY%", city.getName());
+				String news = News.createMessage(News.ID_NAVAL_BOMBARD, attacker.getNationUrl(), city.getName());
 				News.sendNews(conn, attacker.getId(), defender.getId(), news);
 				Log.createLog(conn, attacker.getId(), defender.getForeign().getRegion(), LogType.NAVY, 0);
 				attacker.update();
@@ -417,21 +391,19 @@ public class WarActions
 				int losses = (int)(Math.random() * (attackTotalLosses / 2));
 				if(losses > (int)attacker.getMilitary().getByName(string))
 				{
-					losses = attacker.getMilitary().getByName(string);
+					losses = (Integer)attacker.getMilitary().getByName(string);
 				}
-				System.out.println(losses);
 				attackTotalLosses -= losses;
 				attackLosses.put(string.substring(0, string.indexOf("_")).concat("s"), losses);
-				attacker.getMilitary().updateByName(string, -losses);
+				attacker.getMilitary().setByName(string, (Integer) attacker.getMilitary().getByName(string) - losses);
 				losses = (int)(Math.random() * (defenseTotalLosses / 2)) + (defenseTotalLosses / 2);
 				if((int)defender.getMilitary().getByName(string) < losses)
 				{
-					losses = defender.getMilitary().getByName(string);
+					losses = (Integer)defender.getMilitary().getByName(string);
 				}
-				System.out.println(losses);
 				defenseTotalLosses -= losses;
 				defenseLosses.put(string.substring(0, string.indexOf("_")).concat("s"), losses);
-				defender.getMilitary().updateByName(string, -losses);
+				defender.getMilitary().setByName(string, (Integer) attacker.getMilitary().getByName(string) - losses);
 			}
 			attacker.update();
 			defender.update();
@@ -507,12 +479,10 @@ public class WarActions
 			else
 			{
 				int damage = (int)(Math.random() * attacker.getBomberPower()) + 1;
-				HashMap.Entry entry = (HashMap.Entry)cities.toArray()[(int)(Math.random() * cities.size())];
-				City city = (City)entry.getValue();
+				HashMap.Entry<Integer, City> entry = (HashMap.Entry<Integer, City>)cities.toArray()[(int)(Math.random() * cities.size())];
+				City city = entry.getValue();
 				city.setDevastation(city.getDevastation() + damage);
-				String news = News.createMessage(News.ID_AIR_BOMBARD)
-						.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-						.replace("%CITY%", city.getName());
+				String news = News.createMessage(News.ID_AIR_BOMBARD, attacker.getNationUrl(), city.getName());
 				News.sendNews(conn, attacker.getId(), defender.getId(), news);
 				Log.createLog(conn, attacker.getId(), defender.getForeign().getRegion(), LogType.AIR, 0);
 				attacker.update();
@@ -545,9 +515,7 @@ public class WarActions
 			int damage = (int)Math.sqrt(attacker.getBomberPower());
 			damage = Math.max(damage, 2);
 			defender.getArmy().setSize(defender.getArmy().getSize() - damage);
-			String news = News.createMessage(News.ID_AIR_BOMB_TROOPS)
-					.replace("%SENDER%", "<a href=\"nation.jsp?id=" + attacker.getId() + "\">" + attacker.getCosmetic().getNationName() + "</a>")
-					.replace("%KILLS%", Integer.toString(damage));
+			String news = News.createMessage(News.ID_AIR_BOMB_TROOPS, attacker.getNationUrl(), damage);
 			News.sendNews(conn, attacker.getId(), defender.getId(), news);
 			Log.createLog(conn, attacker.getId(), defender.getForeign().getRegion(), LogType.AIR, 0);
 			attacker.update();

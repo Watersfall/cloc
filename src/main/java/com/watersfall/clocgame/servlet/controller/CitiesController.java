@@ -38,7 +38,7 @@ public class CitiesController extends HttpServlet
 				}
 				else
 				{
-					req.setAttribute("city", new City(conn, id, false));
+					req.setAttribute("city", City.getCity(conn, id));
 				}
 			}
 		}

@@ -1,8 +1,7 @@
 package com.watersfall.clocgame.model.treaty;
 
-import com.watersfall.clocgame.constants.Responses;
-import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.text.Responses;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -18,6 +17,7 @@ public class TreatyMember extends Nation
 	private @Getter boolean invite;
 	private @Getter boolean edit;
 	private @Getter int idTreaty;
+	private @Getter boolean member;
 	private @Getter ResultSet results;
 
 	public TreatyMember(Connection connection, int id, boolean safe) throws SQLException
@@ -28,14 +28,30 @@ public class TreatyMember extends Nation
 		this.results = read.executeQuery();
 		if(!results.first())
 		{
-			throw new NationNotFoundException("No nation with that id!");
+			this.member = false;
 		}
-		this.founder = results.getBoolean(1);
-		this.manage = results.getBoolean(2);
-		this.kick = results.getBoolean(3);
-		this.invite = results.getBoolean(4);
-		this.edit = results.getBoolean(5);
-		this.idTreaty = results.getInt(6);
+		else
+		{
+			this.member = true;
+			this.founder = results.getBoolean(1);
+			this.manage = results.getBoolean(2);
+			this.kick = results.getBoolean(3);
+			this.invite = results.getBoolean(4);
+			this.edit = results.getBoolean(5);
+			this.idTreaty = results.getInt(6);
+		}
+	}
+
+	public TreatyMember(int id, ResultSet results) throws SQLException
+	{
+		super(id, results);
+		this.member = true;
+		this.founder = results.getBoolean("founder");
+		this.manage = results.getBoolean("manage");
+		this.kick = results.getBoolean("kick");
+		this.invite = results.getBoolean("invite");
+		this.edit = results.getBoolean("edit");
+		this.idTreaty = results.getInt("alliance_id");
 	}
 
 	public void setFounder(boolean founder) throws SQLException

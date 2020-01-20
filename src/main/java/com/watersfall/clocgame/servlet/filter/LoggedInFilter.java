@@ -16,6 +16,13 @@ import java.sql.SQLException;
 @WebFilter(urlPatterns = {"/*"})
 public class LoggedInFilter implements Filter
 {
+
+	private static boolean containsExtension(String string)
+	{
+		return string.endsWith(".ico") || string.endsWith(".svg") || string.endsWith(".png") || string.endsWith(".jpg")
+				|| string.endsWith(".jpeg") || string.endsWith(".js") || string.endsWith(".css");
+	}
+
 	private @Getter ServletContext context;
 
 	@Override
@@ -31,7 +38,7 @@ public class LoggedInFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		HttpServletRequest req = (HttpServletRequest) request;
-		if(req.getMethod().equalsIgnoreCase("GET"))
+		if(req.getMethod().equalsIgnoreCase("GET") && !containsExtension(req.getRequestURI()))
 		{
 			request.setAttribute("turn", Util.turn);
 			try(Connection connection = Database.getDataSource().getConnection())

@@ -19,12 +19,7 @@ public class News
 	private @Getter String content;
 	private @Getter String image;
 
-	public static final int ID_SEND_COAL = 0;
-	public static final int ID_SEND_IRON = 1;
-	public static final int ID_SEND_OIL = 2;
-	public static final int ID_SEND_STEEL = 3;
-	public static final int ID_SEND_NITROGEN = 4;
-	public static final int ID_SEND_RESEARCH = 5;
+	public static final int ID_SEND_RESOURCE = 0;
 	public static final int ID_SEND_MONEY = 6;
 	public static final int ID_DECLARE_WAR = 7;
 	public static final int ID_DEFENSIVE_LOST = 8;
@@ -39,59 +34,46 @@ public class News
 	public static final int ID_FORTIFICATION = 17;
 	public static final int ID_AIR_BOMB_TROOPS = 18;
 
-	private static String sendMessage(String resource)
+	private static String sendMessage(Object... args)
 	{
-		return "%SENDER% has sent us %AMOUNT% " + resource + "!";
+		return String.format("%s has sent us %s %s!", args);
 	}
 
-	public static String createMessage(int id)
+	public static String createMessage(int id, Object... args)
 	{
 		switch(id)
 		{
-			case ID_SEND_COAL:
-				return sendMessage("coal");
-			case ID_SEND_IRON:
-				return sendMessage("iron");
-			case ID_SEND_OIL:
-				return sendMessage("oil");
-			case ID_SEND_STEEL:
-				return sendMessage("steel");
-			case ID_SEND_NITROGEN:
-				return sendMessage("nitrogen");
-			case ID_SEND_RESEARCH:
-				return sendMessage("research");
+			case ID_SEND_RESOURCE:
+				return sendMessage(args);
 			case ID_SEND_MONEY:
-				return "%SENDER% has wired us $%AMOUNT%k!";
+				return String.format("%s has wired us $%sk!", args);
 			case ID_DECLARE_WAR:
-				return "%SENDER% has declared war on us!";
+				return String.format("%s has declared war on us!", args);
 			case ID_DEFENSIVE_LOST:
-				return "%SENDER% has defeated our army in battle! We lost %LOST%k soldiers and killed %KILLED%k enemy soldiers!";
+				return String.format("%s has defeated our army in battle! We lost %sk soldiers and killed %sk enemy soldiers!", args);
 			case ID_DEFENSIVE_WON:
-				return "%SENDER% attacked our army, but has been defeated! We lost %LOST%k soldiers and killed %KILLED%k enemy soldiers!";
+				return String.format("%s attacked our army, but has been defeated! We lost %sk soldiers and killed %sk enemy soldiers!", args);
 			case ID_DEFENSIVE_CITY_LOST:
-				return "%SENDER% has attacked and occupied %CITY%! We lost %LOST%k soldiers and killed %KILLED%k enemy soldiers!";
+				return String.format("%s has attacked and occupied %s! We lost %sk soldiers and killed %sk enemy soldiers!", args);
 			case ID_DEFENSIVE_CITY_WON:
-				return "%SENDER% has attacked the city of %CITY%! We killed %KILLED%k enemy soldiers, with %LOST%k of our soldiers dying in the defense of the city!";
+				return String.format("%s has attacked the city of %s! We killed %sk enemy soldiers, with %sk of our soldiers dying in the defense of the city!", args);
 			case ID_FORTIFICATION:
-				return "Our scouts report that %SENDER%'s army has further fortified their position";
+				return String.format("Our scouts report that %s's army has further fortified their position", args);
 			case ID_NAVAL_BATTLE:
-				return "%SENDER% has attacked our navy! We have lost %DEFENDERBBLOSSES% Battleships, " +
-						"%DEFENDERPBLOSSES% Pre-Dreadnought Battleships, " +
-						"%DEFENDERCLLOSSES% Cruisers, %DEFENDERDDLOSSES% Destroyers, and %DEFENDERSSLOSSES% submarines. " +
-						"However, we managed to sink %ATTACKERBBLOSSES% Battleships, " +
-						"%ATTACKERPBLOSSES% Pre-Dreadnought Battleships, " +
-						"%ATTACKERCLLOSSES% Cruisers, %ATTACKERDDLOSSES% Destroyers, and %ATTACKERSSLOSSES% submarines.";
+				return String.format("%s has attacked our navy! We have lost %s Battleships, %s Pre-Dreadnought Battleships, " +
+						"%s Cruisers, %s Destroyers, and %s submarines. However, we managed to sink %s Battleships, " +
+						"%s Pre-Dreadnought Battleships, %s Cruisers, %s Destroyers, and %s submarines.", args);
 			case ID_NAVAL_BOMBARD:
-				return "%SENDER% has bombarded the city of %CITY% with their navy!";
+				return String.format("%s has bombarded the city of %s with their navy!", args);
 			case ID_AIR_BATTLE:
-				return "%s has attacked our airforce! They have shot down %s ," +
-						"and we managed to shoot down %s !";
+				return String.format("%s has attacked our airforce! They have shot down %s ," +
+						"and we managed to shoot down %s !", args);
 			case ID_AIR_BOMBARD:
-				return "%SENDER% has bombed the city of %CITY% with their airforce!";
+				return String.format("%s has bombed the city of %s with their airforce!", args);
 			case ID_AIR_BOMB_TROOPS:
-				return "%SENDER% has bombed our army with their airforce, killing %KILLS%k of our troops!";
+				return String.format("%s has bombed our army with their airforce, killing %sk of our troops!", args);
 			case ID_WAR_LOST:
-				return "%SENDER% has defeated us in war, stealing nothing because I haven't written that part yet!";
+				return String.format("%s has defeated us in war, stealing nothing because I haven't written that part yet!", args);
 		}
 		return "";
 	}

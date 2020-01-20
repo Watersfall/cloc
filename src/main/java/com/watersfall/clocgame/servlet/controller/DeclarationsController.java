@@ -1,12 +1,10 @@
 package com.watersfall.clocgame.servlet.controller;
 
-import com.watersfall.clocgame.constants.Responses;
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.exception.CityNotFoundException;
-import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.model.message.Declaration;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -41,58 +39,15 @@ public class DeclarationsController extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		Connection conn = null;
 		PrintWriter writer = resp.getWriter();
-		try
-		{
-			conn = Database.getDataSource().getConnection();
+		Executor executor = (conn) -> {
 			int user = UserUtils.getUser(req);
 			String message = req.getParameter("message");
 			Nation nation = new Nation(conn, user, true);
-			writer.append(Declaration.post(nation, message, conn));
+			String response = Declaration.post(nation, message, conn);
 			nation.update();
-			conn.commit();
-		}
-		catch(SQLException e)
-		{
-			try
-			{
-				conn.rollback();
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-			writer.append(Responses.genericException(e));
-			e.printStackTrace();
-		}
-		catch(NotLoggedInException e)
-		{
-			writer.append(Responses.noLogin());
-		}
-		catch(NumberFormatException | NullPointerException e)
-		{
-			writer.append(Responses.genericError());
-			e.printStackTrace();
-		}
-		catch(NationNotFoundException e)
-		{
-			writer.append(Responses.noNation());
-		}
-		catch(CityNotFoundException e)
-		{
-			writer.append(Responses.noCity());
-		}
-		finally
-		{
-			try
-			{
-				conn.close();
-			}
-			catch(Exception ex)
-			{
-				//Ignore
-			}
-		}
+			return response;
+		};
+		writer.append(Action.doAction(executor));
 	}
 }
