@@ -39,18 +39,28 @@ public class LoginController extends HttpServlet
 			}
 			else
 			{
-				password = Md5.md5(password);
-				PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_login WHERE username=? AND password=?");
-				check.setString(1, username);
-				check.setString(2, password);
-				ResultSet results = check.executeQuery();
-				if(!results.first())
+				PreparedStatement getSalt = conn.prepareStatement("SELECT salt FROM cloc_login WHERE username=?");
+				getSalt.setString(1, username);
+				ResultSet saltResults = getSalt.executeQuery();
+				if(!saltResults.first())
 				{
 					writer.append(Responses.invalidLogin());
 				}
 				else
 				{
-					req.getSession().setAttribute("user", results.getInt(1));
+					password = Md5.md5(password, saltResults.getString(1));
+					PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_login WHERE username=? AND password=?");
+					check.setString(1, username);
+					check.setString(2, password);
+					ResultSet results = check.executeQuery();
+					if(!results.first())
+					{
+						writer.append(Responses.invalidLogin());
+					}
+					else
+					{
+						req.getSession().setAttribute("user", results.getInt(1));
+					}
 				}
 			}
 		}

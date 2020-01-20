@@ -77,8 +77,9 @@ public class RegisterController extends HttpServlet
 			{
 				return Responses.nameTaken();
 			}
+			String salt = Md5.generateSalt();
 			PreparedStatement create = conn.prepareStatement(
-					"INSERT INTO cloc_login (username, email, password, register_ip, last_ip) VALUES (?,?,?,?,?);" +
+					"INSERT INTO cloc_login (username, email, password, register_ip, last_ip, salt) VALUES (?,?,?,?,?,?);" +
 					"INSERT INTO cloc_army () VALUES ();" +
 					"INSERT INTO cloc_cosmetic (nation_name, username, description) VALUES (?,?,?);" +
 					"INSERT INTO cloc_domestic (government) VALUES (?);" +
@@ -90,15 +91,16 @@ public class RegisterController extends HttpServlet
 			);
 			create.setString(1, username);
 			create.setString(2, "");
-			create.setString(3, Md5.md5(password));
+			create.setString(3, Md5.md5(password, salt));
 			create.setString(4, req.getRemoteAddr());
 			create.setString(5, req.getRemoteAddr());
-			create.setString(6, nation);
-			create.setString(7, username);
-			create.setString(8, "Welcome to CLOC! Please change me in the settings.");
-			create.setInt(9, gov);
-			create.setInt(10, econ);
-			create.setString(11, region);
+			create.setString(6, salt);
+			create.setString(7, nation);
+			create.setString(8, username);
+			create.setString(9, "Welcome to CLOC! Please change me in the settings.");
+			create.setInt(10, gov);
+			create.setInt(11, econ);
+			create.setString(12, region);
 			create.execute();
 			ResultSet key = create.getGeneratedKeys();
 			key.first();

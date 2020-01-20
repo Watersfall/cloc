@@ -25,3 +25,11 @@ CREATE TABLE production(
 	progress INT DEFAULT 0,
 	FOREIGN KEY fk_production (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
+
+ALTER TABLE cloc_login
+	ADD COLUMN salt CHAR(44);
+
+ALTER TABLE cloc_login
+	MODIFY COLUMN  password CHAR(64);
+
+DELETE FROM cloc_login WHERE id>0;

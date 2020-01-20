@@ -2,6 +2,8 @@ package com.watersfall.clocgame.util;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 public class Md5
 {
@@ -11,12 +13,13 @@ public class Md5
 	 * @param password The password to hash
 	 * @return The md5 hash of the password
 	 */
-	public static String md5(String password)
+	public static String md5(String password, String salt)
 	{
 		try
 		{
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] messageDigest = md.digest(password.getBytes());
+			String temp = password + salt;
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] messageDigest = md.digest(temp.getBytes());
 			BigInteger number = new BigInteger(1, messageDigest);
 			return number.toString(16);
 		}
@@ -25,5 +28,14 @@ public class Md5
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String generateSalt()
+	{
+		SecureRandom random = new SecureRandom();
+		byte[] bytes = new byte[32];
+		random.nextBytes(bytes);
+		Base64.Encoder encoder = Base64.getEncoder();
+		return encoder.encodeToString(bytes);
 	}
 }
