@@ -6,11 +6,18 @@
 <%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="policy" type="com.watersfall.clocgame.action.PolicyActions"--%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="decisions" type="java.lang.String"--%>
 <%-- POLICIES --%>
-<div class="container"><%@ include file="includes/results.jsp"%>
-
-	<div class="main">
-	<h1><c:out value="${decisions}"/> Policy</h1>
+<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+	<div class="categories">
+		<ul>
+			<li style="width: 25%"><a href="${pageContext.request.contextPath}/decisions/Economic/"><div>Economy</div></a></li>
+			<li style="width: 25%"><a href="${pageContext.request.contextPath}/decisions/Domestic/"><div>Domestic</div></a></li>
+			<li style="width: 25%"><a href="${pageContext.request.contextPath}/decisions/Foreign/"><div>Foreign</div></a></li>
+			<li style="width: 25%"><a href="${pageContext.request.contextPath}/decisions/Military/"><div>Military</div></a></li>
+		</ul>
+	</div>
+	<h1><c:out value="${decisions}"/> Decisions</h1>
 	<table id="nation">
 		<tr>
 			<th style="width: 15%">
@@ -28,415 +35,218 @@
 			<c:when test="${sessionScope.user == null}">
 				<p>You must be logged in to view this page!</p>
 			</c:when>
-			<c:when test="${decisions == 'Economic'}">
-				<tr>
-					<td>
-						Free Money
-					</td>
-					<td>
-						Acquire some free money, the Free Market way.
-					</td>
-					<td>
-						Free!
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('freemoneycapitalist')">Get Rich
-						</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Free Money
-					</td>
-					<td>
-						Acquire some free money, the Communist way.
-					</td>
-					<td>
-						Free!
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('freemoneycommunist')">Get Rich
-						</button>
-					</td>
-				</tr>
-			</c:when>
-			<c:when test="${decisions == 'Domestic'}">
-				<tr>
-					<td>
-						Increase Arrest Quotas
-					</td>
-					<td>
-						Tell your police force they need to arrest more criminals! Increases stability, but lowers
-						approval and moves your government to the right.
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ARREST)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('crackdown')">Crackdown</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Pardon Petty Criminals
-					</td>
-					<td>
-						Release the jaywalkers from their cells! Decreases stability, but increases approval and moves
-						your government to the left.
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_FREE)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('free')">Free</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Propaganda Campaign
-					</td>
-					<td>
-						Put up posters saying how great you are! Increases approval. Cost is based on GDP and current approval
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_PROPAGANDA)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('propaganda')">Propaganda</button>
-					</td>
-				</tr>
-				<c:if test="${home.offensive != 0 || home.defensive != 0}">
+			<c:otherwise>
+				<c:if test="${decisions == 'Economic' || decisions == null}">
 					<tr>
 						<td>
-							War Propaganda
+							Free Money
 						</td>
 						<td>
-							Rallying war speeches will make anyone love you right? Increases approval, but only available when at war. Cost is based on GDP and current approval
+							Acquire some free money, the Free Market way.
 						</td>
 						<td>
-							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_WAR_PROPAGANDA)}"/>k
+							Free!
 						</td>
 						<td>
-							<button class="policyButton" type="submit" onclick="decision('warpropaganda')">Propaganda</button>
+							<button class="policyButton" type="submit" onclick="decision('freemoneycapitalist')">Get Rich
+							</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Free Money
+						</td>
+						<td>
+							Acquire some free money, the Communist way.
+						</td>
+						<td>
+							Free!
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('freemoneycommunist')">Get Rich
+							</button>
 						</td>
 					</tr>
 				</c:if>
-				<tr>
-					<td>
-						Land Clearance
-					</td>
-					<td>
-						Slash and burn some useless jungle to make room for our expanding economy
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_LAND_CLEARANCE)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('landclearance')">Burn</button>
-					</td>
-				</tr>
-			</c:when>
-			<c:when test="${decisions == 'Foreign'}">
-				<tr>
-					<td>
-						Align With The Entente
-					</td>
-					<td>
-						Praise France's Democracy, hoping to make them like you.
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('alignentente')">Praise</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Align With The Central Powers
-					</td>
-					<td>
-						Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('aligncentral')">Admire</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Declare Neutrality
-					</td>
-					<td>
-						Go out on stage and celebrate your people's strength!
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('alignneutral')">Celebrate</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Form Treaty
-					</td>
-					<td>
-						Create an international alliance to keep yourself safe
-					</td>
-					<td>
-						$0k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="window.location.href = '/createtreaty/'">Create</button>
-					</td>
-				</tr>
-			</c:when>
-			<c:when test="${decisions == 'Military'}">
-				<tr>
-					<td>
-						Conscript
-					</td>
-					<td>
-						Throw more men into your army at the cost of manpower and overall training.
-					</td>
-					<td>
-						Manpower
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('conscript')">Conscript</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Deconscript
-					</td>
-					<td>
-						Maybe that's a little too much army...
-					</td>
-					<td>
-						Nothing
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('deconscript')">Fire</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Train
-					</td>
-					<td>
-						Train your army
-					</td>
-					<td>
-						$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_TRAIN)}"/>k
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('train')">Train</button>
-					</td>
-				</tr>
-				<c:if test="${home.hasTech('MUSKET')}">
+				<c:if test="${decisions == 'Domestic' || decisions == null}">
 					<tr>
 						<td>
-							Build Muskets
+							Increase Arrest Quotas
 						</td>
 						<td>
-							The finest of the 1850's, these muskets may not be "easy to load" or have fancy "rifled barrels" but they're better than nothing
+							Tell your police force they need to arrest more criminals! Increases stability, but lowers
+							approval and moves your government to the right.
 						</td>
 						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_MUSKETS).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ARREST)}"/>k
 						</td>
 						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildmuskets')">Build</button>
+							<button class="policyButton" type="submit" onclick="decision('crackdown')">Crackdown</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Pardon Petty Criminals
+						</td>
+						<td>
+							Release the jaywalkers from their cells! Decreases stability, but increases approval and moves
+							your government to the left.
+						</td>
+						<td>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_FREE)}"/>k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('free')">Free</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Propaganda Campaign
+						</td>
+						<td>
+							Put up posters saying how great you are! Increases approval. Cost is based on GDP and current approval
+						</td>
+						<td>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_PROPAGANDA)}"/>k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('propaganda')">Propaganda</button>
+						</td>
+					</tr>
+					<c:if test="${home.offensive != 0 || home.defensive != 0}">
+						<tr>
+							<td>
+								War Propaganda
+							</td>
+							<td>
+								Rallying war speeches will make anyone love you right? Increases approval, but only available when at war. Cost is based on GDP and current approval
+							</td>
+							<td>
+								$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_WAR_PROPAGANDA)}"/>k
+							</td>
+							<td>
+								<button class="policyButton" type="submit" onclick="decision('warpropaganda')">Propaganda</button>
+							</td>
+						</tr>
+					</c:if>
+					<tr>
+						<td>
+							Land Clearance
+						</td>
+						<td>
+							Slash and burn some useless jungle to make room for our expanding economy
+						</td>
+						<td>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_LAND_CLEARANCE)}"/>k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('landclearance')">Burn</button>
 						</td>
 					</tr>
 				</c:if>
-				<c:if test="${home.hasTech('RIFLED_MUSKET')}">
+				<c:if test="${decisions == 'Foreign' || decisions == null}">
 					<tr>
 						<td>
-							Build Rifled Muskets
+							Align With The Entente
 						</td>
 						<td>
-							The finest of the 1860's, these muskets may not be "easy to load" but they're better than nothing
+							Praise France's Democracy, hoping to make them like you.
 						</td>
 						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_RIFLED_MUSKETS).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
 						</td>
 						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildrifledmuskets')">Build</button>
+							<button class="policyButton" type="submit" onclick="decision('alignentente')">Praise</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Align With The Central Powers
+						</td>
+						<td>
+							Admire the German <i>Stahlhelm</i>, hoping to protect yourself from shrapnel.
+						</td>
+						<td>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('aligncentral')">Admire</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Declare Neutrality
+						</td>
+						<td>
+							Go out on stage and celebrate your people's strength!
+						</td>
+						<td>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_ALIGN)}"/>k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('alignneutral')">Celebrate</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Form Treaty
+						</td>
+						<td>
+							Create an international alliance to keep yourself safe
+						</td>
+						<td>
+							$0k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="window.location.href = '/createtreaty/'">Create</button>
 						</td>
 					</tr>
 				</c:if>
-				<c:if test="${home.hasTech('SINGLE_SHOT_RIFLE')}">
+				<c:if test="${decisions == 'Military' || decisions == null}">
 					<tr>
 						<td>
-							Build Single Shot Rifles
+							Conscript
 						</td>
 						<td>
-							The finest of the 1870's, these rifles are much easier to load than muskets
+							Throw more men into your army at the cost of manpower and overall training.
 						</td>
 						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_SINGLE_SHOT).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
+							Manpower
 						</td>
 						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildsingleshot')">Build</button>
+							<button class="policyButton" type="submit" onclick="decision('conscript')">Conscript</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Deconscript
+						</td>
+						<td>
+							Maybe that's a little too much army...
+						</td>
+						<td>
+							Nothing
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('deconscript')">Fire</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Train
+						</td>
+						<td>
+							Train your army
+						</td>
+						<td>
+							$<fmt:formatNumber value="${home.getPolicyCost(policy.ID_TRAIN)}"/>k
+						</td>
+						<td>
+							<button class="policyButton" type="submit" onclick="decision('train')">Train</button>
 						</td>
 					</tr>
 				</c:if>
-				<c:if test="${home.hasTech('NEEDLE_NOSE_RIFLE')}">
-					<tr>
-						<td>
-							Build Single Shot Rifles
-						</td>
-						<td>
-							The finest of the 1870's, these rifles are much easier to load than muskets
-						</td>
-						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_NEEDLE_NOSE).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
-						</td>
-						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildneedlenose')">Build</button>
-						</td>
-					</tr>
-				</c:if>
-				<c:if test="${home.hasTech('BOLT_ACTION_MANUAL')}">
-					<tr>
-						<td>
-							Build Bolt Action Rifles
-						</td>
-						<td>
-							The finest of the 1870's, these rifles are much easier to load than muskets
-						</td>
-						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_BOLT_ACTION_MANUAL).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
-						</td>
-						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildboltactionmanual')">Build</button>
-						</td>
-					</tr>
-				</c:if>
-				<c:if test="${home.hasTech('BOLT_ACTION_CLIP')}">
-					<tr>
-						<td>
-							Build Bolt Action Rifles
-						</td>
-						<td>
-							The finest of the 1870's, these rifles are much easier to load than muskets
-						</td>
-						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_BOLT_ACTION_CLIP).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
-						</td>
-						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildboltactionclip')">Build</button>
-						</td>
-					</tr>
-				</c:if>
-				<c:if test="${home.hasTech('STRAIGHT_PULL_RIFLE')}">
-					<tr>
-						<td>
-							Build Straight Pull Rifles
-						</td>
-						<td>
-							The finest of the 1870's, these rifles are much easier to load than muskets
-						</td>
-						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_STRAIGHT_PULL).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
-						</td>
-						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildstraightpull')">Build</button>
-						</td>
-					</tr>
-				</c:if>
-				<c:if test="${home.hasTech('SEMI_AUTOMATIC')}">
-					<tr>
-						<td>
-							Build Semi Automatic Rifles
-						</td>
-						<td>
-							The finest of the 1870's, these rifles are much easier to load than muskets
-						</td>
-						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_SEMI_AUTO).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
-						</td>
-						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildsemiauto')">Build</button>
-						</td>
-					</tr>
-				</c:if>
-				<c:if test="${home.hasTech('MACHINE_GUN')}">
-					<tr>
-						<td>
-							Build Machine Guns
-						</td>
-						<td>
-							The finest of the 1870's, these rifles are much easier to load than muskets
-						</td>
-						<td>
-							<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_MACHINE_GUN).entrySet()}" varStatus="i">
-								<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-								<c:if test="${i.last && i.count > 1}">, and </c:if>
-								<c:out value="${cost.value} ${cost.key}"/>
-							</c:forEach>
-						</td>
-						<td>
-							<button class="policyButton" type="submit" onclick="decision('buildmachineguns')">Build</button>
-						</td>
-					</tr>
-				</c:if>
-				<tr>
-					<td>
-						Build Artillery
-					</td>
-					<td>
-						The most effective way to fight without fighting, artillery guns increase the strength of your army
-					</td>
-					<td>
-						<c:forEach var="cost" items="${home.getPolicyCostMap(policy.ID_BUILD_ARTILLERY).entrySet()}" varStatus="i">
-							<c:if test="${i.index > 0 && !i.first && !i.last}">, </c:if>
-							<c:if test="${i.last && i.count > 2}">, and </c:if>
-							<c:if test="${i.last && i.count == 2}"> and </c:if>
-							<c:out value="${cost.value} ${cost.key}"/>
-						</c:forEach>
-					</td>
-					<td>
-						<button class="policyButton" type="submit" onclick="decision('buildartillery')">Build</button>
-					</td>
-				</tr>
-			</c:when>
+			</c:otherwise>
 		</c:choose>
 	</table>
 </div>

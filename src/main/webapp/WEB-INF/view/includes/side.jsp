@@ -71,6 +71,44 @@
 			</ul>
 			<ul>
 				<li>
+					<a style="cursor: pointer;" onclick="toggle('nation2')">
+						<div class="headerTab">
+							<p>Nation</p>
+							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+						</div>
+					</a>
+					<ul id="nation2">
+						<li>
+							<a href="${pageContext.request.contextPath}/decisions/">
+								<div class="headerTabSmall">
+									<p>Decisions</p>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="${pageContext.request.contextPath}/policy/">
+								<div class="headerTabSmall">
+									<p>State Policy</p>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="${pageContext.request.contextPath}/technology/">
+								<div class="headerTabSmall">
+									<p>Technology</p>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="${pageContext.request.contextPath}/production/">
+								<div class="headerTabSmall">
+									<p>Production</p>
+								</div>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li>
 					<a style="cursor: pointer;" onclick="toggle('cities')">
 						<div class="headerTab">
 							<p>Cities</p>
@@ -88,58 +126,6 @@
 							</li>
 						</c:forEach>
 					</ul>
-				</li>
-				<li>
-					<a style="cursor: pointer;" onclick="toggle('decisions')">
-						<div class="headerTab">
-							<p>Decisions</p>
-							<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
-						</div>
-					</a>
-					<ul id="decisions">
-						<li>
-							<a href="${pageContext.request.contextPath}/decisions/Economic/">
-								<div class="headerTabSmall">
-									<p>Economy</p>
-								</div>
-							</a>
-						</li>
-						<li>
-							<a href="${pageContext.request.contextPath}/decisions/Domestic/">
-								<div class="headerTabSmall">
-									<p>Domestic</p>
-								</div>
-							</a>
-						</li>
-						<li>
-							<a href="${pageContext.request.contextPath}/decisions/Foreign/">
-								<div class="headerTabSmall">
-									<p>Foreign</p>
-								</div>
-							</a>
-						</li>
-						<li>
-							<a href="${pageContext.request.contextPath}/decisions/Military/">
-								<div class="headerTabSmall">
-									<p>Military</p>
-								</div>
-							</a>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<a href="${pageContext.request.contextPath}/policy/">
-						<div class="headerTab">
-							<p>State Policy</p>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="${pageContext.request.contextPath}/technology/">
-						<div class="headerTab">
-							<p>Technology</p>
-						</div>
-					</a>
 				</li>
 				<li>
 					<a style="cursor: pointer;" onclick="toggle('world')">
@@ -173,11 +159,37 @@
 					</ul>
 				</li>
 				<li>
-					<a href="${pageContext.request.contextPath}/treaties/">
-						<div class="headerTab">
-							<p>Treaties</p>
-						</div>
-					</a>
+					<c:if test="${home.treaty != null}">
+						<a style="cursor: pointer;" onclick="toggle('treaties')">
+							<div class="headerTab">
+								<p>Treaties</p>
+								<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
+							</div>
+						</a>
+						<ul id="treaties">
+							<li>
+								<a href="${pageContext.request.contextPath}/treaty/${home.treaty.id}">
+									<div class="headerTabSmall">
+										<p>Your Treaty</p>
+									</div>
+								</a>
+							</li>
+							<li>
+								<a href="${pageContext.request.contextPath}/treaties/">
+									<div class="headerTabSmall">
+										<p>Treaty Rankings</p>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</c:if>
+					<c:if test="${home.treaty == null}">
+						<a href="${pageContext.request.contextPath}/treaties/">
+							<div class="headerTab">
+								<p>Treaties</p>
+							</div>
+						</a>
+					</c:if>
 				</li>
 				<li>
 					<a style="cursor: pointer;" onclick="toggle('user')">
