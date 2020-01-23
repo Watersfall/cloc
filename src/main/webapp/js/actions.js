@@ -231,48 +231,6 @@ function newsDelete(id)
 	ajax(url, params);
 }
 
-function processProduction(hover)
-{
-	/*let temp = freeFactories;
-	let id = hover.classList.item(0).substring(3);
-	let classes = document.getElementsByClassName("id=" + id);
-	let index = hover.classList.item(1).substring(7);
-	let old = hover.classList.item(2).substring(8);
-	temp = freeFactories + (old - index);
-	for(let i = 0; i < 15; i++)
-	{
-		if(i < index && (freeFactories + (old - i)) > 0)
-		{
-			classes[i].src = "/images/production/factory.svg";
-		}
-		else
-		{
-			classes[i].src = "/images/production/blank.svg";
-		}
-	}
-	updateFreeFactories(temp);*/
-}
-
-function resetProduction(event, id, num)
-{
-	/*if(event.target.classList.contains("cityElements"))
-	{
-		let classes = document.getElementsByClassName("id=" + id);
-		for(let i = 0; i < 15; i++)
-		{
-			if(i < classes[i].classList.item(2).substring(8))
-			{
-				classes[i].src = "/images/production/factory.svg";
-			}
-			else
-			{
-				classes[i].src = "/images/production/blank.svg";
-			}
-		}
-		updateFreeFactories();
-	}*/
-}
-
 function clickProduction(event, id, num)
 {
 	let element = document.getElementsByClassName("id=" + id);
