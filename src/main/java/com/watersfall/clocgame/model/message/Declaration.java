@@ -20,13 +20,14 @@ public class Declaration
 	private @Getter int sent;
 	private @Getter String content;
 
-	public static ArrayList<Declaration> getDeclarations(Connection conn) throws SQLException
+	public static ArrayList<Declaration> getDeclarationsPage(Connection conn, int page) throws SQLException
 	{
 		ArrayList<Declaration> list = new ArrayList<>();
 		PreparedStatement statement = conn.prepareStatement(
 				"SELECT cloc_declarations.id, sender, sent, content, cloc_cosmetic.* " +
 				"FROM cloc_declarations, cloc_cosmetic WHERE cloc_cosmetic.id=sender " +
-				"ORDER BY cloc_declarations.id DESC");
+				"ORDER BY cloc_declarations.id DESC LIMIT 20 OFFSET ?");
+		statement.setInt(1, (page - 1) * 20);
 		ResultSet results = statement.executeQuery();
 		while(results.next())
 		{

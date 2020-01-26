@@ -21,7 +21,7 @@ import java.util.HashMap;
 @WebServlet(urlPatterns = {"/map/*"})
 public class MapController extends HttpServlet
 {
-	public static final String URL = "/region/{region}";
+	public static final String URL = "/region/{region}/{page}";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -35,9 +35,22 @@ public class MapController extends HttpServlet
 				Region region = Region.getFromName(url.get("region"));
 				if(region != null)
 				{
+					int page;
+					try
+					{
+						page = Integer.parseInt(url.get("page"));
+					}
+					catch(NumberFormatException | NullPointerException e)
+					{
+						page = 1;
+					}
 					String where = "region='" + region.getName() + "'";
-					Collection<Nation> nations = Nation.getNations(conn, where, "cloc_login.id ASC");
+					Collection<Nation> nations = Nation.getNations(conn, where, "cloc_economy.gdp DESC, cloc_login.id ASC", "20 OFFSET " + ((page - 1) * 20));
+					int totalNations = Util.getTotalNationsInRegion(conn, region);
 					req.setAttribute("nations", nations);
+					req.setAttribute("url", "map/region/" + region.getName());
+					req.setAttribute("page", page);
+					req.setAttribute("maxPage", totalNations / 20 + 1);
 				}
 			}
 			else

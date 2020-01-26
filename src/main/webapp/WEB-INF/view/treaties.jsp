@@ -7,7 +7,6 @@
 <%@ include file="includes/side.jsp" %>
 <%@ include file="includes/toggle.jsp"%>
 <div class="container"><%@ include file="includes/results.jsp"%><div class="main">
-
 	<h1>Treaties</h1>
 	<table id="nation">
 		<tr>
@@ -25,6 +24,7 @@
 			</tr>
 		</c:forEach>
 	</table>
+	<%@include file="includes/pagination.jsp"%>
 </div>
 <%@ include file="includes/header.jsp" %></div>
 </body>

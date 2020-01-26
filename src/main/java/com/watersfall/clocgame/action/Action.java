@@ -26,6 +26,7 @@ public class Action
 		}
 		catch(SQLException e)
 		{
+			e.printStackTrace();
 			try
 			{
 				conn.rollback();

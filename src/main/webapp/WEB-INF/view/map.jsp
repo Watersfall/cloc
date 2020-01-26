@@ -108,6 +108,7 @@
 					</tr>
 				</c:forEach>
 			</table>
+			<%@include file="includes/pagination.jsp"%>
 		</c:when>
 		<c:otherwise>
 			<p>Error</p>

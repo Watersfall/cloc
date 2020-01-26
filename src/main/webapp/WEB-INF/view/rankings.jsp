@@ -43,6 +43,7 @@
 			</tr>
 		</c:forEach>
 	</table>
+	<%@include file="includes/pagination.jsp"%>
 </div>
 <%@ include file="includes/header.jsp" %></div>
 </body>

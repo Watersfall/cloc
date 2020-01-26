@@ -1,9 +1,15 @@
 package com.watersfall.clocgame.util;
 
+import com.watersfall.clocgame.model.Region;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 public class Util
@@ -54,5 +60,46 @@ public class Util
 			}
 		}
 		return map;
+	}
+
+	public static int getTotalNations(Connection conn) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_login WHERE id>0");
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
+	}
+
+	public static int getTotalNationsInRegion(Connection conn, Region region) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(cloc_login.id) FROM cloc_login, cloc_foreign WHERE cloc_login.id=cloc_foreign.id AND cloc_foreign.region=?");
+		statement.setString(1, region.getName());
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
+	}
+
+	public static int getTotalTreaties(Connection conn) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_treaties WHERE id>0");
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
+	}
+
+	public static int getTotalDeclarations(Connection conn) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_declarations WHERE id>0");
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
+	}
+
+	public static int getTotalOngoingWars(Connection conn) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_war WHERE end=-1");
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
 	}
 }

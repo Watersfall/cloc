@@ -24,14 +24,17 @@ public class Treaty extends Updatable
 	 * @return An ArrayList containing all treaties <i>without</i> their members
 	 * @throws SQLException if a database issue occurs
 	 */
-	public static ArrayList<Treaty> getAllTreaties(Connection conn) throws SQLException
+	public static ArrayList<Treaty> getTreatyPage(Connection conn, int page) throws SQLException
 	{
 		ArrayList<Treaty> array = new ArrayList<>();
-		PreparedStatement treaties = conn.prepareStatement("SELECT id FROM cloc_treaties");
+		PreparedStatement treaties = conn.prepareStatement("SELECT cloc_treaties.*, COUNT(nation_id) AS count FROM cloc_treaties, cloc_treaties_members " +
+				"WHERE cloc_treaties.id>0 ORDER BY count DESC, id LIMIT 20 OFFSET ?");
+		treaties.setInt(1, (page - 1) * 20);
 		ResultSet results = treaties.executeQuery();
 		while(results.next())
 		{
-			array.add(new Treaty(conn, results.getInt(1), false));
+			array.add(new Treaty(results.getInt("cloc_treaties.id"), results.getString("cloc_treaties.name"),
+					results.getString("cloc_treaties.flag"), results.getString("cloc_treaties.description"), results.getInt("count")));
 		}
 		return array;
 	}
@@ -51,6 +54,26 @@ public class Treaty extends Updatable
 		ResultSet results = create.getGeneratedKeys();
 		results.first();
 		return new Treaty(conn, results.getInt(1), true);
+	}
+
+	public Treaty(int id, String name, String flag, String description, int memberCount)
+	{
+		super(TABLE_NAME, id, null);
+		this.id = id;
+		this.name = name;
+		this.flag = flag;
+		this.description = description;
+		this.memberCount = memberCount;
+	}
+
+	public Treaty(int id, ResultSet results) throws SQLException
+	{
+		super(TABLE_NAME, id, null);
+		this.id = id;
+		this.name = results.getString("ct.name");
+		this.flag = results.getString("ct.flag");
+		this.description = results.getString("ct.description");
+		this.memberCount = results.getInt("ct.members");
 	}
 
 	/**
@@ -89,6 +112,11 @@ public class Treaty extends Updatable
 			this.description = results.getString(3);
 			this.memberCount = results.getInt(5);
 		}
+	}
+
+	public String getTreatyUrl()
+	{
+		return "<a href=\"/treaty/" + id + "\">" + this.name + "</a>";
 	}
 
 	public void setName(String name) throws SQLException

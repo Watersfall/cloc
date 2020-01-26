@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.action.PolicyActions;
-import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.math.BadMath;
 import com.watersfall.clocgame.model.Region;
@@ -475,7 +474,6 @@ public class Nation
 	{
 		if(nation != null && canDeclareWar(nation) == null)
 		{
-			Connection conn = Database.getDataSource().getConnection();
 			PreparedStatement declare = conn.prepareStatement("INSERT INTO cloc_war (attacker, defender, start) VALUES (?,?,?)");
 			declare.setInt(1, this.id);
 			declare.setInt(2, nation.getId());
@@ -1292,10 +1290,13 @@ public class Nation
 				statement.setString(index, object.toString());
 			index++;
 		}
-		statement.setInt(index, id);
+		if(index > 1)
+		{
+			statement.setInt(index, id);
+			statement.execute();
+		}
 		cities.update();
 		updateAllProduction();
-		statement.execute();
 	}
 
 	/**
