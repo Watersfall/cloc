@@ -73,7 +73,7 @@ public class Treaty extends Updatable
 		this.name = results.getString("ct.name");
 		this.flag = results.getString("ct.flag");
 		this.description = results.getString("ct.description");
-		this.memberCount = results.getInt("ct.members");
+		try{this.memberCount = results.getInt("ct.members");}catch(SQLException ignored){}
 	}
 
 	/**

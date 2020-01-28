@@ -156,6 +156,13 @@
 								</div>
 							</a>
 						</li>
+						<li>
+							<a href="${pageContext.request.contextPath}/worldnews/ongoing">
+								<div class="headerTabSmall">
+									<p>World News</p>
+								</div>
+							</a>
+						</li>
 					</ul>
 				</li>
 				<li>

@@ -102,4 +102,12 @@ public class Util
 		results.first();
 		return results.getInt(1);
 	}
+
+	public static int getTotalEndedWars(Connection conn) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_war WHERE end>0");
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
+	}
 }

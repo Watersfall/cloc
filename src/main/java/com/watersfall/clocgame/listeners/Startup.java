@@ -2,6 +2,7 @@ package com.watersfall.clocgame.listeners;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.schedulers.DayScheduler;
+import com.watersfall.clocgame.schedulers.StatsScheduler;
 import com.watersfall.clocgame.schedulers.WeekScheduler;
 import com.watersfall.clocgame.util.Util;
 
@@ -21,6 +22,7 @@ public class Startup implements ServletContextListener
 			Database.getDataSource().close();
 			WeekScheduler.stopWeek();
 			DayScheduler.stopDay();
+			StatsScheduler.stopStats();
 		}
 		catch(Exception e)
 		{
@@ -38,6 +40,7 @@ public class Startup implements ServletContextListener
 			Class.forName("com.mysql.jdbc.Driver");
 			WeekScheduler.startWeek();
 			DayScheduler.startDay();
+			StatsScheduler.startStats();
 			event.getServletContext().setAttribute("database", Database.getDataSource());
 			conn = Database.getDataSource().getConnection();
 			ResultSet results = conn.prepareStatement("SELECT turn FROM cloc_main").executeQuery();
