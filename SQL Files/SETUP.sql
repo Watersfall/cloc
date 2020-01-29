@@ -120,7 +120,7 @@ CREATE TABLE cloc_army(
 CREATE TABLE cloc_foreign(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	region ENUM('North America', 'South America', 'Africa', 'Middle East', 'Europe', 'Asia', 'Oceania', 'Siberia'),
-	alignment TINYINT DEFAULT 1,
+	alignment TINYINT DEFAULT 0,
 	FOREIGN KEY fk_foreign (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 

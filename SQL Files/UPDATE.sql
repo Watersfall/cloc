@@ -36,4 +36,7 @@ ALTER TABLE cloc_tech
 	MODIFY COLUMN ball_and_powder_tech TINYINT UNSIGNED default 1,
     MODIFY COLUMN musket_tech TINYINT UNSIGNED DEFAULT 1;
 
+ALTER TABLE cloc_foreign
+	MODIFY COLUMN alignment TINYINT UNSIGNED DEFAULT 0;
+
 DELETE FROM cloc_login WHERE id>0;
