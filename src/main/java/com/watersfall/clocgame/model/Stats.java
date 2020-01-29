@@ -20,6 +20,9 @@ public class Stats
 	private @Getter long totalIronMines;
 	private @Getter long totalOilWells;
 	private @Getter long totalPopulation;
+	private @Getter long totalNeutralNations;
+	private @Getter long totalEntenteNations;
+	private @Getter long totalCentralPowersNations;
 
 	private static Stats stats = null;
 
@@ -45,9 +48,10 @@ public class Stats
 					"SELECT COUNT(cloc_login.id) AS nations, SUM(cloc_army.size) AS armySize, SUM(cloc_cities.civilian_industry) AS civilianFactories, " +
 					"SUM(cloc_cities.military_industry) AS militaryFactories, SUM(cloc_cities.universities) AS universities, " +
 					"SUM(cloc_cities.coal_mines) AS coalMines, SUM(cloc_cities.iron_mines) AS ironMines, SUM(cloc_cities.oil_wells) AS oilWells, " +
-					"SUM(cloc_domestic.population) AS population " +
-					"FROM cloc_login, cloc_cities, cloc_army, cloc_domestic " +
-					"WHERE cloc_login.id = cloc_domestic.id AND cloc_login.id = cloc_army.id AND cloc_login.id AND cloc_login.id = cloc_cities.owner");
+					"SUM(cloc_domestic.population) AS population, SUM(cloc_foreign.alignment=0) AS neutral, SUM(cloc_foreign.alignment=1) AS entente, " +
+					"SUM(cloc_foreign.alignment=-1) AS central " +
+					"FROM cloc_login, cloc_cities, cloc_army, cloc_domestic, cloc_foreign " +
+					"WHERE cloc_login.id=cloc_domestic.id AND cloc_login.id=cloc_army.id AND cloc_login.id AND cloc_login.id=cloc_cities.owner AND cloc_login.id=cloc_foreign.id");
 			ResultSet results = statement.executeQuery();
 			results.first();
 			this.totalNations = results.getInt("nations");
@@ -59,6 +63,9 @@ public class Stats
 			this.totalIronMines = results.getInt("ironMines");
 			this.totalOilWells = results.getInt("oilWells");
 			this.totalPopulation = results.getInt("population");
+			this.totalNeutralNations = results.getInt("neutral");
+			this.totalEntenteNations = results.getInt("entente");
+			this.totalCentralPowersNations = results.getInt("central");
 		}
 		catch(SQLException e)
 		{
@@ -70,6 +77,9 @@ public class Stats
 	{
 		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
 		map.put("Total Nations", totalNations);
+		map.put("Total Neutral Nations", totalNeutralNations);
+		map.put("Total Entente Nations", totalEntenteNations);
+		map.put("Total Central Powers Nations", totalCentralPowersNations);
 		map.put("Global Population", totalPopulation);
 		map.put("Total Soldiers", totalArmies);
 		map.put("Total Civilian Factories", totalCivilianFactories);
