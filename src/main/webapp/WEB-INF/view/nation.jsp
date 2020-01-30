@@ -228,6 +228,7 @@
 							</li>
 						</ul>
 					</div>
+					<button onclick="send('peace', null, ${nation.id});">Offer Peace</button>
 				</c:if>
 			</c:if>
 		</c:otherwise>

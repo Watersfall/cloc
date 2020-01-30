@@ -523,4 +523,16 @@ public class WarActions
 			return Responses.bombTroops(damage);
 		}
 	}
+
+	public static String sendPeace(Nation sender, Nation receiver) throws SQLException
+	{
+		if(sender.getOffensive() != receiver.getId() && sender.getDefensive() != receiver.getId())
+		{
+			return Responses.noWar();
+		}
+		else
+		{
+			return sender.sendPeace(receiver);
+		}
+	}
 }

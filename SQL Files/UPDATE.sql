@@ -44,3 +44,6 @@ DELETE FROM cloc_login WHERE id>0;
 ALTER TABLE cloc_war
 	ADD CONSTRAINT FOREIGN KEY fk_attacker (attacker) REFERENCES cloc_login(id) ON DELETE CASCADE,
 	ADD CONSTRAINT FOREIGN KEY fk_defender (defender) REFERENCES cloc_login(id) ON DELETE CASCADE;
+
+ALTER TABLE cloc_war
+	ADD COLUMN peace INT default -1;

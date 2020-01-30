@@ -1445,4 +1445,50 @@ public class Nation
 			return false;
 		}
 	}
+
+	public String sendPeace(Nation receiver) throws SQLException
+	{
+		PreparedStatement statement = this.conn.prepareStatement("SELECT attacker, defender, peace FROM cloc_war " +
+				"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
+		statement.setInt(1, this.id);
+		statement.setInt(2, receiver.id);
+		statement.setInt(3, receiver.id);
+		statement.setInt(4, this.id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		if(results.getInt("peace") == -1)
+		{
+			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET peace=? " +
+					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
+			sendPeace.setInt(1, this.id);
+			sendPeace.setInt(2, this.id);
+			sendPeace.setInt(3, receiver.id);
+			sendPeace.setInt(4, receiver.id);
+			sendPeace.setInt(5, this.id);
+			sendPeace.execute();
+			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_SEND_PEACE, this.getNationUrl()));
+			return Responses.peaceSent();
+		}
+		else if(results.getInt("peace") == this.id)
+		{
+			return Responses.peaceAlreadySent();
+		}
+		else if(results.getInt("peace") == receiver.id)
+		{
+			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET end=? " +
+					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
+			sendPeace.setInt(1, Util.turn);
+			sendPeace.setInt(2, this.id);
+			sendPeace.setInt(3, receiver.id);
+			sendPeace.setInt(4, receiver.id);
+			sendPeace.setInt(5, this.id);
+			sendPeace.execute();
+			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_PEACE_ACCEPTED, this.getNationUrl()));
+			return Responses.peaceAccepted();
+		}
+		else
+		{
+			return Responses.genericError();
+		}
+	}
 }

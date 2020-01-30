@@ -33,6 +33,8 @@ public class News
 	public static final int ID_DEFENSIVE_CITY_WON = 16;
 	public static final int ID_FORTIFICATION = 17;
 	public static final int ID_AIR_BOMB_TROOPS = 18;
+	public static final int ID_SEND_PEACE = 19;
+	public static final int ID_PEACE_ACCEPTED = 20;
 
 	private static String sendMessage(Object... args)
 	{
@@ -74,6 +76,10 @@ public class News
 				return String.format("%s has bombed our army with their airforce, killing %sk of our troops!", args);
 			case ID_WAR_LOST:
 				return String.format("%s has defeated us in war, stealing nothing because I haven't written that part yet!", args);
+			case ID_SEND_PEACE:
+				return String.format("%s has requested white peace! Should we continue the war, or halt our advances?", args);
+			case ID_PEACE_ACCEPTED:
+				return String.format("%s has accepted our offer for peace! Let there be peace in our time!", args);
 		}
 		return "";
 	}

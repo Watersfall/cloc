@@ -19,6 +19,7 @@ public class War
 	private @Getter int start;
 	private @Getter int end;
 	private @Getter int id;
+	private @Getter int peace;
 	private @Getter Nation winner;
 
 	public static ArrayList<War> getOngoingWarPage(Connection conn, int page) throws SQLException
@@ -74,6 +75,7 @@ public class War
 		this.start = results.getInt("start");
 		this.end = results.getInt("end");
 		int winner = results.getInt("winner");
+		this.peace = results.getInt("peace");
 		this.id = id;
 		if(results.getInt("cloc_login.id") == results.getInt("attacker"))
 		{

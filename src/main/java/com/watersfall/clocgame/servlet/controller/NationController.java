@@ -78,6 +78,8 @@ public class NationController extends HttpServlet
 					return NationActions.sendResource("budget", amount, sender, receiver);
 				case "war":
 					return NationActions.declareWar(sender, receiver, req);
+				case "peace":
+					return WarActions.sendPeace(sender, receiver);
 				case "land":
 					return WarActions.landOffensive(conn, sender, receiver);
 				case "navy":

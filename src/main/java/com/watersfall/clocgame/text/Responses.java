@@ -608,4 +608,19 @@ public class Responses
 	{
 		return "<p>Created!</p>";
 	}
+
+	public static String peaceSent()
+	{
+		return "<p>You have offered peace! They must now accept it for the war to be over</p>";
+	}
+
+	public static String peaceAlreadySent()
+	{
+		return "<p>You have already sent peace!</p>";
+	}
+
+	public static String peaceAccepted()
+	{
+		return "<p>You have accepted their peace offer! Let there be peace in our time!</p>";
+	}
 }
