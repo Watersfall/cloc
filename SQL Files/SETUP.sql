@@ -175,7 +175,9 @@ CREATE TABLE cloc_war(
 	defender INT,
 	start INT,
 	winner INT,
-	end INT DEFAULT -1
+	end INT DEFAULT -1,
+	FOREIGN KEY fk_attacker (attacker) REFERENCES cloc_login(id) ON DELETE CASCADE,
+	FOREIGN KEY fk_defender (defender) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cloc_war_logs(

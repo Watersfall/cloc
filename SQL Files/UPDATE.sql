@@ -40,3 +40,7 @@ ALTER TABLE cloc_foreign
 	MODIFY COLUMN alignment TINYINT UNSIGNED DEFAULT 0;
 
 DELETE FROM cloc_login WHERE id>0;
+
+ALTER TABLE cloc_war
+	ADD CONSTRAINT FOREIGN KEY fk_attacker (attacker) REFERENCES cloc_login(id) ON DELETE CASCADE,
+	ADD CONSTRAINT FOREIGN KEY fk_defender (defender) REFERENCES cloc_login(id) ON DELETE CASCADE;
