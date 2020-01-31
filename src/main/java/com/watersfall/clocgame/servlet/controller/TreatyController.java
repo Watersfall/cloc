@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.TreatyActions;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.model.treaty.TreatyMember;
@@ -50,6 +51,7 @@ public class TreatyController extends HttpServlet
 		{
 			e.printStackTrace();
 		}
+		req.setAttribute("stats", Stats.getInstance());
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
 	}
 

@@ -62,6 +62,22 @@
 							button.innerHTML = "Show Admin Actions";
 						}
 					}
+
+					function stats()
+					{
+						let panel = document.getElementById("stats");
+						let button = document.getElementById("statsButton");
+						if(panel.style.display === "")
+						{
+							panel.style.display = "block";
+							button.innerHTML = "Hide Stats";
+						}
+						else
+						{
+							panel.style.display = "";
+							button.innerHTML = "Show Stats";
+						}
+					}
 				</script>
 				<style>
 					#admin{
@@ -90,6 +106,17 @@
 					</c:if>
 				</div>
 			</c:if>
+			<h3>Stats</h3>
+			<button id="statsButton" onclick="stats();">Show Stats</button>
+			<table id="stats" class="toggleClass">
+					<%--@elvariable id="stats" type="com.watersfall.clocgame.model.Stats"--%>
+				<c:forEach items="${stats.getTreatyStats(treaty.id).map}" var="stat">
+					<tr>
+						<td>${stat.key}</td>
+						<td>${stat.value}</td>
+					</tr>
+				</c:forEach>
+			</table>
 			<h3>Members</h3>
 			<table id="nation">
 				<tr>
