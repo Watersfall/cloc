@@ -2,7 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.text.Responses;
-import com.watersfall.clocgame.util.Md5;
+import com.watersfall.clocgame.util.Security;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,27 +39,22 @@ public class LoginController extends HttpServlet
 			}
 			else
 			{
-				PreparedStatement getSalt = conn.prepareStatement("SELECT salt FROM cloc_login WHERE username=?");
-				getSalt.setString(1, username);
-				ResultSet saltResults = getSalt.executeQuery();
-				if(!saltResults.first())
+				PreparedStatement statement = conn.prepareStatement("SELECT password, id FROM cloc_login WHERE username=?");
+				statement.setString(1, username);
+				ResultSet results = statement.executeQuery();
+				if(!results.first())
 				{
 					writer.append(Responses.invalidLogin());
 				}
 				else
 				{
-					password = Md5.md5(password, saltResults.getString(1));
-					PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_login WHERE username=? AND password=?");
-					check.setString(1, username);
-					check.setString(2, password);
-					ResultSet results = check.executeQuery();
-					if(!results.first())
+					if(Security.checkPassword(password, results.getString("password")))
 					{
-						writer.append(Responses.invalidLogin());
+						req.getSession().setAttribute("user", results.getInt("id"));
 					}
 					else
 					{
-						req.getSession().setAttribute("user", results.getInt(1));
+						writer.append(Responses.invalidLogin());
 					}
 				}
 			}

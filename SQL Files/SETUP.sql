@@ -17,7 +17,7 @@ CREATE TABLE cloc_login(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(32),
 	email TEXT,
-	password CHAR(32),
+	password CHAR(60),
 	register_ip VARCHAR(15),
 	last_ip VARCHAR(15),
 	sess CHAR(32)

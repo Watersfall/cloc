@@ -27,10 +27,7 @@ CREATE TABLE production(
 );
 
 ALTER TABLE cloc_login
-	ADD COLUMN salt CHAR(44);
-
-ALTER TABLE cloc_login
-	MODIFY COLUMN  password CHAR(64);
+	MODIFY COLUMN  password CHAR(60);
 
 ALTER TABLE cloc_tech
 	MODIFY COLUMN ball_and_powder_tech TINYINT UNSIGNED default 1,
