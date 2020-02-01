@@ -7,61 +7,62 @@ Todo List:
 -   
 - Rename The Game
 
-- War
-    - ~~War Formulas~~
-    - Improved War Formulas
-    - ~~Attacking with land~~
-    - ~~Naval battles~~
-    - ~~Air battles~~
-    - ~~Bombing~~
-    - ~~UI for it~~
-    - ~~Viewing war history~~
-    - Sending and accepting peace offers
-    - ~~View all current wars~~
-    - Casualty logging?
-
-- Treaties
-    - ~~Inviting~~
-    - ~~Leaving~~
-    - ~~Disbanding~~
-    - ~~Showing up on nation pages~~
-    - ~~Ability to set name, description, and flag~~
-    
 - Cities
-    - ~~Removing mines, factories, etc.~~
-    - ~~Make land a hard limit for construction~~
-    - Farming improvements
-    - Make city type have an effect
-    - Rework railroads to reduce factory, etc. upkeep costs instead, or atleast something better than flat production bonus
-
-- Military
-    - ~~Creating, reinforcing, training, supplying~~ No longer necessary
-    - Building and using ships
-    - ~~Building and using aircraft~~
+    - Add a "Countryside" or similar "city" to the city list 
+        - Improve farming infrastructure and overall infrastructure here
+        - Options to increase food production:
+            - Collective Farms: Requires socialist/communist economy, but free/cheap and has a chance of success
+            - Farming Subsidies: Costs money/growth, but chance of success
+            - Fertilizer Technology: Costs research/nitrogen but increases food production
+            - Build farming machinery: Occupies civ industry/costs steel, but increases food production
+        - Ability to found new cities at some milestone/cost
+        
+- War
+    - Improved war formulas
+    - Actual effects on winning and losing
+    - Allow more than just 1 offensive and 1 defensive war
     
-- Decisions
-    - More basic decisions
-    - Remove some policies in favor of decisions
-    - ~~Rename to something "State Policy" or something similar~~
-    
-- Policies
-    - ~~Re-add Free Prisoners, Arrest, and alignment policies~~
-    - ~~Rename to something other than policies~~
+- Logging
+    - Keep logs of:
+        - Global averages and totals
+        - Totals for individual nations
+        - Casualties for wars
+        - Casualties for large-scale wars
+        - Individual treaty averages/totals
 
+- Frontend
+    - Graphs of the logged data
+    - Rewrite of the frontend for general improvements, both visually and code-wise
+    
+- Production
+    - Split off factories into their own database table for more control over individual units
+    - Make production cost resources
+    - Shipbuilding
+    - Potentially split dockyards off of military factories for creating ships
+    - Better and more informative interface
+    - Add images for productions
+    
 - Research & Technology
-    - ~~Create the entire thing lmao~~
-    - Equipment technology, better weapons, artillery, planes
-    - Economic technology, mining, factory, etc.
-    - Chemical weapons
-    - Oil power
+    - Naval technologies
+    - Better air tree
+    - Land vehicles tree
+    - Doctrine trees?
+    - Economy technologies
+    - Add descriptions to all technologies
+    - Add images for technologies
+    - Show what is gained from researching a tech
     
-- UI & Frontend
-    - ~~See "Research & Technology"~~
-    - ~~Mobile support~~
-    - G R A P H S
+Navy, Army, Airforce
+    - Split ships into their own database so they can be named
+    - A way to visualize army, navy, and airforce strengths 
+    - Estimations of enemies strengths compared to your own
+    - Add a confirmation for attacking an enemy who is (estimated to be) significantly stronger than you
     
-- Database & Backend
-    - ~~Improved password security~~
-    - Add logging tables for graphing
-    - Add logging for any errors or exceptions
+Domestic/Nation
+    - More population growth mechanics
+    - Better growth and GDP mechanics
+    - Better system for economic system
+    - Make switching governments, economic systems, and alignments more difficult
     
+Other
+    - Further improved password security
