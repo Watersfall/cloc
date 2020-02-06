@@ -1,6 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="taglibs.jsp" %>
 <c:forEach var="production" items="${home.production}">
-	<li style="position: relative" class="cityElements">
+	<div class="element">
 		<%@include file="production.jsp" %>
-	</li>
+	</div>
 </c:forEach>

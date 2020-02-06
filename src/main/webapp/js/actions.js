@@ -106,7 +106,7 @@ function policy(policy)
 
 function updateDesc(name)
 {
-	let elements = document.getElementsByClassName("optionDesc");
+	let elements = document.getElementsByClassName("desc");
 	let selected = document.getElementById(name);
 	let updateId = selected.options[selected.selectedIndex].id + "_desc";
 	for(let i = 0; i < elements.length; i++)
@@ -330,6 +330,140 @@ function updateProduction()
 		if(xhttp.readyState === 4 && xhttp.status === 200)
 		{
 			element.innerHTML = xhttp.responseText;
+		}
+	};
+}
+
+function loadCity(id)
+{
+	let url = new URL(window.location.href);
+	if(url.pathname.indexOf(id) === -1)
+	{
+		document.getElementById("city").innerHTML = "<p>Loading...</p>";
+		let xhttp = new XMLHttpRequest();
+		xhttp.open("GET", "/city/" + id, true);
+		xhttp.send();
+		xhttp.onreadystatechange = function()
+		{
+			if(xhttp.readyState === 4 && xhttp.status === 200)
+			{
+				document.getElementById("city").innerHTML = xhttp.responseText;
+				window.history.replaceState("id: " + id, "", window.location.href.substring(0, window.location.href.indexOf("cities/") + 7) + id + "/");
+			}
+		};
+	}
+}
+
+function anyParentIsToggleTab(element)
+{
+	do
+	{
+		if(element.onclick == null)
+		{
+			element = element.parentElement;
+		}
+		else if(element.onclick.toString().indexOf("toggleTab(") !== -1)
+		{
+			console.log("onclick found");
+			return true;
+		}
+		else
+		{
+			element = element.parentElement;
+		}
+	}
+	while(element);
+	return false;
+}
+
+function makeABunchOfNations(id)
+{
+	if(id < 500)
+	{
+		let url = context + "/register/";
+		let xhttp = new XMLHttpRequest();
+		xhttp.open("POST", url, true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		let params = "username=testboi" + id + "&nation=testboi" + id + "&capital=ohboy&password=password&region=Africa&government=50&economy=50";
+		xhttp.send(params);
+		xhttp.onreadystatechange = function()
+		{
+			if(xhttp.readyState === 4 && xhttp.status === 200)
+			{
+				id++;
+				makeABunchOfNations(id);
+			}
+		};
+	}
+}
+
+function display()
+{
+	let panel = document.getElementById("admin");
+	let button = document.getElementById("adminButton");
+	if(panel.style.display === "")
+	{
+		panel.style.display = "block";
+		button.innerHTML = "Hide Admin Actions";
+	}
+	else
+	{
+		panel.style.display = "";
+		button.innerHTML = "Show Admin Actions";
+	}
+}
+
+function stats()
+{
+	let panel = document.getElementById("stats");
+	let button = document.getElementById("statsButton");
+	if(panel.style.display === "")
+	{
+		panel.style.display = "block";
+		button.innerHTML = "Hide Stats";
+	}
+	else
+	{
+		panel.style.display = "";
+		button.innerHTML = "Show Stats";
+	}
+}
+
+function tech(tech)
+{
+	document.getElementById('resultsContainer').style.visibility = "visible";
+	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	let attempt = document.getElementById(tech);
+	if(attempt == null)
+	{
+		document.getElementById("result").innerHTML = "<p>Don't do that!</p>";
+	}
+	else if(attempt.classList.contains("unavailable"))
+	{
+		document.getElementById("result").innerHTML = "<p>You can not research this technology!</p>";
+	}
+	else if(attempt.classList.contains("researched"))
+	{
+		document.getElementById("result").innerHTML = "<p>You already have this technology!</p>";
+	}
+	else
+	{
+		research(tech);
+	}
+}
+
+function loadTech(tech)
+{
+	document.getElementById("tech").style.display = "block";
+	let xhttp = new XMLHttpRequest();
+	xhttp.open("GET", "/tech/" + tech, true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send();
+	xhttp.onreadystatechange = function()
+	{
+		if(xhttp.readyState === 4 && xhttp.status === 200)
+		{
+			document.getElementById("tech").innerHTML = xhttp.responseText;
 		}
 	};
 }

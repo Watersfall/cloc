@@ -1,10 +1,4 @@
-<%@ include file="includes/default.jsp" %>
-<html>
-<%@ include file="includes/head.jsp" %>
-<body>
-<%@ include file="includes/side.jsp" %>
-<%@ include file="includes/toggle.jsp"%>
-<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+<%@ include file="includes/defaultTop.jsp" %>
 
 	<form class="registerForm" action="${pageContext.request.contextPath}/register/" method="POST">
 		<label>
@@ -63,7 +57,4 @@
 		<br>
 		<button type="submit">Register!</button>
 	</form>
-</div>
-<%@ include file="includes/header.jsp" %></div>
-</body>
-</html>
+<%@ include file="includes/defaultBottom.jsp" %>

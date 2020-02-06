@@ -13,7 +13,18 @@ function toggle(id)
 
 function toggleTab(tab)
 {
-	let tabs = ["budget", "food", "coal", "iron", "oil", "steel", "nitrogen", "research", "approval", "stability", "land", "population", "growth", "manpower"];
+	let tabs = ["Budget", "Food", "Coal", "Iron", "Oil", "Steel", "Nitrogen", "Research", "Approval", "Stability", "Land", "Population", "Growth", "Manpower", "Equipment"];
+	for(let i = 0; i < tabs.length; i++)
+	{
+		if(tabs[i] !== tab)
+		{
+			let tab = document.getElementById(tabs[i]);
+			if(tab != null)
+			{
+				tab.style.display = "";
+			}
+		}
+	}
 	if(tab !== null)
 	{
 		let div = document.getElementById(tab);
@@ -24,17 +35,6 @@ function toggleTab(tab)
 		else
 		{
 			div.style.display = "";
-		}
-	}
-	for(let i = 0; i < tabs.length; i++)
-	{
-		if(tabs[i] !== tab)
-		{
-			let tab = document.getElementById(tabs[i]);
-			if(tab != null)
-			{
-				tab.style.display = "";
-			}
 		}
 	}
 }

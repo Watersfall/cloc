@@ -1,23 +1,17 @@
 <%--@elvariable id="treaties" type="java.util.ArrayList"--%>
 <%--@elvariable id="treaty" type="com.watersfall.clocgame.model.treaty.Treaty"--%>
-<%@ include file="includes/default.jsp" %>
-<html>
-<%@ include file="includes/head.jsp" %>
-<body>
-<%@ include file="includes/side.jsp" %>
-<%@ include file="includes/toggle.jsp"%>
-<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+<%@ include file="includes/defaultTop.jsp" %>
 	<h1>Treaties</h1>
-	<table id="nation">
+	<table class="standardTable">
 		<tr>
-			<th style="width: 10em">Alliance</th>
+			<th class="hideOnMobile" style="width: 8em;">>Alliance</th>
 			<th></th>
 			<th>Description</th>
 			<th>Members</th>
 		</tr>
 		<c:forEach var="treaty" items="${treaties}">
 			<tr>
-				<td><img class="large" src="${pageContext.request.contextPath}/user/treaty/<c:out value="${treaty.flag}"/>" alt="flag"/></td>
+				<td class="hideOnMobile"><img class="large" src="${pageContext.request.contextPath}/user/treaty/<c:out value="${treaty.flag}"/>" alt="flag"/></td>
 				<td><a href="${pageContext.request.contextPath}/treaty/${treaty.id}"><c:out value="${treaty.name}"/></a></td>
 				<td><c:out value="${treaty.description}"/></td>
 				<td>${treaty.memberCount}</td>
@@ -25,7 +19,4 @@
 		</c:forEach>
 	</table>
 	<%@include file="includes/pagination.jsp"%>
-</div>
-<%@ include file="includes/header.jsp" %></div>
-</body>
-</html>
+<%@ include file="includes/defaultBottom.jsp" %>

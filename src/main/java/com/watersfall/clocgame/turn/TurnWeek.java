@@ -45,35 +45,21 @@ public class TurnWeek implements Runnable
 					HashMap<String, Double> steel = nation.getTotalSteelProduction();
 					HashMap<String, Double> nitrogen = nation.getTotalNitrogenProduction();
 					HashMap<String, Double> research = nation.getTotalResearchProduction();
-					HashMap<String, Integer> food = nation.getFoodProduction();
-					economy.setCoal(economy.getCoal() + coal.get("total"));
-					economy.setIron(economy.getIron() + iron.get("total"));
-					economy.setOil(economy.getOil() + oil.get("total"));
-					economy.setResearch(economy.getResearch() + research.get("total"));
-					economy.setFood(economy.getFood() + food.get("net"));
-					if(economy.getCoal() >= -coal.get("civilian factory demands") && economy.getIron() >= -iron.get("civilian factory demands"))
-					{
-						economy.setSteel(economy.getSteel() + steel.get("total"));
-						economy.setCoal(economy.getCoal() + coal.get("civilian factory demands"));
-						economy.setIron(economy.getIron() + iron.get("civilian factory demands"));
-						economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("civilian industry"));
-					}
-					if(economy.getCoal() >= -coal.get("nitrogen plant demands") && economy.getIron() >= -iron.get("nitrogen plant demands"))
-					{
-						economy.setNitrogen(economy.getNitrogen() + nitrogen.get("total"));
-						economy.setCoal(economy.getCoal() + coal.get("nitrogen plant demands"));
-						economy.setIron(economy.getIron() + iron.get("nitrogen plant demands"));
-						economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("nitrogen industry"));
-					}
-					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("army upkeep"));
+					HashMap<String, Double> food = nation.getFoodProduction();
+					economy.setCoal(economy.getCoal() + coal.get("resource.net"));
+					economy.setIron(economy.getIron() + iron.get("resource.net"));
+					economy.setOil(economy.getOil() + oil.get("resource.net"));
+					economy.setResearch(economy.getResearch() + research.get("resource.net"));
+					economy.setFood(economy.getFood() + food.get("resource.net"));
+					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("growth.net"));
 					economy.setGdp(economy.getGdp() + economy.getGrowth());
 
 					/*
 					 ** Domestic
 					 */
-					domestic.setPopulation(domestic.getPopulation() + (nation.getPopulationGrowth().get("total")).longValue());
-					domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get("total"));
-					domestic.setStability(domestic.getStability() + nation.getStabilityChange().get("total"));
+					domestic.setPopulation(domestic.getPopulation() + (nation.getPopulationGrowth().get("population.net")).longValue());
+					domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get("approval.net"));
+					domestic.setStability(domestic.getStability() + nation.getStabilityChange().get("stability.net"));
 
 					/*
 					 ** Military

@@ -1,285 +1,157 @@
-<%@ include file="includes/default.jsp" %>
-<html>
-<%@ include file="includes/head.jsp" %>
-<body>
-<%@ include file="includes/side.jsp" %>
-<%@ include file="includes/toggle.jsp"%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="offensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="defensive" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="production" type="java.util.HashMap"--%>
-<%--@elvariable id="food" type="java.util.HashMap"--%>
-<%--@elvariable id="population" type="java.util.HashMap"--%>
-<div class="container"><%@ include file="includes/results.jsp"%>
-	<style>
-		#nation td,th{
-			width: 50% !important;
-		}
-	</style>
-	<div class="main">
+<%@ include file="includes/defaultTop.jsp" %>
 	<c:if test="${sessionScope.user == null}">
 		<p>You must be logged in to view this page!</p>
 	</c:if>
 	<c:if test="${sessionScope.user != null}">
-		<c:if test="${home.offensive != 0 || home.defensive != 0}">
-			<div class="cityElements" style="width: 75%;">
-				<p>Your nation is at war!</p>
-			</div>
-		</c:if>
-		<div class="nation">
-			<h1><c:out value="${home.cosmetic.nationTitle}"/><br> of <br><c:out value="${home.cosmetic.nationName}"/></h1>
-			<img class="extraLarge" src="${pageContext.request.contextPath}/user/flag/<c:out value="${home.cosmetic.flag}"/>" alt="flag">
-			<p><c:out value="${home.cosmetic.description}"/></p>
-			<img class="extraLong" src="${pageContext.request.contextPath}/user/portrait/<c:out value="${home.cosmetic.portrait}"/>" alt="flag">
-			<h1><c:out value="${home.cosmetic.leaderTitle}"/>: <c:out value="${home.cosmetic.username}"/></h1>
-		</div>
-		<h1>Domestic</h1>
-		<table id="nation">
+		<h1><c:out value="${home.cosmetic.nationTitle}"/><br>of<br>${home.cosmetic.nationName}</h1>
+		<img class="veryLarge" src="/user/flag/${home.cosmetic.flag}" alt="flag"/>
+		<p><br><c:out value="${home.cosmetic.description}"/></p><br>
+		<img class="veryLong" src="/user/portrait/${home.cosmetic.portrait}" alt="portrait"/>
+		<h1><c:out value="${home.cosmetic.leaderTitle}"/><c:out value=" "/><c:out value=" ${home.cosmetic.username}"/></h1>
+		<h2>Domestic</h2>
+		<table class="standardTable nationTable">
 			<tr>
-				<td>Government</td>
-				<td><cloc:government value="${home.domestic.government}"/></td>
+				<td><p>Government</p></td>
+				<td><p><cloc:government value="${home.domestic.government}"/></p></td>
 			</tr>
 			<tr>
-				<td>Approval</td>
-				<td>
-					<div class="noClose" onclick="toggleTab('approval')">
-						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
-						<cloc:approval value="${home.domestic.approval}"/>
-					</div>
-					<div class="resourceTabDown" id="approval">
-						<p class="neutral">${home.domestic.approval}% Approval</p>
-						<br>
-						<br>
-						<c:choose>
-							<c:when test="${home.approvalChange.policies != 0}">
-								<p class="${home.approvalChange.policies > 0 ? 'positive' : 'negative'}">
-									${home.approvalChange.policies > 0 ? '+' : ''}${home.approvalChange.policies}% from policies
-								</p>
-							</c:when>
-							<c:otherwise>
-								<p class="neutral">No change...</p>
-							</c:otherwise>
-						</c:choose>
-					</div>
+				<td><p>Approval</p></td>
+				<td onclick="toggleTab('Approval');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><cloc:approval value="${home.domestic.approval}"/></p>
+					<ui:dropdown value="${home.domestic.approval}" name="Approval" map="${home.approvalChange}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
-				<td>Stability</td>
-				<td>
-					<div class="noClose" onclick="toggleTab('stability')">
-						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
-						<cloc:stability value="${home.domestic.stability}"/>
-					</div>
-					<div class="resourceTabDown" id="stability">
-						<p class="neutral">${home.domestic.stability}% Stability</p>
-						<br>
-						<br>
-						<p class="positive">+${home.stabilityChange.total}% from default</p>
-					</div>
+				<td><p>Stability</p></td>
+				<td onclick="toggleTab('Stability');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><cloc:stability value="${home.domestic.stability}"/></p>
+					<ui:dropdown value="${home.domestic.stability}" name="Stability" map="${home.stabilityChange}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
-				<td>Land</td>
-				<td>
-					<div class="noClose" onclick="toggleTab('land')">
-						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
-						<fmt:formatNumber value="${home.freeLand}"/> km<sup>2</sup> / <fmt:formatNumber value="${home.domestic.land}"/> km<sup>2</sup>
-					</div>
-					<div class="resourceTabDown" id="land">
-						<p class="neutral">Land Usage</p><br>
-						<c:forEach var="city" items="${home.landUsageByCityAndType}">
-							<p class="neutral">${city.key}</p>
-							<ul style="margin: 0; padding: 0 0 0 2em; list-style: circle">
-							<c:forEach var="land" items="${city.value}">
-								<c:if test="${land.value > 0}">
-									<li class="neutral"><fmt:formatNumber value="${land.value}"/> km<sup>2</sup> from ${land.key}</li>
-								</c:if>
-							</c:forEach>
-							</ul>
-						</c:forEach>
-					</div>
+				<td><p>Land</p></td>
+				<td onclick="toggleTab('Land');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.freeLand}"/> km<sup>2</sup> / <fmt:formatNumber value="${home.domestic.land}"/> km<sup>2</sup></p>
+					<ui:dropdown value="${home.domestic.land}" name="Land" map="${home.landUsage}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
-				<td>Population</td>
-				<td>
-					<div class="noClose" onclick="toggleTab('population')">
-						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
-						<fmt:formatNumber value="${home.domestic.population}"/> People
-					</div>
-					<div class="resourceTabDown" id="population">
-						<c:set var="population" value="${home.populationGrowth}"/>
-						<p class="positive">+<fmt:formatNumber value="${population.base}" maxFractionDigits="2"/>% from base growth<br></p>
-						<p class="${population.policies > 1 ? 'positive' : 'negative'}">Modified by <fmt:formatNumber value="${population.policies * 100}" maxFractionDigits="2"/>% from policies<br></p>
-						<p class="${population.unemployment > 1 ? 'positive' : 'negative'}">Modified by <fmt:formatNumber value="${population.unemployment * 100}" maxFractionDigits="2"/>% from ${population.unemployment > 0 ? 'unemployment' : 'over population'}<br></p>
-						<p class="${population.total > 0 ? 'positive' : 'negative'}">${population.total >= 0 ? '+' : ''}<fmt:formatNumber value="${population.total}" maxFractionDigits="2"/>% change total</p>
-					</div>
+				<td><p>Population</p></td>
+				<td onclick="toggleTab('Population');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.domestic.population}"/> People</p>
+					<ui:dropdown value="${home.domestic.population}" name="Population" map="${home.populationGrowth}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
-				<td>Manpower</td>
-				<td>
-					<div class="noClose" onclick="toggleTab('manpower')">
-						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
- 						<fmt:formatNumber value="${home.freeManpower}"/>
-					</div>
-					<div class="resourceTabDown" id="manpower">
-						<p class="neutral"><fmt:formatNumber value="${home.totalManpower}"/> Total</p><br><br>
-						<c:set var="manpower" value="${home.usedManpower}"/>
-						<c:forEach var="entry" items="${manpower}">
-							<p class="negative"><fmt:formatNumber value="${entry.value}"/> in ${entry.key}<br></p>
-						</c:forEach>
-					</div>
+				<td><p>Manpower</p></td>
+				<td onclick="toggleTab('Manpower');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.freeManpower}"/> Bodies</p>
+					<ui:dropdown value="${home.totalManpower}" name="Manpower" map="${home.usedManpower}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
-				<td>Rebel Threat</td>
-				<td><cloc:rebels value="${home.domestic.rebels}"/></td>
+				<td><p>Rebel Threat</p></td>
+				<td><p><cloc:rebels value="${home.domestic.rebels}"/></p></td>
 			</tr>
 		</table>
-		<h1>Economy</h1>
-		<table id="nation">
+		<h2>Economy</h2>
+		<table class="standardTable nationTable">
 			<tr>
-				<td>Economic System</td>
-				<td><cloc:economic value="${home.economy.economic}"/></td>
+				<td><p>Economic System</p></td>
+				<td><p><cloc:economic value="${home.economy.economic}"/></p></td>
 			</tr>
 			<tr>
-				<td>Gross Domestic Product</td>
-				<td>$<fmt:formatNumber value="${home.economy.gdp}"/> Million</td>
+				<td><p>Gross Domestic Product</p></td>
+				<td><p><fmt:formatNumber value="${home.economy.gdp}"/> Million</p></td>
 			</tr>
 			<tr>
-				<td>Growth</td>
-				<td>
-					<div class="noClose" onclick="toggleTab('growth')">
-						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
-						<fmt:formatNumber value="${home.economy.growth}"/> Million per Month
-					</div>
-					<div class="resourceTabDown" id="growth">
-						<c:set value="${home.growthChange}" var="growth"/>
-						<c:forEach items="${growth.entrySet()}" var="item" varStatus="status">
-							<c:if test="${item.key != 'net'}">
-								<c:if test="${item.value > 0.0}">
-									<p class="positive">+${item.value} from ${item.key}</p><br>
-								</c:if>
-								<c:if test="${item.value < 0.0}">
-									<p class="negative">${item.value} from ${item.key}</p><br>
-								</c:if>
-							</c:if>
-						</c:forEach>
-						<c:if test="${growth.net == 0}">
-							<p class="neutral"><br>No net change...</p>
-						</c:if>
-						<c:if test="${growth.net > 0}">
-							<p class="positive"><br>+${growth.net} net gain</p>
-						</c:if>
-						<c:if test="${growth.net < 0}">
-							<p class="negative"><br>${growth.net} net loss</p>
-						</c:if>
-					</div>
+				<td><p>Growth</p></td>
+				<td onclick="toggleTab('Growth')">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.economy.growth}"/> Million per month</p>
+					<ui:dropdown value="${home.economy.growth}" name="Growth" map="${home.growthChange}" nation="${home}"/>
 				</td>
 			</tr>
 		</table>
-		<h1>Foreign</h1>
-		<table id="nation">
+		<h2>Foreign</h2>
+		<table class="standardTable nationTable">
 			<tr>
-				<td>Region</td>
-				<td><c:out value="${home.foreign.region.name}"/></td>
+				<td><p>Region</p></td>
+				<td><a href="${pageContext.request.contextPath}/map/region/${home.foreign.region.name}"><p>${home.foreign.region.name}</p></a></td>
 			</tr>
 			<tr>
-				<td>Official Alignment</td>
-				<td><cloc:alignment value="${home.foreign.alignment}"/></td>
+				<td><p>Official Alignment</p></td>
+				<td><p><cloc:alignment value="${home.foreign.alignment}"/></p></td>
 			</tr>
 			<tr>
-				<td>Treaty Membership</td>
+				<td><p>Treaty Membership</p></td>
 				<td>
-					<c:if test="${home.treaty != null}">
-						<a href="${pageContext.request.contextPath}/treaty/${home.treaty.id}/"><c:out value="${home.treaty.name}"/></a>
-					</c:if>
 					<c:if test="${home.treaty == null}">
-						None
+						<p>None</p>
+					</c:if>
+					<c:if test="${home.treaty != null}">
+						<p>${home.treaty.treatyUrl}</p>
 					</c:if>
 				</td>
 			</tr>
 		</table>
-		<h1>Military</h1>
-		<table id="nation">
-			<caption>Army</caption>
+		<h2>Military</h2>
+		<table class="standardTable nationTable">
+			<caption><p>Army</p></caption>
 			<tr>
-				<td>Size</td>
-				<td><fmt:formatNumber value="${home.army.size}"/>k Personnel</td>
+				<td><p>Active Personnel</p></td>
+				<td><p><fmt:formatNumber value="${home.army.size}"/></p></td>
 			</tr>
 			<tr>
-				<td>Training</td>
-				<td>${home.army.training}%</td>
+				<td><p>Training</p></td>
+				<td><p><fmt:formatNumber value="${home.army.training}"/>%</p></td>
 			</tr>
 			<tr>
-				<td>Equipment</td>
-				<td>
-					<div class="noClose" onclick="toggleTab('equipment')">
-						<img class="noClose small" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow"/>
-						<fmt:formatNumber value="${home.totalEquipment}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> needed
-					</div>
-					<div class="resourceTabDown" id="equipment">
-						<c:forEach var="equipment" items="${home.equipment}">
-							<ul style="margin: 0; padding: 0 0 0 2em; list-style: circle">
-								<c:if test="${equipment.value > 0}">
-									<li class="neutral"><fmt:formatNumber value="${equipment.value}"/> <c:out value=" ${equipment.key}"/></li>
-								</c:if>
-							</ul>
-						</c:forEach>
-					</div>
+				<td><p>Equipment</p></td>
+				<td onclick="toggleTab('Equipment');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.totalInfantryEquipment}"/>/<fmt:formatNumber value="${home.army.size * 1000}"/> Required</p>
+					<ui:dropdown value="${home.totalInfantryEquipment}" name="Equipment" map="${home.equipment}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
-				<td>Artillery</td>
-				<td><fmt:formatNumber value="${home.army.artillery}"/> Pieces</td>
+				<td><p>Artillery</p></td>
+				<td><p><fmt:formatNumber value="${home.army.artillery}"/> Pieces</p></td>
 			</tr>
 		</table>
 		<br><br>
-		<table id="nation">
-			<caption>Navy</caption>
+		<table class="standardTable nationTable">
+			<caption><p>Navy</p></caption>
 			<tr>
-				<td>Destroyers</td>
-				<td><fmt:formatNumber value="${home.military.destroyers}"/></td>
+				<td><p>Destroyers</p></td>
+				<td><p><fmt:formatNumber value="${home.military.destroyers}"/></p></td>
 			</tr>
 			<tr>
-				<td>Cruisers</td>
-				<td><fmt:formatNumber value="${home.military.cruisers}"/></td>
+				<td><p>Cruisers</p></td>
+				<td><p><fmt:formatNumber value="${home.military.cruisers}"/></p></td>
 			</tr>
 			<tr>
-				<td>Battleships</td>
-				<td><fmt:formatNumber value="${home.military.battleships}"/></td>
+				<td><p>Battleships</p></td>
+				<td><p><fmt:formatNumber value="${home.military.battleships}"/></p></td>
 			</tr>
 			<tr>
-				<td>Submarines</td>
-				<td><fmt:formatNumber value="${home.military.submarines}"/></td>
+				<td><p>Submarines</p></td>
+				<td><p><fmt:formatNumber value="${home.military.submarines}"/></p></td>
 			</tr>
 			<tr>
-				<td>Troop Transports</td>
-				<td><fmt:formatNumber value="${home.military.transports}"/></td>
+				<td><p>Troop Transports</p></td>
+				<td><p><fmt:formatNumber value="${home.military.transports}"/></p></td>
 			</tr>
 		</table>
 		<br><br>
-		<table id="nation">
-			<caption>Airforce</caption>
-			<tr>
-				<td>Zeppelins</td>
-				<td><fmt:formatNumber value="${home.military.zeppelins}"/></td>
-			</tr>
+		<table class="standardTable nationTable">
+			<caption><p>Airforce</p></caption>
 		</table>
-		<h1>Wars</h1>
-		<c:if test="${offensive != null}">
-			<p>Offensive: <a href="${pageContext.request.contextPath}/nation/${offensive.id}/">${offensive.cosmetic.nationName}</a></p>
-		</c:if>
-		<c:if test="${defensive != null}">
-			<p>Defensive: <a href="${pageContext.request.contextPath}/nation/${defensive.id}/">${defensive.cosmetic.nationName}</a></p>
-		</c:if>
-		<c:if test="${offensive == null && defensive == null}">
-			<p>None</p>
-		</c:if>
 	</c:if>
-</div>
-<%@ include file="includes/header.jsp" %>
-</div>
-</body>
-</html>
+<%@ include file="includes/defaultBottom.jsp" %>

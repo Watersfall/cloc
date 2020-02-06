@@ -1,13 +1,7 @@
 <%--@elvariable id="treaty" type="com.watersfall.clocgame.model.treaty.Treaty"--%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.treaty.TreatyMember"--%>
-<%@ include file="includes/default.jsp" %>
-<html>
-<%@ include file="includes/head.jsp" %>
-<body>
-<%@ include file="includes/side.jsp" %>
-<%@ include file="includes/toggle.jsp"%>
-<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
-
+<%--@elvariable id="stats" type="com.watersfall.clocgame.model.Stats"--%>
+<%@ include file="includes/defaultTop.jsp" %>
 	<c:choose>
 		<c:when test="${empty id}">
 			<p>You have visited this page incorrectly!</p>
@@ -21,8 +15,7 @@
 				<button onclick="updateTreaty('accept', '${treaty.id}')">Accept</button><button onclick="updateTreaty('decline', '${treaty.id}')">Reject</button>
 			</c:if>
 			<h1><c:out value="${treaty.name}"/></h1>
-			<br>
-			<img style="width: 40%; height: auto;" src="${pageContext.request.contextPath}/user/treaty/<c:out value="${treaty.flag}"/>" alt="flag"/>
+			<img class="veryLarge" src="${pageContext.request.contextPath}/user/treaty/<c:out value="${treaty.flag}"/>" alt="flag"/>
 			<br>
 			<p><c:out value="${treaty.description}"/></p>
 			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">
@@ -46,46 +39,8 @@
 			</c:if>
 			<br>
 			<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder || home.invite || home.edit)}">
-				<script>
-					function display()
-					{
-						let panel = document.getElementById("admin");
-						let button = document.getElementById("adminButton");
-						if(panel.style.display === "")
-						{
-							panel.style.display = "block";
-							button.innerHTML = "Hide Admin Actions";
-						}
-						else
-						{
-							panel.style.display = "";
-							button.innerHTML = "Show Admin Actions";
-						}
-					}
-
-					function stats()
-					{
-						let panel = document.getElementById("stats");
-						let button = document.getElementById("statsButton");
-						if(panel.style.display === "")
-						{
-							panel.style.display = "block";
-							button.innerHTML = "Hide Stats";
-						}
-						else
-						{
-							panel.style.display = "";
-							button.innerHTML = "Show Stats";
-						}
-					}
-				</script>
-				<style>
-					#admin{
-						display: none;
-					}
-				</style>
 				<button id="adminButton" onclick="display()">Show Admin Actions</button>
-				<div id="admin">
+				<div id="admin" class="toggleable">
 					<c:if test="${home.manage || home.founder || home.edit}">
 						<label for="name">Alliance Name</label>
 						<input type="text" id="name" value="${treaty.name}"/>
@@ -108,17 +63,18 @@
 			</c:if>
 			<h3>Stats</h3>
 			<button id="statsButton" onclick="stats();">Show Stats</button>
-			<table id="stats" class="toggleClass">
-					<%--@elvariable id="stats" type="com.watersfall.clocgame.model.Stats"--%>
-				<c:forEach items="${stats.getTreatyStats(treaty.id).map}" var="stat">
-					<tr>
-						<td>${stat.key}</td>
-						<td>${stat.value}</td>
-					</tr>
-				</c:forEach>
-			</table>
+			<div id="stats" class="toggleable">
+				<table class="standardTable">
+					<c:forEach items="${stats.getTreatyStats(treaty.id).map}" var="stat">
+						<tr>
+							<td>${stat.key}</td>
+							<td>${stat.value}</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
 			<h3>Members</h3>
-			<table id="nation">
+			<table class="standardTable">
 				<tr>
 					<th>Name</th>
 					<th>Region</th>
@@ -129,8 +85,8 @@
 				</tr>
 				<c:forEach items="${treaty.members}" var="member">
 					<tr>
-						<td><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></td>
-						<td><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name}">${member.foreign.region.name}</a></td>
+						<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
+						<td><b><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name}">${member.foreign.region.name}</a></b></td>
 						<td>${member.roles}</td>
 						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
 							<td><button>Kick</button></td>
@@ -144,7 +100,4 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
-</div>
-<%@ include file="includes/header.jsp" %></div>
-</body>
-</html>
+<%@ include file="includes/defaultBottom.jsp" %>

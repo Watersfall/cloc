@@ -34,8 +34,8 @@ public class War
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-				"LEFT JOIN cloc_treaties_members ctm ON cloc_login.id = ctm.nation_id\n" +
-				"LEFT JOIN cloc_treaties ct ON ctm.alliance_id = ct.id \n" +
+				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
+				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
 				"WHERE (attacker=cloc_login.id OR defender=cloc_login.id) AND end=-1 ORDER BY cloc_war.id DESC LIMIT 20 OFFSET ?");
 		statement.setInt(1, (page - 1) * 20);
 		ResultSet results = statement.executeQuery();
@@ -58,8 +58,8 @@ public class War
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-				"LEFT JOIN cloc_treaties_members ctm ON cloc_login.id = ctm.nation_id\n" +
-				"LEFT JOIN cloc_treaties ct ON ctm.alliance_id = ct.id \n" +
+				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
+				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
 				"WHERE (attacker=cloc_login.id OR defender=cloc_login.id) AND end>0 ORDER BY cloc_war.end DESC, cloc_war.id DESC LIMIT 20 OFFSET ?");
 		statement.setInt(1, (page - 1) * 20);
 		ResultSet results = statement.executeQuery();
@@ -80,18 +80,18 @@ public class War
 		if(results.getInt("cloc_login.id") == results.getInt("attacker"))
 		{
 			this.attacker = new Nation(results.getInt("cloc_login.id"), results);
-			this.attackerTreaty = new Treaty(results.getInt("ct.id"), results);
+			this.attackerTreaty = new Treaty(results.getInt("treaty.id"), results);
 			results.next();
 			this.defender = new Nation(results.getInt("cloc_login.id"), results);
-			this.defenderTreaty = new Treaty(results.getInt("ct.id"), results);
+			this.defenderTreaty = new Treaty(results.getInt("treaty.id"), results);
 		}
 		else
 		{
 			this.defender = new Nation(results.getInt("cloc_login.id"), results);
-			this.defenderTreaty = new Treaty(results.getInt("ct.id"), results);
+			this.defenderTreaty = new Treaty(results.getInt("treaty.id"), results);
 			results.next();
 			this.attacker = new Nation(results.getInt("cloc_login.id"), results);
-			this.attackerTreaty = new Treaty(results.getInt("ct.id"), results);
+			this.attackerTreaty = new Treaty(results.getInt("treaty.id"), results);
 		}
 		if(winner == attacker.getId())
 		{

@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="taglibs.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="production" type="java.util.Map.Entry<Integer, Production>"--%>
 <div id="id${production.value.id}" style="max-width: 22em;">
@@ -37,7 +37,7 @@
 			<div style="background: green; width: ${production.value.efficiency / 100}%"><p class="neutral">Efficiency:&nbsp;${production.value.efficiency / 100}%</p></div>
 		</div>
 	</div>
-	<select id="change${production.value.id}" class="toggleClass">
+	<select id="change${production.value.id}" class="toggle">
 		<c:forEach items="${home.tech.researchedTechs}" var="tech">
 			<c:if test="${tech.technology.producible}">
 				<option value="${tech.name()}"} ${(tech.name() == production.value.production) ? 'selected' : ''}>${tech.technology.name}</option>

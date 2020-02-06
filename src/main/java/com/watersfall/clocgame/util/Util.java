@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class Util
@@ -60,6 +61,22 @@ public class Util
 			}
 		}
 		return map;
+	}
+
+	public static String formatNumber(int number)
+	{
+		return formatNumber((long) number);
+	}
+
+	public static String formatNumber(long number)
+	{
+		return String.format("%,d", number);
+	}
+
+	public static String formatNumber(double number)
+	{
+		DecimalFormat df = new DecimalFormat("#.##");
+		return df.format(number);
 	}
 
 	public static int getTotalNations(Connection conn) throws SQLException

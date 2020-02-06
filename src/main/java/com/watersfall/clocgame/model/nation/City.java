@@ -307,14 +307,12 @@ public class City extends Updatable
 		double military = -this.getIndustryMilitary();
 		double nitrogen = -this.getIndustryNitrogen();
 		double net = total + civilian + military + nitrogen;
-		map.put("total", total);
-		map.put("mines", mines);
-		map.put("infrastructure", bonus);
-		map.put("devastation", devastation2);
-		map.put("civilian factory demands", civilian);
-		map.put("military factory demands", military);
-		map.put("nitrogen plant demands", nitrogen);
-		map.put("net", net);
+		map.put("resource.mines", mines);
+		map.put("resource.infrastructure", bonus);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
 		return map;
 	}
 
@@ -343,14 +341,12 @@ public class City extends Updatable
 		double military = -this.getIndustryMilitary();
 		double nitrogen = -this.getIndustryNitrogen();
 		double net = total + civilian + military + nitrogen;
-		map.put("total", total);
-		map.put("mines", mines);
-		map.put("infrastructure", bonus);
-		map.put("devastation", devastation2);
-		map.put("civilian factory demands", civilian);
-		map.put("military factory demands", military);
-		map.put("nitrogen plant demands", nitrogen);
-		map.put("net", net);
+		map.put("resource.mines", mines);
+		map.put("resource.infrastructure", bonus);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
 		return map;
 	}
 
@@ -379,14 +375,12 @@ public class City extends Updatable
 		double military = -this.getIndustryMilitary();
 		double nitrogen = -this.getIndustryNitrogen();
 		double net = total + civilian + military + nitrogen;
-		map.put("total", total);
-		map.put("wells", wells);
-		map.put("infrastructure", bonus);
-		map.put("devastation", devastation2);
-		map.put("civilian factory demands", civilian);
-		map.put("military factory demands", military);
-		map.put("nitrogen plant demands", nitrogen);
-		map.put("net", net);
+		map.put("resource.wells", wells);
+		map.put("resource.infrastructure", bonus);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
 		return map;
 	}
 
@@ -409,11 +403,11 @@ public class City extends Updatable
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
 		double net = total;
-		map.put("total", total);
-		map.put("factories", factories);
-		map.put("infrastructure", bonus);
-		map.put("devastation", devastation2);
-		map.put("net", net);
+		map.put("resource.factoryProduction", factories);
+		map.put("resource.infrastructure", bonus);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
 		return map;
 	}
 
@@ -436,11 +430,11 @@ public class City extends Updatable
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
 		double net = total;
-		map.put("total", total);
-		map.put("factories", factories);
-		map.put("infrastructure", bonus);
-		map.put("devastation", devastation2);
-		map.put("net", net);
+		map.put("resource.factoryProduction", factories);
+		map.put("resource.infrastructure", bonus);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
 		return map;
 	}
 
@@ -465,11 +459,11 @@ public class City extends Updatable
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
 		double net = total;
-		map.put("default", standard);
-		map.put("total", total);
-		map.put("universities", universities);
-		map.put("devastation", devastation2);
-		map.put("net", net);
+		map.put("resource.default", standard);
+		map.put("resource.universities", universities);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
 		return map;
 	}
 
@@ -485,9 +479,9 @@ public class City extends Updatable
 	public LinkedHashMap<String, Integer> getLandUsage()
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		map.put("mines", City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
-		map.put("factories", City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
-		map.put("universities", City.LAND_UNIVERSITY * (this.universities));
+		map.put("land.mines", City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
+		map.put("land.factories", City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
+		map.put("land.universities", City.LAND_UNIVERSITY * (this.universities));
 		return map;
 	}
 }

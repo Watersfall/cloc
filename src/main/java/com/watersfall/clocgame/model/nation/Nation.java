@@ -2,7 +2,6 @@ package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.math.BadMath;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.message.Declaration;
@@ -48,7 +47,7 @@ public class Nation
 	private LinkedHashMap<String, Double> nitrogenProduction = null;
 	private LinkedHashMap<String, Double> researchProduction = null;
 	private @Getter LinkedHashMap<Integer, Production>production;
-	private HashMap<String, LinkedHashMap<String, Double>> allProductions = null;
+	private LinkedHashMap<String, LinkedHashMap<String, Double>> allProductions = null;
 	private int landUsage = -1;
 
 	/**
@@ -93,6 +92,8 @@ public class Nation
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
+				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
+				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
 				"WHERE " + where);
 		ResultSet results = get.executeQuery();
 		while(results.next())
@@ -122,6 +123,8 @@ public class Nation
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
+				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
+				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
 				"WHERE " + where + "\n" +
 				"ORDER BY " + order);
 		ResultSet results = get.executeQuery();
@@ -153,6 +156,8 @@ public class Nation
 				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
 				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
+				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
+				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
 				"WHERE " + where + "\n" +
 				"ORDER BY " + order + "\n" +
 				"LIMIT " + limit);
@@ -303,29 +308,10 @@ public class Nation
 		this.tech = new NationTech(id, results);
 		this.policy = new NationPolicy(id, results);
 		this.army = new NationArmy(id, results);
-	}
-
-	/**
-	 * Commits all changes made to this object
-	 * Put in the main Nation class instead of in the subclasses since they all share the same conn
-	 *
-	 * @throws SQLException if something TQL related goes wrong
-	 */
-	public void commit() throws SQLException
-	{
-		conn.commit();
-	}
-
-	/**
-	 * Attempts to join a treaty in the standard way:
-	 * by checking if this nation has an invite and letting them in if they do
-	 * @param treaty The Treaty to join
-	 * @param founder Whether this Nation should be roled as founder of the treaty or not
-	 * @throws SQLException If a database error occurs
-	 */
-	public void joinTreaty(Treaty treaty, boolean founder) throws SQLException
-	{
-		this.joinTreaty(treaty.getId(), founder);
+		if(results.getInt("treaty.id") != 0)
+		{
+			this.treaty = new Treaty(results.getInt("treaty.id"), results);
+		}
 	}
 
 	/**
@@ -338,18 +324,6 @@ public class Nation
 	public void joinTreaty(Integer id, boolean founder) throws SQLException
 	{
 		this.joinTreaty(id, founder, false);
-	}
-
-	/**
-	 * Attempts to join a treaty
-	 * @param treaty The Treaty to join
-	 * @param founder Whether this nation should be roled as Treaty Founder
-	 * @param ignoreInvite Whether this nation should bypass the invite requirement to join
-	 * @throws SQLException If a database error occurs
-	 */
-	public void joinTreaty(Treaty treaty, boolean founder, boolean ignoreInvite) throws SQLException
-	{
-		this.joinTreaty(treaty.getId(), founder, ignoreInvite);
 	}
 
 	/**
@@ -483,210 +457,50 @@ public class Nation
 		}
 	}
 
-	/**
-	 * Calculates the growth change of this nation, returning a HashMap with keys:
-	 * <ul>
-	 *     <li>civilian industry</li>
-	 *     <li>military industry</li>
-	 *     <li>nitrogen industry</li>
-	 *     <li>army upkeep</li>
-	 *     <li>net</li>
-	 * </ul>
-	 * @return A HashMap with the growth change of this Nation
-	 */
-	public LinkedHashMap<String, Integer> getGrowthChange()
+	public String sendPeace(Nation receiver) throws SQLException
 	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		int factoriesCiv = 0;
-		int factoriesMil = 0;
-		int factoriesNit = 0;
-		int army = this.army.getSize() / -20;
-		for(City city : cities.getCities().values())
+		PreparedStatement statement = this.conn.prepareStatement("SELECT attacker, defender, peace FROM cloc_war " +
+				"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
+		statement.setInt(1, this.id);
+		statement.setInt(2, receiver.id);
+		statement.setInt(3, receiver.id);
+		statement.setInt(4, this.id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		if(results.getInt("peace") == -1)
 		{
-			factoriesCiv += city.getIndustryCivilian();
-			factoriesMil += city.getIndustryMilitary();
-			factoriesNit += city.getIndustryNitrogen();
+			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET peace=? " +
+					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
+			sendPeace.setInt(1, this.id);
+			sendPeace.setInt(2, this.id);
+			sendPeace.setInt(3, receiver.id);
+			sendPeace.setInt(4, receiver.id);
+			sendPeace.setInt(5, this.id);
+			sendPeace.execute();
+			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_SEND_PEACE, this.getNationUrl()));
+			return Responses.peaceSent();
 		}
-		map.put("civilian industry", factoriesCiv);
-		map.put("military industry", factoriesMil);
-		map.put("nitrogen industry", factoriesNit);
-		map.put("army upkeep", army);
-		map.put("net", factoriesCiv + factoriesMil + factoriesNit + army);
-		return map;
-	}
-
-	/**
-	 * Calculates out the population growth of this Nation, returning a HashMap with keys:
-	 * <ul>
-	 *     <li>base</li>
-	 *     <li>policies</li>
-	 *     <li>unemployment</li>
-	 *     <li>total</li>
-	 * </ul>
-	 * @return A HashMap with the Nations population growth
-	 */
-	public HashMap<String, Double> getPopulationGrowth()
-	{
-		HashMap<String, Double> map = new HashMap<>();
-		double modifier = 1;
-		long employment = 0;
-		double unemployment = 0;
-		double growth = 0.2;
-		if(this.policy.getFood() == 2)
+		else if(results.getInt("peace") == this.id)
 		{
-			modifier += 0.25;
+			return Responses.peaceAlreadySent();
 		}
-		else if(this.policy.getFood() == 0)
+		else if(results.getInt("peace") == receiver.id)
 		{
-			modifier += -0.50;
+			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET end=? " +
+					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
+			sendPeace.setInt(1, Util.turn);
+			sendPeace.setInt(2, this.id);
+			sendPeace.setInt(3, receiver.id);
+			sendPeace.setInt(4, receiver.id);
+			sendPeace.setInt(5, this.id);
+			sendPeace.execute();
+			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_PEACE_ACCEPTED, this.getNationUrl()));
+			return Responses.peaceAccepted();
 		}
-		if(this.policy.getManpower() == 0)
+		else
 		{
-			modifier += 0.25;
+			return Responses.genericError();
 		}
-		if(this.policy.getManpower() == 1)
-		{
-			modifier += 0.10;
-		}
-		else if(this.policy.getManpower() == 3)
-		{
-			modifier += -0.1;
-		}
-		else if(this.policy.getManpower() == 4)
-		{
-			modifier += -0.25;
-		}
-		if(this.policy.getEconomy() == 4)
-		{
-			modifier += -0.1;
-		}
-		for(City city : cities.getCities().values())
-		{
-			employment += city.getTotalEmployment();
-		}
-		modifier += unemployment;
-		unemployment = BadMath.log((double) (employment - this.domestic.getPopulation()) / (double) this.domestic.getPopulation());
-		map.put("base", growth);
-		map.put("policies", modifier);
-		map.put("unemployment", unemployment);
-		map.put("total", growth * modifier * unemployment);
-		return map;
-	}
-
-	/**
-	 * Calculates the approval change of this nation and returns a HashMap with keys:
-	 * <ul>
-	 *     <li>policies</li>
-	 *     <li>total</li>
-	 * </ul>
-	 * @return A HashMap with this Nations approval change
-	 */
-	public HashMap<String, Integer> getApprovalChange()
-	{
-		HashMap<String, Integer> map = new HashMap<>();
-		int policies = 0;
-		if(defensive == 0 && offensive == 0 && policy.getEconomy() > 2)
-		{
-			policies += -2;
-		}
-		if(defensive != 0 && offensive != 0 && policy.getEconomy() < 2)
-		{
-			policies += -2;
-		}
-		map.put("policies", policies);
-		map.put("total", policies);
-		return map;
-	}
-
-	/**
-	 * Calculates the stability change of this nation and returns a HashMap with keys:
-	 * <ul>
-	 *     <li>total</li>
-	 * </ul>
-	 * @return A HashMap with this Nations stability change
-	 */
-	public HashMap<String, Integer> getStabilityChange()
-	{
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put("total", 1);
-		return map;
-	}
-
-	/**
-	 * Gets the total amount of military factories
-	 * @return The total military factories
-	 */
-	public int getTotalMilitaryFactories()
-	{
-		int sum = 0;
-		for(City city : cities.getCities().values())
-		{
-			sum += city.getIndustryMilitary();
-		}
-		return sum;
-	}
-
-	/**
-	 * Calculates the land usage by type of each city in this Nation,
-	 * returning a HashMap where each Key is the name of a city,
-	 * and the Value is a HashMap where each key is a type, and it's value
-	 * is the land usage
-	 * @return A HashMap with the land usage
-	 */
-	public HashMap<String, HashMap<String, Integer>> getLandUsageByCityAndType()
-	{
-		HashMap<String, HashMap<String, Integer>> map = new HashMap<>();
-		for(City city : this.cities.getCities().values())
-		{
-			map.put(city.getName(), city.getLandUsage());
-		}
-		return map;
-	}
-
-	/**
-	 * Calculates the total land used by each city in this Nation, returning a HashMap where
-	 * each Key is the name of a city, and the Value is the land usage of that city
-	 * @return A HashMap with the land usage by city
-	 */
-	public HashMap<String, Integer> getLandUsageByCity()
-	{
-		HashMap<String, Integer> map = new HashMap<>();
-		for(City city : this.cities.getCities().values())
-		{
-			int total = 0;
-			for(Integer land : city.getLandUsage().values())
-			{
-				total += land;
-			}
-			map.put(city.getName(), total);
-		}
-		return map;
-	}
-
-	/**
-	 * Calculates the total land usage by type of this nation, returning a HashMap with the following keys:
-	 * <ul>
-	 *     <li>mines</li>
-	 *     <li>factories</li>
-	 *     <li>universities</li>
-	 * </ul>
-	 * @return HashMap with the land usage of this nation by type
-	 */
-	public HashMap<String, Integer> getLandUsageByType()
-	{
-		HashMap<String, Integer> map = new HashMap<>();
-		int mines = 0, factories = 0, universities = 0;
-		for(City city : this.cities.getCities().values())
-		{
-			HashMap<String, Integer> land = city.getLandUsage();
-			mines += land.get("mines");
-			factories += land.get("factories");
-			universities += land.get("universities");
-		}
-		map.put("mines", mines);
-		map.put("factories", factories);
-		map.put("universities", universities);
-		return map;
 	}
 
 	/**
@@ -699,21 +513,52 @@ public class Nation
 	}
 
 	/**
-	 * Calculates out the food production of this Nation, stored in a HashMap with keys:
-	 * <ul>
-	 *     <li>farming</li>
-	 *     <li>costs</li>
-	 *     <li>net</li>
-	 * </ul>
-	 * @return A HashMap containing food production
+	 * Calculates the total land usage of this Nation
+	 * @return The total land usage
 	 */
-	public HashMap<String, Integer> getFoodProduction()
+	public int getTotalLandUsage()
 	{
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put("farming", this.getFreeLand() / 250);
-		map.put("costs", (int)(this.domestic.getPopulation() / 2000));
-		map.put("net", map.get("farming") - map.get("costs"));
-		return map;
+		if(landUsage == -1)
+		{
+			int total = 0;
+			for(City city : cities.getCities().values())
+			{
+				for(Integer integer : city.getLandUsage().values())
+				{
+					total += integer;
+				}
+			}
+			this.landUsage = total;
+		}
+		return landUsage;
+	}
+
+	/**
+	 * Gets the total amount of military factories in all cities in this nation
+	 * @return The military factory count
+	 */
+	public int getTotalMilitaryFactories()
+	{
+		int total = 0;
+		for(City city : cities.getCities().values())
+		{
+			total += city.getIndustryMilitary();
+		}
+		return total;
+	}
+
+	/**
+	 * Gets the total amount of factories in all cities in this nation
+	 * @return The factory count
+	 */
+	public int getTotalFactories()
+	{
+		int total = 0;
+		for(City city : cities.getCities().values())
+		{
+			total += city.getIndustryMilitary() + city.getIndustryNitrogen() + city.getIndustryCivilian();
+		}
+		return total;
 	}
 
 	/**
@@ -754,9 +599,9 @@ public class Nation
 	 * </ul>
 	 * @return A HashMap containing manpower usage
 	 */
-	public HashMap<String, Long> getUsedManpower()
+	public LinkedHashMap<String, Long> getUsedManpower()
 	{
-		HashMap<String, Long> map = new HashMap<>();
+		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
 		long navy = this.military.getBattleships() +
 				this.military.getCruisers() +
 				this.military.getPreBattleships() +
@@ -765,18 +610,19 @@ public class Nation
 				this.military.getSubmarines();
 		navy *= 500;
 		long airforce = this.military.getBiplaneFighters() +
+				this.military.getReconPlanes() +
+				this.military.getReconBalloons() +
 				this.military.getTriplaneFighters() +
 				this.military.getMonoplaneFighters() +
-				this.military.getReconBalloons() +
-				this.military.getReconPlanes() +
 				this.military.getBombers() +
 				this.military.getZeppelins();
 		airforce *= 50;
 		long army = this.army.getSize();
 		army *= 1000;
-		map.put("Navy", navy);
-		map.put("Airforce", airforce);
-		map.put("Army", army);
+		map.put("manpower.navy", -navy);
+		map.put("manpower.airforce", -airforce);
+		map.put("manpower.army", -army);
+		map.put("manpower.net", navy + airforce + army);
 		return map;
 	}
 
@@ -786,9 +632,21 @@ public class Nation
 	 */
 	public long getFreeManpower()
 	{
-		long soldiers = this.army.getSize() * 1000;
-		long manpower = getTotalManpower();
-		return manpower - soldiers;
+		return this.getTotalManpower() - this.getUsedManpower().get("manpower.net");
+	}
+
+	public LinkedHashMap<String, Double> getAllResources()
+	{
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		map.put("Budget", this.economy.getBudget());
+		map.put("Food", this.economy.getFood());
+		map.put("Coal", this.economy.getCoal());
+		map.put("Iron", this.economy.getIron());
+		map.put("Oil", this.economy.getOil());
+		map.put("Steel", this.economy.getSteel());
+		map.put("Nitrogen", this.economy.getNitrogen());
+		map.put("Research", this.economy.getResearch());
+		return map;
 	}
 
 	/**
@@ -811,13 +669,6 @@ public class Nation
 		if(coalProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			map.put("total", 0e0);
-			map.put("mines", 0e0);
-			map.put("infrastructure", 0e0);
-			map.put("civilian factory demands", 0e0);
-			map.put("military factory demands", 0e0);
-			map.put("nitrogen plant demands", 0e0);
-			map.put("net", 0e0);
 			for(City city : this.getCities().getCities().values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getCoalProduction();
@@ -852,13 +703,6 @@ public class Nation
 		if(ironProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			map.put("total", 0e0);
-			map.put("mines", 0e0);
-			map.put("infrastructure", 0e0);
-			map.put("civilian factory demands", 0e0);
-			map.put("military factory demands", 0e0);
-			map.put("nitrogen plant demands", 0e0);
-			map.put("net", 0e0);
 			for(City city : this.getCities().getCities().values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getIronProduction();
@@ -1001,16 +845,37 @@ public class Nation
 	}
 
 	/**
+	 * Calculates out the food production of this Nation, stored in a HashMap with keys:
+	 * <ul>
+	 *     <li>farming</li>
+	 *     <li>costs</li>
+	 *     <li>net</li>
+	 * </ul>
+	 * @return A HashMap containing food production
+	 */
+	public LinkedHashMap<String, Double> getFoodProduction()
+	{
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		double farming = this.getFreeLand() / 250.0;
+		double consumption = -this.domestic.getPopulation() / 2000.0;
+		map.put("resource.farming", farming);
+		map.put("resource.consumption", consumption);
+		map.put("resource.net", farming + consumption);
+		return map;
+	}
+
+	/**
 	 * Calculates the total production of all types for this nation
 	 * The production is returned as a HashMap of HashMaps, with the outer HashMap containing the keys:
 	 * <ul>
+	 *     <li>budget</li>
+	 *     <li>food</li>
 	 *     <li>coal</li>
 	 *     <li>iron</li>
 	 *     <li>oil</li>
 	 *     <li>steel</li>
 	 *     <li>nitrogen</li>
 	 *     <li>research</li>
-	 *     <li>weapons</li>
 	 * </ul>
 	 * Each of the inner HashMaps has the same keys as their standard getter,
 	 * typically containing:
@@ -1027,48 +892,31 @@ public class Nation
 	 * </ul>
 	 * @return A HashMap containing the total weapons production of this Nation
 	 */
-	public HashMap<String, LinkedHashMap<String, Double>> getAllTotalProductions()
+	public LinkedHashMap<String, LinkedHashMap<String, Double>> getAllTotalProductions()
 	{
 		if(allProductions == null)
 		{
-			HashMap<String, LinkedHashMap<String, Double>> map = new HashMap<>();
-			map.put("coal", this.getTotalCoalProduction());
-			map.put("iron", this.getTotalIronProduction());
-			map.put("oil", this.getTotalOilProduction());
-			map.put("steel", this.getTotalSteelProduction());
-			map.put("nitrogen", this.getTotalNitrogenProduction());
-			map.put("research", this.getTotalResearchProduction());
+			LinkedHashMap<String, LinkedHashMap<String, Double>> map = new LinkedHashMap<>();
+			LinkedHashMap<String, Double> budget = new LinkedHashMap<>();
+			budget.put("resource.gdp", this.getBudgetChange());
+			map.put("Budget", budget);
+			map.put("Food", this.getFoodProduction());
+			map.put("Coal", this.getTotalCoalProduction());
+			map.put("Iron", this.getTotalIronProduction());
+			map.put("Oil", this.getTotalOilProduction());
+			map.put("Steel", this.getTotalSteelProduction());
+			map.put("Nitrogen", this.getTotalNitrogenProduction());
+			map.put("Research", this.getTotalResearchProduction());
 			allProductions = map;
 		}
 		return allProductions;
 	}
 
 	/**
-	 * Calculates the total land usage of this Nation
-	 * @return The total land usage
-	 */
-	public int getTotalLandUsage()
-	{
-		if(landUsage == -1)
-		{
-			int total = 0;
-			for(City city : cities.getCities().values())
-			{
-				for(Integer integer : city.getLandUsage().values())
-				{
-					total += integer;
-				}
-			}
-			this.landUsage = total;
-		}
-		return landUsage;
-	}
-
-	/**
 	 * Gets the total equipment of the army
 	 * @return The total equipment
 	 */
-	public int getTotalEquipment()
+	public int getTotalInfantryEquipment()
 	{
 		return army.getMusket() + army.getRifledMusket() + army.getSingleShot() + army.getNeedleNose() +
 				army.getBoltActionManual() + army.getBoltActionClip() + army.getStraightPull() +
@@ -1091,7 +939,7 @@ public class Nation
 	}
 
 	/**
-	 * Calculates the power of an army based on it's size, technology level, training, and artillery
+	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power
 	 */
 	public double getPower()
@@ -1256,6 +1104,277 @@ public class Nation
 		}
 	}
 
+	/**
+	 * Returns the cash-cost of a policy<br>
+	 * This contains most policy costs that would show up under policies->category
+	 * but does not include any that cost another resource/other resources
+	 * @param policy The ID of the policy
+	 * @return The cost of the policy
+	 */
+	public int getPolicyCost(int policy)
+	{
+		switch(policy)
+		{
+			case PolicyActions.ID_PROPAGANDA:
+				return (int)(this.economy.getGdp() / 2 * (this.domestic.getApproval() / 100.0));
+			case PolicyActions.ID_WAR_PROPAGANDA:
+				return getPolicyCost(PolicyActions.ID_PROPAGANDA) / 2;
+			case PolicyActions.ID_LAND_CLEARANCE:
+				return (int)this.economy.getGdp() * 2;
+			case PolicyActions.ID_ALIGN:
+			case PolicyActions.ID_FREE:
+			case PolicyActions.ID_ARREST:
+				return 100;
+			case PolicyActions.ID_TRAIN:
+				return this.army.getSize() * this.army.getSize() * this.army.getTraining() / 200;
+			case PolicyActions.ID_CREATE_TREATY:
+				return 500;
+			default:
+				return 0;
+		}
+	}
+
+	/**
+	 * Checks whether the nation has researched a tech
+	 * @param tech The String name of the tech
+	 * @return True if it's researched, false otherwise
+	 */
+	public boolean hasTech(String tech)
+	{
+		return this.tech.getResearchedTechs().contains(Technologies.valueOf(tech));
+	}
+
+	/**
+	 * Returns the cost of posting declarations
+	 * @return Declaration posting cost
+	 */
+	public int getDeclarationCost()
+	{
+		return Declaration.COST;
+	}
+
+	/**
+	 * Calculates how much this nation's budget increases by for the daily turn change (or 7 times a standard turn)
+	 * @return The budget increase
+	 */
+	public double getBudgetChange()
+	{
+		return this.economy.getGdp() / 7;
+	}
+
+	/**
+	 * Gets one of the nations productions by id
+	 * @param id the id of the production
+	 * @return The production
+	 */
+	public Production getProductionById(int id)
+	{
+		return production.get(id);
+	}
+
+	public String getNationUrl()
+	{
+		return "<a href=\"/nation/" + id + "\"><b>" + this.cosmetic.getNationName() + "</b></a>";
+	}
+
+	/**
+	 * Runs the daily production tick
+	 * @throws SQLException if a database error occurs
+	 */
+	public void processProduction() throws SQLException
+	{
+		if(this.production.size() == 0)
+		{
+			return;
+		}
+		String statement = "UPDATE cloc_army, cloc_military SET ";
+		for(Production production : this.production.values())
+		{
+			double ic = production.getIc() + (production.getProgress() / 100.0);
+			int amount = (int)(ic / production.getProductionAsTechnology().getTechnology().getProductionCost());
+			int leftover = (int)((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionCost())) * 100);
+			production.setProgress(leftover);
+			statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "=" + production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
+			int efficiencyGain = (int)(0.1 * (10000.0 / (production.getEfficiency() / 100.0)));
+			production.setEfficiency(production.getEfficiency() + efficiencyGain);
+			if(production.getEfficiency() > 10000)
+			{
+				production.setEfficiency(10000);
+			}
+		}
+		statement += "WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id";
+		statement = statement.replace(", WHERE", " WHERE");
+		PreparedStatement update = conn.prepareStatement(statement);
+		update.setInt(1, this.id);
+		update.setInt(2, this.id);
+		update.execute();
+	}
+
+	public LinkedHashMap<String, Integer> getApprovalChange()
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		int policies = 0;
+		if(defensive == 0 && offensive == 0 && policy.getEconomy() > 2)
+		{
+			policies += -2;
+		}
+		if(defensive != 0 && offensive != 0 && policy.getEconomy() < 2)
+		{
+			policies += -2;
+		}
+		map.put("approval.policies", policies);
+		map.put("approval.net", policies);
+		return map;
+	}
+
+	public LinkedHashMap<String, Integer> getStabilityChange()
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		int approval = this.domestic.getApproval() / 20 - 2;
+		if(approval < 0)
+		{
+			map.put("stability.lowApproval", approval);
+		}
+		else
+		{
+			map.put("stability.approval", approval);
+		}
+		map.put("stability.net", approval);
+		return map;
+	}
+
+	public LinkedHashMap<String, Integer> getGrowthChange()
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		int factories = this.getTotalFactories();
+		int military = -1 * this.getUsedManpower().get("manpower.net").intValue() / 20000;
+		map.put("growth.factories", factories);
+		map.put("growth.military", military);
+		map.put("growth.net", factories + military);
+		return map;
+	}
+
+	public LinkedHashMap<String, Double> getPopulationGrowth()
+	{
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		double base = 0.2;
+		double foodPolicy = 0;
+		double manpowerPolicy = 0;
+		if(this.policy.getFood() == 2)
+		{
+			foodPolicy = 0.15;
+		}
+		else if(this.policy.getFood() == 0)
+		{
+			foodPolicy = -0.25;
+		}
+		if(this.policy.getManpower() == 0)
+		{
+			manpowerPolicy = 0.25;
+		}
+		else if(this.policy.getManpower() == 1)
+		{
+			manpowerPolicy = 0.1;
+		}
+		else if(this.policy.getManpower() == 3)
+		{
+			manpowerPolicy = -0.1;
+		}
+		else if(this.policy.getManpower() == 4)
+		{
+			manpowerPolicy = -0.25;
+		}
+		map.put("population.base", base);
+		map.put("population.foodPolicy", foodPolicy);
+		map.put("population.manpowerPolicy", manpowerPolicy);
+		map.put("population.net", base + foodPolicy + manpowerPolicy);
+		return map;
+	}
+
+	public LinkedHashMap<String, LinkedHashMap<String, Integer>> getLandUsage()
+	{
+		LinkedHashMap<String, LinkedHashMap<String, Integer>> map = new LinkedHashMap<>();
+		for(City city : cities.getCities().values())
+		{
+			map.put(city.getName(), city.getLandUsage());
+		}
+		return map;
+	}
+
+	public String getDisplayString(String key)
+	{
+		switch(key)
+		{
+			case "population.base":
+				return "% from Base Growth";
+			case "population.foodPolicy":
+				return "% from Food Policy";
+			case "population.manpowerPolicy":
+				return "% from Conscription Policy";
+			case "population.net":
+				return "% total growth per month";
+			case "growth.factories":
+				return " per week from factories";
+			case "growth.military":
+				return " per week from military upkeep";
+			case "growth.net":
+			case "approval.net":
+				return " change per week";
+			case "stability.lowApproval":
+				return " per week from low approval";
+			case "stability.approval":
+				return " per week from high approval";
+			case "approval.policies":
+				return " per week from policies";
+			case "manpower.army":
+				return " in the Army";
+			case "manpower.navy":
+				return " in the Navy";
+			case "manpower.airforce":
+				return " in the Airforce";
+			case "manpower.net":
+				return " total deployed";
+			case "land.mines":
+				return " from Mines";
+			case "land.factories":
+				return " from Factories";
+			case "land.universities":
+				return " from Universities";
+			case "resource.gdp":
+				return " from GDP";
+			case "resource.factoryUpkeep":
+				return " from factory demands";
+			case "resource.factoryProduction":
+				return " from factories";
+			case "resource.mines":
+				return " from mining";
+			case "resource.wells":
+				return " from oil wells";
+			case "resource.infrastructure":
+				return " from infrastructure";
+			case "resource.farming":
+				return " from farming";
+			case "resource.consumption":
+				return " from consumption";
+			case "resource.net":
+				return " net production";
+			case "resource.totalGain":
+				return " total production";
+			case "resource.totalLoss":
+				return " total upkeep";
+			case "resource.devastation":
+				return " from devastation";
+			case "resource.default":
+				return " from population";
+			default:
+				return key;
+		}
+	}
+
+	/**
+	 * Writes the updated fields in this nation to the database
+	 * @throws SQLException if a database error occurs
+	 */
 	public void update() throws SQLException
 	{
 		PreparedStatement statement;
@@ -1300,127 +1419,6 @@ public class Nation
 	}
 
 	/**
-	 * Returns the cash-cost of a policy<br>
-	 * This contains most policy costs that would show up under policies->category
-	 * but does not include any that cost another resource/other resources
-	 * @param policy The ID of the policy
-	 * @return The cost of the policy
-	 */
-	public int getPolicyCost(int policy)
-	{
-		switch(policy)
-		{
-			case PolicyActions.ID_PROPAGANDA:
-				return (int)(this.economy.getGdp() / 2 * (this.domestic.getApproval() / 100.0));
-			case PolicyActions.ID_WAR_PROPAGANDA:
-				return getPolicyCost(PolicyActions.ID_PROPAGANDA) / 2;
-			case PolicyActions.ID_LAND_CLEARANCE:
-				return (int)this.economy.getGdp() * 2;
-			case PolicyActions.ID_ALIGN:
-			case PolicyActions.ID_FREE:
-			case PolicyActions.ID_ARREST:
-				return 100;
-			case PolicyActions.ID_TRAIN:
-				return this.army.getSize() * this.army.getSize() * this.army.getTraining() / 200;
-			default:
-				return 0;
-		}
-	}
-
-	/**
-	 * Returns the costs of a policy as a LinkedHashMap where the key is the resource and the value is the cost
-	 * for that resource<br>
-	 * Contains the cost of any policy that takes more than one resource, or a single resource that isn't cash
-	 * @param policy The ID of the policy
-	 * @return A LinkedHashMap of the costs
-	 */
-	public LinkedHashMap<String, Integer> getPolicyCostMap(int policy)
-	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		switch(policy)
-		{
-
-		}
-		return map;
-	}
-
-	/**
-	 * Checks whether the nation has researched a tech
-	 * @param tech The String name of the tech
-	 * @return True if it's researched, false otherwise
-	 */
-	public boolean hasTech(String tech)
-	{
-		return this.tech.getResearchedTechs().contains(Technologies.valueOf(tech));
-	}
-
-	/**
-	 * Returns the cost of posting declarations
-	 * @return Declaration posting cost
-	 */
-	public int getDeclarationCost()
-	{
-		return Declaration.COST;
-	}
-
-	/**
-	 * Calculates how much this nation's budget increases by for the daily turn change (or 7 times a standard turn)
-	 * @return The budget increase
-	 */
-	public double getBudgetChange()
-	{
-		return this.economy.getGdp() / 7;
-	}
-
-	/**
-	 * Runs the daily production tick
-	 * @throws SQLException if a database error occurs
-	 */
-	public void processProduction() throws SQLException
-	{
-		if(this.production.size() == 0)
-		{
-			return;
-		}
-		String statement = "UPDATE cloc_army, cloc_military SET ";
-		for(Production production : this.production.values())
-		{
-			double ic = production.getIc() + (production.getProgress() / 100.0);
-			int amount = (int)(ic / production.getProductionAsTechnology().getTechnology().getProductionCost());
-			int leftover = (int)((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionCost())) * 100);
-			production.setProgress(leftover);
-			statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "=" + production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
-			int efficiencyGain = (int)(0.1 * (10000.0 / (production.getEfficiency() / 100.0)));
-			production.setEfficiency(production.getEfficiency() + efficiencyGain);
-			if(production.getEfficiency() > 10000)
-			{
-				production.setEfficiency(10000);
-			}
-		}
-		statement += "WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id";
-		statement = statement.replace(", WHERE", " WHERE");
-		PreparedStatement update = conn.prepareStatement(statement);
-		update.setInt(1, this.id);
-		update.setInt(2, this.id);
-		update.execute();
-	}
-
-	public String getNationUrl()
-	{
-		return "<a href=\"/nation/" + id + "\">" + this.cosmetic.getNationName() + "</a>";
-	}
-
-	/**
-	 * Gets one of the nations productions by id
-	 * @param id the id of the production
-	 * @return The production
-	 */
-	public Production getProductionById(int id)
-	{
-		return production.get(id);
-	}
-
-	/**
 	 * Saved all this nation's productions in the database
 	 * @throws SQLException If a database error occurs
 	 */
@@ -1443,52 +1441,6 @@ public class Nation
 		else
 		{
 			return false;
-		}
-	}
-
-	public String sendPeace(Nation receiver) throws SQLException
-	{
-		PreparedStatement statement = this.conn.prepareStatement("SELECT attacker, defender, peace FROM cloc_war " +
-				"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-		statement.setInt(1, this.id);
-		statement.setInt(2, receiver.id);
-		statement.setInt(3, receiver.id);
-		statement.setInt(4, this.id);
-		ResultSet results = statement.executeQuery();
-		results.first();
-		if(results.getInt("peace") == -1)
-		{
-			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET peace=? " +
-					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-			sendPeace.setInt(1, this.id);
-			sendPeace.setInt(2, this.id);
-			sendPeace.setInt(3, receiver.id);
-			sendPeace.setInt(4, receiver.id);
-			sendPeace.setInt(5, this.id);
-			sendPeace.execute();
-			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_SEND_PEACE, this.getNationUrl()));
-			return Responses.peaceSent();
-		}
-		else if(results.getInt("peace") == this.id)
-		{
-			return Responses.peaceAlreadySent();
-		}
-		else if(results.getInt("peace") == receiver.id)
-		{
-			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET end=? " +
-					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-			sendPeace.setInt(1, Util.turn);
-			sendPeace.setInt(2, this.id);
-			sendPeace.setInt(3, receiver.id);
-			sendPeace.setInt(4, receiver.id);
-			sendPeace.setInt(5, this.id);
-			sendPeace.execute();
-			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_PEACE_ACCEPTED, this.getNationUrl()));
-			return Responses.peaceAccepted();
-		}
-		else
-		{
-			return Responses.genericError();
 		}
 	}
 }

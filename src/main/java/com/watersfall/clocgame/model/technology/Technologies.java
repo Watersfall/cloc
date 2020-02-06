@@ -79,32 +79,32 @@ public enum Technologies
 	{
 		String value = "";
 		value += "<h2 style=\"text-align: center;\">" + technology.getName() + "</h2>";
-		value += "<p style=\"text-align: left;\">" + technology.getDesc() + "</p>";
-		value += "<p style=\"text-align: left;\">Prerequisites: </p>";
-		value += "<ul>";
+		value += "<p class=\"textLeft\">" + technology.getDesc() + "</p>";
+		value += "<p class=\"textLeft\">Prerequisites: </p>";
+		value += "<ul class=\"bulletList\">";
 		if(this.technology.getPrerequisites().isEmpty())
 		{
-			value += "<li class=\"neutral\">None</li>";
+			value += "<li class=\"textLeft\">None</li>";
 		}
 		else
 		{
 			for(Technologies tech : this.technology.getPrerequisites())
 			{
-				value += "<li class=\"neutral\">" + tech.getTechnology().getName() + "</ll>";
+				value += "<li class=\"textLeft\">" + tech.getTechnology().getName() + "</ll>";
 			}
 		}
 		value += "</ul>";
-		value += "<p style=\"text-align: left;\">Costs: </p>";
-		value += "<ul>";
+		value += "<p class=\"textLeft\">Costs: </p>";
+		value += "<ul class=\"bulletList\">";
 		if(this.technology.getCosts().isEmpty())
 		{
-			value += "<li class=\"neutral\">None</li>";
+			value += "<li class=\"textLeft\">None</li>";
 		}
 		else
 		{
 			for(Map.Entry<String, Integer> cost: this.technology.getCosts().entrySet())
 			{
-				value += "<li class=\"neutral\">" + cost.getValue() + " " + cost.getKey() + "</li>";
+				value += "<li class=\"textLeft\">" + cost.getValue() + " " + cost.getKey() + "</li>";
 			}
 		}
 		value += "</ul>";

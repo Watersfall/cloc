@@ -33,8 +33,11 @@ public class Treaty extends Updatable
 		ResultSet results = treaties.executeQuery();
 		while(results.next())
 		{
-			array.add(new Treaty(results.getInt("cloc_treaties.id"), results.getString("cloc_treaties.name"),
-					results.getString("cloc_treaties.flag"), results.getString("cloc_treaties.description"), results.getInt("count")));
+			if(results.getInt("cloc_treaties.id") != 0)
+			{
+				array.add(new Treaty(results.getInt("cloc_treaties.id"), results.getString("cloc_treaties.name"),
+						results.getString("cloc_treaties.flag"), results.getString("cloc_treaties.description"), results.getInt("count")));
+			}
 		}
 		return array;
 	}
@@ -70,10 +73,10 @@ public class Treaty extends Updatable
 	{
 		super(TABLE_NAME, id, null);
 		this.id = id;
-		this.name = results.getString("ct.name");
-		this.flag = results.getString("ct.flag");
-		this.description = results.getString("ct.description");
-		try{this.memberCount = results.getInt("ct.members");}catch(SQLException ignored){}
+		this.name = results.getString("treaty.name");
+		this.flag = results.getString("treaty.flag");
+		this.description = results.getString("treaty.description");
+		try{this.memberCount = results.getInt("treaty.members");}catch(SQLException ignored){}
 	}
 
 	/**
@@ -166,6 +169,7 @@ public class Treaty extends Updatable
 					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
 					"JOIN cloc_treaties_members ON cloc_login.id = nation_id\n" +
+					"JOIN cloc_treaties treaty ON cloc_treaties_members.alliance_id = treaty.id\n" +
 					"WHERE alliance_id=?");
 			getMembers.setInt(1, this.id);
 			ResultSet results = getMembers.executeQuery();

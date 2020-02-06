@@ -40,6 +40,11 @@ public class NationCosmetic extends Updatable
 		this.description = results.getString("description");
 	}
 
+	public String getNationUrl()
+	{
+		return "<a href=\"/nation/" + id + "\"><b>" + this.getNationName() + "</b></a>";
+	}
+
 	public void setNationName(String nationName)
 	{
 		this.addField("nation_name", nationName);

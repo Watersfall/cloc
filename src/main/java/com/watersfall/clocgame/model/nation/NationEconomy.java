@@ -39,6 +39,10 @@ public class NationEconomy extends Updatable
 
 	public void setEconomic(int economic)
 	{
+		if(economic < 0)
+			economic = 0;
+		else if(economic > 100)
+			economic = 100;
 		this.addField("economic", economic);
 		this.economic = economic;
 	}

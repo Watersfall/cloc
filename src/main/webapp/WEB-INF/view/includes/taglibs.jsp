@@ -5,3 +5,4 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="cloc" uri="/WEB-INF/custom.tld" %>
+<%@ taglib prefix="ui" tagdir="/WEB-INF/tags" %>

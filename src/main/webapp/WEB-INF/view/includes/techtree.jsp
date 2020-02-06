@@ -5,7 +5,7 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="tech" type="com.watersfall.clocgame.model.technology.Technologies"--%>
 <%--@elvariable id="cat" type="com.watersfall.clocgame.model.technology.technologies.Category"--%>
-<%@include file="default.jsp"%>
+<%@ include file="taglibs.jsp" %>
 <c:forEach items="${techs}" var="tech">
 	<c:if test="${tech.category == category}">
 		<div style="grid-column: ${tech.x};grid-row: ${tech.y};">

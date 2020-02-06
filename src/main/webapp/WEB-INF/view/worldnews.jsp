@@ -1,19 +1,11 @@
-<%@ include file="includes/default.jsp" %>
-<html>
-<%@ include file="includes/head.jsp" %>
-<body>
-<%@ include file="includes/side.jsp" %>
-<%@ include file="includes/toggle.jsp"%>
-<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+<%@ include file="includes/defaultTop.jsp" %>
 	<h1>World News</h1>
 	<h2 style="text-align: center">Wars</h2>
 	<div class="categories">
-		<ul style="display: inline-block">
-			<li><a href="${pageContext.request.contextPath}/worldnews/ongoing/1">Ongoing</a></li>
-			<li><a href="${pageContext.request.contextPath}/worldnews/ended/1">Ended</a></li>
-		</ul>
+		<a class="small" href="${pageContext.request.contextPath}/worldnews/ongoing/1">Ongoing</a>
+		<a class="small" href="${pageContext.request.contextPath}/worldnews/ended/1">Ended</a>
 	</div>
-	<table id="nation">
+	<table class="standardTable">
 		<tr>
 			<th>Attacker</th>
 			<th>Treaty</th>
@@ -37,23 +29,21 @@
 					<td>${war.defenderTreaty.treatyUrl}</td>
 				</c:if>
 				<c:if test="${war.defenderTreaty.name == null}">
-					<td>${war.defenderTreaty.treatyUrl}</td>
+					<td></td>
 				</c:if>
 				<td>${war.defender.army.size}k</td>
 			</tr>
 		</c:forEach>
 	</table>
 	<%@ include file="includes/pagination.jsp" %>
-	<table id="nation">
+	<br><br>
+	<table class="standardTable">
 		<%--@elvariable id="stats" type="com.watersfall.clocgame.model.Stats"--%>
 		<c:forEach items="${stats.map.entrySet()}" var="stat">
 			<tr>
-				<td>${stat.key}</td>
-				<td>${stat.value}</td>
+				<td><p>${stat.key}</p></td>
+				<td><p>${stat.value}</p></td>
 			</tr>
 		</c:forEach>
 	</table>
-</div>
-	<%@ include file="includes/header.jsp" %></div>
-</body>
-</html>
+<%@ include file="includes/defaultBottom.jsp" %>

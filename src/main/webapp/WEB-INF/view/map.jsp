@@ -1,15 +1,6 @@
-<%@ include file="includes/default.jsp" %>
-<html>
-<%@ include file="includes/head.jsp" %>
-<body>
-<%@ include file="includes/side.jsp" %>
-<%@ include file="includes/toggle.jsp"%>
-<%--@elvariable id="regions" type="java.util.HashMap"--%>
-<%--@elvariable id="nations" type="java.util.Collection"--%>
-<%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
+<%@ include file="includes/defaultTop.jsp" %>
 	<c:if test="${empty region}">
-		<svg id="world-map" width="85%" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
+		<svg id="world-map" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
 			<g id="world">
 				<a href="region/Siberia">
 					<title>Siberia</title>
@@ -56,54 +47,51 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${empty region}">
-			<table id="nation">
+			<table class="standardTable">
 				<tr>
-					<th>Region</th>
-					<th>Total GDP</th>
-					<th>Total Armies</th>
+					<th><p>Region</p></th>
+					<th><p>Total GDP</p></th>
+					<th><p>Total Armies</p></th>
 				</tr>
 				<c:forEach items="${regions}" var="region">
 					<tr>
-						<td><a href="region/${region.key}">${region.key}</a> </td>
-						<td>$<fmt:formatNumber value="${region.value.gdp}"/> Million</td>
-						<td><fmt:formatNumber value="${region.value.army}"/>k Active Personnel</td>
+						<td><p><a href="region/${region.key}">${region.key}</a></p></td>
+						<td><p>$<fmt:formatNumber value="${region.value.gdp}"/> Million</p></td>
+						<td><p><fmt:formatNumber value="${region.value.army}"/>k Active Personnel</p></td>
 					</tr>
 				</c:forEach>
 			</table>
 		</c:when>
 		<c:when test="${not empty region}">
+			<h1>${region}</h1>
 			<a href="${pageContext.request.contextPath}/map/">
 				<button class="policyButton">Return to Map</button>
 			</a>
-			<table id="nation">
+			<table class="standardTable">
 				<tr>
-					<th style="width: 10em">Nation</th>
+					<th class="hideOnMobile" style="width: 8em;"><p>Nation</p></th>
 					<th></th>
-					<th>Leader</th>
-					<th>Region</th>
-					<th>GDP</th>
-					<th>Treaty</th>
+					<th><p>Leader</p></th>
+					<th><p>Region</p></th>
+					<th><p>GDP</p></th>
+					<th><p>Treaty</p></th>
 				</tr>
 				<c:forEach items="${nations}" var="nation">
 					<tr>
-						<td style="width: 10em">
+						<td class="hideOnMobile">
 							<a href="${pageContext.request.contextPath}/nation/${nation.id}">
 								<img class="large" src="${pageContext.request.contextPath}/user/flag/<c:out value="${nation.cosmetic.flag}"/>" alt="flag">
 							</a>
 						</td>
-						<td>
-							<a href="${pageContext.request.contextPath}/nation/${nation.id}">
-									${nation.cosmetic.nationName}
-							</a>
-						</td>
-						<td><c:out value="${nation.cosmetic.username}"/></td>
-						<td><c:out value="${nation.foreign.region.name}"/></td>
-						<td><fmt:formatNumber value="${nation.economy.gdp}"/></td>
+						<td><p class="textLeft">${nation.nationUrl}</p></td>
+						<td><p><c:out value="${nation.cosmetic.username}"/></p></td>
+						<td><p><c:out value="${nation.foreign.region.name}"/></p></td>
+						<td><p>$<fmt:formatNumber value="${nation.economy.gdp}"/> Million</p></td>
 						<c:if test="${nation.treaty != null}">
-							<td><a href="${pageContext.request.contextPath}/treaty/${nation.treaty.id}"><c:out value="${nation.treaty.name}"/></a></td>
+							<td>${nation.treaty.treatyUrl}</td>
 						</c:if>
 						<c:if test="${nation.treaty == null}">
-							<td>None</td>
+							<td><p>None</p></td>
 						</c:if>
 					</tr>
 				</c:forEach>
@@ -117,8 +105,4 @@
 			</a>
 		</c:otherwise>
 	</c:choose>
-
-</div>
-<%@ include file="includes/header.jsp" %></div>
-</body>
-</html>
+<%@ include file="includes/defaultBottom.jsp" %>

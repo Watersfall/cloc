@@ -1,16 +1,14 @@
-<%@ include file="includes/default.jsp" %>
-<html>
-<%@ include file="includes/head.jsp" %>
-<body>
-<%@ include file="includes/side.jsp" %>
-<%@ include file="includes/toggle.jsp"%>
-<div class="container"><%@ include file="includes/results.jsp"%><div class="main">
-
-	<label>
-		<input id="name" type="text" name="name" maxlength="32">
-	</label>
-	<button onclick="createTreaty(document.getElementById('name').value)">Create</button>
-</div>
-<%@ include file="includes/header.jsp" %></div>
-</body>
-</html>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%@ include file="includes/defaultTop.jsp" %>
+	<c:choose>
+		<c:when test="${empty home}">
+			<p>You must be logged in to view this page!</p>
+		</c:when>
+		<c:otherwise>
+			<label>
+				<input id="name" type="text" name="name" maxlength="32">
+			</label>
+			<button onclick="createTreaty(document.getElementById('name').value)">Create</button>
+		</c:otherwise>
+	</c:choose>
+<%@ include file="includes/defaultBottom.jsp" %>

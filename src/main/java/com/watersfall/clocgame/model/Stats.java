@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -98,21 +99,21 @@ public class Stats
 		return treatyMap.get(id);
 	}
 
-	public LinkedHashMap<String, Long> getMap()
+	public LinkedHashMap<String, String> getMap()
 	{
-		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
-		map.put("Total Nations", totalNations);
-		map.put("Total Neutral Nations", totalNeutralNations);
-		map.put("Total Entente Nations", totalEntenteNations);
-		map.put("Total Central Powers Nations", totalCentralPowersNations);
-		map.put("Global Population", totalPopulation);
-		map.put("Total Soldiers", totalArmies);
-		map.put("Total Civilian Factories", totalCivilianFactories);
-		map.put("Total Military Factories", totalMilitaryFactories);
-		map.put("Total Universities", totalUniversities);
-		map.put("Total Iron Mines", totalIronMines);
-		map.put("Total Coal Mines", totalCoalMines);
-		map.put("Total Oil Wells", totalOilWells);
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
+		map.put("Total Nations", Util.formatNumber(totalNations) + " Nations");
+		map.put("Total Neutral Nations", Util.formatNumber(totalNeutralNations) + " Nations");
+		map.put("Total Entente Nations", Util.formatNumber(totalEntenteNations) + " Nations");
+		map.put("Total Central Powers Nations", Util.formatNumber(totalCentralPowersNations) + " Nations");
+		map.put("Global Population", Util.formatNumber(totalPopulation) + " People");
+		map.put("Total Soldiers", Util.formatNumber(totalArmies) + " Troops");
+		map.put("Total Civilian Factories", Util.formatNumber(totalCivilianFactories) + " Factories");
+		map.put("Total Military Factories", Util.formatNumber(totalMilitaryFactories) + " Factories");
+		map.put("Total Universities", Util.formatNumber(totalUniversities) + " Universities");
+		map.put("Total Iron Mines", Util.formatNumber(totalIronMines) + " Mines");
+		map.put("Total Coal Mines", Util.formatNumber(totalCoalMines) + " Mines");
+		map.put("Total Oil Wells", Util.formatNumber(totalOilWells) + " Wells");
 		return map;
 	}
 
@@ -156,22 +157,22 @@ public class Stats
 		public LinkedHashMap<String, Object> getMap()
 		{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put("Total Population", totalPopulation);
-			map.put("Average Population", averagePopulation);
-			map.put("Total Soldiers", totalArmies);
-			map.put("Average Soldiers", averageArmy);
-			map.put("Total Civilian Factories", totalCivilianFactories);
-			map.put("Average Civilian Factories", averageCivilianFactories);
-			map.put("Total Military Factories", totalMilitaryFactories);
-			map.put("Average Military Factories", averageMilitaryFactories);
-			map.put("Total Universities", totalUniversities);
-			map.put("Average Universities", averageUniversities);
-			map.put("Total Iron Mines", totalIronMines);
-			map.put("Average Iron Mines", averageIronMines);
-			map.put("Total Coal Mines", totalCoalMines);
-			map.put("Average Coal Mines", averageCoalMines);
-			map.put("Total Oil Wells", totalOilWells);
-			map.put("Average Oil Wells", averageOilWells);
+			map.put("Total Population", Util.formatNumber(totalPopulation) + " People");
+			map.put("Average Population", Util.formatNumber(averagePopulation) + " People");
+			map.put("Total Soldiers", Util.formatNumber(totalArmies) + " Troops");
+			map.put("Average Soldiers", Util.formatNumber(averageArmy) + " Troops");
+			map.put("Total Civilian Factories", Util.formatNumber(totalCivilianFactories) + " Factories");
+			map.put("Average Civilian Factories", Util.formatNumber(averageCivilianFactories) + " Factories");
+			map.put("Total Military Factories", Util.formatNumber(totalMilitaryFactories) + " Factories");
+			map.put("Average Military Factories", Util.formatNumber(averageMilitaryFactories) + " Factories");
+			map.put("Total Universities", Util.formatNumber(totalUniversities) + " Universities");
+			map.put("Average Universities", Util.formatNumber(averageUniversities) + " Universities");
+			map.put("Total Iron Mines", Util.formatNumber(totalIronMines) + " Mines");
+			map.put("Average Iron Mines", Util.formatNumber(averageIronMines) + " Mines");
+			map.put("Total Coal Mines", Util.formatNumber(totalCoalMines) + " Mines");
+			map.put("Average Coal Mines", Util.formatNumber(averageCoalMines) + " Mines");
+			map.put("Total Oil Wells", Util.formatNumber(totalOilWells) + " Wells");
+			map.put("Average Oil Wells", Util.formatNumber(averageOilWells) + " Wells");
 			return map;
 		}
 	}

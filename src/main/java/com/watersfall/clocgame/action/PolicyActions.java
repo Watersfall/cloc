@@ -33,6 +33,7 @@ public class PolicyActions
 	public static final int ID_WAR_PROPAGANDA = 14;
 	public static final int ID_ALIGN = 15;
 	public static final int ID_TRAIN = 16;
+	public static final int ID_CREATE_TREATY = 17;
 	//</editor-fold>
 	//<editor-fold desc="Modifiers"
 	private static final int CRACKDOWN_STAB = 5;
@@ -365,5 +366,10 @@ public class PolicyActions
 	public int getID_TRAIN()
 	{
 		return ID_TRAIN;
+	}
+
+	public int getID_CREATE_TREATY()
+	{
+		return ID_CREATE_TREATY;
 	}
 }
