@@ -40,6 +40,7 @@ public class TreatyController extends HttpServlet
 			treaty.getMembers();
 			req.setAttribute("treaty", treaty);
 			req.setAttribute("id", id);
+			req.setAttribute("description", "The Treaty of " + treaty.getName() + " : " + treaty.getDescription());
 			Nation nation = (Nation)req.getAttribute("home");
 			if(nation != null && nation.getTreaty() != null && nation.getTreaty().getId() == treaty.getId())
 			{

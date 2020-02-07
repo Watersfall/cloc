@@ -35,7 +35,12 @@ public class NationController extends HttpServlet
 			int id = Integer.parseInt(url.get("id"));
 			try(Connection connection = Database.getDataSource().getConnection())
 			{
-				req.setAttribute("nation", new Nation(connection, id, false));
+				Nation nation =  new Nation(connection, id, false);
+				req.setAttribute("nation", nation);
+				req.setAttribute("description",
+						"The Nation of " + nation.getCosmetic().getNationName() +
+						", Lead by " + nation.getCosmetic().getUsername()
+				);
 			}
 			catch(Exception e)
 			{

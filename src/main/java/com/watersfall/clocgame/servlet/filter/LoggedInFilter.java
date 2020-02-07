@@ -40,7 +40,8 @@ public class LoggedInFilter implements Filter
 		HttpServletRequest req = (HttpServletRequest) request;
 		if(req.getMethod().equalsIgnoreCase("GET") && !containsExtension(req.getRequestURI()))
 		{
-			request.setAttribute("turn", Util.turn);
+			req.setAttribute("turn", Util.turn);
+			req.setAttribute("description", "A World War 1 themed online nation sim");
 			try(Connection connection = Database.getDataSource().getConnection())
 			{
 				HttpSession sess = req.getSession(true);

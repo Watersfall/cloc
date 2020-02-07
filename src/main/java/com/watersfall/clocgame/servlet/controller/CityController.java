@@ -41,10 +41,13 @@ public class CityController extends HttpServlet
 				if(nation != null && nation.getCities().getCities().get(id) != null)
 				{
 					req.setAttribute("city", nation.getCities().getCities().get(id));
+					req.setAttribute("description", "The city of " + nation.getCities().getCities().get(id).getName());
 				}
 				else
 				{
-					req.setAttribute("city", City.getCity(conn, id));
+					City city =  City.getCity(conn, id);
+					req.setAttribute("city", city);
+					req.setAttribute("description", "The city of " + city.getName());
 				}
 			}
 		}

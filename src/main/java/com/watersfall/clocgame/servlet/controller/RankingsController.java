@@ -41,6 +41,7 @@ public class RankingsController extends HttpServlet
 			req.setAttribute("page", page);
 			req.setAttribute("maxPage", totalNations / 20 + 1);
 			req.setAttribute("nations", nations);
+			req.setAttribute("description", "World Rankings");
 		}
 		catch(SQLException e)
 		{

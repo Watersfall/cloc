@@ -6,3 +6,4 @@ nb-configuration.xml
 clocturn/nbactions.xml
 *.jar
 */target/
+/src/main/webapp/user/

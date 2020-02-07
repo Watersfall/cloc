@@ -56,6 +56,7 @@ public class NewsAndStatsController extends HttpServlet
 			req.setAttribute("page", page);
 			req.setAttribute("maxPage", totalWars / 20 + 1);
 			req.setAttribute("wars", wars);
+			req.setAttribute("description", "World News & Stats");
 		}
 		catch(SQLException e)
 		{

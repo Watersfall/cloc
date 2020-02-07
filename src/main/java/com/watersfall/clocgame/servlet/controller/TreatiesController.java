@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = "/treaties/*")
@@ -34,11 +35,19 @@ public class TreatiesController extends HttpServlet
 			{
 				page = 1;
 			}
-			req.setAttribute("treaties", Treaty.getTreatyPage(conn, page));
+			ArrayList<Treaty> treatyPage = Treaty.getTreatyPage(conn, page);
+			req.setAttribute("treaties", treatyPage);
 			int totalTreaties = Util.getTotalTreaties(conn);
 			req.setAttribute("url", "treaties");
 			req.setAttribute("page", page);
 			req.setAttribute("maxPage", totalTreaties / 20 + 1);
+			String desc = "";
+			for(Treaty treaty : treatyPage)
+			{
+				desc += treaty.getName() + ", ";
+			}
+			desc = desc.substring(0, desc.length() - 2);
+			req.setAttribute("description", "Page " + page + " Treaties: " + desc);
 		}
 		catch(SQLException e)
 		{
