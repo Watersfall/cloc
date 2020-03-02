@@ -54,6 +54,14 @@ function cityDecision(policy, cityId)
 	ajax(url, null);
 }
 
+function farm(action, increase)
+{
+	displayResults();
+	let url = context + "/countryside/" + action;
+	let params = "increase=" + increase;
+	ajax(url, params);
+}
+
 function send(action, amount, id)
 {
 	displayResults();

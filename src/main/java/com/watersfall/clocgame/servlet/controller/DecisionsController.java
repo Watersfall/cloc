@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class DecisionsController extends HttpServlet
 {
 	public static final String URL = "/{decisions}";
-	private static final PolicyActions policy = new PolicyActions();
+	public static final PolicyActions policy = new PolicyActions();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException

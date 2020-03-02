@@ -44,3 +44,9 @@ ALTER TABLE cloc_war
 
 ALTER TABLE cloc_war
 	ADD COLUMN peace INT default -1;
+
+ALTER TABLE cloc_domestic
+	ADD COLUMN farm_subsidies INT DEFAULT 0,
+	ADD COLUMN farm_regulations INT DEFAULT 0,
+    ADD COLUMN farm_technology INT DEFAULT 0,
+    ADD COLUMN farm_collectivization INT DEFAULT 0;

@@ -60,6 +60,10 @@ CREATE TABLE cloc_domestic(
 	population BIGINT UNSIGNED DEFAULT 100000,
 	rebels INT UNSIGNED DEFAULT 0,
 	lost_manpower LONG DEFAULT 0,
+	farm_subsidies INT DEFAULT 0,
+	farm_regulations INT DEFAULT 0,
+	farm_technology INT DEFAULT 0,
+	farm_collectivization INT DEFAULT 0,
 	FOREIGN KEY fk_domestic (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 

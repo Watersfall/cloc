@@ -46,12 +46,11 @@ public class Nation
 	private LinkedHashMap<String, Double> steelProduction = null;
 	private LinkedHashMap<String, Double> nitrogenProduction = null;
 	private LinkedHashMap<String, Double> researchProduction = null;
-	private @Getter LinkedHashMap<Integer, Production>production;
+	private @Getter LinkedHashMap<Integer, Production> production;
 	private LinkedHashMap<String, LinkedHashMap<String, Double>> allProductions = null;
 	private int landUsage = -1;
 
 	/**
-	 *
 	 * @param conn The SQL conn to use
 	 * @param name The nation name to get
 	 * @param safe Whether the returned nation should be safe to write to
@@ -75,6 +74,7 @@ public class Nation
 
 	/**
 	 * Returns an unordered Collection of all Nations in the database matching the where clause fed into the method
+	 *
 	 * @param conn  The SQL conn to use
 	 * @param where the SQL where clause
 	 * @return Collection of nations matching where
@@ -105,6 +105,7 @@ public class Nation
 
 	/**
 	 * Returns an ordered Collection of all nations matching the where clause, sorted by the order clause
+	 *
 	 * @param conn  the SQL conn to use
 	 * @param where the SQL where clause
 	 * @param order the SQL order by clause
@@ -137,6 +138,7 @@ public class Nation
 
 	/**
 	 * Returns an ordered Collection of all nations matching the where clause, sorted by the order clause, with a specified limit
+	 *
 	 * @param conn  the SQL conn to use
 	 * @param where the SQL where clause
 	 * @param order the SQL order by clause
@@ -171,9 +173,10 @@ public class Nation
 
 	/**
 	 * Primary Nation constructor that creates a Nation from an ID
+	 *
 	 * @param conn The conn object to use
-	 * @param id         The id of the nation being loaded
-	 * @param safe       Whether the contents of the returned Nation object should be editable
+	 * @param id   The id of the nation being loaded
+	 * @param safe Whether the contents of the returned Nation object should be editable
 	 * @throws SQLException if something SQL related goes wrong
 	 */
 	public Nation(Connection conn, int id, boolean safe) throws SQLException
@@ -295,6 +298,7 @@ public class Nation
 
 	/**
 	 * Constructs a partial nation from a ResultSet
+	 *
 	 * @param results The ResultSet to build the nation from
 	 */
 	public Nation(int id, ResultSet results) throws SQLException
@@ -317,7 +321,8 @@ public class Nation
 	/**
 	 * Attempts to join a treaty in the standard way:
 	 * by checking if this nation has an invite and letting them in if they do
-	 * @param id The id of the Treaty to join
+	 *
+	 * @param id      The id of the Treaty to join
 	 * @param founder Whether this Nation should be roled as founder of the treaty or not
 	 * @throws SQLException If a database error occurs
 	 */
@@ -328,8 +333,9 @@ public class Nation
 
 	/**
 	 * Attempts to join a treaty
-	 * @param id The id of the Treaty to join
-	 * @param founder Whether this nation should be roled as Treaty Founder
+	 *
+	 * @param id           The id of the Treaty to join
+	 * @param founder      Whether this nation should be roled as Treaty Founder
 	 * @param ignoreInvite Whether this nation should bypass the invite requirement to join
 	 * @throws SQLException If a database error occurs
 	 */
@@ -356,6 +362,7 @@ public class Nation
 
 	/**
 	 * Leaves the current treaty
+	 *
 	 * @throws SQLException If a database error occurs
 	 */
 	public void leaveTreaty() throws SQLException
@@ -375,6 +382,7 @@ public class Nation
 	/**
 	 * Checks whether this nation can declare war on the nation passed in, returning null if it can
 	 * If it cannot, returns the reason why
+	 *
 	 * @param nation The Nation to check against
 	 * @return null if the nation can declare war on the other, the reason why it cannot otherwise
 	 */
@@ -422,6 +430,7 @@ public class Nation
 
 	/**
 	 * Checks if this nation is at war with another nation
+	 *
 	 * @param nation The nation to check
 	 * @return True if they are at war, false if they are not
 	 */
@@ -432,6 +441,7 @@ public class Nation
 
 	/**
 	 * Checks if this nation is in any war
+	 *
 	 * @return True if the nation is at war, false otherwise
 	 */
 	public boolean isAtWar()
@@ -441,6 +451,7 @@ public class Nation
 
 	/**
 	 * Declares war on the specified Nation
+	 *
 	 * @param nation The Nation to declare war on
 	 * @throws SQLException If a database error occurs
 	 */
@@ -505,6 +516,7 @@ public class Nation
 
 	/**
 	 * Calculates the free land available in this Nation
+	 *
 	 * @return The free land available
 	 */
 	public int getFreeLand()
@@ -514,6 +526,7 @@ public class Nation
 
 	/**
 	 * Calculates the total land usage of this Nation
+	 *
 	 * @return The total land usage
 	 */
 	public int getTotalLandUsage()
@@ -535,6 +548,7 @@ public class Nation
 
 	/**
 	 * Gets the total amount of military factories in all cities in this nation
+	 *
 	 * @return The military factory count
 	 */
 	public int getTotalMilitaryFactories()
@@ -549,6 +563,7 @@ public class Nation
 
 	/**
 	 * Gets the total amount of factories in all cities in this nation
+	 *
 	 * @return The factory count
 	 */
 	public int getTotalFactories()
@@ -563,6 +578,7 @@ public class Nation
 
 	/**
 	 * Calculates the total manpower a nation has
+	 *
 	 * @return The total manpower of the nation
 	 */
 	public long getTotalManpower()
@@ -597,6 +613,7 @@ public class Nation
 	 *     <li>Airforce</li>
 	 *     <li>Army</li>
 	 * </ul>
+	 *
 	 * @return A HashMap containing manpower usage
 	 */
 	public LinkedHashMap<String, Long> getUsedManpower()
@@ -628,6 +645,7 @@ public class Nation
 
 	/**
 	 * Calculates the amount of free manpower this nation has available
+	 *
 	 * @return The amount of free manpower
 	 */
 	public long getFreeManpower()
@@ -662,6 +680,7 @@ public class Nation
 	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
+	 *
 	 * @return A LinkedHashMap containing the total coal production of this Nation
 	 */
 	public LinkedHashMap<String, Double> getTotalCoalProduction()
@@ -675,7 +694,7 @@ public class Nation
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
-					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
 			coalProduction = map;
@@ -696,6 +715,7 @@ public class Nation
 	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
+	 *
 	 * @return A HashMap containing the total iron production of this Nation
 	 */
 	public LinkedHashMap<String, Double> getTotalIronProduction()
@@ -709,7 +729,7 @@ public class Nation
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
-					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
 			ironProduction = map;
@@ -730,6 +750,7 @@ public class Nation
 	 *     <li>nitrogen plant demands</li>
 	 *     <li>net</li>
 	 * </ul>
+	 *
 	 * @return A LinkedHashMap containing the total iron production of this Nation
 	 */
 	public LinkedHashMap<String, Double> getTotalOilProduction()
@@ -743,7 +764,7 @@ public class Nation
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
-					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
 			oilProduction = map;
@@ -761,6 +782,7 @@ public class Nation
 	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
+	 *
 	 * @return A LinkedHashMap containing the total steel production of this Nation
 	 */
 	public LinkedHashMap<String, Double> getTotalSteelProduction()
@@ -774,7 +796,7 @@ public class Nation
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
-					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
 			steelProduction = map;
@@ -792,6 +814,7 @@ public class Nation
 	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
+	 *
 	 * @return A LinkedHashMap containing the total nitrogen production of this Nation
 	 */
 	public LinkedHashMap<String, Double> getTotalNitrogenProduction()
@@ -805,7 +828,7 @@ public class Nation
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
-					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
 			nitrogenProduction = map;
@@ -823,6 +846,7 @@ public class Nation
 	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
+	 *
 	 * @return A LinkedHashMap containing the total research production of this Nation
 	 */
 	public LinkedHashMap<String, Double> getTotalResearchProduction()
@@ -836,7 +860,7 @@ public class Nation
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
-					map.compute(entry.getKey(), (k,v) -> v += entry.getValue());
+					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
 			researchProduction = map;
@@ -851,16 +875,18 @@ public class Nation
 	 *     <li>costs</li>
 	 *     <li>net</li>
 	 * </ul>
+	 *
 	 * @return A HashMap containing food production
 	 */
 	public LinkedHashMap<String, Double> getFoodProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double farming = this.getFreeLand() / 250.0;
+		double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get("farming.net");
 		double consumption = -this.domestic.getPopulation() / 2000.0;
 		map.put("resource.farming", farming);
 		map.put("resource.consumption", consumption);
 		map.put("resource.net", farming + consumption);
+		map.put("resource.total", farming);
 		return map;
 	}
 
@@ -890,6 +916,7 @@ public class Nation
 	 *     <li>costs</li>
 	 *     <li>upkeep</li>
 	 * </ul>
+	 *
 	 * @return A HashMap containing the total weapons production of this Nation
 	 */
 	public LinkedHashMap<String, LinkedHashMap<String, Double>> getAllTotalProductions()
@@ -910,6 +937,17 @@ public class Nation
 			allProductions = map;
 		}
 		return allProductions;
+	}
+
+	public LinkedHashMap<String, Double> getBaseFoodProduction()
+	{
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		double base = 1.0;
+		double tech = domestic.getFarmTechnology() / 100.0;
+		map.put("farming.base", base);
+		map.put("farming.total", base);
+		map.put("farming.net", base);
+		return map;
 	}
 
 	/**
@@ -1366,6 +1404,20 @@ public class Nation
 				return " from devastation";
 			case "resource.default":
 				return " from population";
+			case "farming.base":
+				return " from default";
+			case "farming.net":
+				return "";
+			case "farming.regulations":
+				return " from current regulations";
+			case "farming.deregulation":
+				return " from deregulation";
+			case "farming.subsidies":
+				return " from subsidies";
+			case "farming.collectives":
+				return " from collectivization";
+			case "farming.tech":
+				return " from technology";
 			default:
 				return key;
 		}

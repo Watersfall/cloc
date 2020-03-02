@@ -195,7 +195,7 @@ ul {
 }
 
 #main {
-	max-width: 60em;
+	max-width: 75em;
 	margin: 0 auto auto;
 	background: #6d6d6d;
 	min-height: 95vh;
@@ -418,6 +418,10 @@ img.veryLong {
 	padding: 1em;
 	width: fit-content;
 	display: inline-block;
+}
+
+.farm {
+	min-width: 75%;
 }
 
 .specialTable {

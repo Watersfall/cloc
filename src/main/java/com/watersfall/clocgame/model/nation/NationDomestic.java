@@ -16,6 +16,10 @@ public class NationDomestic extends Updatable
 	private @Getter long population;
 	private @Getter long manpowerLost;
 	private @Getter int rebels;
+	private @Getter int farmSubsidies;
+	private @Getter int farmRegulations;
+	private @Getter int farmTechnology;
+	private @Getter int farmCollectivization;
 
 	public NationDomestic(int id, ResultSet results) throws SQLException
 	{
@@ -27,6 +31,10 @@ public class NationDomestic extends Updatable
 		this.population = results.getLong("population");
 		this.manpowerLost = results.getLong("lost_manpower");
 		this.rebels = results.getInt("rebels");
+		this.farmSubsidies = results.getInt("farm_subsidies");
+		this.farmRegulations = results.getInt("farm_regulations");
+		this.farmTechnology = results.getInt("farm_technology");
+		this.farmCollectivization = results.getInt("farm_collectivization");
 	}
 
 	public void setLand(int land)
@@ -97,5 +105,45 @@ public class NationDomestic extends Updatable
 			rebels = 100;
 		this.addField("rebels", rebels);
 		this.rebels = rebels;
+	}
+
+	public void setFarmSubsidies(int farm)
+	{
+		if(farm < 0)
+			farm = 0;
+		else if(farm > 1000)
+			farm = 1000;
+		this.addField("farm_subsidies", farm);
+		this.farmSubsidies = farm;
+	}
+
+	public void setFarmRegulations(int farm)
+	{
+		if(farm < 0)
+			farm = 0;
+		else if(farm > 1000)
+			farm = 1000;
+		this.addField("farm_regulations", farm);
+		this.farmRegulations = farm;
+	}
+
+	public void setFarmTechnology(int farm)
+	{
+		if(farm < 0)
+			farm = 0;
+		else if(farm > 1000)
+			farm = 1000;
+		this.addField("farm_technology", farm);
+		this.farmTechnology = farm;
+	}
+
+	public void setFarmCollectivization(int farm)
+	{
+		if(farm < 0)
+			farm = 0;
+		else if(farm > 1000)
+			farm = 1000;
+		this.addField("farm_collectivization", farm);
+		this.farmCollectivization = farm;
 	}
 }

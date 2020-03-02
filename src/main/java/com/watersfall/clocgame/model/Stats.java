@@ -58,18 +58,18 @@ public class Stats
 					"WHERE cloc_login.id=cloc_domestic.id AND cloc_login.id=cloc_army.id AND cloc_login.id AND cloc_login.id=cloc_cities.owner AND cloc_login.id=cloc_foreign.id");
 			ResultSet results = statement.executeQuery();
 			results.first();
-			this.totalNations = results.getInt("nations");
-			this.totalArmies = results.getInt("armySize");
-			this.totalCivilianFactories = results.getInt("civilianFactories");
-			this.totalMilitaryFactories = results.getInt("militaryFactories");
-			this.totalUniversities = results.getInt("universities");
-			this.totalCoalMines = results.getInt("coalMines");
-			this.totalIronMines = results.getInt("ironMines");
-			this.totalOilWells = results.getInt("oilWells");
-			this.totalPopulation = results.getInt("population");
-			this.totalNeutralNations = results.getInt("neutral");
-			this.totalEntenteNations = results.getInt("entente");
-			this.totalCentralPowersNations = results.getInt("central");
+			this.totalNations = results.getLong("nations");
+			this.totalArmies = results.getLong("armySize");
+			this.totalCivilianFactories = results.getLong("civilianFactories");
+			this.totalMilitaryFactories = results.getLong("militaryFactories");
+			this.totalUniversities = results.getLong("universities");
+			this.totalCoalMines = results.getLong("coalMines");
+			this.totalIronMines = results.getLong("ironMines");
+			this.totalOilWells = results.getLong("oilWells");
+			this.totalPopulation = results.getLong("population");
+			this.totalNeutralNations = results.getLong("neutral");
+			this.totalEntenteNations = results.getLong("entente");
+			this.totalCentralPowersNations = results.getLong("central");
 			treatyMap = new HashMap<>();
 			PreparedStatement treaties = conn.prepareStatement(
 					"SELECT cloc_treaties.id AS id, SUM(cloc_army.size) AS armySize, AVG(cloc_army.size) AS averageArmy, " +

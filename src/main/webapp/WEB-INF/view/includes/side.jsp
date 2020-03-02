@@ -83,6 +83,9 @@
 							</div>
 						</a>
 					</c:forEach>
+					<a href="${pageContext.request.contextPath}/countryside/">
+						<div><p>The Countryside</p></div>
+					</a>
 				</div>
 			</a>
 			<a onclick="toggle('realpolitik');">

@@ -623,4 +623,14 @@ public class Responses
 	{
 		return "<p>You have accepted their peace offer! Let there be peace in our time!</p>";
 	}
+
+	public static String farmSubsidiesIncrease()
+	{
+		return "<p>Increased!</p>";
+	}
+
+	public static String farmSubsidiesDecrease()
+	{
+		return "<p>Decreased!</p>";
+	}
 }
