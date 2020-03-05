@@ -2,6 +2,7 @@ package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.message.Declaration;
@@ -587,19 +588,19 @@ public class Nation
 		long manpower = domestic.getPopulation();
 		switch(policy.getManpower())
 		{
-			case 0:
+			case DISARMED_MANPOWER:
 				manpower *= 0.05;
 				break;
-			case 1:
+			case VOLUNTEER_MANPOWER:
 				manpower *= 0.10;
 				break;
-			case 2:
-				manpower *= 0.175;
+			case RECRUITMENT_MANPOWER:
+				manpower *= 0.20;
 				break;
-			case 3:
-				manpower *= 0.25;
+			case MANDATORY_MANPOWER:
+				manpower *= 0.30;
 				break;
-			case 4:
+			case SCRAPING_THE_BARREL_MANPOWER:
 				manpower *= 0.45;
 				break;
 		}
@@ -697,6 +698,27 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
+			Policy policy = this.policy.getEconomy();
+			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
+			}
+			else if(policy == Policy.AGRARIAN_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.05);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.05));
+			}
+			else if(policy == Policy.INDUSTRY_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
+			}
+			else
+			{
+				map.put("resource.economy_type", map.get("resource.total") * 0.10);
+				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
+			}
 			coalProduction = map;
 		}
 		return coalProduction;
@@ -731,6 +753,27 @@ public class Nation
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
+			}
+			Policy policy = this.policy.getEconomy();
+			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
+			}
+			else if(policy == Policy.AGRARIAN_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.05);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.05));
+			}
+			else if(policy == Policy.INDUSTRY_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
+			}
+			else
+			{
+				map.put("resource.economy_type", map.get("resource.total") * 0.10);
+				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
 			}
 			ironProduction = map;
 		}
@@ -767,6 +810,27 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
+			Policy policy = this.policy.getEconomy();
+			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
+			}
+			else if(policy == Policy.AGRARIAN_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.05);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.05));
+			}
+			else if(policy == Policy.INDUSTRY_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
+			}
+			else
+			{
+				map.put("resource.economy_type", map.get("resource.total") * 0.10);
+				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
+			}
 			oilProduction = map;
 		}
 		return oilProduction;
@@ -799,6 +863,22 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
+			Policy policy = this.policy.getEconomy();
+			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY || policy == Policy.AGRARIAN_ECONOMY)
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
+			}
+			else if(policy == Policy.INDUSTRY_ECONOMY)
+			{
+				map.put("resource.economy_type", map.get("resource.total") * 0.10);
+				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
+			}
+			else
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
+			}
 			steelProduction = map;
 		}
 		return steelProduction;
@@ -830,6 +910,22 @@ public class Nation
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
+			}
+			Policy policy = this.policy.getEconomy();
+			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY || policy == Policy.AGRARIAN_ECONOMY)
+			{
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
+				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
+			}
+			else if(policy == Policy.INDUSTRY_ECONOMY)
+			{
+				map.put("resource.economy_type", map.get("resource.total") * 0.10);
+				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
+			}
+			else
+			{
+				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
+				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
 			}
 			nitrogenProduction = map;
 		}
@@ -883,10 +979,34 @@ public class Nation
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get("farming.net");
 		double consumption = -this.domestic.getPopulation() / 2000.0;
+		double economy = 0.0;
+		double food = 0.0;
+		double total = farming;
+		double net = farming + consumption;
+		if(this.policy.getEconomy() == Policy.AGRARIAN_ECONOMY)
+		{
+			economy = farming * 0.15;
+			total += economy;
+		}
+		else if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
+		{
+			economy = -farming * 0.1;
+		}
+		if(this.policy.getFood() == Policy.FREE_FOOD)
+		{
+			food = consumption * 0.35;
+		}
+		else if(this.policy.getFood() == Policy.RATIONING_FOOD)
+		{
+			food = -consumption * 0.35;
+		}
+		net += food + economy;
 		map.put("resource.farming", farming);
 		map.put("resource.consumption", consumption);
-		map.put("resource.net", farming + consumption);
-		map.put("resource.total", farming);
+		map.put("resource.economy_type", economy);
+		map.put("resource.food_type", food);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
 		return map;
 	}
 
@@ -1251,17 +1371,7 @@ public class Nation
 	public LinkedHashMap<String, Integer> getApprovalChange()
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		int policies = 0;
-		if(defensive == 0 && offensive == 0 && policy.getEconomy() > 2)
-		{
-			policies += -2;
-		}
-		if(defensive != 0 && offensive != 0 && policy.getEconomy() < 2)
-		{
-			policies += -2;
-		}
-		map.put("approval.policies", policies);
-		map.put("approval.net", policies);
+		map.put("approval.net", 0);
 		return map;
 	}
 
@@ -1298,27 +1408,27 @@ public class Nation
 		double base = 0.2;
 		double foodPolicy = 0;
 		double manpowerPolicy = 0;
-		if(this.policy.getFood() == 2)
+		if(this.policy.getFood() == Policy.FREE_FOOD)
 		{
 			foodPolicy = 0.15;
 		}
-		else if(this.policy.getFood() == 0)
+		else if(this.policy.getFood() == Policy.RATIONING_FOOD)
 		{
 			foodPolicy = -0.25;
 		}
-		if(this.policy.getManpower() == 0)
+		if(this.policy.getManpower() == Policy.DISARMED_MANPOWER)
 		{
 			manpowerPolicy = 0.25;
 		}
-		else if(this.policy.getManpower() == 1)
+		else if(this.policy.getManpower() == Policy.VOLUNTEER_MANPOWER)
 		{
 			manpowerPolicy = 0.1;
 		}
-		else if(this.policy.getManpower() == 3)
+		else if(this.policy.getManpower() == Policy.MANDATORY_MANPOWER)
 		{
 			manpowerPolicy = -0.1;
 		}
-		else if(this.policy.getManpower() == 4)
+		else if(this.policy.getManpower() == Policy.SCRAPING_THE_BARREL_MANPOWER)
 		{
 			manpowerPolicy = -0.25;
 		}
@@ -1404,6 +1514,10 @@ public class Nation
 				return " from devastation";
 			case "resource.default":
 				return " from population";
+			case "resource.economy_type":
+				return " from economic focus";
+			case "resource.food_type":
+				return " from food policy";
 			case "farming.base":
 				return " from default";
 			case "farming.net":

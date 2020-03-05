@@ -108,7 +108,7 @@ function policy(policy)
 {
 	displayResults();
 	let url = context + "/policy/" + policy;
-	let params = 'selection=' + document.getElementById(policy).selectedIndex;
+	let params = 'selection=' + document.getElementById("policy_" + policy).value;
 	ajax(url, params);
 }
 

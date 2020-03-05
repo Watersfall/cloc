@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.DecisionActions;
+import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -24,6 +25,7 @@ public class PolicyController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		req.setAttribute("policies", Policy.getPoliciesByCategory());
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/policy.jsp").forward(req, resp);
 	}
 
@@ -35,15 +37,15 @@ public class PolicyController extends HttpServlet
 		Executor executor = (conn) -> {
 			String decision = url.get("policy");
 			int user = UserUtils.getUser(req);
-			int selection = Integer.parseInt(req.getParameter("selection"));
+			Policy policy = Policy.valueOf(req.getParameter("selection"));
 			switch(decision)
 			{
-				case "manpower":
-					return DecisionActions.manpower(conn, user, selection);
-				case "food2":
-					return DecisionActions.food(conn, user, selection);
-				case "economy":
-					return DecisionActions.economy(conn, user, selection);
+				case "Manpower":
+					return DecisionActions.manpower(conn, user, policy);
+				case "Food":
+					return DecisionActions.food(conn, user, policy);
+				case "Economy":
+					return DecisionActions.economy(conn, user, policy);
 				default:
 					return Responses.genericError();
 			}
