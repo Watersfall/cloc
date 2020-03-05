@@ -633,4 +633,9 @@ public class Responses
 	{
 		return "<p>Decreased!</p>";
 	}
+
+	public static String alreadyLoggedIn()
+	{
+		return "<p>You are already logged in!</p>";
+	}
 }

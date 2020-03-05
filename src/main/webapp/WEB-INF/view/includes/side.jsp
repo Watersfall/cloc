@@ -9,14 +9,17 @@
 			</a>
 			<a>
 				<div>
-					<p>Login</p>
-					<label>
-						<input id="username" class="loginText" type="text" name="username" placeholder="Username">
-					</label><br>
-					<label>
-						<input id="password" class="loginText" type="password" name="password" placeholder="Password">
-					</label><br>
-					<button onclick="login(document.getElementById('username').value, document.getElementById('password').value);">Log in</button>
+					<form method="POST" action="${pageContext.request.contextPath}/login/">
+						<p>Login</p>
+						<label>
+							<input id="username" class="loginText" type="text" name="username" placeholder="Username">
+						</label><br>
+						<label>
+							<input id="password" class="loginText" type="password" name="password" placeholder="Password">
+						</label><br>
+						<input type="hidden" name="url" value="${requestScope['javax.servlet.forward.request_uri']}">
+						<button type="submit">Log in</button>
+					</form>
 				</div>
 			</a>
 			<a href="${pageContext.request.contextPath}/register/">

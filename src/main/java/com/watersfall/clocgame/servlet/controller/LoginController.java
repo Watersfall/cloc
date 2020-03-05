@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,41 +27,60 @@ public class LoginController extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		PrintWriter writer = resp.getWriter();
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
-		try(Connection conn = Database.getDataSource().getConnection())
+		String url = req.getParameter("url");
+		if(req.getSession().getAttribute("user") != null)
 		{
-			if(username == null || password == null)
+			req.setAttribute("error", Responses.alreadyLoggedIn());
+		}
+		else
+		{
+			try(Connection conn = Database.getDataSource().getConnection())
 			{
-				writer.append(Responses.nullFields());
-			}
-			else
-			{
-				PreparedStatement statement = conn.prepareStatement("SELECT password, id FROM cloc_login WHERE username=?");
-				statement.setString(1, username);
-				ResultSet results = statement.executeQuery();
-				if(!results.first())
+				if(username == null || password == null)
 				{
-					writer.append(Responses.invalidLogin());
+					req.setAttribute("error", Responses.nullFields());
 				}
 				else
 				{
-					if(Security.checkPassword(password, results.getString("password")))
+					PreparedStatement statement = conn.prepareStatement("SELECT password, id FROM cloc_login WHERE username=?");
+					statement.setString(1, username);
+					ResultSet results = statement.executeQuery();
+					if(!results.first())
 					{
-						req.getSession().setAttribute("user", results.getInt("id"));
+						req.setAttribute("error", Responses.invalidLogin());
 					}
 					else
 					{
-						writer.append(Responses.invalidLogin());
+						if(Security.checkPassword(password, results.getString("password")))
+						{
+							req.getSession().setAttribute("user", results.getInt("id"));
+						}
+						else
+						{
+							req.setAttribute("error", Responses.invalidLogin());
+						}
 					}
 				}
 			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+				req.setAttribute("error", Responses.genericException(e));
+			}
 		}
-		catch(SQLException e)
+		if(req.getAttribute("error") != null)
 		{
-			e.printStackTrace();
-			writer.append(Responses.genericException(e));
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
+		}
+		else if(url == null || url.isEmpty())
+		{
+			resp.sendRedirect("/main/");
+		}
+		else
+		{
+			resp.sendRedirect(url);
 		}
 	}
 }
