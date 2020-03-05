@@ -60,7 +60,7 @@ CREATE TABLE cloc_domestic(
 	stability TINYINT UNSIGNED DEFAULT 50,
 	population BIGINT UNSIGNED DEFAULT 100000,
 	rebels INT UNSIGNED DEFAULT 0,
-	lost_manpower LONG DEFAULT 0,
+	lost_manpower BIGINT DEFAULT 0,
 	farm_subsidies INT DEFAULT 0,
 	farm_regulations INT DEFAULT 0,
 	farm_technology INT DEFAULT 0,
@@ -91,7 +91,11 @@ CREATE TABLE cloc_cities(
 
 CREATE TABLE cloc_military(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	fighters INT UNSIGNED DEFAULT 0,
+	recon_balloons INT UNSIGNED DEFAULT 0,
+	recon_planes INT UNSIGNED DEFAULT 0,
+	biplane_fighters INT UNSIGNED DEFAULT 0,
+	triplane_fighters INT UNSIGNED DEFAULT 0,
+	monoplane_fighters INT UNSIGNED DEFAULT 0,
 	zeppelins INT UNSIGNED DEFAULT 0,
 	bombers INT UNSIGNED DEFAULT 0,
 	submarines INT UNSIGNED DEFAULT 0,

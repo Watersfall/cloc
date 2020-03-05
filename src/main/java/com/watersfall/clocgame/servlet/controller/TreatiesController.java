@@ -46,7 +46,10 @@ public class TreatiesController extends HttpServlet
 			{
 				desc += treaty.getName() + ", ";
 			}
-			desc = desc.substring(0, desc.length() - 2);
+			if(desc.length() > 2)
+			{
+				desc = desc.substring(0, desc.length() - 2);
+			}
 			req.setAttribute("description", "Page " + page + " Treaties: " + desc);
 		}
 		catch(SQLException e)
