@@ -11,7 +11,8 @@ Todo List:
     - Add a "Countryside" or similar "city" to the city list 
         - Improve farming infrastructure and overall infrastructure here
         - Options to increase food production:
-            - Collective Farms: Requires socialist/communist economy, but free/cheap and has a chance of success
+            - ~~Collective Farms: Requires socialist/communist economy, but free/cheap and has a chance of success~~ 
+            rethinking
             - Farming Subsidies: Costs money/growth, but chance of success
             - Fertilizer Technology: Costs research/nitrogen but increases food production
             - Build farming machinery: Occupies civ industry/costs steel, but increases food production
@@ -52,17 +53,17 @@ Todo List:
     - Add images for technologies
     - Show what is gained from researching a tech
     
-Navy, Army, Airforce
+ - Navy, Army, Airforce
     - Split ships into their own database so they can be named
     - A way to visualize army, navy, and airforce strengths 
     - Estimations of enemies strengths compared to your own
     - Add a confirmation for attacking an enemy who is (estimated to be) significantly stronger than you
     
-Domestic/Nation
+ - Domestic/Nation
     - More population growth mechanics
     - Better growth and GDP mechanics
-    - Better system for economic system
-    - Make switching governments, economic systems, and alignments more difficult
+    - ~~Better system for economic system~~
+    - Make switching governments, ~~economic systems~~, and alignments more difficult
     
-Other
-    - Further improved password security
+ - Other
+    - ~~Further improved password security~~
