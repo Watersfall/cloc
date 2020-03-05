@@ -1,4 +1,15 @@
 USE cloc;
+
+CREATE TABLE cloc_login(
+   id INT PRIMARY KEY AUTO_INCREMENT,
+   username VARCHAR(32),
+   email TEXT,
+   password CHAR(60),
+   register_ip VARCHAR(15),
+   last_ip VARCHAR(15),
+   sess CHAR(32)
+);
+
 CREATE TABLE cloc_main(
 	turn INT UNSIGNED DEFAULT 0
 );
@@ -11,16 +22,6 @@ CREATE TABLE production(
 	production TEXT,
 	progress INT DEFAULT 0,
 	FOREIGN KEY fk_production (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
-);	
-
-CREATE TABLE cloc_login(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	username VARCHAR(32),
-	email TEXT,
-	password CHAR(60),
-	register_ip VARCHAR(15),
-	last_ip VARCHAR(15),
-	sess CHAR(32)
 );
 
 CREATE TABLE cloc_cosmetic(
@@ -240,4 +241,4 @@ CREATE TABLE cloc_declarations(
 	FOREIGN KEY fk_declarations (sender) REFERENCES cloc_login (id) ON DELETE CASCADE
 );
 
-INSERT INTO cloc_main (turn) VALUES (1);
+INSERT INTO cloc_main (turn) VALUES (0);
