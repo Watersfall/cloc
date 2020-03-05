@@ -153,7 +153,7 @@ CREATE TABLE cloc_tech(
 	rifle_clips_tech TINYINT UNSIGNED DEFAULT 0,
 	smokeless_powder_tech TINYINT UNSIGNED DEFAULT 0,
 	bolt_action_clip_tech TINYINT UNSIGNED DEFAULT 0,
-	musket_tech TINYINT UNSIGNED DEFAULT 0,
+	musket_tech TINYINT UNSIGNED DEFAULT 1,
 	needle_nose_rifle_tech TINYINT UNSIGNED DEFAULT 0,
 	rifled_musket_tech TINYINT UNSIGNED DEFAULT 0,
 	single_shot_rifle_tech TINYINT UNSIGNED DEFAULT 0,
