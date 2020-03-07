@@ -1408,6 +1408,7 @@ public class Nation
 		double base = 0.2;
 		double foodPolicy = 0;
 		double manpowerPolicy = 0;
+		double economyPolicy = 0;
 		if(this.policy.getFood() == Policy.FREE_FOOD)
 		{
 			foodPolicy = 0.15;
@@ -1432,10 +1433,19 @@ public class Nation
 		{
 			manpowerPolicy = -0.25;
 		}
+		if(this.policy.getEconomy() == Policy.CIVILIAN_ECONOMY)
+		{
+			economyPolicy = 0.15;
+		}
+		else if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
+		{
+			economyPolicy = -0.15;
+		}
 		map.put("population.base", base);
 		map.put("population.foodPolicy", foodPolicy);
 		map.put("population.manpowerPolicy", manpowerPolicy);
-		map.put("population.net", base + foodPolicy + manpowerPolicy);
+		map.put("population.economy_policy", economyPolicy);
+		map.put("population.net", base + foodPolicy + manpowerPolicy + economyPolicy);
 		return map;
 	}
 
@@ -1459,6 +1469,8 @@ public class Nation
 				return "% from Food Policy";
 			case "population.manpowerPolicy":
 				return "% from Conscription Policy";
+			case "population.economy_policy":
+				return "% from Economic Policy";
 			case "population.net":
 				return "% total growth per month";
 			case "growth.factories":
