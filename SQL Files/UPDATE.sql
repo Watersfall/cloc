@@ -50,3 +50,9 @@ CREATE TABLE global_stats_history(
 	total_coal_mines BIGINT,
 	total_oil_wells BIGINT
 );
+
+ALTER TABLE cloc_cities
+	MODIFY iron_mines INT DEFAULT 5,
+    MODIFY coal_mines INT DEFAULT 5,
+    MODIFY civilian_industry INT DEFAULT 1,
+    MODIFY military_industry INT DEFAULT 1;
