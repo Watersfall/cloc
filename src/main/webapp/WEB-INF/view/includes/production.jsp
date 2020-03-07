@@ -4,8 +4,8 @@
 <div id="id${production.value.id}" style="max-width: 22em;">
 	<p class="neutral" style="position: absolute; top: 0.25em; left: 0.25em;">${production.value.productionAsTechnology.technology.name}</p>
 	<div style="width: 100%;">
-		<div style="min-width: 8em; width: 50%; float: left; height: 100%;">
-			<span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+		<div style="min-width: 8em; width: 50%; float: left;">
+			<span style="display: inline-block; vertical-align: middle;"></span>
 			<img style="width: 100%; height: auto; vertical-align: middle; margin-top: 1.25em;" src="${pageContext.request.contextPath}/images/production/gun.svg" alt="production icon"/>
 		</div>
 		<div style="min-width: 8em; width: 50%; float: left">
