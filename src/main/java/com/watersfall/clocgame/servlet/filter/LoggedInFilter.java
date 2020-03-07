@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.filter;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.util.Time;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 
@@ -41,6 +42,7 @@ public class LoggedInFilter implements Filter
 		if(req.getMethod().equalsIgnoreCase("GET") && !containsExtension(req.getRequestURI()))
 		{
 			req.setAttribute("turn", Util.week);
+			req.setAttribute("time", new Time());
 			req.setAttribute("description", "A World War 1 themed online nation sim");
 			try(Connection connection = Database.getDataSource().getConnection())
 			{

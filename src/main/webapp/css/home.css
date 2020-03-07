@@ -195,16 +195,18 @@ canvas {
 	left: 22.5em;
 	top: 0;
 	right: 0;
+	bottom: 100%;
 	margin: 0;
-	min-height: 100%;
+	height: 100%;
 }
 
 #main {
+	position: relative;
 	max-width: 75em;
 	margin: 0 auto auto;
 	background: #6d6d6d;
-	min-height: 95vh;
-	padding: 0 0 2em;
+	padding: 0;
+	min-height: calc(100% - 8.25rem);
 }
 
 #resultsContainer {
@@ -229,6 +231,10 @@ canvas {
 
 #world path:hover{
 	fill: #eee;
+}
+
+#footer {
+	position: relative;
 }
 
 div.detailsUp {
