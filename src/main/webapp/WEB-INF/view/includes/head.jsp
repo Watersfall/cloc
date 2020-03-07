@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/tech.css">
 	<script src="${pageContext.request.contextPath}/js/header.js"></script>
 	<script src="${pageContext.request.contextPath}/js/actions.js"></script>
+	<script src="${pageContext.request.contextPath}/js/graph.js"></script>
 	<meta name="description" content="${description}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1">
 	<script>

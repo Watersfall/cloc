@@ -25,7 +25,7 @@ public class DecisionActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeEconomy() + 1 > Util.turn)
+		else if(nation.getPolicy().getChangeEconomy() + 1 > Util.week)
 		{
 			return Responses.noChange();
 		}
@@ -56,7 +56,7 @@ public class DecisionActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeManpower() + 1 > Util.turn)
+		else if(nation.getPolicy().getChangeManpower() + 1 > Util.week)
 		{
 			return Responses.noChange();
 		}
@@ -87,7 +87,7 @@ public class DecisionActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeFood() + 1 > Util.turn)
+		else if(nation.getPolicy().getChangeFood() + 1 > Util.week)
 		{
 			return Responses.noChange();
 		}

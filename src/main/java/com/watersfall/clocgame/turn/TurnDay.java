@@ -2,6 +2,7 @@ package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.util.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ public class TurnDay implements Runnable
 		try
 		{
 			connection = Database.getDataSource().getConnection();
+			connection.prepareStatement("UPDATE cloc_main SET day=day+1").execute();
 			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
 			ResultSet results = ids.executeQuery();
 			while(results.next())
@@ -42,6 +44,7 @@ public class TurnDay implements Runnable
 				}
 			}
 			connection.commit();
+			Util.day++;
 		}
 		catch(SQLException e)
 		{

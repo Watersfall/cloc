@@ -40,10 +40,20 @@
 	<table class="standardTable">
 		<%--@elvariable id="stats" type="com.watersfall.clocgame.model.Stats"--%>
 		<c:forEach items="${stats.map.entrySet()}" var="stat">
-			<tr>
-				<td><p>${stat.key}</p></td>
-				<td><p>${stat.value}</p></td>
+			<tr onclick="generateGraph('${stat.key}');">
+				<td><p>${stats.getStringFromKey(stat.key)}</p></td>
+				<td>
+					<p>${stat.value}<img class="tiny floatRight" src="${pageContext.request.contextPath}/images/ui/graph.svg" alt="graph"></p>
+				</td>
+			</tr>
+			<tr style="padding: 0;">
+				<td colspan="2" style="padding: 0;">
+					<div class="toggleable" id="${stat.key}_div">
+						<%@include file="includes/graph.jsp"%>
+					</div>
+				</td>
 			</tr>
 		</c:forEach>
 	</table>
+
 <%@ include file="includes/defaultBottom.jsp" %>

@@ -15,7 +15,8 @@ import java.util.HashMap;
 
 public class Util
 {
-	public static int turn = 0;
+	public static long week = 0;
+	public static long day = 0;
 
 	public static final String DIRECTORY = System.getenv("CLOC_FILE_PATH");
 

@@ -90,6 +90,11 @@ ul {
 	margin: 0;
 }
 
+canvas {
+	background-color: #eeeeee;
+	margin: 1em;
+}
+
 #header {
 	font-size: 1.5rem;
 	position: fixed;

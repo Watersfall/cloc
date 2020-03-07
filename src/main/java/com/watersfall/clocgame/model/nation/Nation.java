@@ -463,7 +463,7 @@ public class Nation
 			PreparedStatement declare = conn.prepareStatement("INSERT INTO cloc_war (attacker, defender, start) VALUES (?,?,?)");
 			declare.setInt(1, this.id);
 			declare.setInt(2, nation.getId());
-			declare.setInt(3, Util.turn);
+			declare.setLong(3, Util.week);
 			declare.execute();
 			conn.commit();
 		}
@@ -500,7 +500,7 @@ public class Nation
 		{
 			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET end=? " +
 					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-			sendPeace.setInt(1, Util.turn);
+			sendPeace.setLong(1, Util.week);
 			sendPeace.setInt(2, this.id);
 			sendPeace.setInt(3, receiver.id);
 			sendPeace.setInt(4, receiver.id);

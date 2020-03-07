@@ -2,6 +2,7 @@ package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Policy;
+import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationDomestic;
@@ -25,7 +26,7 @@ public class TurnWeek implements Runnable
 		{
 			connection = Database.getDataSource().getConnection();
 			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
-			connection.prepareStatement("UPDATE cloc_main SET turn=turn+1").execute();
+			connection.prepareStatement("UPDATE cloc_main SET week=week+1").execute();
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
@@ -103,8 +104,9 @@ public class TurnWeek implements Runnable
 			 */
 			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
 			connection.commit();
-			Util.turn++;
-
+			Util.week++;
+			Stats.getInstance().updateStats();
+			Stats.getInstance().writeLog();
 		}
 		catch(SQLException e)
 		{

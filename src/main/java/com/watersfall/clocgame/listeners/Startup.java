@@ -43,9 +43,10 @@ public class Startup implements ServletContextListener
 			StatsScheduler.startStats();
 			event.getServletContext().setAttribute("database", Database.getDataSource());
 			conn = Database.getDataSource().getConnection();
-			ResultSet results = conn.prepareStatement("SELECT turn FROM cloc_main").executeQuery();
+			ResultSet results = conn.prepareStatement("SELECT week, day FROM cloc_main").executeQuery();
 			results.first();
-			Util.turn = results.getInt(1);
+			Util.week = results.getLong(1);
+			Util.day = results.getLong(2);
 		}
 		catch(SQLException e)
 		{

@@ -94,6 +94,58 @@ public class Stats
 		}
 	}
 
+	public void writeLog()
+	{
+		Connection conn = null;
+		try
+		{
+			conn = Database.getDataSource().getConnection();
+			PreparedStatement statement = conn.prepareStatement("INSERT INTO global_stats_history " +
+					"(week, total_nations, total_neutral_nations, total_entente_nations, total_central_powers_nations, " +
+					"total_population, total_soldiers, total_civilian_factories, total_military_factories, total_universities, " +
+					"total_iron_mines, total_coal_mines, total_oil_wells) " +
+					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			statement.setLong(1, Util.week);
+			statement.setLong(2, this.totalNations);
+			statement.setLong(3, this.totalNeutralNations);
+			statement.setLong(4, this.totalEntenteNations);
+			statement.setLong(5, this.totalCentralPowersNations);
+			statement.setLong(6, this.totalPopulation);
+			statement.setLong(7, this.totalArmies);
+			statement.setLong(8, this.totalCivilianFactories);
+			statement.setLong(9, this.totalMilitaryFactories);
+			statement.setLong(10, this.totalUniversities);
+			statement.setLong(11, this.totalIronMines);
+			statement.setLong(12, this.totalCoalMines);
+			statement.setLong(13, this.totalOilWells);
+			statement.execute();
+			conn.commit();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			try
+			{
+				conn.rollback();
+			}
+			catch(Exception e2)
+			{
+				//Ignore
+			}
+		}
+		finally
+		{
+			try
+			{
+				conn.close();
+			}
+			catch(Exception e)
+			{
+				//Ignore
+			}
+		}
+	}
+
 	public TreatyStats getTreatyStats(int id)
 	{
 		return treatyMap.get(id);
@@ -102,19 +154,52 @@ public class Stats
 	public LinkedHashMap<String, String> getMap()
 	{
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		map.put("Total Nations", Util.formatNumber(totalNations) + " Nations");
-		map.put("Total Neutral Nations", Util.formatNumber(totalNeutralNations) + " Nations");
-		map.put("Total Entente Nations", Util.formatNumber(totalEntenteNations) + " Nations");
-		map.put("Total Central Powers Nations", Util.formatNumber(totalCentralPowersNations) + " Nations");
-		map.put("Global Population", Util.formatNumber(totalPopulation) + " People");
-		map.put("Total Soldiers", Util.formatNumber(totalArmies) + " Troops");
-		map.put("Total Civilian Factories", Util.formatNumber(totalCivilianFactories) + " Factories");
-		map.put("Total Military Factories", Util.formatNumber(totalMilitaryFactories) + " Factories");
-		map.put("Total Universities", Util.formatNumber(totalUniversities) + " Universities");
-		map.put("Total Iron Mines", Util.formatNumber(totalIronMines) + " Mines");
-		map.put("Total Coal Mines", Util.formatNumber(totalCoalMines) + " Mines");
-		map.put("Total Oil Wells", Util.formatNumber(totalOilWells) + " Wells");
+		map.put("total_nations", Util.formatNumber(totalNations) + " nations");
+		map.put("total_neutral_nations", Util.formatNumber(totalNeutralNations) + " nations");
+		map.put("total_entente_nations", Util.formatNumber(totalEntenteNations) + " nations");
+		map.put("total_central_powers_nations", Util.formatNumber(totalCentralPowersNations) + " nations");
+		map.put("total_population", Util.formatNumber(totalPopulation) + " People");
+		map.put("total_soldiers", Util.formatNumber(totalArmies) + " Troops");
+		map.put("total_civilian_factories", Util.formatNumber(totalCivilianFactories) + " Factories");
+		map.put("total_military_factories", Util.formatNumber(totalMilitaryFactories) + " Factories");
+		map.put("total_universities", Util.formatNumber(totalUniversities) + " Universities");
+		map.put("total_iron_mines", Util.formatNumber(totalIronMines) + " Mines");
+		map.put("total_coal_mines", Util.formatNumber(totalCoalMines) + " Mines");
+		map.put("total_oil_wells", Util.formatNumber(totalOilWells) + " Wells");
 		return map;
+	}
+
+	public String getStringFromKey(String key)
+	{
+		switch(key)
+		{
+			case "total_nations":
+				return "Total Nations";
+			case "total_neutral_nations":
+				return "Total Neutral Nations";
+			case "total_entente_nations":
+				return "Total Entente Nations";
+			case "total_central_powers_nations":
+				return "Total Central Powers Nations";
+			case "total_population":
+				return "Global Population";
+			case "total_soldiers":
+				return "Total Soldiers";
+			case "total_civilian_factories":
+				return "Total Civilian Factories";
+			case "total_military_factories":
+				return "Total Military Factories";
+			case "total_universities":
+				return "Total Universities";
+			case "total_iron_mines":
+				return "Total Iron Mines";
+			case "total_coal_mines":
+				return "Total Coal Mines";
+			case "total_oil_wells":
+				return "Total Oil Wells";
+			default:
+				return "";
+		}
 	}
 
 	public static @AllArgsConstructor class TreatyStats
