@@ -36,7 +36,7 @@ ALTER TABLE cloc_declarations
     ADD COLUMN sent BIGINT;
 
 CREATE TABLE global_stats_history(
-    day BIGINT,
+    week BIGINT,
 	total_nations BIGINT,
 	total_neutral_nations BIGINT,
 	total_entente_nations BIGINT,
