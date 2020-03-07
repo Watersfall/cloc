@@ -41,6 +41,7 @@ public class Nation
 	private @Getter boolean safe;
 	private @Getter ResultSet results;
 	private @Getter int freeFactories;
+	private @Getter long lastLogin;
 	private LinkedHashMap<String, Double> coalProduction = null;
 	private LinkedHashMap<String, Double> ironProduction = null;
 	private LinkedHashMap<String, Double> oilProduction = null;
@@ -224,6 +225,7 @@ public class Nation
 		ResultSet main = get.executeQuery();
 		main.first();
 		this.results = main;
+		this.lastLogin = main.getLong("last_login");
 		this.cosmetic = new NationCosmetic(id, main);
 		this.domestic = new NationDomestic(id, main);
 		this.economy = new NationEconomy(id, main);

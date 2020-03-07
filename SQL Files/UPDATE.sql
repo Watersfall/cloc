@@ -56,3 +56,6 @@ ALTER TABLE cloc_cities
     MODIFY coal_mines INT DEFAULT 5,
     MODIFY civilian_industry INT DEFAULT 1,
     MODIFY military_industry INT DEFAULT 1;
+
+ALTER TABLE cloc_login
+	ADD COLUMN last_login BIGINT;

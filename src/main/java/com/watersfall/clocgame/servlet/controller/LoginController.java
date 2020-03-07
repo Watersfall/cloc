@@ -1,7 +1,9 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.Security;
 
 import javax.servlet.ServletException;
@@ -56,6 +58,15 @@ public class LoginController extends HttpServlet
 						if(Security.checkPassword(password, results.getString("password")))
 						{
 							req.getSession().setAttribute("user", results.getInt("id"));
+							Executor exec = (connection) -> {
+								PreparedStatement update = connection.prepareStatement("UPDATE cloc_login SET last_login=? WHERE id=?");
+								update.setLong(1, System.currentTimeMillis());
+								update.setInt(2, Integer.parseInt(req.getSession().getAttribute("user").toString()));
+								update.execute();
+								connection.commit();
+								return null;
+							};
+							Action.doAction(exec);
 						}
 						else
 						{
