@@ -37,20 +37,17 @@ public class NewsAndStatsController extends HttpServlet
 			}
 			ArrayList<War> wars = null;
 			int totalWars = 0;
-			if(url.get("page") != null)
+			if(url.get("page") == null || url.get("page").equalsIgnoreCase("ongoing"))
 			{
-				if(url.get("page").equalsIgnoreCase("ongoing"))
-				{
-					wars = War.getOngoingWarPage(conn, page);
-					totalWars = Util.getTotalOngoingWars(conn);
-					req.setAttribute("url", "worldnews/ongoing");
-				}
-				else if(url.get("page").equalsIgnoreCase("ended"))
-				{
-					wars = War.getEndedWarPage(conn, page);
-					totalWars = Util.getTotalEndedWars(conn);
-					req.setAttribute("url", "worldnews/ended");
-				}
+				wars = War.getOngoingWarPage(conn, page);
+				totalWars = Util.getTotalOngoingWars(conn);
+				req.setAttribute("url", "worldnews/ongoing");
+			}
+			else if(url.get("page").equalsIgnoreCase("ended"))
+			{
+				wars = War.getEndedWarPage(conn, page);
+				totalWars = Util.getTotalEndedWars(conn);
+				req.setAttribute("url", "worldnews/ended");
 			}
 			req.setAttribute("stats", Stats.getInstance());
 			req.setAttribute("page", page);
