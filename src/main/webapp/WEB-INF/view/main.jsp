@@ -4,6 +4,11 @@
 		<p>You must be logged in to view this page!</p>
 	</c:if>
 	<c:if test="${sessionScope.user != null}">
+		<c:if test="${home.atWar}">
+			<div class="element" style="width: 75%; margin-top: 1em;">
+				<h2 class="negative">You are at war!</h2>
+			</div>
+		</c:if>
 		<h1><c:out value="${home.cosmetic.nationTitle}"/><br>of<br>${home.cosmetic.nationName}</h1>
 		<img class="veryLarge" src="/user/flag/${home.cosmetic.flag}" alt="flag"/>
 		<p><br><c:out value="${home.cosmetic.description}"/></p><br>
@@ -153,5 +158,18 @@
 		<table class="standardTable nationTable">
 			<caption><p>Airforce</p></caption>
 		</table>
+		<h2>Wars</h2>
+		<c:if test="${home.atWar}">
+			<c:if test="${home.offensive > 0}">
+				<a href="${pageContext.request.contextPath}/nation/${home.offensive}">Offensive</a>
+			</c:if>
+			<c:if test="${home.defensive > 0}">
+				<a href="${pageContext.request.contextPath}/nation/${home.defensive}">Defensive</a>
+			</c:if>
+		</c:if>
+		<c:if test="${!home.atWar}">
+			<i>None</i>
+		</c:if>
+		<br><br>
 	</c:if>
 <%@ include file="includes/defaultBottom.jsp" %>

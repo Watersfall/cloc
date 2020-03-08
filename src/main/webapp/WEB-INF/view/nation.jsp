@@ -188,6 +188,12 @@
 					<button id="decc" onclick="declareWar(${nation.id})">Declare War</button><br>
 				</c:if>
 				<c:if test="${home.isAtWarWith(nation)}">
+					<div class="categories">
+						<%@include file="includes/land.jsp"%>
+						<%@include file="includes/air.jsp"%>
+						<%@include file="includes/navy.jsp"%>
+					</div>
+					<br>
 					<button onclick="send('peace', null, ${nation.id});">Offer Peace</button>
 				</c:if>
 			</c:if>
