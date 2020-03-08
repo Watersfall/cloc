@@ -47,7 +47,7 @@ public class CityDecisionController extends HttpServlet
 					return CityActions.industrialize(conn, user, id);
 				case "militarize":
 					return CityActions.militarize(conn, user, id);
-				case "nitrogenplant":
+				case "nitrogen":
 					return CityActions.nitrogen(conn, user, id);
 				case "university":
 					return CityActions.university(conn, user, id);
@@ -67,7 +67,7 @@ public class CityDecisionController extends HttpServlet
 					return CityActions.remove(conn, user, id, "civilian_industry");
 				case "unmilitarize":
 					return CityActions.remove(conn, user, id, "military_industry");
-				case "unnitrogenplant":
+				case "unnitrogen":
 					return CityActions.remove(conn, user, id, "nitrogen_industry");
 				case "ununiversity":
 					return CityActions.remove(conn, user, id, "universities");
