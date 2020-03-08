@@ -48,13 +48,21 @@ public class TurnWeek implements Runnable
 					HashMap<String, Double> nitrogen = nation.getTotalNitrogenProduction();
 					HashMap<String, Double> research = nation.getTotalResearchProduction();
 					HashMap<String, Double> food = nation.getFoodProduction();
-					economy.setCoal(economy.getCoal() + coal.get("resource.net"));
-					economy.setIron(economy.getIron() + iron.get("resource.net"));
-					economy.setOil(economy.getOil() + oil.get("resource.net"));
+					economy.setCoal(economy.getCoal() + coal.get("resource.total"));
+					economy.setIron(economy.getIron() + iron.get("resource.total"));
+					economy.setOil(economy.getOil() + oil.get("resource.total"));
 					economy.setResearch(economy.getResearch() + research.get("resource.net"));
 					economy.setFood(economy.getFood() + food.get("resource.net"));
 					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("growth.net"));
 					economy.setGdp(economy.getGdp() + economy.getGrowth());
+
+					if(economy.getCoal() > coal.get("resource.factoryUpkeep")
+							&& economy.getIron() > iron.get("resource.factoryUpkeep")
+							&& economy.getOil() > oil.get("resource.factoryUpkeep"))
+					{
+						economy.setSteel(economy.getSteel() + steel.get("resource.net"));
+						economy.setNitrogen(economy.getNitrogen() + nitrogen.get("resource.net"));
+					}
 
 					/*
 					 ** Domestic

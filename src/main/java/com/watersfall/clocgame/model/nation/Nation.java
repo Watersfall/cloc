@@ -670,6 +670,53 @@ public class Nation
 		return map;
 	}
 
+	private static void extractionEconBoosts(LinkedHashMap<String, Double> map, Policy policy)
+	{
+		double bonus;
+		if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
+		{
+			bonus = -0.1;
+		}
+		else if(policy == Policy.AGRARIAN_ECONOMY)
+		{
+			bonus = -0.05;
+		}
+		else if(policy == Policy.INDUSTRY_ECONOMY)
+		{
+			bonus = -0.15;
+		}
+		else
+		{
+			bonus = 0.1;
+		}
+		computeBonus(map, bonus);
+	}
+
+	private static void factoryEconBoosts(LinkedHashMap<String, Double> map, Policy policy)
+	{
+		double bonus;
+		if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY || policy == Policy.AGRARIAN_ECONOMY)
+		{
+			bonus = -0.1;
+		}
+		else if(policy == Policy.INDUSTRY_ECONOMY)
+		{
+			bonus = 0.1;
+		}
+		else
+		{
+			bonus = -0.15;
+		}
+		computeBonus(map, bonus);
+	}
+
+	private static void computeBonus(LinkedHashMap<String, Double> map, double bonus)
+	{
+		map.put("resource.economy_type", map.get("resource.total") * bonus);
+		map.compute("resource.net", (k, v) -> v += (map.get("resource.total") * bonus));
+		map.compute("resource.total", (k, v) -> v += v * bonus);
+	}
+
 	/**
 	 * Calculates the total coal production of all cities
 	 * Return value cached to save performance on multiple calls
@@ -700,27 +747,7 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
-			Policy policy = this.policy.getEconomy();
-			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
-			}
-			else if(policy == Policy.AGRARIAN_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.05);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.05));
-			}
-			else if(policy == Policy.INDUSTRY_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
-			}
-			else
-			{
-				map.put("resource.economy_type", map.get("resource.total") * 0.10);
-				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
-			}
+			extractionEconBoosts(map, this.getPolicy().getEconomy());
 			coalProduction = map;
 		}
 		return coalProduction;
@@ -756,27 +783,7 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
-			Policy policy = this.policy.getEconomy();
-			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
-			}
-			else if(policy == Policy.AGRARIAN_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.05);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.05));
-			}
-			else if(policy == Policy.INDUSTRY_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
-			}
-			else
-			{
-				map.put("resource.economy_type", map.get("resource.total") * 0.10);
-				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
-			}
+			extractionEconBoosts(map, this.getPolicy().getEconomy());
 			ironProduction = map;
 		}
 		return ironProduction;
@@ -812,27 +819,7 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
-			Policy policy = this.policy.getEconomy();
-			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
-			}
-			else if(policy == Policy.AGRARIAN_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.05);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.05));
-			}
-			else if(policy == Policy.INDUSTRY_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
-			}
-			else
-			{
-				map.put("resource.economy_type", map.get("resource.total") * 0.10);
-				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
-			}
+			extractionEconBoosts(map, this.getPolicy().getEconomy());
 			oilProduction = map;
 		}
 		return oilProduction;
@@ -865,22 +852,7 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
-			Policy policy = this.policy.getEconomy();
-			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY || policy == Policy.AGRARIAN_ECONOMY)
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
-			}
-			else if(policy == Policy.INDUSTRY_ECONOMY)
-			{
-				map.put("resource.economy_type", map.get("resource.total") * 0.10);
-				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
-			}
-			else
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
-			}
+			factoryEconBoosts(map, this.getPolicy().getEconomy());
 			steelProduction = map;
 		}
 		return steelProduction;
@@ -913,22 +885,7 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
-			Policy policy = this.policy.getEconomy();
-			if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY || policy == Policy.AGRARIAN_ECONOMY)
-			{
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.1));
-				map.put("resource.economy_type", -map.get("resource.total") * 0.1);
-			}
-			else if(policy == Policy.INDUSTRY_ECONOMY)
-			{
-				map.put("resource.economy_type", map.get("resource.total") * 0.10);
-				map.compute("resource.net", (k, v) -> v = v + (map.get("resource.total") * 0.10));
-			}
-			else
-			{
-				map.put("resource.economy_type", -map.get("resource.total") * 0.15);
-				map.compute("resource.net", (k, v) -> v = v - (map.get("resource.total") * 0.15));
-			}
+			factoryEconBoosts(map, this.getPolicy().getEconomy());
 			nitrogenProduction = map;
 		}
 		return nitrogenProduction;
