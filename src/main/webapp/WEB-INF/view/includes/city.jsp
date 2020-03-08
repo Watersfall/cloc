@@ -157,7 +157,7 @@
 					</p>
 					<c:if test="${city.industryNitrogen > 0}">
 						<p>(
-							<b><fmt:formatNumber value="${city.nitrogenProduction.get('resource.total') / city.nitrogenProduction}" maxFractionDigits="2"/></b>
+							<b><fmt:formatNumber value="${city.nitrogenProduction.get('resource.total') / city.industryNitrogen}" maxFractionDigits="2"/></b>
 							nitrogen per factory
 							)</p>
 					</c:if>
