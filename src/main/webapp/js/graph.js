@@ -148,7 +148,7 @@ function drawLabels(id)
 	let increment = (max - min) / 7;
 	for(let i = 50; i < height; i += 50)
 	{
-		canvas.fillText(Math.trunc(max - (increment * ((i - 50) / 50))) + "", 95, i);
+		canvas.fillText(formatNumber((max - (increment * ((i - 50) / 50)))), 95, i);
 	}
 	canvas.font = "18px Trebuchet MS";
 	canvas.textAlign = "center";
@@ -157,4 +157,27 @@ function drawLabels(id)
 	canvas.rotate(-Math.PI / 2);
 	canvas.fillText(id, 0, 0);
 	canvas.restore()
+}
+
+function formatNumber(number)
+{
+	let prefixes = ["k", "m", "b", "t", "q"];
+	let i = -1;
+	if(number < 1000)
+	{
+		return Math.trunc(number) + "";
+	}
+	else
+	{
+		while((number / 1000) > 1)
+		{
+			number /= 1000;
+			i++;
+		}
+		if(i >= prefixes.length)
+		{
+			return ">999q";
+		}
+		return Math.trunc(number).toString() + prefixes[i];
+	}
 }
