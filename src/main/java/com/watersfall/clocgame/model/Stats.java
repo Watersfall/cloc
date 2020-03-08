@@ -159,7 +159,7 @@ public class Stats
 		map.put("total_entente_nations", Util.formatNumber(totalEntenteNations) + " nations");
 		map.put("total_central_powers_nations", Util.formatNumber(totalCentralPowersNations) + " nations");
 		map.put("total_population", Util.formatNumber(totalPopulation) + " People");
-		map.put("total_soldiers", Util.formatNumber(totalArmies) + " Troops");
+		map.put("total_soldiers", Util.formatNumber(totalArmies) + "k Troops");
 		map.put("total_civilian_factories", Util.formatNumber(totalCivilianFactories) + " Factories");
 		map.put("total_military_factories", Util.formatNumber(totalMilitaryFactories) + " Factories");
 		map.put("total_universities", Util.formatNumber(totalUniversities) + " Universities");
@@ -244,8 +244,8 @@ public class Stats
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			map.put("Total Population", Util.formatNumber(totalPopulation) + " People");
 			map.put("Average Population", Util.formatNumber(averagePopulation) + " People");
-			map.put("Total Soldiers", Util.formatNumber(totalArmies) + " Troops");
-			map.put("Average Soldiers", Util.formatNumber(averageArmy) + " Troops");
+			map.put("Total Soldiers", Util.formatNumber(totalArmies) + "k Troops");
+			map.put("Average Soldiers", Util.formatNumber(averageArmy) + "k Troops");
 			map.put("Total Civilian Factories", Util.formatNumber(totalCivilianFactories) + " Factories");
 			map.put("Average Civilian Factories", Util.formatNumber(averageCivilianFactories) + " Factories");
 			map.put("Total Military Factories", Util.formatNumber(totalMilitaryFactories) + " Factories");

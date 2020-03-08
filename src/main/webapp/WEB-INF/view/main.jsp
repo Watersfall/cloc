@@ -111,7 +111,7 @@
 			<caption><p>Army</p></caption>
 			<tr>
 				<td><p>Active Personnel</p></td>
-				<td><p><fmt:formatNumber value="${home.army.size}"/></p></td>
+				<td><p><fmt:formatNumber value="${home.army.size}"/>k Personnel</p></td>
 			</tr>
 			<tr>
 				<td><p>Training</p></td>
