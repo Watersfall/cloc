@@ -1556,6 +1556,34 @@ public class Nation
 	}
 
 	/**
+	 * Invites this Nation to the Treaty with the specified id
+	 * @param id The Treaty id to invite to
+	 * @return The displayable response message
+	 * @throws SQLException If a database error occurs
+	 */
+	public String inviteToTreaty(Integer id, Nation inviter) throws SQLException
+	{
+		PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
+		check.setInt(1, this.id);
+		check.setInt(2, id);
+		ResultSet results = check.executeQuery();
+		if(results.first())
+		{
+			return Responses.alreadyInvited();
+		}
+		else
+		{
+			PreparedStatement invite = conn.prepareStatement("INSERT INTO cloc_treaty_invites (alliance_id, nation_id) VALUES (?,?)");
+			invite.setInt(1, id);
+			invite.setInt(2, this.id);
+			invite.execute();
+			String message = News.createMessage(News.ID_TREATY_INVITE, inviter.getNationUrl(), inviter.getTreaty().getTreatyUrl());
+			News.sendNews(conn, inviter.getId(), this.getId(), message);
+			return Responses.invited();
+		}
+	}
+
+	/**
 	 * Saved all this nation's productions in the database
 	 * @throws SQLException If a database error occurs
 	 */

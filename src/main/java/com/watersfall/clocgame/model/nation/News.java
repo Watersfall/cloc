@@ -35,6 +35,7 @@ public class News
 	public static final int ID_AIR_BOMB_TROOPS = 18;
 	public static final int ID_SEND_PEACE = 19;
 	public static final int ID_PEACE_ACCEPTED = 20;
+	public static final int ID_TREATY_INVITE = 21;
 
 	private static String sendMessage(Object... args)
 	{
@@ -80,6 +81,8 @@ public class News
 				return String.format("%s has requested white peace! Should we continue the war, or halt our advances?", args);
 			case ID_PEACE_ACCEPTED:
 				return String.format("%s has accepted our offer for peace! Let there be peace in our time!", args);
+			case ID_TREATY_INVITE:
+				return String.format("%s has invited us to the %s treaty!", args);
 		}
 		return "";
 	}

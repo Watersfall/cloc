@@ -122,7 +122,7 @@ public class Treaty extends Updatable
 
 	public String getTreatyUrl()
 	{
-		return "<a href=\"/treaty/" + id + "\">" + this.name + "</a>";
+		return "<a href=\"/treaty/" + id + "\"><b>" + this.name + "</b></a>";
 	}
 
 	public void setName(String name) throws SQLException
