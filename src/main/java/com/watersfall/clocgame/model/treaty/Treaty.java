@@ -27,8 +27,11 @@ public class Treaty extends Updatable
 	public static ArrayList<Treaty> getTreatyPage(Connection conn, int page) throws SQLException
 	{
 		ArrayList<Treaty> array = new ArrayList<>();
-		PreparedStatement treaties = conn.prepareStatement("SELECT cloc_treaties.*, COUNT(nation_id) AS count FROM cloc_treaties, cloc_treaties_members " +
-				"WHERE cloc_treaties.id>0 ORDER BY count DESC, id LIMIT 20 OFFSET ?");
+		PreparedStatement treaties = conn.prepareStatement("SELECT cloc_treaties.*, COUNT(nation_id) AS count " +
+				"FROM cloc_treaties, cloc_treaties_members " +
+				"WHERE cloc_treaties.id > 0 AND cloc_treaties_members.alliance_id=cloc_treaties.id " +
+				"GROUP BY cloc_treaties.id " +
+				"ORDER BY count DESC, id LIMIT 20 OFFSET ?");
 		treaties.setInt(1, (page - 1) * 20);
 		ResultSet results = treaties.executeQuery();
 		while(results.next())
