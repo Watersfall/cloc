@@ -17,7 +17,7 @@ public class TechnologyChemicalWeapons extends SingleTechnology
 
 	private TechnologyChemicalWeapons()
 	{
-		super(NAME, DESC, COLUMN_NAME, FIELD_NAME, 5);
+		super(NAME, DESC, COLUMN_NAME, FIELD_NAME, 1);
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
