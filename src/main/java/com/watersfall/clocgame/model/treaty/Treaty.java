@@ -209,9 +209,12 @@ public class Treaty extends Updatable
 	{
 		PreparedStatement deleteMembers = conn.prepareStatement("DELETE FROM cloc_treaties_members WHERE alliance_id=?");
 		PreparedStatement deleteAlliance = conn.prepareStatement("DELETE FROM cloc_treaties WHERE id=?");
+		PreparedStatement deleteInvites = conn.prepareStatement("DELETE FROM cloc_treaty_invites WHERE alliance_id=?");
+		deleteInvites.setInt(1, this.id);
 		deleteMembers.setInt(1, this.id);
 		deleteAlliance.setInt(1, this.id);
 		deleteMembers.execute();
+		deleteInvites.execute();
 		deleteAlliance.execute();
 	}
 }

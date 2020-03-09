@@ -77,6 +77,6 @@
 				</div>
 			</div>
 		</div>
-		<button onclick="settingsAll(document.getElementById('flag').value, document.getElementById('portrait').value, document.getElementById('nationTitle').value, document.getElementById('leaderTitle').value, document.getElementById('description').value)">Update All</button>
+		<button onclick="settingsAll(document.getElementById('nationTitle').value, document.getElementById('leaderTitle').value, document.getElementById('description').value)">Update All</button>
 	</c:if>
 <%@ include file="includes/defaultBottom.jsp" %>

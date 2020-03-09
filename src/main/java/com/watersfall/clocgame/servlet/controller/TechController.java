@@ -32,4 +32,10 @@ public class TechController extends HttpServlet
 			writer.append("<p>Not a tech</p>");
 		}
 	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+	{
+		doGet(req, resp);
+	}
 }

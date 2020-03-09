@@ -11,7 +11,7 @@ function setFreeFactories(newFreeFactories)
 	freeFactories = newFreeFactories;
 }
 
-function ajax(url, params)
+function ajax(url, params, callback)
 {
 	let xhttp = new XMLHttpRequest();
 	xhttp.open("POST", url, true);
@@ -24,14 +24,22 @@ function ajax(url, params)
 	{
 		xhttp.send();
 	}
-	xhttp.onreadystatechange = function()
+	if(callback === null || callback === undefined)
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		xhttp.onreadystatechange = function()
 		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
-			return xhttp.responseText;
-		}
-	};
+			if(xhttp.readyState === 4 && xhttp.status === 200)
+			{
+				displayResults();
+				document.getElementById("result").innerHTML = xhttp.responseText;
+				return xhttp.responseText;
+			}
+		};
+	}
+	else
+	{
+		xhttp.onreadystatechange = callback;
+	}
 }
 
 function displayResults()
@@ -42,21 +50,18 @@ function displayResults()
 
 function decision(policy)
 {
-	displayResults();
 	let url = context + "/decision/" + policy;
 	ajax(url, null);
 }
 
 function cityDecision(policy, cityId)
 {
-	displayResults();
 	let url = context + "/decision/city/" + cityId + "/" + policy;
 	ajax(url, null);
 }
 
 function farm(action, increase)
 {
-	displayResults();
 	let url = context + "/countryside/" + action;
 	let params = "increase=" + increase;
 	ajax(url, params);
@@ -64,7 +69,6 @@ function farm(action, increase)
 
 function send(action, amount, id)
 {
-	displayResults();
 	let url = context + "/nation/" + id;
 	let params;
 	if(amount === null)
@@ -80,7 +84,6 @@ function send(action, amount, id)
 
 function declareWar(id)
 {
-	displayResults();
 	let url = context + "/nation/" + id;
 	let params = "action=war";
 	ajax(url, params);
@@ -88,25 +91,21 @@ function declareWar(id)
 
 function settings(name, value)
 {
-	displayResults();
 	let url = context + "/settings/";
 	let params = "action=" + name + "&" + name + "=" + value;
 	ajax(url, params);
 }
 
-function settingsAll(flag, portrait, nationTitle, leaderTitle, description)
+function settingsAll(nationTitle, leaderTitle, description)
 {
-	displayResults();
 	let url = context + "/settings/";
-	let params = "action=all" + "&flag=" + flag +
-		"&portrait=" + portrait + "&nationTitle=" + nationTitle +
+	let params = "action=all" + "&nationTitle=" + nationTitle +
 		"&leaderTitle=" + leaderTitle + "&description=" + description;
 	ajax(url, params);
 }
 
 function policy(policy)
 {
-	displayResults();
 	let url = context + "/policy/" + policy;
 	let params = 'selection=' + document.getElementById("policy_" + policy).value;
 	ajax(url, params);
@@ -134,41 +133,36 @@ function updateDesc(name)
 function createTreaty(name)
 {
 	displayResults();
-	let xhttp = new XMLHttpRequest();
+	let url = context + "/createtreaty/";
 	let params = "name=" + name;
-	xhttp.open("POST", context + "/createtreaty/", true);
-	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
+	let callback = function()
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
+			document.getElementById("result").innerHTML = this.responseText;
 		}
-		if(xhttp.readyState === 4 && xhttp.status === 201)
+		if(this.readyState === 4 && this.status === 201)
 		{
-			window.location.href = "/treaty/" + xhttp.responseText;
+			window.location.href = "/treaty/" + this.responseText;
 		}
 	};
+	ajax(url, params, callback);
 }
 
 function login()
 {
 	let user = document.getElementById("username").value;
 	let pass = document.getElementById("password").value;
-	let xhttp = new XMLHttpRequest();
+	let url = context + "/login/";
 	let params = "username=" + user + "&password=" + pass;
-	xhttp.open("POST", context + "/login/", true);
-	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
+	let callback = function()
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		if(this.readyState === 4 && this.status === 200)
 		{
-			if(xhttp.responseText != "")
+			if(this.responseText != "")
 			{
 				toggle("login_error_div");
-				document.getElementById("login_error").innerHTML = xhttp.responseText;
+				document.getElementById("login_error").innerHTML = this.responseText;
 			}
 			else
 			{
@@ -176,24 +170,23 @@ function login()
 			}
 		}
 	};
+	ajax(url, params, callback);
 }
 
 function research(tech)
 {
 	displayResults();
-	let xhttp = new XMLHttpRequest();
 	let params = "tech=" + tech;
-	xhttp.open("POST", context + "/technology/", true);
-	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
+	let url = context + "/technology/";
+	let callback = function()
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("result").innerHTML = xhttp.responseText;
+			document.getElementById("result").innerHTML = this.responseText;
 			updateTechs();
 		}
 	};
+	ajax(url, params, callback);
 }
 
 function updateTechs()
@@ -202,23 +195,20 @@ function updateTechs()
 	if(url.pathname.indexOf("/tree/") !== -1)
 	{
 		let category = url.pathname.substring(url.pathname.indexOf("/tree/") + 6);
-		let xhttp = new XMLHttpRequest();
-		xhttp.open("GET", context + "/techtree/" + category, true);
-		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		xhttp.send();
-		xhttp.onreadystatechange = function()
+		let url = context + "/techtree/" + category;
+		let callback = function()
 		{
-			if(xhttp.readyState === 4 && xhttp.status === 200)
+			if(this.readyState === 4 && this.status === 200)
 			{
-				document.getElementById("techTree").innerHTML = xhttp.responseText;
+				document.getElementById("techTree").innerHTML = this.responseText;
 			}
 		};
+		ajax(url, null, callback());
 	}
 }
 
 function updateTreaty(attribute, value)
 {
-	displayResults();
 	let url = context + "/treaty/";
 	let params = "attribute=" + attribute + "&value=" + value;
 	ajax(url, params);
@@ -226,7 +216,6 @@ function updateTreaty(attribute, value)
 
 function postDeclaration()
 {
-	displayResults();
 	let message = document.getElementById("post").value;
 	let url = context + "/declarations/";
 	let params = "message=" + message;
@@ -235,7 +224,6 @@ function postDeclaration()
 
 function newsDelete(id)
 {
-	displayResults();
 	let url = context + "/news/";
 	let params = "delete=" + id;
 	ajax(url, params);
@@ -298,28 +286,31 @@ function deleteProduction(id)
 	displayResults();
 	let url = context + "/production/" + id;
 	let params = "action=delete&delete=" + id;
-	ajax(url, params);
-	let element = document.getElementsByClassName("id=" + id);
-	element[0].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = 'none';
+	let callback = function()
+	{
+		if(this.readyState === 4 && this.status === 200)
+		{
+			let element = document.getElementsByClassName("id=" + id);
+			element[0].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = 'none';
+		}
+	};
+	ajax(url, params, callback);
 }
 
 function createProduction()
 {
 	let url = context + "/production/0";
 	let params = "action=new";
-	let xhttp = new XMLHttpRequest();
-	xhttp.open("POST", url, true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send(params);
-	xhttp.onreadystatechange = function()
+	let callback = function()
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		if(this.readyState === 4 && this.status === 200)
 		{
 			updateProduction();
 			freeFactories--;
 			updateFreeFactories();
 		}
 	};
+	ajax(url, params, callback);
 }
 
 function changeProduction(id)
@@ -330,18 +321,15 @@ function changeProduction(id)
 function updateProduction()
 {
 	let url = context + "/production/all";
-	let xhttp = new XMLHttpRequest();
 	let element = document.getElementById("production");
-	xhttp.open("GET", url, true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send();
-	xhttp.onreadystatechange = function()
+	let callback = function()
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		if(this.readyState === 4 && this.status === 200)
 		{
-			element.innerHTML = xhttp.responseText;
+			element.innerHTML = this.responseText;
 		}
 	};
+	ajax(url, null, callback);
 }
 
 function loadCity(id)
@@ -350,17 +338,16 @@ function loadCity(id)
 	if(url.pathname.indexOf(id) === -1)
 	{
 		document.getElementById("city").innerHTML = "<p>Loading...</p>";
-		let xhttp = new XMLHttpRequest();
-		xhttp.open("GET", "/city/" + id, true);
-		xhttp.send();
-		xhttp.onreadystatechange = function()
+		let url = "/city/" + id;
+		let callback = function()
 		{
-			if(xhttp.readyState === 4 && xhttp.status === 200)
+			if(this.readyState === 4 && this.status === 200)
 			{
 				document.getElementById("city").innerHTML = xhttp.responseText;
 				window.history.replaceState("id: " + id, "", window.location.href.substring(0, window.location.href.indexOf("cities/") + 7) + id + "/");
 			}
 		};
+		ajax(url, null, callback);
 	}
 }
 
@@ -384,27 +371,6 @@ function anyParentIsToggleTab(element)
 	}
 	while(element);
 	return false;
-}
-
-function makeABunchOfNations(id)
-{
-	if(id < 500)
-	{
-		let url = context + "/register/";
-		let xhttp = new XMLHttpRequest();
-		xhttp.open("POST", url, true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		let params = "username=testboi" + id + "&nation=testboi" + id + "&capital=ohboy&password=password&region=Africa&government=50&economy=50";
-		xhttp.send(params);
-		xhttp.onreadystatechange = function()
-		{
-			if(xhttp.readyState === 4 && xhttp.status === 200)
-			{
-				id++;
-				makeABunchOfNations(id);
-			}
-		};
-	}
 }
 
 function display()
@@ -441,6 +407,7 @@ function stats()
 
 function tech(tech)
 {
+	displayResults();
 	document.getElementById('resultsContainer').style.visibility = "visible";
 	document.getElementById("result").innerHTML = "<p>Loading...</p>";
 	let attempt = document.getElementById(tech);
@@ -465,15 +432,13 @@ function tech(tech)
 function loadTech(tech)
 {
 	document.getElementById("tech").style.display = "block";
-	let xhttp = new XMLHttpRequest();
-	xhttp.open("GET", "/tech/" + tech, true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send();
-	xhttp.onreadystatechange = function()
+	let url = "/tech/" + tech;
+	let callback = function()
 	{
-		if(xhttp.readyState === 4 && xhttp.status === 200)
+		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("tech").innerHTML = xhttp.responseText;
+			document.getElementById("tech").innerHTML = this.responseText;
 		}
 	};
+	ajax(url, null, callback);
 }
