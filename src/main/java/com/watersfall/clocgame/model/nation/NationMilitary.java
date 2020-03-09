@@ -175,6 +175,10 @@ public class NationMilitary extends Updatable
 
 	public void setWarProtection(int warProtection)
 	{
+		if(warProtection < 0)
+			warProtection = 0;
+		else if(warProtection > 127)
+			warProtection = 127;
 		this.addField("war_protection", warProtection);
 		this.warProtection = warProtection;
 	}
