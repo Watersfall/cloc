@@ -152,9 +152,10 @@ function createTreaty(name)
 	};
 }
 
-function login(user, pass)
+function login()
 {
-	displayResults();
+	let user = document.getElementById("username").value;
+	let pass = document.getElementById("password").value;
 	let xhttp = new XMLHttpRequest();
 	let params = "username=" + user + "&password=" + pass;
 	xhttp.open("POST", context + "/login/", true);
@@ -166,7 +167,8 @@ function login(user, pass)
 		{
 			if(xhttp.responseText != "")
 			{
-				document.getElementById("result").innerHTML = xhttp.responseText;
+				toggle("login_error_div");
+				document.getElementById("login_error").innerHTML = xhttp.responseText;
 			}
 			else
 			{

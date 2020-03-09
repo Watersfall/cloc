@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,10 +32,10 @@ public class LoginController extends HttpServlet
 	{
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
-		String url = req.getParameter("url");
+		PrintWriter writer = resp.getWriter();
 		if(req.getSession().getAttribute("user") != null)
 		{
-			req.setAttribute("error", Responses.alreadyLoggedIn());
+			writer.append(Responses.alreadyLoggedIn());
 		}
 		else
 		{
@@ -42,7 +43,7 @@ public class LoginController extends HttpServlet
 			{
 				if(username == null || password == null)
 				{
-					req.setAttribute("error", Responses.nullFields());
+					writer.append(Responses.nullFields());
 				}
 				else
 				{
@@ -51,7 +52,7 @@ public class LoginController extends HttpServlet
 					ResultSet results = statement.executeQuery();
 					if(!results.first())
 					{
-						req.setAttribute("error", Responses.invalidLogin());
+						writer.append(Responses.invalidLogin());
 					}
 					else
 					{
@@ -70,7 +71,7 @@ public class LoginController extends HttpServlet
 						}
 						else
 						{
-							req.setAttribute("error", Responses.invalidLogin());
+							writer.append(Responses.invalidLogin());
 						}
 					}
 				}
@@ -80,18 +81,6 @@ public class LoginController extends HttpServlet
 				e.printStackTrace();
 				req.setAttribute("error", Responses.genericException(e));
 			}
-		}
-		if(req.getAttribute("error") != null)
-		{
-			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
-		}
-		else if(url == null || url.isEmpty())
-		{
-			resp.sendRedirect("/main/");
-		}
-		else
-		{
-			resp.sendRedirect(url);
 		}
 	}
 }

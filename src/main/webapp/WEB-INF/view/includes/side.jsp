@@ -8,8 +8,11 @@
 				</div>
 			</a>
 			<a>
+				<div class="toggleable" id="login_error_div">
+					<p class="negative" id="login_error"></p>
+				</div>
 				<div>
-					<form method="POST" action="${pageContext.request.contextPath}/login/">
+					<form onsubmit="login(); return false;" method="POST">
 						<p>Login</p>
 						<label>
 							<input id="username" class="loginText" type="text" name="username" placeholder="Username">
@@ -17,7 +20,6 @@
 						<label>
 							<input id="password" class="loginText" type="password" name="password" placeholder="Password">
 						</label><br>
-						<input type="hidden" name="url" value="${requestScope['javax.servlet.forward.request_uri']}">
 						<button type="submit">Log in</button>
 					</form>
 				</div>
