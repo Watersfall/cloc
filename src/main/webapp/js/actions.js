@@ -26,11 +26,11 @@ function ajax(url, params, callback)
 	}
 	if(callback === null || callback === undefined)
 	{
+		displayResults();
 		xhttp.onreadystatechange = function()
 		{
 			if(xhttp.readyState === 4 && xhttp.status === 200)
 			{
-				displayResults();
 				document.getElementById("result").innerHTML = xhttp.responseText;
 				return xhttp.responseText;
 			}
