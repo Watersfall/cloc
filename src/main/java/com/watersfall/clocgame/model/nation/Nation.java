@@ -50,7 +50,7 @@ public class Nation
 	private LinkedHashMap<String, Double> researchProduction = null;
 	private @Getter LinkedHashMap<Integer, Production> production;
 	private LinkedHashMap<String, LinkedHashMap<String, Double>> allProductions = null;
-	private int landUsage = -1;
+	private long landUsage = -1;
 
 	/**
 	 * @param conn The SQL conn to use
@@ -522,7 +522,7 @@ public class Nation
 	 *
 	 * @return The free land available
 	 */
-	public int getFreeLand()
+	public long getFreeLand()
 	{
 		return this.domestic.getLand() - this.getTotalLandUsage();
 	}
@@ -532,11 +532,11 @@ public class Nation
 	 *
 	 * @return The total land usage
 	 */
-	public int getTotalLandUsage()
+	public long getTotalLandUsage()
 	{
 		if(landUsage == -1)
 		{
-			int total = 0;
+			long total = 0;
 			for(City city : cities.getCities().values())
 			{
 				for(Integer integer : city.getLandUsage().values())
@@ -569,9 +569,9 @@ public class Nation
 	 *
 	 * @return The factory count
 	 */
-	public int getTotalFactories()
+	public long getTotalFactories()
 	{
-		int total = 0;
+		long total = 0;
 		for(City city : cities.getCities().values())
 		{
 			total += city.getIndustryMilitary() + city.getIndustryNitrogen() + city.getIndustryCivilian();
@@ -1033,7 +1033,7 @@ public class Nation
 	 * Gets the total equipment of the army
 	 * @return The total equipment
 	 */
-	public int getTotalInfantryEquipment()
+	public long getTotalInfantryEquipment()
 	{
 		return army.getMusket() + army.getRifledMusket() + army.getSingleShot() + army.getNeedleNose() +
 				army.getBoltActionManual() + army.getBoltActionClip() + army.getStraightPull() +
@@ -1130,7 +1130,7 @@ public class Nation
 	 */
 	public double getFighterPower()
 	{
-		int power = 0;
+		long power = 0;
 		power += this.military.getBiplaneFighters() +
 				this.military.getTriplaneFighters() +
 				this.military.getMonoplaneFighters();
@@ -1143,15 +1143,15 @@ public class Nation
 	 */
 	public double getBomberPower()
 	{
-		int power = 0;
+		long power = 0;
 		power += this.military.getBombers();
 		power += (this.military.getZeppelins() * 0.5);
 		return power;
 	}
 
-	public int getTotalShipCount()
+	public long getTotalShipCount()
 	{
-		int power = 0;
+		long power = 0;
 		power += this.military.getSubmarines();
 		power += this.military.getDestroyers();
 		power += this.military.getCruisers();
@@ -1176,7 +1176,7 @@ public class Nation
 	 * @param defender The army this army is attacking
 	 * @return The casualties taken
 	 */
-	public int getAttackingCasualties(Nation defender)
+	public long getAttackingCasualties(Nation defender)
 	{
 		double attackPower = this.getPower();
 		double defensePower = defender.getPower() * (1 + (double)defender.getArmy().getFortification() / 10);
@@ -1201,7 +1201,7 @@ public class Nation
 	 * @param attacker The specified attacking army
 	 * @return The casualties taken
 	 */
-	public int getDefendingCasualties(Nation attacker)
+	public long getDefendingCasualties(Nation attacker)
 	{
 		double attackPower = attacker.getPower();
 		double defensePower = this.getPower() * (1 + (double)this.getArmy().getFortification() / 10);;
@@ -1228,7 +1228,7 @@ public class Nation
 	 * @param policy The ID of the policy
 	 * @return The cost of the policy
 	 */
-	public int getPolicyCost(int policy)
+	public long getPolicyCost(int policy)
 	{
 		switch(policy)
 		{
@@ -1350,11 +1350,11 @@ public class Nation
 		return map;
 	}
 
-	public LinkedHashMap<String, Integer> getGrowthChange()
+	public LinkedHashMap<String, Long> getGrowthChange()
 	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		int factories = this.getTotalFactories();
-		int military = -1 * this.getUsedManpower().get("manpower.net").intValue() / 20000;
+		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
+		long factories = this.getTotalFactories();
+		long military = -1 * this.getUsedManpower().get("manpower.net").intValue() / 20000;
 		map.put("growth.factories", factories);
 		map.put("growth.military", military);
 		map.put("growth.net", factories + military);
