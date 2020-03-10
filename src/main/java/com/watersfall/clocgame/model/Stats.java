@@ -81,7 +81,8 @@ public class Stats
 					"SUM(cloc_domestic.population) AS population, AVG(cloc_domestic.population) AS averagePopulation  " +
 					"FROM cloc_login, cloc_cities, cloc_army, cloc_domestic, cloc_foreign, cloc_treaties_members, cloc_treaties " +
 					"WHERE cloc_login.id=cloc_domestic.id AND cloc_login.id=cloc_army.id AND cloc_login.id AND cloc_login.id=cloc_cities.owner " +
-					"AND cloc_login.id=cloc_foreign.id AND cloc_login.id=cloc_treaties_members.nation_id AND cloc_treaties_members.alliance_id=cloc_treaties.id");
+					"AND cloc_login.id=cloc_foreign.id AND cloc_login.id=cloc_treaties_members.nation_id AND cloc_treaties_members.alliance_id=cloc_treaties.id " +
+					"GROUP BY id");
 			ResultSet treatyResults = treaties.executeQuery();
 			while(treatyResults.next())
 			{
