@@ -19,7 +19,7 @@ public class WarActions
 {
 	public static String landOffensive(Connection connection, Nation attacker, Nation defender) throws SQLException
 	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
+		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
@@ -38,7 +38,7 @@ public class WarActions
 				PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=?, winner=? WHERE attacker=? AND defender=?");
 				updateWar.setLong(1, Util.week);
 				updateWar.setInt(2, attacker.getId());
-				if(attacker.getOffensive() == defender.getId())
+				if(attacker.getOffensive().getId() == defender.getId())
 				{
 					updateWar.setInt(3, attacker.getId());
 					updateWar.setInt(4, defender.getId());
@@ -103,7 +103,7 @@ public class WarActions
 
 	public static String cityBattle(Connection connection, Nation attacker, Nation defender) throws SQLException
 	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
+		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
@@ -205,7 +205,7 @@ public class WarActions
 
 	public static String navyBattle(Connection conn, Nation attacker, Nation defender) throws SQLException
 	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
+		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
@@ -320,7 +320,7 @@ public class WarActions
 
 	public static String navyBombard(Connection conn, Nation attacker, Nation defender) throws SQLException
 	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
+		if(attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
@@ -362,7 +362,7 @@ public class WarActions
 
 	public static String airBattle(Connection conn, Nation attacker, Nation defender) throws SQLException
 	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
+		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
@@ -452,7 +452,7 @@ public class WarActions
 
 	public static String airBombard(Connection conn, Nation attacker, Nation defender) throws SQLException
 	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
+		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
@@ -494,7 +494,7 @@ public class WarActions
 
 	public static String airBombTroops(Connection conn, Nation attacker, Nation defender) throws SQLException
 	{
-		if(attacker.getOffensive() != defender.getId() && attacker.getDefensive() != defender.getId())
+		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
@@ -526,7 +526,7 @@ public class WarActions
 
 	public static String sendPeace(Nation sender, Nation receiver) throws SQLException
 	{
-		if(sender.getOffensive() != receiver.getId() && sender.getDefensive() != receiver.getId())
+		if(!sender.isAtWarWith(receiver))
 		{
 			return Responses.noWar();
 		}

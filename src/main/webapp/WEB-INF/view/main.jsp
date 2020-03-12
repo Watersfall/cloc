@@ -160,11 +160,11 @@
 		</table>
 		<h2>Wars</h2>
 		<c:if test="${home.atWar}">
-			<c:if test="${home.offensive > 0}">
-				<a href="${pageContext.request.contextPath}/nation/${home.offensive}">Offensive</a>
+			<c:if test="${home.offensive != null}">
+				Offensive war against ${home.offensive.nationUrl}
 			</c:if>
-			<c:if test="${home.defensive > 0}">
-				<a href="${pageContext.request.contextPath}/nation/${home.defensive}">Defensive</a>
+			<c:if test="${home.defensive != null}">
+				Defensive war against ${home.defensive.nationUrl}
 			</c:if>
 		</c:if>
 		<c:if test="${!home.atWar}">

@@ -34,8 +34,8 @@ public class Nation
 	private @Getter NationTech tech;
 	private @Getter NationInvites invites;
 	private @Getter NationNews news;
-	private @Getter int defensive;
-	private @Getter int offensive;
+	private @Getter Nation defensive;
+	private @Getter Nation offensive;
 	private @Getter Treaty treaty;
 	private @Getter Connection conn;
 	private @Getter boolean safe;
@@ -71,6 +71,32 @@ public class Nation
 		else
 		{
 			return new Nation(conn, results.getInt(1), safe);
+		}
+	}
+
+	public static Nation getNationById(Connection conn, int id) throws SQLException
+	{
+		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
+				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
+				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
+				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
+				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
+				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
+				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
+				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
+				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
+				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
+				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+				"WHERE cloc_login.id=?" );
+		get.setInt(1, id);
+		ResultSet results = get.executeQuery();
+		if(!results.first())
+		{
+			return null;
+		}
+		else
+		{
+			return new Nation(id, results);
 		}
 	}
 
@@ -270,19 +296,19 @@ public class Nation
 		ResultSet resultsDefender = defender.executeQuery();
 		if(!resultsAttacker.first())
 		{
-			offensive = 0;
+			offensive = null;
 		}
 		else
 		{
-			this.offensive = resultsAttacker.getInt(1);
+			this.offensive = getNationById(conn, resultsAttacker.getInt(1));
 		}
 		if(!resultsDefender.first())
 		{
-			defensive = 0;
+			defensive = null;
 		}
 		else
 		{
-			this.defensive = resultsDefender.getInt(1);
+			this.defensive = getNationById(conn, resultsDefender.getInt(1));
 		}
 
 		PreparedStatement treatyCheck = conn.prepareStatement("SELECT alliance_id FROM cloc_treaties_members " +
@@ -391,11 +417,11 @@ public class Nation
 	 */
 	public String canDeclareWar(Nation nation)
 	{
-		if(this.offensive != 0)
+		if(this.offensive != null)
 		{
 			return Responses.cannotWar("alreadyAtWar");
 		}
-		else if(nation.defensive != 0)
+		else if(nation.defensive != null)
 		{
 			return Responses.cannotWar("alreadyAtWar2");
 		}
@@ -439,7 +465,8 @@ public class Nation
 	 */
 	public boolean isAtWarWith(Nation nation)
 	{
-		return this.defensive == nation.getId() || this.offensive == nation.getId();
+		return (this.defensive != null && this.defensive.getId() == nation.getId())
+				|| (this.offensive != null && this.offensive.getId() == nation.getId());
 	}
 
 	/**
@@ -449,7 +476,7 @@ public class Nation
 	 */
 	public boolean isAtWar()
 	{
-		return defensive != 0 || offensive != 0;
+		return defensive != null || offensive != null;
 	}
 
 	/**
@@ -1062,7 +1089,7 @@ public class Nation
 	public double getPower()
 	{
 		double power = 0e0;
-		long equipment = army.getSize() * 1000;
+		long equipment = (long)army.getSize() * 1000L;
 		if(equipment > 0)
 		{
 			long amount = (army.getMachineGun() > equipment) ? equipment : army.getMachineGun();
@@ -1103,6 +1130,7 @@ public class Nation
 		{
 			long amount = (army.getSingleShot() > equipment) ? equipment : army.getSingleShot();
 			power += amount * 4.5;
+			System.out.println(power);
 			equipment -= amount;
 		}
 		if(equipment > 0)
@@ -1185,14 +1213,14 @@ public class Nation
 			defensePower = java.lang.Math.pow(defensePower, 1.95);
 			double armyHp = this.army.getSize() * 20.0;
 			armyHp -= defensePower;
-			return (int)(this.army.getSize() - (armyHp / 20.0));
+			return (long)(this.army.getSize() - (armyHp / 20.0));
 		}
 		else
 		{
 			defensePower = java.lang.Math.pow(defensePower, 2.0);
 			double armyHp = this.army.getSize() * 20.0;
 			armyHp -= defensePower;
-			return (int)(this.army.getSize() - (armyHp / 20.0));
+			return (long)(this.army.getSize() - (armyHp / 20.0));
 		}
 	}
 
@@ -1210,14 +1238,15 @@ public class Nation
 			attackPower = java.lang.Math.pow(attackPower, 2.0);
 			double armyHp = this.army.getSize() * 20.0;
 			armyHp -= attackPower;
-			return (int)(this.army.getSize() - (armyHp / 20.0));
+			System.out.println((int)(this.army.getSize() - (armyHp / 20.0)));
+			return (long)(this.army.getSize() - (armyHp / 20.0));
 		}
 		else
 		{
 			attackPower = java.lang.Math.pow(attackPower, 1.95);
 			double armyHp = this.army.getSize() * 20.0;
 			armyHp -= attackPower;
-			return (int)(this.army.getSize() - (armyHp / 20.0));
+			return (long)(this.army.getSize() - (armyHp / 20.0));
 		}
 	}
 

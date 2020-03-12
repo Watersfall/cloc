@@ -147,7 +147,7 @@ public class PolicyActions
 	{
 		Nation nation = new Nation(connection, id, true);
 		long cost = nation.getPolicyCost(ID_WAR_PROPAGANDA);
-		if(nation.getOffensive() == 0 && nation.getDefensive() == 0)
+		if(nation.getOffensive() == null && nation.getDefensive() == null)
 		{
 			return Responses.propagandaNoWar();
 		}
