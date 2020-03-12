@@ -61,8 +61,8 @@ public class WarActions
 			else
 			{
 				String losses;
-				int attackLosses = attacker.getAttackingCasualties(defender);
-				int defenderLosses = defender.getDefendingCasualties(attacker);
+				int attackLosses = (int)attacker.getAttackingCasualties(defender);
+				int defenderLosses = (int)defender.getDefendingCasualties(attacker);
 				if(attackLosses > attacker.getArmy().getSize())
 				{
 					attackLosses = attacker.getArmy().getSize();
@@ -133,7 +133,7 @@ public class WarActions
 				{
 					String losses;
 					int attackLosses = (int)(attacker.getAttackingCasualties(defender) * 1.5);
-					int defenderLosses = defender.getDefendingCasualties(attacker);
+					int defenderLosses = (int)defender.getDefendingCasualties(attacker);
 					int damage = (int)(Math.random() * 10) + 5;
 					if(attackLosses > attacker.getArmy().getSize())
 					{

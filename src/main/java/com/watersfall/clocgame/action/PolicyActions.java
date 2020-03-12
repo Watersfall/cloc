@@ -53,7 +53,7 @@ public class PolicyActions
 	public static String arrest(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, idNation, true);
-		int cost = nation.getPolicyCost(ID_ARREST);
+		long cost = nation.getPolicyCost(ID_ARREST);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -80,7 +80,7 @@ public class PolicyActions
 	public static String free(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, idNation, true);
-		int cost = nation.getPolicyCost(ID_FREE);
+		long cost = nation.getPolicyCost(ID_FREE);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -107,7 +107,7 @@ public class PolicyActions
 	public static String landClearance(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, idNation, true);
-		int cost = nation.getPolicyCost(ID_LAND_CLEARANCE);
+		long cost = nation.getPolicyCost(ID_LAND_CLEARANCE);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -125,7 +125,7 @@ public class PolicyActions
 	public static String propaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, id, true);
-		int cost = nation.getPolicyCost(ID_PROPAGANDA);
+		long cost = nation.getPolicyCost(ID_PROPAGANDA);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -146,7 +146,7 @@ public class PolicyActions
 	public static String warPropaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, id, true);
-		int cost = nation.getPolicyCost(ID_WAR_PROPAGANDA);
+		long cost = nation.getPolicyCost(ID_WAR_PROPAGANDA);
 		if(nation.getOffensive() == 0 && nation.getDefensive() == 0)
 		{
 			return Responses.propagandaNoWar();
@@ -195,7 +195,7 @@ public class PolicyActions
 	private static String align(Connection connection, int idNation, int align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		Nation nation = new Nation(connection, idNation, true);
-		int cost = nation.getPolicyCost(ID_ALIGN);
+		long cost = nation.getPolicyCost(ID_ALIGN);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -263,7 +263,7 @@ public class PolicyActions
 	public static String train(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
 		Nation nation = new Nation(conn, id, true);
-		int cost = nation.getPolicyCost(ID_TRAIN);
+		long cost = nation.getPolicyCost(ID_TRAIN);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
