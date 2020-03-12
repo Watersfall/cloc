@@ -1,8 +1,8 @@
 <%@ include file="taglibs.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="production" type="java.util.Map.Entry<Integer, Production>"--%>
-<div id="id${production.value.id}" style="max-width: 22em;">
-	<p class="neutral" style="position: absolute; top: 0.25em; left: 0.25em;">${production.value.productionAsTechnology.technology.name}</p>
+<div id="production_id_${production.value.id}" style="max-width: 22em;" class="original=${production.value.factories}">
+	<p class="neutral name">${production.value.productionAsTechnology.technology.name}</p>
 	<div style="width: 100%;">
 		<div style="min-width: 8em; width: 50%; float: left;">
 			<span style="display: inline-block; vertical-align: middle;"></span>
@@ -16,10 +16,20 @@
 							<td>
 								<c:choose>
 									<c:when test="${production.value.factories >= ((row - 1) * 5) + (column)}">
-										<img onclick="clickProduction(event, ${production.value.id}, ${((row - 1) * 5) + (column)})" class="id=${production.value.id} number=${((row - 1) * 5) + (column)} default=${production.value.factories}" style="height: 2em; width: 2em;" src="${pageContext.request.contextPath}/images/production/factory.svg" alt="factory"/>
+										<img
+											src="${pageContext.request.contextPath}/images/production/factory.svg"
+											alt="factory"
+											class="smallSquare production_table_id=${production.value.id}"
+											onclick="clickProduction(${production.value.id}, ${((row - 1) * 5) + (column)})"
+										>
 									</c:when>
 									<c:otherwise>
-										<img onclick="clickProduction(event, ${production.value.id}, ${((row - 1) * 5) + (column)})" class="id=${production.value.id} number=${((row - 1) * 5) + (column)} default=${production.value.factories}" style="height: 2em; width: 2em;" src="${pageContext.request.contextPath}/images/production/blank.svg" alt="nofactory"/>
+										<img
+											src="${pageContext.request.contextPath}/images/production/blank.svg"
+											alt="blank"
+											class="smallSquare production_table_id=${production.value.id}"
+											onclick="clickProduction(${production.value.id}, ${((row - 1) * 5) + (column)})"
+										>
 									</c:otherwise>
 								</c:choose>
 							</td>
@@ -37,14 +47,14 @@
 			<div style="background: green; width: ${production.value.efficiency / 100}%"><p class="neutral">Efficiency:&nbsp;${production.value.efficiency / 100}%</p></div>
 		</div>
 	</div>
-	<select id="change${production.value.id}" class="toggle">
+	<select id="change_${production.value.id}">
 		<c:forEach items="${home.tech.researchedTechs}" var="tech">
 			<c:if test="${tech.technology.producible}">
-				<option value="${tech.name()}"} ${(tech.name() == production.value.production) ? 'selected' : ''}>${tech.technology.name}</option>
+				<option value="${tech.name()}" ${(tech.name() == production.value.production) ? 'selected' : ''}>${tech.technology.name}</option>
 			</c:if>
 		</c:forEach>
 	</select>
+	<br>
 	<button onclick="deleteProduction(${production.value.id});">Delete</button>
-	<button onclick="changeProduction(${production.value.id});">Change</button>
-	<button onclick="sendProduction(${production.value.id}, document.getElementsByClassName('id=${production.value.id}')[0].classList.item(2).substring(8))">Update</button>
+	<button onclick="updateProduction(${production.value.id});">Update</button>
 </div>

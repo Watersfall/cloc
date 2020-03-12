@@ -342,6 +342,11 @@ img.veryLong {
 	height: auto;
 }
 
+img.smallSquare {
+	width: 2em;
+	height: 2em;
+}
+
 .halfPad {
 	padding: 0.5rem;
 }

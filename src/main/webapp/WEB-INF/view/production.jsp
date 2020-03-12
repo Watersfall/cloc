@@ -1,12 +1,12 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%@ include file="includes/defaultTop.jsp" %>
-	<script>
-	document.addEventListener("DOMContentLoaded", function(){
-		setFreeFactories(${home.freeFactories});
-	});
-	</script>
-	<h1>Production</h1>
-	<h2 id="factories">${home.freeFactories} Free Factories</h2>
+	<style>
+		.name{
+			position: absolute;
+			top: 0.25em;
+			left: 0.25em;
+		}
+	</style>
 	<div id="production">
 		<%@include file="includes/allproduction.jsp" %>
 	</div>
