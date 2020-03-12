@@ -153,16 +153,22 @@ public class WarActions
 					City city = (City)entry.getValue();
 					if(attacker.getPower() > defender.getPower())
 					{
-						String message = News.createMessage(News.ID_DEFENSIVE_CITY_LOST
-								, attacker.getNationUrl(), city.getName(), Integer.toString(defenderLosses), Integer.toString(attackLosses));
+						String message = News.createMessage(News.ID_DEFENSIVE_CITY_LOST,
+								attacker.getNationUrl(),
+								city.getName(),
+								Integer.toString(defenderLosses),
+								Integer.toString(attackLosses));
 						News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 						losses =  Responses.offensiveCityVictory(city, attackLosses, defenderLosses);
 						city.setDevastation(city.getDevastation() + damage);
 					}
 					else
 					{
-						String message = News.createMessage(News.ID_DEFENSIVE_CITY_WON
-								, attacker.getNationUrl(), city.getName(), Integer.toString(defenderLosses), Integer.toString(attackLosses));
+						String message = News.createMessage(News.ID_DEFENSIVE_CITY_WON,
+								attacker.getNationUrl(),
+								city.getName(),
+								Integer.toString(attackLosses),
+								Integer.toString(defenderLosses));
 						News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 						losses = Responses.offensiveCityDefeat(city, attackLosses, defenderLosses);
 						city.setDevastation(city.getDevastation() + damage / 2);
