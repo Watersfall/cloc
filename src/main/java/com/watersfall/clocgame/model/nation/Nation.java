@@ -425,6 +425,10 @@ public class Nation
 		{
 			return Responses.cannotWar("alreadyAtWar2");
 		}
+		else if(this.isAtWarWith(nation))
+		{
+			return Responses.cannotWar("alreadyAtWar3");
+		}
 		else if(!Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion()))
 		{
 			return Responses.cannotWar("noBorder");

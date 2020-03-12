@@ -346,6 +346,8 @@ public class Responses
 				return "<p>You are already at war with another nation!</p>";
 			case "alreadyAtWar2":
 				return "<p>They are already in a defensive war!</p>";
+			case "alreadyAtWar3":
+				return "<p>You are already at war with this nation!</p>";
 			default:
 				return null;
 		}
