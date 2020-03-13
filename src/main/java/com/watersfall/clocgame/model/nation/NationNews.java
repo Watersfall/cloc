@@ -57,12 +57,12 @@ public class NationNews
 	public List<News> getNewsPage(int page)
 	{
 		List<News> list = new ArrayList<>(this.news.values());
-		int min = page * 100;
+		int min = (page - 1) * 100;
 		if(min > list.size())
 		{
 			min = list.size() - 1;
 		}
-		int max = (page + 1) * 100;
+		int max = page * 100;
 		if (max > list.size())
 		{
 			max = list.size() - 1;
