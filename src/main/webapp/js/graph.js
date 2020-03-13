@@ -169,8 +169,10 @@ function formatNumber(number)
 	}
 	else
 	{
+		let remainder = 0;
 		while((number / 1000) > 1)
 		{
+			remainder = number % 1000;
 			number /= 1000;
 			i++;
 		}
@@ -178,6 +180,6 @@ function formatNumber(number)
 		{
 			return ">999q";
 		}
-		return Math.trunc(number).toString() + prefixes[i];
+		return Math.trunc(number).toString() + "." + remainder.toString().substring(0, 2) + prefixes[i];
 	}
 }
