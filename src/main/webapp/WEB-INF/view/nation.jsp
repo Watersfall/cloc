@@ -184,6 +184,17 @@
 					</tr>
 				</table>
 				<h2>War</h2>
+				<c:if test="${nation.atWar}">
+					<c:if test="${nation.offensive != null}">
+						Offensive war against ${nation.offensive.nationUrl}<br>
+					</c:if>
+					<c:if test="${nation.defensive != null}">
+						Defensive war against ${nation.defensive.nationUrl}
+					</c:if>
+				</c:if>
+				<c:if test="${!nation.atWar}">
+					<i>None</i>
+				</c:if>
 				<c:if test="${home.canDeclareWar(nation) == null}">
 					<button id="decc" onclick="declareWar(${nation.id})">Declare War</button><br>
 				</c:if>
