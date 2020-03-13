@@ -5,16 +5,17 @@
 	</c:if>
 	<c:if test="${not empty home}">
 		<h1>National News</h1>
-		<c:forEach items="${home.news.news.entrySet()}" var="news">
+		<button onclick="newsDelete('all')">Delete All</button>
+		<c:forEach items="${news}" var="news">
 			<jsp:useBean id="newsDate" class="java.util.Date" />
-			<jsp:setProperty name="newsDate" property="time" value="${news.value.time}" />
-			<div class="specialTable">
+			<jsp:setProperty name="newsDate" property="time" value="${news.time}" />
+			<div class="specialTable" id="news_${news.id}">
 				<div class="full">
 					<div class="newsContent">
-						<p class="halfPad">${news.value.content}</p>
+						<p class="halfPad">${news.content}</p>
 					</div>
 					<div class="newsButton">
-						<button class="right" onclick="newsDelete(${news.value.id})">Delete</button>
+						<button class="right" onclick="newsDelete(${news.id})">Delete</button>
 					</div>
 				</div>
 				<div class="full">
@@ -25,6 +26,8 @@
 			</div>
 			<br>
 		</c:forEach>
+		<%@include file="includes/pagination.jsp"%>
+		<br>
 		<button onclick="newsDelete('all')">Delete All</button>
 	</c:if>
 <%@ include file="includes/defaultBottom.jsp" %>

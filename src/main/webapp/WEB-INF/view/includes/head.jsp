@@ -2,12 +2,13 @@
 <!DOCTYPE html>
 <head>
 	<title>&ltCLOC - Online Nation Sim</title>
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css?v=0">
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/tech.css?v=0">
-	<script src="${pageContext.request.contextPath}/js/header.js?v=0"></script>
-	<script src="${pageContext.request.contextPath}/js/actions.js?v=0"></script>
-	<script src="${pageContext.request.contextPath}/js/graph.js?v=0"></script>
-	<script src="${pageContext.request.contextPath}/js/production.js?v=0"></script>
+	<c:set value="1" var="version"/>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css?v=${version}">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/tech.css?v=${version}">
+	<script src="${pageContext.request.contextPath}/js/header.js?v=${version}"></script>
+	<script src="${pageContext.request.contextPath}/js/actions.js?v=${version}"></script>
+	<script src="${pageContext.request.contextPath}/js/graph.js?v=${version}"></script>
+	<script src="${pageContext.request.contextPath}/js/production.js?v=${version}"></script>
 	<meta name="description" content="${description}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1">
 	<script>

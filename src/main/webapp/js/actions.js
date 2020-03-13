@@ -222,9 +222,21 @@ function postDeclaration()
 
 function newsDelete(id)
 {
+	displayResults();
 	let url = context + "/news/";
 	let params = "delete=" + id;
-	ajax(url, params);
+	let callback = function()
+	{
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("result").innerHTML = this.responseText;
+			if(this.responseText.indexOf("Deleted") !== -1)
+			{
+				document.getElementById("news_" + id).remove();
+			}
+		}
+	};
+	ajax(url, params, callback);
 }
 
 function loadCity(id)

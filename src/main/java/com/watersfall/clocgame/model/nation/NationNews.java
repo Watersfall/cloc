@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class NationNews
 {
@@ -36,7 +38,7 @@ public class NationNews
 		this.id = id;
 		while(results.next())
 		{
-			News temp = new News(results);
+			News temp = new News(conn, results);
 			news.put(temp.getId(), temp);
 			if(!temp.isRead())
 			{
@@ -50,5 +52,26 @@ public class NationNews
 		PreparedStatement delete = conn.prepareStatement("DELETE FROM cloc_news WHERE receiver=?");
 		delete.setInt(1, this.id);
 		delete.execute();
+	}
+
+	public List<News> getNewsPage(int page)
+	{
+		List<News> list = new ArrayList<>(this.news.values());
+		int min = page * 100;
+		if(min > list.size())
+		{
+			min = list.size() - 1;
+		}
+		int max = (page + 1) * 100;
+		if (max > list.size())
+		{
+			max = list.size() - 1;
+		}
+		if(max <= 0 || min < 0)
+		{
+			return list;
+		}
+		System.out.println("Min: " + min + "\nMax: " + max);
+		return list.subList(min, max);
 	}
 }
