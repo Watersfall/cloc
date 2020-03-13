@@ -240,6 +240,7 @@ public class PolicyActions
 		else
 		{
 			nation.getArmy().setSize(nation.getArmy().getSize() + 2);
+			nation.getEconomy().setRecentConscription(nation.getEconomy().getRecentConscription() + 1);
 			nation.update();
 			return Responses.conscript();
 		}
@@ -255,6 +256,7 @@ public class PolicyActions
 		else
 		{
 			nation.getArmy().setSize(nation.getArmy().getSize() - 2);
+			nation.getEconomy().setRecentDeconscription(nation.getEconomy().getRecentDeconscription() + 1);
 			nation.update();
 			return Responses.deconscript();
 		}

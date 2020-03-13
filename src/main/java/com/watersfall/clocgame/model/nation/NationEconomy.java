@@ -20,6 +20,8 @@ public class NationEconomy extends Updatable
 	private @Getter double steel;
 	private @Getter double nitrogen;
 	private @Getter double research;
+	private @Getter int recentConscription;
+	private @Getter int recentDeconscription;
 
 	public NationEconomy(int id, ResultSet results) throws SQLException
 	{
@@ -35,6 +37,8 @@ public class NationEconomy extends Updatable
 		this.steel = results.getDouble("steel");
 		this.nitrogen= results.getDouble("nitrogen");
 		this.research = results.getDouble("research");
+		this.recentConscription = results.getInt("recent_conscription");
+		this.recentDeconscription = results.getInt("recent_deconscription");
 	}
 
 	public void setEconomic(int economic)
@@ -141,5 +145,25 @@ public class NationEconomy extends Updatable
 			research = 999999999999.00;
 		this.addField("research", research);
 		this.research = research;
+	}
+
+	public void setRecentConscription(int conscription)
+	{
+		if(conscription < 0)
+			conscription = 0;
+		else if(conscription > 2000000000)
+			conscription = 2000000000;
+		this.addField("recent_conscription", conscription);
+		this.recentConscription = conscription;
+	}
+
+	public void setRecentDeconscription(int conscription)
+	{
+		if(conscription < 0)
+			conscription = 0;
+		else if(conscription > 2000000000)
+			conscription = 2000000000;
+		this.addField("recent_deconscription", conscription);
+		this.recentDeconscription = conscription;
 	}
 }

@@ -64,6 +64,9 @@ public class TurnWeek implements Runnable
 						economy.setNitrogen(economy.getNitrogen() + nitrogen.get("resource.net"));
 					}
 
+					economy.setRecentConscription(economy.getRecentConscription() / 2);
+					economy.setRecentDeconscription(economy.getRecentDeconscription() / 2);
+
 					/*
 					 ** Domestic
 					 */

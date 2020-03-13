@@ -13,12 +13,12 @@ import java.util.LinkedHashMap;
 
 public class City extends Updatable
 {
-	public static final int EMPLOYMENT_MINE = 10000;
-	public static final int EMPLOYMENT_FACTORY = 100000;
-	public static final int EMPLOYMENT_UNIVERSITY = 50000;
-	public static final int LAND_MINE = 100;
-	public static final int LAND_FACTORY = 500;
-	public static final int LAND_UNIVERSITY = 750;
+	public static final long EMPLOYMENT_MINE = 10000L;
+	public static final long EMPLOYMENT_FACTORY = 100000L;
+	public static final long EMPLOYMENT_UNIVERSITY = 50000L;
+	public static final long LAND_MINE = 100L;
+	public static final long LAND_FACTORY = 500L;
+	public static final long LAND_UNIVERSITY = 750L;
 	public static final String TABLE_NAME = "cloc_cities";
 
 	private @Getter int owner;
@@ -476,9 +476,9 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A LinkedHashMap of land usage in this city
 	 */
-	public LinkedHashMap<String, Integer> getLandUsage()
+	public LinkedHashMap<String, Long> getLandUsage()
 	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
 		map.put("land.mines", City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
 		map.put("land.factories", City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
 		map.put("land.universities", City.LAND_UNIVERSITY * (this.universities));

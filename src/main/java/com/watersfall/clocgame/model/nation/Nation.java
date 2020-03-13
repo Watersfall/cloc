@@ -40,7 +40,7 @@ public class Nation
 	private @Getter Connection conn;
 	private @Getter boolean safe;
 	private @Getter ResultSet results;
-	private @Getter int freeFactories;
+	private @Getter long freeFactories;
 	private @Getter long lastLogin;
 	private LinkedHashMap<String, Double> coalProduction = null;
 	private LinkedHashMap<String, Double> ironProduction = null;
@@ -570,9 +570,9 @@ public class Nation
 			long total = 0;
 			for(City city : cities.getCities().values())
 			{
-				for(Integer integer : city.getLandUsage().values())
+				for(Long longboi : city.getLandUsage().values())
 				{
-					total += integer;
+					total += longboi;
 				}
 			}
 			this.landUsage = total;
@@ -585,9 +585,9 @@ public class Nation
 	 *
 	 * @return The military factory count
 	 */
-	public int getTotalMilitaryFactories()
+	public long getTotalMilitaryFactories()
 	{
-		int total = 0;
+		long total = 0;
 		for(City city : cities.getCities().values())
 		{
 			total += city.getIndustryMilitary();
@@ -1387,10 +1387,21 @@ public class Nation
 	{
 		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
 		long factories = this.getTotalFactories();
-		long military = -1 * this.getUsedManpower().get("manpower.net").intValue() / 20000;
+		long military = -1 * this.getUsedManpower().get("manpower.net") / 20000;
+		long conscription = economy.getRecentDeconscription() - economy.getRecentConscription();
+		if(conscription > 0)
+		{
+			conscription = (long)((conscription + 1) * 0.75);
+			map.put("growth.deconscription", conscription);
+		}
+		else
+		{
+			conscription = (long)(conscription * 1.15);
+			map.put("growth.conscription", conscription);
+		}
 		map.put("growth.factories", factories);
 		map.put("growth.military", military);
-		map.put("growth.net", factories + military);
+		map.put("growth.net", factories + military + conscription);
 		return map;
 	}
 
@@ -1441,9 +1452,9 @@ public class Nation
 		return map;
 	}
 
-	public LinkedHashMap<String, LinkedHashMap<String, Integer>> getLandUsage()
+	public LinkedHashMap<String, LinkedHashMap<String, Long>> getLandUsage()
 	{
-		LinkedHashMap<String, LinkedHashMap<String, Integer>> map = new LinkedHashMap<>();
+		LinkedHashMap<String, LinkedHashMap<String, Long>> map = new LinkedHashMap<>();
 		for(City city : cities.getCities().values())
 		{
 			map.put(city.getName(), city.getLandUsage());
@@ -1469,6 +1480,10 @@ public class Nation
 				return " per week from factories";
 			case "growth.military":
 				return " per week from military upkeep";
+			case "growth.deconscription":
+				return " from recent deconscription";
+			case "growth.conscription":
+				return " from recent conscription";
 			case "growth.net":
 			case "approval.net":
 				return " change per week";
