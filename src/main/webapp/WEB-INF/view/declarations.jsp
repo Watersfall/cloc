@@ -19,9 +19,10 @@
 		</div>
 	</c:forEach>
 	<%@include file="includes/pagination.jsp"%>
+	<br>
 	<c:if test="${home != null}">
-		<label for="post">Post Declaration</label>
-		<textarea style="width: 100%;" id="post"></textarea>
+		<label for="post">Post Declaration<br></label>
+		<textarea style="max-width: 25em; min-width: 75%; height: 5em;" id="post"></textarea><br>
 		<button onclick="postDeclaration()">Post - $${home.declarationCost}k</button>
 	</c:if>
 <%@ include file="includes/defaultBottom.jsp" %>
