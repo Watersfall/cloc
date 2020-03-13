@@ -165,7 +165,7 @@ function formatNumber(number)
 	let i = -1;
 	if(number < 1000)
 	{
-		return Math.trunc(number) + "";
+		return Math.trunc(number).toString();
 	}
 	else
 	{
@@ -179,6 +179,24 @@ function formatNumber(number)
 		if(i >= prefixes.length)
 		{
 			return ">999q";
+		}
+		number = Math.trunc(number);
+		remainder = Math.trunc(remainder);
+		remainder = remainder.toString();
+		if(remainder.toString().length < 3)
+		{
+			if(remainder.toString().length === 1)
+			{
+				remainder = null;
+			}
+			else
+			{
+				remainder = "0" + remainder.toString();
+			}
+		}
+		if(remainder === null)
+		{
+			return Math.trunc(number).toString() + prefixes[i];
 		}
 		return Math.trunc(number).toString() + "." + remainder.toString().substring(0, 2) + prefixes[i];
 	}
