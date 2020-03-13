@@ -1266,17 +1266,17 @@ public class Nation
 		switch(policy)
 		{
 			case PolicyActions.ID_PROPAGANDA:
-				return (int)(this.economy.getGdp() / 2 * (this.domestic.getApproval() / 100.0));
+				return (long)(this.economy.getGdp() / 2L * (this.domestic.getApproval() / 100.0));
 			case PolicyActions.ID_WAR_PROPAGANDA:
-				return getPolicyCost(PolicyActions.ID_PROPAGANDA) / 2;
+				return getPolicyCost(PolicyActions.ID_PROPAGANDA) / 2L;
 			case PolicyActions.ID_LAND_CLEARANCE:
-				return (int)this.economy.getGdp() * 2;
+				return (long)(this.economy.getGdp() * 2L);
 			case PolicyActions.ID_ALIGN:
 			case PolicyActions.ID_FREE:
 			case PolicyActions.ID_ARREST:
 				return 100;
 			case PolicyActions.ID_TRAIN:
-				return this.army.getSize() * this.army.getSize() * this.army.getTraining() / 200;
+				return (long)this.army.getSize() * (long)this.army.getSize() * (long)this.army.getTraining() / 200L;
 			case PolicyActions.ID_CREATE_TREATY:
 				return 500;
 			default:
