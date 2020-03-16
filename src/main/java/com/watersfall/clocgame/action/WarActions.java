@@ -36,7 +36,7 @@ public class WarActions
 			else if(defender.getArmy().getSize() <= 5)
 			{
 				PreparedStatement updateWar = connection.prepareStatement("UPDATE cloc_war SET end=?, winner=? WHERE attacker=? AND defender=?");
-				updateWar.setLong(1, Util.week);
+				updateWar.setLong(1, Util.month);
 				updateWar.setInt(2, attacker.getId());
 				if(attacker.getOffensive().getId() == defender.getId())
 				{

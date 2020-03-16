@@ -1,30 +1,30 @@
 package com.watersfall.clocgame.schedulers;
 
-import com.watersfall.clocgame.turn.TurnWeek;
+import com.watersfall.clocgame.turn.TurnMonth;
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.Getter;
 
-public class WeekScheduler
+public class MonthScheduler
 {
 	private static @Getter
 	Scheduler scheduler;
 
-	private WeekScheduler()
+	private MonthScheduler()
 	{
 		scheduler = new Scheduler();
-		scheduler.schedule("0 * * * *", new TurnWeek());
+		scheduler.schedule("0 */12 * * *", new TurnMonth());
 		scheduler.start();
 	}
 
-	public static void startWeek()
+	public static void startMonth()
 	{
 		if(scheduler == null)
 		{
-			new WeekScheduler();
+			new MonthScheduler();
 		}
 	}
 
-	public static void stopWeek()
+	public static void stopMonth()
 	{
 		if(scheduler != null)
 		{

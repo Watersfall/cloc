@@ -496,7 +496,7 @@ public class Nation
 			PreparedStatement declare = conn.prepareStatement("INSERT INTO cloc_war (attacker, defender, start) VALUES (?,?,?)");
 			declare.setInt(1, this.id);
 			declare.setInt(2, nation.getId());
-			declare.setLong(3, Util.week);
+			declare.setLong(3, Util.month);
 			declare.execute();
 			conn.commit();
 		}
@@ -533,7 +533,7 @@ public class Nation
 		{
 			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET end=? " +
 					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-			sendPeace.setLong(1, Util.week);
+			sendPeace.setLong(1, Util.month);
 			sendPeace.setInt(2, this.id);
 			sendPeace.setInt(3, receiver.id);
 			sendPeace.setInt(4, receiver.id);
@@ -1408,41 +1408,41 @@ public class Nation
 	public LinkedHashMap<String, Double> getPopulationGrowth()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double base = 0.2;
+		double base = 2;
 		double foodPolicy = 0;
 		double manpowerPolicy = 0;
 		double economyPolicy = 0;
 		if(this.policy.getFood() == Policy.FREE_FOOD)
 		{
-			foodPolicy = 0.15;
+			foodPolicy = 1.5;
 		}
 		else if(this.policy.getFood() == Policy.RATIONING_FOOD)
 		{
-			foodPolicy = -0.25;
+			foodPolicy = -2.5;
 		}
 		if(this.policy.getManpower() == Policy.DISARMED_MANPOWER)
 		{
-			manpowerPolicy = 0.25;
+			manpowerPolicy = 2.5;
 		}
 		else if(this.policy.getManpower() == Policy.VOLUNTEER_MANPOWER)
 		{
-			manpowerPolicy = 0.1;
+			manpowerPolicy = 1;
 		}
 		else if(this.policy.getManpower() == Policy.MANDATORY_MANPOWER)
 		{
-			manpowerPolicy = -0.1;
+			manpowerPolicy = -1;
 		}
 		else if(this.policy.getManpower() == Policy.SCRAPING_THE_BARREL_MANPOWER)
 		{
-			manpowerPolicy = -0.25;
+			manpowerPolicy = -2.5;
 		}
 		if(this.policy.getEconomy() == Policy.CIVILIAN_ECONOMY)
 		{
-			economyPolicy = 0.15;
+			economyPolicy = 1.5;
 		}
 		else if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
 		{
-			economyPolicy = -0.15;
+			economyPolicy = -1.5;
 		}
 		map.put("population.base", base);
 		map.put("population.foodPolicy", foodPolicy);

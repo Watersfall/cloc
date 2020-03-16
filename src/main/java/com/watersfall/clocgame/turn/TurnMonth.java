@@ -7,6 +7,7 @@ import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationDomestic;
 import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.schedulers.DayScheduler;
 import com.watersfall.clocgame.util.Util;
 
 import java.sql.Connection;
@@ -15,7 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class TurnWeek implements Runnable
+public class TurnMonth implements Runnable
 {
 	@Override
 	public void run()
@@ -24,9 +25,10 @@ public class TurnWeek implements Runnable
 		System.out.println("Running turn");
 		try
 		{
+			DayScheduler.resetIncrement();
 			connection = Database.getDataSource().getConnection();
 			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
-			connection.prepareStatement("UPDATE cloc_main SET week=week+1").execute();
+			connection.prepareStatement("UPDATE cloc_main SET month=month+1").execute();
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
@@ -115,7 +117,8 @@ public class TurnWeek implements Runnable
 			 */
 			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
 			connection.commit();
-			Util.week++;
+			Util.month++;
+			Util.currentMonth = (int)(Util.month % 12);
 			Stats.getInstance().updateStats();
 			Stats.getInstance().writeLog();
 		}

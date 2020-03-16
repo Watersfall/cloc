@@ -73,7 +73,7 @@
 					<br><br>
 					<p>
 						<b><fmt:formatNumber value="${city.coalMines}"/></b> Coal Mines producing
-						<b><fmt:formatNumber value="${city.coalProduction.get('resource.total')}"/></b> coal per week
+						<b><fmt:formatNumber value="${city.coalProduction.get('resource.total')}"/></b> coal per month
 					</p>
 					<c:if test="${city.coalMines > 0}">
 						<p>(
@@ -90,7 +90,7 @@
 					<br><br>
 					<p>
 						<b><fmt:formatNumber value="${city.ironMines}"/></b> Iron Mines producing
-						<b><fmt:formatNumber value="${city.ironProduction.get('resource.total')}"/></b> iron per week
+						<b><fmt:formatNumber value="${city.ironProduction.get('resource.total')}"/></b> iron per month
 					</p>
 					<c:if test="${city.ironMines > 0}">
 						<p>(
@@ -107,7 +107,7 @@
 					<br><br>
 					<p>
 						<b><fmt:formatNumber value="${city.oilWells}"/></b> Oil Wells producing
-						<b><fmt:formatNumber value="${city.oilProduction.get('resource.total')}"/></b> oil per week
+						<b><fmt:formatNumber value="${city.oilProduction.get('resource.total')}"/></b> oil per month
 					</p>
 					<c:if test="${city.oilWells > 0}">
 						<p>(
@@ -126,7 +126,7 @@
 					<br><br>
 					<p>
 						<b><fmt:formatNumber value="${city.industryCivilian}"/></b> Factories producing
-						<b><fmt:formatNumber value="${city.steelProduction.get('resource.total')}"/></b> steel per week
+						<b><fmt:formatNumber value="${city.steelProduction.get('resource.total')}"/></b> steel per month
 					</p>
 					<c:if test="${city.industryCivilian > 0}">
 						<p>(
@@ -153,7 +153,7 @@
 					<br><br>
 					<p>
 						<b><fmt:formatNumber value="${city.industryNitrogen}"/></b> Factories producing
-						<b><fmt:formatNumber value="${city.nitrogenProduction.get('resource.total')}"/></b> nitrogen per week
+						<b><fmt:formatNumber value="${city.nitrogenProduction.get('resource.total')}"/></b> nitrogen per month
 					</p>
 					<c:if test="${city.industryNitrogen > 0}">
 						<p>(

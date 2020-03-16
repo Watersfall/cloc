@@ -2,8 +2,8 @@ package com.watersfall.clocgame.listeners;
 
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.schedulers.DayScheduler;
+import com.watersfall.clocgame.schedulers.MonthScheduler;
 import com.watersfall.clocgame.schedulers.StatsScheduler;
-import com.watersfall.clocgame.schedulers.WeekScheduler;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletContextEvent;
@@ -20,7 +20,7 @@ public class Startup implements ServletContextListener
 		try
 		{
 			Database.getDataSource().close();
-			WeekScheduler.stopWeek();
+			MonthScheduler.stopMonth();
 			DayScheduler.stopDay();
 			StatsScheduler.stopStats();
 		}
@@ -38,15 +38,16 @@ public class Startup implements ServletContextListener
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
-			WeekScheduler.startWeek();
+			MonthScheduler.startMonth();
 			DayScheduler.startDay();
 			StatsScheduler.startStats();
 			event.getServletContext().setAttribute("database", Database.getDataSource());
 			conn = Database.getDataSource().getConnection();
-			ResultSet results = conn.prepareStatement("SELECT week, day FROM cloc_main").executeQuery();
+			ResultSet results = conn.prepareStatement("SELECT month, day FROM cloc_main").executeQuery();
 			results.first();
-			Util.week = results.getLong(1);
+			Util.month = results.getLong(1);
 			Util.day = results.getLong(2);
+			Util.currentMonth = (int)(Util.month % 12);
 		}
 		catch(SQLException e)
 		{

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 public class TurnDay implements Runnable
 {
@@ -15,7 +16,8 @@ public class TurnDay implements Runnable
 	public void run()
 	{
 		Connection connection = null;
-		System.out.println("Running budget tick");
+		Calendar cal = Calendar.getInstance();
+		System.out.println(cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE));
 		try
 		{
 			connection = Database.getDataSource().getConnection();
@@ -29,8 +31,8 @@ public class TurnDay implements Runnable
 				try
 				{
 					nation.getEconomy().setBudget(nation.getEconomy().getBudget() + nation.getBudgetChange());
-					nation.getDomestic().setPopulation(nation.getDomestic().getPopulation()
-							+ (long)(nation.getDomestic().getPopulation() * (nation.getPopulationGrowth().get("population.net") / (4 * 7))));
+					nation.getDomestic().setPopulation((long)(nation.getDomestic().getPopulation()
+							* (1L + ((nation.getPopulationGrowth().get("population.net") / (4L * 7L * 100L))))));
 					nation.processProduction();
 					nation.update();
 				}

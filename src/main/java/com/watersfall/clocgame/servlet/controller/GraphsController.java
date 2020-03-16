@@ -33,8 +33,8 @@ public class GraphsController extends HttpServlet
 			{
 				if(url.get("type").equalsIgnoreCase("globalstats"))
 				{
-					PreparedStatement statement = conn.prepareStatement("SELECT * FROM global_stats_history WHERE week>? ORDER BY week ASC LIMIT 20");
-					statement.setLong(1, Util.week - 20);
+					PreparedStatement statement = conn.prepareStatement("SELECT * FROM global_stats_history WHERE month>? ORDER BY month ASC LIMIT 20");
+					statement.setLong(1, Util.month - 20);
 					ResultSet results = statement.executeQuery();
 					return convert(results);
 				}
@@ -55,7 +55,7 @@ public class GraphsController extends HttpServlet
 	{
 		String string =
 				"{\n" +
-				"\t\"weeks\":[\n";
+				"\t\"months\":[\n";
 		while(results.next())
 		{
 			string += "\t\t{\n";
