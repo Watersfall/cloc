@@ -38,27 +38,23 @@ public class ProductionActions
 		}
 		if(newProduction.getTechnology().isProducible())
 		{
-			if(nation.getFreeFactories() >= newFactoryCount - production.getFactories())
+			if(nation.getFreeFactories() >= newFactoryCount - production.getFactories().size())
 			{
 				if(!newProduction.name().equalsIgnoreCase(production.getProduction()))
 				{
-					production.setEfficiency((int)(production.getEfficiency() * 0.25));
 					production.setProgress(0);
 					production.setProduction(newProduction.name());
 				}
-				if(newFactoryCount != production.getFactories())
+				if(newFactoryCount != production.getFactories().size())
 				{
-					if(newFactoryCount > production.getFactories())
+					if(newFactoryCount > production.getFactories().size())
 					{
-						int newEfficiency = (production.getEfficiency() * production.getFactories()
-								+ 1000 * (newFactoryCount - production.getFactories())) / newFactoryCount;
-						production.setEfficiency(newEfficiency);
+						production.addFactories(newFactoryCount - production.getFactories().size(), nation.getConn());
 					}
-					production.setFactories(newFactoryCount);
-				}
-				if(production.getEfficiency() < 1000)
-				{
-					production.setEfficiency(1000);
+					else
+					{
+						production.removeFactories(production.getFactories().size() - newFactoryCount, nation.getConn());
+					}
 				}
 				production.update(nation.getConn());
 				return Responses.updated();

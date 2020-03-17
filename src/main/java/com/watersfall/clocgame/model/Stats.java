@@ -50,18 +50,22 @@ public class Stats
 		{
 			PreparedStatement statement = conn.prepareStatement(
 					"SELECT COUNT(cloc_login.id) AS nations, SUM(cloc_army.size) AS armySize, SUM(cloc_cities.civilian_industry) AS civilianFactories, " +
-					"SUM(cloc_cities.military_industry) AS militaryFactories, SUM(cloc_cities.universities) AS universities, " +
-					"SUM(cloc_cities.coal_mines) AS coalMines, SUM(cloc_cities.iron_mines) AS ironMines, SUM(cloc_cities.oil_wells) AS oilWells, " +
+					"SUM(cloc_cities.universities) AS universities, SUM(cloc_cities.coal_mines) AS coalMines, " +
+					"SUM(cloc_cities.iron_mines) AS ironMines, SUM(cloc_cities.oil_wells) AS oilWells, " +
 					"SUM(cloc_domestic.population) AS population, SUM(cloc_foreign.alignment=0) AS neutral, SUM(cloc_foreign.alignment=1) AS entente, " +
 					"SUM(cloc_foreign.alignment=-1) AS central " +
 					"FROM cloc_login, cloc_cities, cloc_army, cloc_domestic, cloc_foreign " +
-					"WHERE cloc_login.id=cloc_domestic.id AND cloc_login.id=cloc_army.id AND cloc_login.id AND cloc_login.id=cloc_cities.owner AND cloc_login.id=cloc_foreign.id");
+					"WHERE cloc_login.id=cloc_domestic.id AND cloc_domestic.id=cloc_army.id AND cloc_army.id=cloc_foreign.id AND cloc_foreign.id=cloc_cities.owner " +
+					"AND cloc_login.id=cloc_foreign.id");
 			ResultSet results = statement.executeQuery();
+			PreparedStatement statement1 = conn.prepareStatement("SELECT COUNT(factories.id) FROM factories");
+			ResultSet milFactories = statement1.executeQuery();
 			results.first();
+			milFactories.first();
 			this.totalNations = results.getLong("nations");
 			this.totalArmies = results.getLong("armySize");
 			this.totalCivilianFactories = results.getLong("civilianFactories");
-			this.totalMilitaryFactories = results.getLong("militaryFactories");
+			this.totalMilitaryFactories = milFactories.getLong(1);
 			this.totalUniversities = results.getLong("universities");
 			this.totalCoalMines = results.getLong("coalMines");
 			this.totalIronMines = results.getLong("ironMines");
@@ -74,14 +78,14 @@ public class Stats
 			PreparedStatement treaties = conn.prepareStatement(
 					"SELECT cloc_treaties.id AS id, SUM(cloc_army.size) AS armySize, AVG(cloc_army.size) AS averageArmy, " +
 					"SUM(cloc_cities.civilian_industry) AS civilianFactories, AVG(cloc_cities.civilian_industry) AS averageCivilianIndustry, " +
-					"SUM(cloc_cities.military_industry) AS militaryFactories, AVG(cloc_cities.military_industry) AS averageMilitaryIndustry, " +
 					"SUM(cloc_cities.universities) AS universities, AVG(cloc_cities.universities) AS averageUniversities, " +
 					"SUM(cloc_cities.coal_mines) AS coalMines, AVG(cloc_cities.coal_mines) AS averageCoalmines, SUM(cloc_cities.iron_mines) AS ironMines, " +
 					"AVG(cloc_cities.iron_mines) AS averageIronMines, SUM(cloc_cities.oil_wells) AS oilWells, AVG(cloc_cities.oil_wells) AS averageOilWells, " +
-					"SUM(cloc_domestic.population) AS population, AVG(cloc_domestic.population) AS averagePopulation  " +
+					"SUM(cloc_domestic.population) AS population, AVG(cloc_domestic.population) AS averagePopulation " +
 					"FROM cloc_login, cloc_cities, cloc_army, cloc_domestic, cloc_foreign, cloc_treaties_members, cloc_treaties " +
-					"WHERE cloc_login.id=cloc_domestic.id AND cloc_login.id=cloc_army.id AND cloc_login.id AND cloc_login.id=cloc_cities.owner " +
-					"AND cloc_login.id=cloc_foreign.id AND cloc_login.id=cloc_treaties_members.nation_id AND cloc_treaties_members.alliance_id=cloc_treaties.id " +
+					"WHERE cloc_login.id=cloc_cities.owner AND cloc_cities.owner=cloc_army.id AND cloc_army.id=cloc_domestic.id " +
+					"AND cloc_domestic.id=cloc_foreign.id AND cloc_login.id=cloc_treaties_members.nation_id " +
+					"AND cloc_treaties_members.alliance_id=cloc_treaties.id " +
 					"GROUP BY id");
 			ResultSet treatyResults = treaties.executeQuery();
 			while(treatyResults.next())
@@ -224,14 +228,16 @@ public class Stats
 
 		public TreatyStats(ResultSet results) throws SQLException
 		{
+			this.totalPopulation = results.getLong("population");
+			this.averagePopulation = results.getLong("averagePopulation");
 			this.totalArmies = results.getLong("armySize");
 			this.averageArmy = results.getDouble("averageArmy");
 			this.totalCivilianFactories = results.getLong("CivilianFactories");
 			this.averageCivilianFactories = results.getDouble("averageCivilianIndustry");
 			this.totalUniversities = results.getLong("universities");
 			this.averageUniversities = results.getDouble("averageUniversities");
-			this.totalMilitaryFactories = results.getLong("militaryFactories");
-			this.averageMilitaryFactories = results.getDouble("averageMilitaryIndustry");
+			//this.totalMilitaryFactories = results.getLong("militaryFactories");
+			//this.averageMilitaryFactories = results.getDouble("averageMilitaryIndustry");
 			this.totalCoalMines = results.getLong("coalMines");
 			this.averageCoalMines = results.getDouble("averageCoalMines");
 			this.totalIronMines = results.getLong("ironMines");
@@ -249,8 +255,8 @@ public class Stats
 			map.put("Average Soldiers", Util.formatNumber(averageArmy) + "k Troops");
 			map.put("Total Civilian Factories", Util.formatNumber(totalCivilianFactories) + " Factories");
 			map.put("Average Civilian Factories", Util.formatNumber(averageCivilianFactories) + " Factories");
-			map.put("Total Military Factories", Util.formatNumber(totalMilitaryFactories) + " Factories");
-			map.put("Average Military Factories", Util.formatNumber(averageMilitaryFactories) + " Factories");
+			//map.put("Total Military Factories", Util.formatNumber(totalMilitaryFactories) + " Factories");
+			//map.put("Average Military Factories", Util.formatNumber(averageMilitaryFactories) + " Factories");
 			map.put("Total Universities", Util.formatNumber(totalUniversities) + " Universities");
 			map.put("Average Universities", Util.formatNumber(averageUniversities) + " Universities");
 			map.put("Total Iron Mines", Util.formatNumber(totalIronMines) + " Mines");

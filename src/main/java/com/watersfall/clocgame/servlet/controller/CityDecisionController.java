@@ -58,25 +58,25 @@ public class CityDecisionController extends HttpServlet
 				case "railroad":
 					return CityActions.railroad(conn, user, id);
 				case "uncoalmine":
-					return CityActions.remove(conn, user, id, "coal_mines");
+					return CityActions.remove(conn, user, id, "cloc_cities.coal_mines");
 				case "unironmine":
-					return CityActions.remove(conn, user, id, "iron_mines");
+					return CityActions.remove(conn, user, id, "cloc_cities.iron_mines");
 				case "undrill":
-					return CityActions.remove(conn, user, id, "oil_wells");
+					return CityActions.remove(conn, user, id, "cloc_cities.oil_wells");
 				case "unindustrialize":
-					return CityActions.remove(conn, user, id, "civilian_industry");
+					return CityActions.remove(conn, user, id, "cloc_cities.civilian_industry");
 				case "unmilitarize":
 					return CityActions.remove(conn, user, id, "military_industry");
 				case "unnitrogen":
-					return CityActions.remove(conn, user, id, "nitrogen_industry");
+					return CityActions.remove(conn, user, id, "cloc_cities.nitrogen_industry");
 				case "ununiversity":
-					return CityActions.remove(conn, user, id, "universities");
+					return CityActions.remove(conn, user, id, "cloc_cities.universities");
 				case "unport":
-					return CityActions.remove(conn, user, id, "ports");
+					return CityActions.remove(conn, user, id, "cloc_cities.ports");
 				case "unbarrack":
-					return CityActions.remove(conn, user, id, "barracks");
+					return CityActions.remove(conn, user, id, "cloc_cities.barracks");
 				case "unrailroad":
-					return CityActions.remove(conn, user, id, "railroads");
+					return CityActions.remove(conn, user, id, "cloc_cities.railroads");
 				default:
 					return Responses.genericError();
 			}

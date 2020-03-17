@@ -158,7 +158,7 @@ public class CityActions
 			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
 			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
 			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
-			city.setIndustryMilitary(city.getIndustryMilitary() + 1);
+			city.buildMilitaryIndustry(conn);
 			nation.update();
 			return Responses.militarize();
 		}
@@ -348,12 +348,16 @@ public class CityActions
 		{
 			return Responses.noneLeft();
 		}
+		else if(type.equalsIgnoreCase("military_industry"))
+		{
+			city.closeMilitaryIndustry(conn);
+		}
 		else
 		{
 			city.setByName(type, (Integer)city.getByName(type) - 1);
 			city.update(conn);
-			return Responses.close(type);
 		}
+		return Responses.close(type);
 	}
 
 	public static String rename(City city, String name, Connection conn) throws SQLException, NullPointerException

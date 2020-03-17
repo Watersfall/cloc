@@ -1,7 +1,7 @@
 <%@ include file="taglibs.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="production" type="java.util.Map.Entry<Integer, Production>"--%>
-<div id="production_id_${production.value.id}" style="max-width: 22em;" class="original=${production.value.factories}">
+<div id="production_id_${production.value.id}" style="max-width: 22em;" class="original=${production.value.factories.size()}">
 	<p class="neutral name">${production.value.productionAsTechnology.technology.name}</p>
 	<div style="width: 100%;">
 		<div style="min-width: 8em; width: 50%; float: left;">
@@ -15,7 +15,7 @@
 						<c:forEach var="column" begin="1" end="5">
 							<td>
 								<c:choose>
-									<c:when test="${production.value.factories >= ((row - 1) * 5) + (column)}">
+									<c:when test="${production.value.factories.size() >= ((row - 1) * 5) + (column)}">
 										<img
 											src="${pageContext.request.contextPath}/images/production/factory.svg"
 											alt="factory"

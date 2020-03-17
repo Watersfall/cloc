@@ -19,8 +19,6 @@ CREATE TABLE cloc_main(
 CREATE TABLE production(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	owner INT,
-	factories INT DEFAULT 1,
-	efficiency INT DEFAULT 2500,
 	production TEXT,
 	progress INT DEFAULT 0,
 	FOREIGN KEY fk_production (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
@@ -82,7 +80,6 @@ CREATE TABLE cloc_cities(
 	coal_mines INT UNSIGNED DEFAULT 5,
 	oil_wells INT UNSIGNED DEFAULT 2,
 	civilian_industry INT UNSIGNED DEFAULT 1,
-	military_industry INT UNSIGNED DEFAULT 1,
 	nitrogen_industry INT UNSIGNED DEFAULT 0,
 	universities INT UNSIGNED DEFAULT 0,
 	name VARCHAR(64),
@@ -261,6 +258,17 @@ CREATE TABLE global_stats_history(
 	 total_iron_mines BIGINT,
 	 total_coal_mines BIGINT,
 	 total_oil_wells BIGINT
+);
+
+CREATE TABLE factories(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	owner INT,
+	city_id INT,
+	production INT,
+	efficiency INT DEFAULT 1500,
+	FOREIGN KEY fk_production (production) REFERENCES production (id) ON DELETE SET NULL,
+	FOREIGN KEY fk_owner (owner) REFERENCES cloc_login(id) ON DELETE CASCADE,
+	FOREIGN KEY fk_city (city_id) REFERENCES cloc_cities(id) ON DELETE CASCADE
 );
 
 INSERT INTO cloc_main (week, day) VALUES (1, 1);

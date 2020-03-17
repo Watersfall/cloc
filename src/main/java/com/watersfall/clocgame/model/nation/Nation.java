@@ -227,7 +227,9 @@ public class Nation
 					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
 					"WHERE cloc_login.id=? FOR UPDATE");
-			getProduction = conn.prepareStatement("SELECT * FROM production WHERE owner=? FOR UPDATE");
+			getProduction = conn.prepareStatement("SELECT * FROM production " +
+					"LEFT JOIN factories ON production.id=factories.production_id " +
+					"WHERE production.owner=? FOR UPDATE");
 			attacker = conn.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1 FOR UPDATE");
 			defender = conn.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1 FOR UPDATE");
 		}
@@ -243,7 +245,9 @@ public class Nation
 					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
 					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
 					"WHERE cloc_login.id=?");
-			getProduction = conn.prepareStatement("SELECT * FROM production WHERE owner=?");
+			getProduction = conn.prepareStatement("SELECT * FROM production " +
+					"LEFT JOIN factories ON production.id=factories.production_id " +
+					"WHERE production.owner=?");
 			attacker = conn.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1");
 			defender = conn.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1");
 		}
@@ -274,17 +278,45 @@ public class Nation
 		getProduction.setInt(1, id);
 		ResultSet resultsProduction = getProduction.executeQuery();
 		int usedFactories = 0;
-		while(resultsProduction.next())
+		boolean any = resultsProduction.first();
+		if(any)
 		{
-			production.put(resultsProduction.getInt("id"), new Production(
-					resultsProduction.getInt("id"),
-					resultsProduction.getInt("owner"),
-					resultsProduction.getInt("factories"),
-					resultsProduction.getInt("efficiency"),
-					resultsProduction.getString("production"),
-					resultsProduction.getInt("progress")
-			));
-			usedFactories += resultsProduction.getInt("factories");
+			int lastId = resultsProduction.getInt("production_id");
+			String lastProduction = resultsProduction.getString("production");
+			int lastProgress = resultsProduction.getInt("progress");
+			HashMap<Integer, Factory> map = new HashMap<>();
+			do
+			{
+				usedFactories++;
+				if(lastId == resultsProduction.getInt("production_id"))
+				{
+					map.put(resultsProduction.getInt("factories.id"),
+							new Factory(resultsProduction.getInt("factories.id"),
+									resultsProduction.getInt("owner"),
+									resultsProduction.getInt("city_id"),
+									resultsProduction.getInt("production_id"),
+									resultsProduction.getInt("efficiency")));
+				}
+				else
+				{
+					if(!map.isEmpty())
+					{
+						production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress));
+					}
+					map = new HashMap<>();
+					map.put(resultsProduction.getInt("id"),
+							new Factory(resultsProduction.getInt("id"),
+									resultsProduction.getInt("owner"),
+									resultsProduction.getInt("city_id"),
+									resultsProduction.getInt("production_id"),
+									resultsProduction.getInt("efficiency")));
+				}
+				lastId = resultsProduction.getInt("production_id");
+				lastProduction = resultsProduction.getString("production");
+				lastProgress = resultsProduction.getInt("progress");
+			}
+			while(resultsProduction.next());
+			production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress));
 		}
 		this.freeFactories = getTotalMilitaryFactories() - usedFactories;
 		this.id = id;
@@ -1345,12 +1377,6 @@ public class Nation
 			int leftover = (int)((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionCost())) * 100);
 			production.setProgress(leftover);
 			statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "=" + production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
-			int efficiencyGain = (int)(0.1 * (10000.0 / (production.getEfficiency() / 100.0)));
-			production.setEfficiency(production.getEfficiency() + efficiencyGain);
-			if(production.getEfficiency() > 10000)
-			{
-				production.setEfficiency(10000);
-			}
 		}
 		statement += "WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id";
 		statement = statement.replace(", WHERE", " WHERE");

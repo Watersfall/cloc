@@ -4,10 +4,7 @@ import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -34,13 +31,20 @@ public class City extends Updatable
 	private @Getter int industryMilitary;
 	private @Getter int industryNitrogen;
 	private @Getter int universities;
+	private @Getter HashMap<Integer, Factory> militaryFactories;
 	private @Getter String name;
 	private @Getter CityType type;
 	private @Getter int devastation;
 
 	public static City getCity(Connection conn, int id) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT * FROM cloc_cities WHERE id=?");
+		PreparedStatement statement = conn.prepareStatement("SELECT cloc_cities.*, COALESCE(military_industry, 0) AS military_industry " +
+				"FROM cloc_cities " +
+				"LEFT JOIN ( " +
+				"SELECT city_id, COUNT(id) " +
+				"AS military_industry FROM factories GROUP BY city_id ) military_industry " +
+				"ON military_industry.city_id=cloc_cities.id " +
+				"WHERE cloc_cities.owner=? FOR UPDATE");
 		statement.setInt(1, id);
 		ResultSet results = statement.executeQuery();
 		results.first();
@@ -50,24 +54,43 @@ public class City extends Updatable
 	public City(int id, ResultSet results) throws SQLException
 	{
 		super(TABLE_NAME, id, results);
-		this.owner = results.getInt("owner");
-		this.capital = results.getBoolean("capital");
-		this.coastal = results.getBoolean("coastal");
-		this.railroads = results.getInt("railroads");
-		this.ports = results.getInt("ports");
-		this.barracks = results.getInt("barracks");
-		this.ironMines = results.getInt("iron_mines");
-		this.coalMines = results.getInt("coal_mines");
-		this.oilWells = results.getInt("oil_wells");
-		this.industryCivilian = results.getInt("civilian_industry");
+		this.owner = results.getInt("cloc_cities.owner");
+		this.capital = results.getBoolean("cloc_cities.capital");
+		this.coastal = results.getBoolean("cloc_cities.coastal");
+		this.railroads = results.getInt("cloc_cities.railroads");
+		this.ports = results.getInt("cloc_cities.ports");
+		this.barracks = results.getInt("cloc_cities.barracks");
+		this.ironMines = results.getInt("cloc_cities.iron_mines");
+		this.coalMines = results.getInt("cloc_cities.coal_mines");
+		this.oilWells = results.getInt("cloc_cities.oil_wells");
+		this.industryCivilian = results.getInt("cloc_cities.civilian_industry");
 		this.industryMilitary = results.getInt("military_industry");
-		this.industryNitrogen = results.getInt("nitrogen_industry");
-		this.universities = results.getInt("universities");
-		this.name = results.getString("name");
-		this.type = CityType.valueOf(results.getString("type"));
-		this.devastation = results.getInt("devastation");
-		this.id = results.getInt("id");
+		this.industryNitrogen = results.getInt("cloc_cities.nitrogen_industry");
+		this.universities = results.getInt("cloc_cities.universities");
+		this.name = results.getString("cloc_cities.name");
+		this.type = CityType.valueOf(results.getString("cloc_cities.type"));
+		this.devastation = results.getInt("cloc_cities.devastation");
+		this.id = results.getInt("cloc_cities.id");
 		this.results = results;
+	}
+
+	public void buildMilitaryIndustry(Connection conn) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("INSERT INTO factories (owner, city_id, production_id) VALUES (?,?,?)");
+		statement.setInt(1, this.owner);
+		statement.setInt(2, this.id);
+		statement.setNull(3, Types.INTEGER);
+		statement.execute();
+	}
+
+	public void closeMilitaryIndustry(Connection conn) throws SQLException
+	{
+		if(!this.militaryFactories.isEmpty())
+		{
+			PreparedStatement statement = conn.prepareStatement("DELETE FROM factories WHERE city_id=? ORDER BY production_id LIMIT 1");
+			statement.setInt(1, this.id);
+			statement.execute();
+		}
 	}
 
 	public void setCapital(boolean capital)
@@ -150,16 +173,6 @@ public class City extends Updatable
 			industryCivilian = 2000000000;
 		this.addField("civilian_industry", industryCivilian);
 		this.industryCivilian = industryCivilian;
-	}
-
-	public void setIndustryMilitary(int industryMilitary)
-	{
-		if(industryMilitary < 0)
-			industryMilitary = 0;
-		else if(industryMilitary > 2000000000)
-			industryMilitary = 2000000000;
-		this.addField("military_industry", industryMilitary);
-		this.industryMilitary = industryMilitary;
 	}
 
 	public void setIndustryNitrogen(int industryNitrogen)

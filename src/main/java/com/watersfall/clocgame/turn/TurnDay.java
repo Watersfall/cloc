@@ -43,6 +43,9 @@ public class TurnDay implements Runnable
 					statement.execute();
 				}
 			}
+			PreparedStatement updateEfficiency = connection.prepareStatement("UPDATE factories " +
+					"SET efficiency=LEAST(efficiency+(0.1 * (10000.0 / (efficiency / 100.0))), 10000) WHERE production_id IS NOT NULL");
+			updateEfficiency.execute();
 			connection.commit();
 			Util.day++;
 		}

@@ -23,11 +23,23 @@ public class NationCities
 		PreparedStatement read;
 		if(safe)
 		{
-			read = conn.prepareStatement("SELECT * FROM cloc_cities WHERE owner=? FOR UPDATE ");
+			read = conn.prepareStatement("SELECT cloc_cities.*, COALESCE(military_industry, 0) AS military_industry " +
+					"FROM cloc_cities " +
+					"LEFT JOIN ( " +
+					"SELECT city_id, COUNT(id) " +
+					"AS military_industry FROM factories GROUP BY city_id ) military_industry " +
+					"ON military_industry.city_id=cloc_cities.id " +
+					"WHERE cloc_cities.owner=? FOR UPDATE");
 		}
 		else
 		{
-			read = conn.prepareStatement("SELECT * FROM cloc_cities WHERE owner=?");
+			read = conn.prepareStatement("SELECT cloc_cities.*, COALESCE(military_industry, 0) AS military_industry " +
+					"FROM cloc_cities " +
+					"LEFT JOIN ( " +
+					"SELECT city_id, COUNT(id) " +
+					"AS military_industry FROM factories GROUP BY city_id ) military_industry " +
+					"ON military_industry.city_id=cloc_cities.id " +
+					"WHERE cloc_cities.owner=?");
 		}
 		read.setInt(1, id);
 		this.results = read.executeQuery();
@@ -43,7 +55,7 @@ public class NationCities
 			this.id = id;
 			while(results.next())
 			{
-				cities.put(results.getInt("id"), new City(results.getInt("id"), results));
+				cities.put(results.getInt("cloc_cities.id"), new City(results.getInt("cloc_cities.id"), results));
 			}
 		}
 	}
