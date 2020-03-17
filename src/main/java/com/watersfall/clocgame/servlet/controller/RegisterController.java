@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Types;
 
 @WebServlet(urlPatterns = {"/register/"})
 public class RegisterController extends HttpServlet
@@ -104,14 +105,20 @@ public class RegisterController extends HttpServlet
 			ResultSet key = create.getGeneratedKeys();
 			key.first();
 			int id = key.getInt(1);
-			PreparedStatement cities = conn.prepareStatement("INSERT INTO cloc_cities (owner, capital, coastal, name, type, military_industry) VALUES (?,?,?,?,?,?)");
+			PreparedStatement cities = conn.prepareStatement("INSERT INTO cloc_cities (owner, capital, coastal, name, type) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			cities.setInt(1, id);
 			cities.setBoolean(2, true);
 			cities.setBoolean(3, true);
 			cities.setString(4, capital);
 			cities.setString(5, CityType.FARMING.name());
-			cities.setInt(6, 1);
 			cities.execute();
+			ResultSet cityKey = cities.getGeneratedKeys();
+			cityKey.first();
+			PreparedStatement factory = conn.prepareStatement("INSERT INTO factories (owner, city_id, production_id) VALUES (?,?,?)");
+			factory.setInt(1, id);
+			factory.setInt(2, cityKey.getInt(1));
+			factory.setNull(3, Types.INTEGER);
+			factory.execute();
 			req.getSession().setAttribute("user", id);
 			resp.sendRedirect(req.getContextPath() + "/main/");
 			return Responses.registered();
