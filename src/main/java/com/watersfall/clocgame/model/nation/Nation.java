@@ -1372,7 +1372,12 @@ public class Nation
 		String statement = "UPDATE cloc_army, cloc_military SET ";
 		for(Production production : this.production.values())
 		{
-			double ic = production.getIc() + (production.getProgress() / 100.0);
+			double productionIc = production.getIc();
+			if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
+			{
+				productionIc *= 1.25;
+			}
+			double ic = productionIc + (production.getProgress() / 100.0);
 			int amount = (int)(ic / production.getProductionAsTechnology().getTechnology().getProductionCost());
 			int leftover = (int)((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionCost())) * 100);
 			production.setProgress(leftover);
