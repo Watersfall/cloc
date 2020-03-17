@@ -5,10 +5,7 @@ import com.watersfall.clocgame.model.technology.Technologies;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 
 public @Data @AllArgsConstructor class Production
@@ -84,9 +81,14 @@ public @Data @AllArgsConstructor class Production
 
 	public static void createDefaultProduction(int owner, Connection conn) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("INSERT INTO production (owner, production, progress) VALUES (?, 'MUSKET', 0)");
+		PreparedStatement statement = conn.prepareStatement("INSERT INTO production (owner, production, progress) VALUES (?, 'MUSKET', 0)", Statement.RETURN_GENERATED_KEYS);
 		statement.setInt(1, owner);
 		statement.execute();
+		ResultSet key = statement.getGeneratedKeys();
+		key.first();
+		PreparedStatement factory = conn.prepareStatement("UPDATE factories SET production_id=? WHERE production_id IS NULL LIMIT 1");
+		factory.setInt(1, key.getInt(1));
+		factory.execute();
 	}
 	
 	public void update() throws SQLException
