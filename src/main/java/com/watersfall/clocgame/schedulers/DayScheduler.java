@@ -12,7 +12,8 @@ public class DayScheduler
 	private DayScheduler()
 	{
 		scheduler = new Scheduler();
-		scheduler.schedule("0,8,17,25,34,42,51 * * * *", new TurnDay());
+		//scheduler.schedule("0,8,17,25,34,42,51 * * * *", new TurnDay());
+		scheduler.schedule("* * * * *", new TurnDay());
 		scheduler.start();
 	}
 

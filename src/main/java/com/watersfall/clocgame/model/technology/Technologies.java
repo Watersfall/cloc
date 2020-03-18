@@ -2,6 +2,7 @@ package com.watersfall.clocgame.model.technology;
 
 import com.watersfall.clocgame.model.technology.technologies.Category;
 import com.watersfall.clocgame.model.technology.technologies.single.ammoandfeed.*;
+import com.watersfall.clocgame.model.technology.technologies.single.artillery.TechnologyArtillery;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.TechnologyShipOil;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.TechnologyTank;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.air.*;
@@ -37,6 +38,11 @@ public enum Technologies
 	STRAIGHT_PULL_RIFLE(TechnologyStraightPullRifle.getInstance(), Category.WEAPONS, 3, 4, new String[]{"horizontalLeft"}),
 	SEMI_AUTOMATIC(TechnologySemiAutomatic.getInstance(), Category.WEAPONS, 3, 5, new String[]{"vertical"}),
 	MACHINE_GUN(TechnologyMachineGun.getInstance(), Category.WEAPONS, 1, 5, new String[]{"vertical"}),
+
+	/*
+	** ARTILLERY
+	 */
+	ARTILLERY(TechnologyArtillery.getInstance(), Category.ARTILLERY, 2, 1, new String[]{""}),
 
 	/*
 	** Air

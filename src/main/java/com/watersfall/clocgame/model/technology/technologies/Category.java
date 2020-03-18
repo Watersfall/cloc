@@ -7,6 +7,7 @@ public enum Category
 	ECONOMY("Economy"),
 	AMMO_AND_FEED("Ammo & Feed"),
 	WEAPONS("Weapons"),
+	ARTILLERY("Artillery"),
 	LAND("Land Vehicles"),
 	AIR("Aircraft"),
 	SEA("Naval"),
