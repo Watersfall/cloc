@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.technology.Technologies;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -118,12 +119,16 @@ public @Data @AllArgsConstructor class Production
 		return total / factories.size();
 	}
 
-	public double getIc()
+	public double getIc(Policy policy)
 	{
 		int total = 0;
 		for(Factory factory : factories.values())
 		{
 			total += factory.getEfficiency();
+		}
+		if(policy == Policy.WAR_ECONOMY)
+		{
+			total *= 1.25;
 		}
 		return total / 10000.0;
 	}
@@ -146,9 +151,9 @@ public @Data @AllArgsConstructor class Production
 		statement.execute();
 	}
 
-	public String getProductionString()
+	public String getProductionString(Policy policy)
 	{
-		double speed = this.getIc() / getProductionAsTechnology().getTechnology().getProductionCost();
+		double speed = this.getIc(policy) / getProductionAsTechnology().getTechnology().getProductionCost();
 		if(speed >= 1)
 		{
 			return String.format("%.2f&nbsp;per&nbsp;day", speed);
@@ -159,7 +164,7 @@ public @Data @AllArgsConstructor class Production
 		}
 		else
 		{
-			double timeRemaining = (getProductionAsTechnology().getTechnology().getProductionCost() - (this.progress / 100.0)) / this.getIc();
+			double timeRemaining = (getProductionAsTechnology().getTechnology().getProductionCost() - (this.progress / 100.0)) / this.getIc(policy);
 			if(timeRemaining > 7)
 			{
 				timeRemaining = timeRemaining / 7;

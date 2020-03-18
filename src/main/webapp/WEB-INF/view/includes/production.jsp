@@ -41,7 +41,7 @@
 	</div>
 	<div style="width: 100%; float: left;">
 		<div style="background: red;">
-			<div style="background: green; width: ${production.value.progress / production.value.productionAsTechnology.technology.productionCost}%;"><p class="neutral">${production.value.productionString}</p></div>
+			<div style="background: green; width: ${production.value.progress / production.value.productionAsTechnology.technology.productionCost}%;"><p class="neutral">${production.value.getProductionString(home.policy.economy)}</p></div>
 		</div>
 		<div style="background: red;">
 			<div style="background: green; width: ${production.value.efficiency / 100}%"><p class="neutral">Efficiency:&nbsp;${production.value.efficiency / 100}%</p></div>
