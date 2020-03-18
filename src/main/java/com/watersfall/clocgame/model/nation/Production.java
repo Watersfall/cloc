@@ -75,6 +75,9 @@ public @Data @AllArgsConstructor class Production
 
 	public static void deleteProductionById(int id, Connection conn) throws SQLException
 	{
+		PreparedStatement efficiency = conn.prepareStatement("UPDATE factories SET efficiency=1500 WHERE production_id=?");
+		efficiency.setInt(1, id);
+		efficiency.execute();
 		PreparedStatement delete = conn.prepareStatement("DELETE FROM production WHERE id=?");
 		delete.setInt(1, id);
 		delete.execute();
@@ -135,7 +138,7 @@ public @Data @AllArgsConstructor class Production
 
 	public void addFactories(int amount, Connection conn) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("UPDATE factories SET production_id=? " +
+		PreparedStatement statement = conn.prepareStatement("UPDATE factories SET production_id=?, efficiency=1500 " +
 				"WHERE production_id IS NULL LIMIT ?");
 		statement.setInt(1, this.id);
 		statement.setInt(2, amount);
