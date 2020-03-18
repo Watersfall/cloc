@@ -36,7 +36,7 @@ Todo List:
     - Rewrite of the frontend for general improvements, both visually and code-wise
     
 - Production
-    - Split off factories into their own database table for more control over individual units
+    - ~~Split off factories into their own database table for more control over individual units~~
     - Make production cost resources
     - Shipbuilding
     - Potentially split dockyards off of military factories for creating ships

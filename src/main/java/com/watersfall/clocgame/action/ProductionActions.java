@@ -5,6 +5,7 @@ import com.watersfall.clocgame.model.nation.Production;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.text.Responses;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ProductionActions
@@ -42,6 +43,19 @@ public class ProductionActions
 			{
 				if(!newProduction.name().equalsIgnoreCase(production.getProduction()))
 				{
+					PreparedStatement statement;
+					if(production.getProductionAsTechnology().getCategory() == newProduction.getCategory())
+					{
+						statement = nation.getConn().prepareStatement("UPDATE factories " +
+								"SET efficiency=GREATEST(efficiency / 2, 1500) WHERE production_id=?");
+					}
+					else
+					{
+						statement = nation.getConn().prepareStatement("UPDATE factories " +
+								"SET efficiency=1500 WHERE production_id=?");
+					}
+					statement.setInt(1, id);
+					statement.execute();
 					production.setProgress(0);
 					production.setProduction(newProduction.name());
 				}
