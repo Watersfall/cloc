@@ -31,6 +31,7 @@ public class City extends Updatable
 	private @Getter int industryMilitary;
 	private @Getter int industryNitrogen;
 	private @Getter int universities;
+	private @Getter long population;
 	private @Getter HashMap<Integer, Factory> militaryFactories;
 	private @Getter String name;
 	private @Getter CityType type;
@@ -70,6 +71,7 @@ public class City extends Updatable
 		this.name = results.getString("cloc_cities.name");
 		this.type = CityType.valueOf(results.getString("cloc_cities.type"));
 		this.devastation = results.getInt("cloc_cities.devastation");
+		this.population = results.getInt("cloc_cities.population");
 		this.id = results.getInt("cloc_cities.id");
 		this.results = results;
 	}
@@ -215,6 +217,17 @@ public class City extends Updatable
 			devastation = 100;
 		this.addField("devastation", devastation);
 		this.devastation = devastation;
+	}
+
+	public void setPopulation(long population)
+	{
+		if(population < 50000)
+			population = 50000;
+		else if(population > 1000000000000000L)
+			population = 1000000000000000L;
+		System.out.println("Setting population to: " + population);
+		this.addField("population", population);
+		this.population = population;
 	}
 
 	/**

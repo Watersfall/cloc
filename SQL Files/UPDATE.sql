@@ -1,4 +1,7 @@
 USE cloc;
 
-ALTER TABLE cloc_tech
-	ADD COLUMN artillery_tech TINYINT UNSIGNED DEFAULT 0;
+ALTER TABLE cloc_domestic
+	DROP COLUMN population;
+
+ALTER TABLE cloc_cities
+	ADD COLUMN population BIGINT DEFAULT 0;

@@ -163,6 +163,7 @@ CREATE TABLE cloc_tech(
 	biplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
 	triplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
 	monoplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
+	artillery_tech TINYINT UNSIGNED DEFAULT 0,
 	FOREIGN KEY fk_tech (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 

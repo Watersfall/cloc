@@ -13,7 +13,6 @@ public class NationDomestic extends Updatable
 	private @Getter int government;
 	private @Getter int approval;
 	private @Getter int stability;
-	private @Getter long population;
 	private @Getter long manpowerLost;
 	private @Getter int rebels;
 	private @Getter int farmSubsidies;
@@ -28,7 +27,6 @@ public class NationDomestic extends Updatable
 		this.government = results.getInt("government");
 		this.approval = results.getInt("approval");
 		this.stability = results.getInt("stability");
-		this.population = results.getLong("population");
 		this.manpowerLost = results.getLong("lost_manpower");
 		this.rebels = results.getInt("rebels");
 		this.farmSubsidies = results.getInt("farm_subsidies");
@@ -75,16 +73,6 @@ public class NationDomestic extends Updatable
 			stability = 100;
 		this.addField("stability", stability);
 		this.stability = stability;
-	}
-
-	public void setPopulation(long population)
-	{
-		if(population < 10000)
-			population = 10000;
-		else if(population > 1000000000000000L)
-			population = 1000000000000000L;
-		this.addField("population", population);
-		this.population = population;
 	}
 
 	public void setManpowerLost(long manpowerLost)

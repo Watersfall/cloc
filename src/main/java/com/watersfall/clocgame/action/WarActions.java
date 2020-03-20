@@ -73,10 +73,10 @@ public class WarActions
 				}
 				attacker.getArmy().setSize(attacker.getArmy().getSize() - attackLosses);
 				attacker.getDomestic().setManpowerLost(attacker.getDomestic().getManpowerLost() + attackLosses * 1000);
-				attacker.getDomestic().setPopulation(attacker.getDomestic().getPopulation() - attackLosses * 1000);
+				attacker.getCities().changeRandomCityPopulation(-attackLosses * 1000);
 				defender.getArmy().setSize(defender.getArmy().getSize() - defenderLosses);
 				defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() + defenderLosses * 1000);
-				defender.getDomestic().setPopulation(defender.getDomestic().getPopulation() - defenderLosses * 1000);
+				defender.getCities().changeRandomCityPopulation(-defenderLosses * 1000);
 				attacker.getArmy().setFortification(0);
 				defender.getArmy().setFortification(0);
 				attacker.update();
@@ -145,10 +145,10 @@ public class WarActions
 					}
 					attacker.getArmy().setSize(attacker.getArmy().getSize() - attackLosses);
 					attacker.getDomestic().setManpowerLost(attacker.getDomestic().getManpowerLost() + attackLosses * 1000);
-					attacker.getDomestic().setPopulation(attacker.getDomestic().getPopulation() - attackLosses * 1000);
+					attacker.getCities().changeRandomCityPopulation(-attackLosses * 1000);
 					defender.getArmy().setSize(defender.getArmy().getSize() - defenderLosses);
 					defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() + defenderLosses * 1000);
-					defender.getDomestic().setPopulation(defender.getDomestic().getPopulation() - defenderLosses * 1000);
+					defender.getCities().changeRandomCityPopulation(-defenderLosses * 1000);
 					HashMap.Entry entry = (HashMap.Entry)cities.toArray()[(int)(Math.random() * cities.size())];
 					City city = (City)entry.getValue();
 					if(attacker.getPower() > defender.getPower())

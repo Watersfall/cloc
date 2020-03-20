@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class NationCities
@@ -57,6 +58,39 @@ public class NationCities
 			{
 				cities.put(results.getInt("cloc_cities.id"), new City(results.getInt("cloc_cities.id"), results));
 			}
+		}
+	}
+
+	public void changeRandomCityPopulation(long amount)
+	{
+		ArrayList<City> array = new ArrayList<>(cities.size());
+		if(amount < 0)
+		{
+			for(City city: cities.values())
+			{
+				if(city.getPopulation() - amount > 50000)
+				{
+					array.add(city);
+				}
+			}
+			if(array.isEmpty())
+			{
+				for(City city: cities.values())
+				{
+					long remove = 50000 - city.getPopulation();
+					if(remove > amount)
+					{
+						remove = amount;
+					}
+					city.setPopulation(city.getPopulation() - remove);
+					amount = amount - remove;
+				}
+			}
+		}
+		else
+		{
+			City city = (City)cities.values().toArray()[(int)(Math.random() * cities.size())];
+			city.setPopulation(city.getPopulation() + amount);
 		}
 	}
 

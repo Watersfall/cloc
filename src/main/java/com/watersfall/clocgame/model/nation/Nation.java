@@ -642,6 +642,16 @@ public class Nation
 		return total;
 	}
 
+	public long getTotalPopulation()
+	{
+		long total = 0;
+		for(City city : cities.getCities().values())
+		{
+			total += city.getPopulation();
+		}
+		return total;
+	}
+
 	/**
 	 * Calculates the total manpower a nation has
 	 *
@@ -650,7 +660,7 @@ public class Nation
 	public long getTotalManpower()
 	{
 		long lostManpower = domestic.getManpowerLost();
-		long manpower = domestic.getPopulation();
+		long manpower = this.getTotalPopulation();
 		switch(policy.getManpower())
 		{
 			case DISARMED_MANPOWER:
@@ -1000,7 +1010,7 @@ public class Nation
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get("farming.net");
-		double consumption = -this.domestic.getPopulation() / 2000.0;
+		double consumption = -this.getTotalPopulation() / 2000.0;
 		double economy = 0.0;
 		double food = 0.0;
 		double total = farming;
