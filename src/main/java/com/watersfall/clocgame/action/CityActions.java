@@ -22,6 +22,10 @@ public class CityActions
 		{
 			return Responses.notYourCity();
 		}
+		if(city.getFreeSlots() <= 0)
+		{
+			return Responses.noBuildSlots();
+		}
 		int cost = city.getMineCost();
 		if(nation.getEconomy().getBudget() < cost)
 		{
@@ -48,6 +52,10 @@ public class CityActions
 		{
 			return Responses.notYourCity();
 		}
+		if(city.getFreeSlots() <= 0)
+		{
+			return Responses.noBuildSlots();
+		}
 		int cost = city.getMineCost();
 		if(nation.getEconomy().getBudget() < cost)
 		{
@@ -73,6 +81,10 @@ public class CityActions
 		if(city == null)
 		{
 			return Responses.notYourCity();
+		}
+		if(city.getFreeSlots() <= 0)
+		{
+			return Responses.noBuildSlots();
 		}
 		int cost = city.getWellCost();
 		if(nation.getEconomy().getBudget() < cost)
@@ -103,6 +115,10 @@ public class CityActions
 		else if(nation.getFreeLand() < City.LAND_FACTORY)
 		{
 			return Responses.noLand();
+		}
+		if(city.getFreeSlots() <= 0)
+		{
+			return Responses.noBuildSlots();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
 		if(nation.getEconomy().getCoal() < cost.get("coal"))
@@ -140,6 +156,10 @@ public class CityActions
 		{
 			return Responses.noLand();
 		}
+		if(city.getFreeSlots() <= 0)
+		{
+			return Responses.noBuildSlots();
+		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
 		if(nation.getEconomy().getCoal() < cost.get("coal"))
 		{
@@ -175,6 +195,10 @@ public class CityActions
 		else if(nation.getFreeLand() < City.LAND_FACTORY)
 		{
 			return Responses.noLand();
+		}
+		if(city.getFreeSlots() <= 0)
+		{
+			return Responses.noBuildSlots();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
 		if(nation.getEconomy().getCoal() < cost.get("coal"))
@@ -212,6 +236,10 @@ public class CityActions
 		{
 			return Responses.noLand();
 		}
+		if(city.getFreeSlots() <= 0)
+		{
+			return Responses.noBuildSlots();
+		}
 		HashMap<String, Integer> cost = city.getUniversityCost();
 		if(nation.getEconomy().getCoal() < cost.get("coal"))
 		{
@@ -241,7 +269,7 @@ public class CityActions
 		Nation nation = new Nation(conn, idNation, true);
 		NationEconomy economy = nation.getEconomy();
 		City city = nation.getCities().getCities().get(idCity);
-		if(idNation != city.getOwner())
+		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
@@ -273,7 +301,7 @@ public class CityActions
 		Nation nation = new Nation(conn, idNation, true);
 		NationEconomy economy = nation.getEconomy();
 		City city = nation.getCities().getCities().get(idCity);
-		if(idNation != city.getOwner())
+		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
@@ -301,7 +329,7 @@ public class CityActions
 		Nation nation = new Nation(conn, idNation, true);
 		NationEconomy economy = nation.getEconomy();
 		City city = nation.getCities().getCities().get(idCity);
-		if(idNation != city.getOwner())
+		if(city == null)
 		{
 			return Responses.notYourCity();
 		}

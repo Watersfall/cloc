@@ -67,6 +67,23 @@
 				</span>
 			</h1>
 			<div>
+				<div class="element" style="min-width: 50%;">
+					<h3>${city.size.name}</h3>
+					<h4>${city.freeSlots} Free Build Slots (out of ${city.buildSlots} total)</h4>
+					<img src="${pageContext.request.contextPath}/images/city/size/${city.size.name()}.png" alt="city">
+					<table class="standardTable">
+						<tr>
+							<td style="width: 50%;"><p>Population</p></td>
+							<td onclick="toggleTab('Population');">
+								<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+								<p class="clickable"><fmt:formatNumber value="${city.population}"/></p>
+								<ui:dropdown value="${city.population}" name="Population" map="${city.getPopulationGrowth(home)}" nation="${home}"/>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div>
 				<div class="element">
 					<h3>Coal Mines</h3>
 					<img src="${pageContext.request.contextPath}/images/city/coalmine.png" alt="coal mine"/>

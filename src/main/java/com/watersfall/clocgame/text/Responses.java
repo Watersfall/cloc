@@ -119,6 +119,11 @@ public class Responses
 		return "<p>You do not have enough research!</p>";
 	}
 
+	public static String noBuildSlots()
+	{
+		return "<p>You do not have enough build slots</p>";
+	}
+
 	public static String noManpower()
 	{
 		return "<p>You do not have enough manpower!</p>";

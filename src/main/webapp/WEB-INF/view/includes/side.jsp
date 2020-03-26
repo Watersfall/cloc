@@ -91,6 +91,13 @@
 					<a href="${pageContext.request.contextPath}/countryside/">
 						<div><p>The Countryside</p></div>
 					</a>
+					<c:if test="${home.canMakeNewCity()}">
+						<a onclick="createCity()">
+							<div>
+								<p>New</p>
+							</div>
+						</a>
+					</c:if>
 				</div>
 			</a>
 			<a onclick="toggle('realpolitik');">

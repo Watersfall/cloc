@@ -493,6 +493,15 @@ public class Nation
 		}
 	}
 
+	public void damagePopulation(long amount)
+	{
+		for(Integer integer : cities.getCities().keySet())
+		{
+			City city = cities.getCities().get(integer);
+			city.setPopulation((long)((double)city.getPopulation() / (double)this.getTotalPopulation()) * amount);
+		}
+	}
+
 	/**
 	 * Checks if this nation is at war with another nation
 	 *
@@ -1489,6 +1498,31 @@ public class Nation
 		return map;
 	}
 
+	public long getRequiredSizeForNextCity()
+	{
+		return 500000L * (long)Math.pow(2, cities.getCities().size() - 1);
+	}
+
+	public boolean canMakeNewCity()
+	{
+		return this.getTotalPopulation() >= getRequiredSizeForNextCity();
+	}
+
+	public City getLargestCity()
+	{
+		long max = 0;
+		int cityId = 0;
+		for(City city : cities.getCities().values())
+		{
+			if(city.getPopulation() > max)
+			{
+				max = city.getPopulation();
+				cityId = city.getId();
+			}
+		}
+		return cities.getCities().get(cityId);
+	}
+
 	public LinkedHashMap<String, LinkedHashMap<String, Long>> getLandUsage()
 	{
 		LinkedHashMap<String, LinkedHashMap<String, Long>> map = new LinkedHashMap<>();
@@ -1511,6 +1545,8 @@ public class Nation
 				return "% from Conscription Policy";
 			case "population.economy_policy":
 				return "% from Economic Policy";
+			case "population.size":
+				return "% from city size";
 			case "population.net":
 				return "% total growth per month";
 			case "growth.factories":

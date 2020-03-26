@@ -1,6 +1,8 @@
 package com.watersfall.clocgame.model.nation;
 
+import com.watersfall.clocgame.model.CitySize;
 import com.watersfall.clocgame.model.CityType;
+import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Updatable;
 import lombok.Getter;
 
@@ -45,7 +47,7 @@ public class City extends Updatable
 				"SELECT city_id, COUNT(id) " +
 				"AS military_industry FROM factories GROUP BY city_id ) military_industry " +
 				"ON military_industry.city_id=cloc_cities.id " +
-				"WHERE cloc_cities.owner=? FOR UPDATE");
+				"WHERE cloc_cities.id=? FOR UPDATE");
 		statement.setInt(1, id);
 		ResultSet results = statement.executeQuery();
 		results.first();
@@ -71,7 +73,7 @@ public class City extends Updatable
 		this.name = results.getString("cloc_cities.name");
 		this.type = CityType.valueOf(results.getString("cloc_cities.type"));
 		this.devastation = results.getInt("cloc_cities.devastation");
-		this.population = results.getInt("cloc_cities.population");
+		this.population = results.getLong("cloc_cities.population");
 		this.id = results.getInt("cloc_cities.id");
 		this.results = results;
 	}
@@ -221,13 +223,112 @@ public class City extends Updatable
 
 	public void setPopulation(long population)
 	{
-		if(population < 50000)
-			population = 50000;
+		if(population < 100)
+			population = 100;
 		else if(population > 1000000000000000L)
 			population = 1000000000000000L;
 		System.out.println("Setting population to: " + population);
 		this.addField("population", population);
 		this.population = population;
+	}
+
+	public CitySize getSize()
+	{
+		if(this.population > CitySize.ECUMENOPOLIS.getMinimum())
+			return CitySize.ECUMENOPOLIS;
+		else if(this.population > CitySize.MEGALOPOLIS.getMinimum())
+			return CitySize.MEGALOPOLIS;
+		else if(this.population > CitySize.METROPOLIS.getMinimum())
+			return CitySize.METROPOLIS;
+		else if(this.population > CitySize.LARGE_CITY.getMinimum())
+			return CitySize.LARGE_CITY;
+		else if(this.population > CitySize.CITY.getMinimum())
+			return CitySize.CITY;
+		else if(this.population > CitySize.LARGE_TOWN.getMinimum())
+			return CitySize.LARGE_TOWN;
+		else if(this.population > CitySize.TOWN.getMinimum())
+			return CitySize.TOWN;
+		else if(this.population > CitySize.VILLAGE.getMinimum())
+			return CitySize.VILLAGE;
+		else
+			return CitySize.BRUH_WHAT;
+	}
+
+	public int getBuildSlots()
+	{
+		return (int)(this.getSize().getBuildSlots() * (1.0 + (this.railroads / 20.0)));
+	}
+
+	public int getUsedSlots()
+	{
+		return this.ironMines + this.coalMines + this.oilWells + this.industryCivilian + this.industryMilitary
+				+ this.industryNitrogen + this.universities;
+	}
+
+	public int getFreeSlots()
+	{
+		return getBuildSlots() - getUsedSlots();
+	}
+
+	public LinkedHashMap<String, Double> getPopulationGrowth(Nation nation)
+	{
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		double base = 0.2;
+		double foodPolicy = 0;
+		double manpowerPolicy = 0;
+		double economyPolicy = 0;
+		double size = 0;
+		if(nation.getPolicy().getFood() == Policy.FREE_FOOD)
+		{
+			foodPolicy = 0.15;
+		}
+		else if(nation.getPolicy().getFood() == Policy.RATIONING_FOOD)
+		{
+			foodPolicy = -0.25;
+		}
+		if(nation.getPolicy().getManpower() == Policy.DISARMED_MANPOWER)
+		{
+			manpowerPolicy = 0.25;
+		}
+		else if(nation.getPolicy().getManpower() == Policy.VOLUNTEER_MANPOWER)
+		{
+			manpowerPolicy = 0.1;
+		}
+		else if(nation.getPolicy().getManpower() == Policy.MANDATORY_MANPOWER)
+		{
+			manpowerPolicy = -0.1;
+		}
+		else if(nation.getPolicy().getManpower() == Policy.SCRAPING_THE_BARREL_MANPOWER)
+		{
+			manpowerPolicy = -0.25;
+		}
+		if(nation.getPolicy().getEconomy() == Policy.CIVILIAN_ECONOMY)
+		{
+			economyPolicy = 0.15;
+		}
+		else if(nation.getPolicy().getEconomy() == Policy.WAR_ECONOMY)
+		{
+			economyPolicy = -0.15;
+		}
+		if(this.getSize() == CitySize.VILLAGE)
+		{
+			size = 1;
+		}
+		else if(this.getSize() == CitySize.TOWN)
+		{
+			size = 0.5;
+		}
+		else if(this.getSize() == CitySize.LARGE_TOWN)
+		{
+			size = 0.25;
+		}
+		map.put("population.base", base);
+		map.put("population.foodPolicy", foodPolicy);
+		map.put("population.manpowerPolicy", manpowerPolicy);
+		map.put("population.economy_policy", economyPolicy);
+		map.put("population.size", size);
+		map.put("population.net", base + foodPolicy + manpowerPolicy + economyPolicy + size);
+		return map;
 	}
 
 	/**
@@ -242,9 +343,9 @@ public class City extends Updatable
 	public HashMap<String, Integer> getFactoryCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("coal", 25 + (50 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("iron", 25 + (50 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("steel", 5 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen()));
+		map.put("coal", (int)(50 * (1.0 + this.getUsedSlots() / 5.0)));
+		map.put("iron", (int)(50 * (1.0 + this.getUsedSlots() / 5.0)));
+		map.put("steel", (int)(5 * (1.0 + this.getUsedSlots() / 5.0)));
 		return map;
 	}
 
@@ -260,9 +361,9 @@ public class City extends Updatable
 	public HashMap<String, Integer> getUniversityCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("coal", 50 + (100 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("iron", 50 + (100 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
-		map.put("steel", 5 + (10 * (this.getIndustryCivilian() + this.getIndustryMilitary() + this.getIndustryNitrogen())));
+		map.put("coal", (int)(100 * (1.0 + this.getUsedSlots() / 5.0)));
+		map.put("iron", (int)(100 * (1.0 + this.getUsedSlots() / 5.0)));
+		map.put("steel", (int)(10 * (1.0 + this.getUsedSlots() / 5.0)));
 		return map;
 	}
 
@@ -272,7 +373,7 @@ public class City extends Updatable
 	 */
 	public int getMineCost()
 	{
-		return 500 + (50 * (this.getIronMines() + this.getCoalMines()));
+		return (int)(1000 * (1.0 + this.getUsedSlots() / 5.0));
 	}
 
 	/**
@@ -281,7 +382,7 @@ public class City extends Updatable
 	 */
 	public int getWellCost()
 	{
-		return 500 + (100 * this.getOilWells());
+		return (int)(1500 * (1.0 + this.getUsedSlots() / 5.0));
 	}
 
 	public int getRailCost()
@@ -324,8 +425,8 @@ public class City extends Updatable
 	public LinkedHashMap<String, Double> getCoalProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double mines = this.getCoalMines();
-		double bonus = this.getRailroads() * 0.1 * this.getCoalMines();
+		double mines = this.getCoalMines() * 10;
+		double bonus = this.getRailroads() * 0.1 * mines;
 		double total = mines + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
@@ -358,8 +459,8 @@ public class City extends Updatable
 	public LinkedHashMap<String, Double> getIronProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double mines = this.getIronMines();
-		double bonus = this.getRailroads() * 0.1 * this.getIronMines();
+		double mines = this.getIronMines() * 10;
+		double bonus = this.getRailroads() * 0.1 * mines;
 		double total = mines + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
@@ -392,8 +493,8 @@ public class City extends Updatable
 	public LinkedHashMap<String, Double> getOilProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double wells = this.getOilWells();
-		double bonus = this.getRailroads() * 0.1 * this.getOilWells();
+		double wells = this.getOilWells() * 10;
+		double bonus = this.getRailroads() * 0.1 * wells;
 		double total = wells + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
@@ -423,8 +524,8 @@ public class City extends Updatable
 	public LinkedHashMap<String, Double> getSteelProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double factories = this.getIndustryCivilian();
-		double bonus = this.getRailroads() * 0.1 * this.getIndustryCivilian();
+		double factories = this.getIndustryCivilian() * 5;
+		double bonus = this.getRailroads() * 0.1 * factories;
 		double total = factories + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
@@ -450,8 +551,8 @@ public class City extends Updatable
 	public LinkedHashMap<String, Double> getNitrogenProduction()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double factories = this.getIndustryNitrogen();
-		double bonus = this.getRailroads() * 0.1 * this.getIndustryNitrogen();
+		double factories = this.getIndustryNitrogen() * 5;
+		double bonus = this.getRailroads() * 0.1 * factories;
 		double total = factories + bonus;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));

@@ -220,6 +220,30 @@ function postDeclaration()
 	ajax(url, params);
 }
 
+function createCity()
+{
+	let url = context + "/cities/new";
+	let callback = function()
+	{
+		displayResults();
+		this.onreadystatechange = function()
+		{
+			if(this.readyState === 4 && this.status === 200)
+			{
+				if(isNaN(this.responseText))
+				{
+					document.getElementById("result").innerHTML = this.responseText;
+				}
+				else
+				{
+					window.location.replace("/cities/" + this.responseText);
+				}
+			}
+		};
+	};
+	ajax(url, null, callback);
+}
+
 function newsDelete(id)
 {
 	displayResults();

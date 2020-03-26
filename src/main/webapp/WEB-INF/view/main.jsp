@@ -48,8 +48,8 @@
 				<td><p>Population</p></td>
 				<td onclick="toggleTab('Population');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.domestic.population}"/> People</p>
-					<ui:dropdown value="${home.domestic.population}" name="Population" map="${home.populationGrowth}" nation="${home}"/>
+					<p class="clickable"><fmt:formatNumber value="${home.totalPopulation}"/> People</p>
+					<ui:dropdown value="${home.totalPopulation}" name="Population" map="${home.populationGrowth}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>

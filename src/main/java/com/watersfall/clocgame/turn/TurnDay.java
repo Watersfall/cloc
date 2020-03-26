@@ -34,7 +34,7 @@ public class TurnDay implements Runnable
 					{
 						City city = nation.getCities().getCities().get(cityId);
 						city.setPopulation(city.getPopulation()
-								+ (long)(city.getPopulation() * (nation.getPopulationGrowth().get("population.net") / (4 * 7))));
+								+ (long)(city.getPopulation() * (city.getPopulationGrowth(nation).get("population.net") / (4 * 7))));
 					}
 					nation.processProduction();
 					nation.update();

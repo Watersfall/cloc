@@ -44,7 +44,7 @@
 				</tr>
 				<tr>
 					<td><p>Population</p></td>
-					<td><p><fmt:formatNumber value="${nation.domestic.population}"/> People</p></td>
+					<td><p><fmt:formatNumber value="${nation.totalPopulation}"/> People</p></td>
 				</tr>
 			</table>
 			<h2>Economy</h2>
