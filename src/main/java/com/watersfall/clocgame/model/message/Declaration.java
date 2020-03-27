@@ -58,7 +58,7 @@ public class Declaration
 		{
 			PreparedStatement post = conn.prepareStatement("INSERT INTO cloc_declarations (sender, sent, content) VALUES (?,?,?)");
 			post.setInt(1, nation.getId());
-			post.setLong(2, Util.week);
+			post.setLong(2, Util.month);
 			post.setString(3, message);
 			post.execute();
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);

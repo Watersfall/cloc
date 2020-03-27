@@ -33,7 +33,7 @@ function loadData(url, id)
 		if(xhttp.readyState === 4 && xhttp.status === 200)
 		{
 			data = JSON.parse(xhttp.responseText);
-			data = data["weeks"];
+			data = data["months"];
 			dataPoints = data.length;
 			generateGraph(id)
 		}
@@ -138,11 +138,11 @@ function drawLabels(id)
 	canvas.textAlign = "center";
 	canvas.font = "18px Trebuchet MS";
 	canvas.fillText(id, width / 2, 28);
-	canvas.fillText("Week", 350, height - 10);
+	canvas.fillText("Month", 350, height - 10);
 	canvas.font = "12px Trebuchet MS";
 	for(let i = 0; i < dataPoints; i += 2)
 	{
-		canvas.fillText(data[i]["week"], 100 + (i * widthScale), height - 35);
+		canvas.fillText(data[i]["month"], 100 + (i * widthScale), height - 35);
 	}
 	canvas.textAlign = "right";
 	let increment = (max - min) / 7;

@@ -106,11 +106,11 @@ public class Stats
 		{
 			conn = Database.getDataSource().getConnection();
 			PreparedStatement statement = conn.prepareStatement("INSERT INTO global_stats_history " +
-					"(week, total_nations, total_neutral_nations, total_entente_nations, total_central_powers_nations, " +
+					"(month, total_nations, total_neutral_nations, total_entente_nations, total_central_powers_nations, " +
 					"total_population, total_soldiers, total_civilian_factories, total_military_factories, total_universities, " +
 					"total_iron_mines, total_coal_mines, total_oil_wells) " +
 					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			statement.setLong(1, Util.week);
+			statement.setLong(1, Util.month);
 			statement.setLong(2, this.totalNations);
 			statement.setLong(3, this.totalNeutralNations);
 			statement.setLong(4, this.totalEntenteNations);
