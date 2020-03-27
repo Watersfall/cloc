@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class TechnologyMusket extends SingleTechnology
 {
@@ -43,9 +44,17 @@ public class TechnologyMusket extends SingleTechnology
 	}
 
 	@Override
-	public double getProductionCost()
+	public double getProductionICCost()
 	{
 		return 0.01;
+	}
+
+	@Override
+	public LinkedHashMap<String, Integer> getProductionResourceCost()
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		map.put("steel", 1);
+		return map;
 	}
 
 	@Override

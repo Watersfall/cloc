@@ -6,6 +6,7 @@ import com.watersfall.clocgame.model.technology.Technologies;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class TechnologyStrategicBombers extends SingleTechnology
 {
@@ -43,9 +44,18 @@ public class TechnologyStrategicBombers extends SingleTechnology
 	}
 
 	@Override
-	public double getProductionCost()
+	public double getProductionICCost()
 	{
 		return 30.0;
+	}
+
+	@Override
+	public LinkedHashMap<String, Integer> getProductionResourceCost()
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		map.put("steel", 2);
+		map.put("oil", 3);
+		return map;
 	}
 
 	@Override

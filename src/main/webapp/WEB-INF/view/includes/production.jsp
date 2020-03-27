@@ -1,14 +1,14 @@
 <%@ include file="taglibs.jsp" %>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="production" type="java.util.Map.Entry<Integer, Production>"--%>
-<div id="production_id_${production.value.id}" style="max-width: 22em;" class="original=${production.value.factories.size()}">
+<div id="production_id_${production.value.id}" style="position: relative" class="original=${production.value.factories.size()}">
 	<p class="neutral name">${production.value.productionAsTechnology.technology.name}</p>
 	<div style="width: 100%;">
-		<div style="min-width: 8em; width: 50%; float: left;">
+		<div style="min-width: 8em; max-width: 12em; width: 40%; float: left;">
 			<span style="display: inline-block; vertical-align: middle;"></span>
 			<img style="width: 100%; height: auto; vertical-align: middle; margin-top: 1.25em;" src="${pageContext.request.contextPath}/images/production/gun.svg" alt="production icon"/>
 		</div>
-		<div style="min-width: 8em; width: 50%; float: left">
+		<div style="min-width: 8em; max-width: 12em; width: 40%; float: left">
 			<table style="min-width: 8em; width: 100%;">
 				<c:forEach var="row" begin="1" end="3">
 					<tr>
@@ -38,10 +38,18 @@
 				</c:forEach>
 			</table>
 		</div>
+		<div style="float: right; width: 20%;">
+			<c:forEach items="${production.value.requiredResources.entrySet()}" var="res">
+				<p class="${production.value.givenResources.get(res.key) >= res.value ? '' : 'negative'} textRight">
+					<img class="tiny" src="${pageContext.request.contextPath}/images/ui/${res.key}.svg" alt="${res.key}"/>
+					${res.value * 7}
+				</p>
+			</c:forEach>
+		</div>
 	</div>
 	<div style="width: 100%; float: left;">
 		<div style="background: red;">
-			<div style="background: green; width: ${production.value.progress / production.value.productionAsTechnology.technology.productionCost}%;"><p class="neutral">${production.value.getProductionString(home.policy.economy)}</p></div>
+			<div style="background: green; width: ${production.value.progress / production.value.productionAsTechnology.technology.productionICCost}%;"><p class="neutral">${production.value.getProductionString(home.policy.economy)}</p></div>
 		</div>
 		<div style="background: red;">
 			<div style="background: green; width: ${production.value.efficiency / 100}%"><p class="neutral">Efficiency:&nbsp;${production.value.efficiency / 100}%</p></div>

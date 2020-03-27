@@ -51,6 +51,7 @@ public class Nation
 	private @Getter LinkedHashMap<Integer, Production> production;
 	private LinkedHashMap<String, LinkedHashMap<String, Double>> allProductions = null;
 	private long landUsage = -1;
+	private HashMap<String, Double> totalProductionCosts = null;
 
 	/**
 	 * @param conn The SQL conn to use
@@ -277,6 +278,10 @@ public class Nation
 		updatables.add(army);
 		getProduction.setInt(1, id);
 		ResultSet resultsProduction = getProduction.executeQuery();
+		HashMap<String, Double> resources = new HashMap<>();
+		resources.put("steel", economy.getSteel());
+		resources.put("nitrogen", economy.getNitrogen());
+		resources.put("oil", economy.getOil());
 		int usedFactories = 0;
 		boolean any = resultsProduction.first();
 		if(any)
@@ -301,7 +306,11 @@ public class Nation
 				{
 					if(!map.isEmpty())
 					{
-						production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress));
+						production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress, resources));
+						for(HashMap.Entry<String, Double> entry : production.get(lastId).getRequiredResources().entrySet())
+						{
+							resources.compute(entry.getKey(), (key, value) -> value = value - entry.getValue());
+						}
 					}
 					map = new HashMap<>();
 					map.put(resultsProduction.getInt("id"),
@@ -316,7 +325,7 @@ public class Nation
 				lastProgress = resultsProduction.getInt("progress");
 			}
 			while(resultsProduction.next());
-			production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress));
+			production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress, resources));
 		}
 		this.freeFactories = getTotalMilitaryFactories() - usedFactories;
 		this.id = id;
@@ -621,6 +630,31 @@ public class Nation
 		return landUsage;
 	}
 
+	public HashMap<String, Double> getTotalProductionCosts()
+	{
+		if(totalProductionCosts == null)
+		{
+			HashMap<String, Double> map = new HashMap<>();
+			for(Production production1 : production.values())
+			{
+				for(HashMap.Entry<String, Double> entry : production1.getRequiredResources().entrySet())
+				{
+					if(map.containsKey(entry.getKey()))
+					{
+						map.compute(entry.getKey(), (key2, value) -> value = value + entry.getValue());
+					}
+					else
+					{
+						map.put(entry.getKey(), entry.getValue());
+					}
+				}
+			}
+			map.forEach((key, value) -> map.compute(key, (k, v) -> v = v * -7.0));
+			totalProductionCosts = map;
+		}
+		return totalProductionCosts;
+	}
+
 	/**
 	 * Gets the total amount of military factories in all cities in this nation
 	 *
@@ -902,6 +936,12 @@ public class Nation
 				}
 			}
 			extractionEconBoosts(map, this.getPolicy().getEconomy());
+			if(getTotalProductionCosts().get("oil") != null)
+			{
+
+				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("oil"));
+				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("oil"));
+			}
 			oilProduction = map;
 		}
 		return oilProduction;
@@ -935,6 +975,11 @@ public class Nation
 				}
 			}
 			factoryEconBoosts(map, this.getPolicy().getEconomy());
+			if(getTotalProductionCosts().get("steel") != null)
+			{
+				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("steel"));
+				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("steel"));
+			}
 			steelProduction = map;
 		}
 		return steelProduction;
@@ -968,6 +1013,11 @@ public class Nation
 				}
 			}
 			factoryEconBoosts(map, this.getPolicy().getEconomy());
+			if(getTotalProductionCosts().get("nitrogen") != null)
+			{
+				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("nitrogen"));
+				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("nitrogen"));
+			}
 			nitrogenProduction = map;
 		}
 		return nitrogenProduction;
@@ -1391,12 +1441,30 @@ public class Nation
 		String statement = "UPDATE cloc_army, cloc_military SET ";
 		for(Production production : this.production.values())
 		{
-			double productionIc = production.getIc(this.policy.getEconomy());
-			double ic = productionIc + (production.getProgress() / 100.0);
-			int amount = (int)(ic / production.getProductionAsTechnology().getTechnology().getProductionCost());
-			int leftover = (int)((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionCost())) * 100);
-			production.setProgress(leftover);
-			statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "=" + production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
+			if(production.getIc(this.getPolicy().getEconomy()) > 0)
+			{
+				production.getRequiredResources().forEach((k, v) -> {
+					switch(k)
+					{
+						case "steel":
+							this.getEconomy().setSteel(this.getEconomy().getSteel() - v);
+							break;
+						case "oil":
+							this.getEconomy().setSteel(this.getEconomy().getOil() - v);
+							break;
+						case "nitrogen":
+							this.getEconomy().setNitrogen(this.getEconomy().getNitrogen() - v);
+							break;
+					}
+				});
+				double productionIc = production.getIc(this.policy.getEconomy());
+				double ic = productionIc + (production.getProgress() / 100.0);
+				int amount = (int) (ic / production.getProductionAsTechnology().getTechnology().getProductionICCost());
+				int leftover = (int) ((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionICCost())) * 100);
+				production.setProgress(leftover);
+				statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "="
+						+ production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
+			}
 		}
 		statement += "WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id";
 		statement = statement.replace(", WHERE", " WHERE");
@@ -1610,6 +1678,8 @@ public class Nation
 				return " from economic focus";
 			case "resource.food_type":
 				return " from food policy";
+			case "resource.mil_factory_demands":
+				return " from military factory demands";
 			case "farming.base":
 				return " from default";
 			case "farming.net":

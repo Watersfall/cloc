@@ -3,19 +3,21 @@ package com.watersfall.clocgame.model.nation;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.technology.Technologies;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.*;
 import java.util.HashMap;
 
-public @Data @AllArgsConstructor class Production
+public @Data class Production
 {
 	private final int id;
 	private final int owner;
 	private HashMap<Integer, Factory> factories;
 	private String production;
 	private int progress;
+	private HashMap<String, Double> requiredResources;
+	private HashMap<String, Double> givenResources;
+	private Double ic = null;
 	
 	public static Production getProductionById(int id)
 	{
@@ -42,7 +44,8 @@ public @Data @AllArgsConstructor class Production
 						results.getInt("owner"),
 						map,
 						results.getString("production"),
-						results.getInt("progress"));
+						results.getInt("progress"),
+						null);
 			}
 		}
 		catch(SQLException e)
@@ -71,6 +74,20 @@ public @Data @AllArgsConstructor class Production
 			}
 		}
 		return production;
+	}
+
+	public Production(int id, int owner, HashMap<Integer, Factory> factories, String production, int progress, HashMap<String, Double> givenResources)
+	{
+		this.id = id;
+		this.owner = owner;
+		this.factories = factories;
+		this.production = production;
+		this.progress = progress;
+		this.givenResources = givenResources;
+		this.requiredResources = new HashMap<>();
+		this.getProductionAsTechnology().getTechnology().getProductionResourceCost().forEach((k, v) -> {
+			this.requiredResources.put(k, (double)(v * this.factories.size()) / 7.0);
+		});
 	}
 
 	public static void deleteProductionById(int id, Connection conn) throws SQLException
@@ -124,16 +141,36 @@ public @Data @AllArgsConstructor class Production
 
 	public double getIc(Policy policy)
 	{
-		int total = 0;
-		for(Factory factory : factories.values())
+		if(ic == null)
 		{
-			total += factory.getEfficiency();
+			boolean hasAllResources = true;
+			for(HashMap.Entry<String, Double> entry : this.requiredResources.entrySet())
+			{
+				if(givenResources.get(entry.getKey()) < entry.getValue())
+				{
+					hasAllResources = false;
+				}
+			}
+			if(!hasAllResources)
+			{
+				ic = 0.0;
+			}
+			else
+			{
+				int total = 0;
+				for(Factory factory : factories.values())
+				{
+					total += factory.getEfficiency();
+				}
+				if(policy == Policy.WAR_ECONOMY)
+				{
+					total *= 1.25;
+				}
+				ic = total / 10000.0;
+			}
+
 		}
-		if(policy == Policy.WAR_ECONOMY)
-		{
-			total *= 1.25;
-		}
-		return total / 10000.0;
+		return ic;
 	}
 
 	public void addFactories(int amount, Connection conn) throws SQLException
@@ -156,7 +193,11 @@ public @Data @AllArgsConstructor class Production
 
 	public String getProductionString(Policy policy)
 	{
-		double speed = this.getIc(policy) / getProductionAsTechnology().getTechnology().getProductionCost();
+		if(this.getIc(policy) <= 0.0)
+		{
+			return"No&nbsp;progress";
+		}
+		double speed = this.getIc(policy) / getProductionAsTechnology().getTechnology().getProductionICCost();
 		if(speed >= 1)
 		{
 			return String.format("%.2f&nbsp;per&nbsp;day", speed);
@@ -167,7 +208,7 @@ public @Data @AllArgsConstructor class Production
 		}
 		else
 		{
-			double timeRemaining = (getProductionAsTechnology().getTechnology().getProductionCost() - (this.progress / 100.0)) / this.getIc(policy);
+			double timeRemaining = (getProductionAsTechnology().getTechnology().getProductionICCost() - (this.progress / 100.0)) / this.getIc(policy);
 			if(timeRemaining > 7)
 			{
 				timeRemaining = timeRemaining / 7;

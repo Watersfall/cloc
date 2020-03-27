@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology;
 import com.watersfall.clocgame.model.nation.Nation;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public interface Technology
@@ -24,7 +25,13 @@ public interface Technology
 	 * Gets the production cost of this technology if it is producible, or -1.0 if it is not
 	 * @return The production cost
 	 */
-	default double getProductionCost() {return -1.0;}
+	default double getProductionICCost() {return -1.0;}
+
+	/**
+	 * Gets the resources required for production
+	 * @return The production resource costs
+	 */
+	default LinkedHashMap<String, Integer> getProductionResourceCost() {return null;}
 
 	/**
 	 * @param nation The nation to get the success chance for

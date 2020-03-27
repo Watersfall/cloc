@@ -1,6 +1,5 @@
 package com.watersfall.clocgame.schedulers;
 
-import com.watersfall.clocgame.turn.TurnDay;
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.Getter;
 
@@ -13,7 +12,7 @@ public class DayScheduler
 	{
 		scheduler = new Scheduler();
 		//scheduler.schedule("0,8,17,25,34,42,51 * * * *", new TurnDay());
-		scheduler.schedule("* * * * *", new TurnDay());
+		//scheduler.schedule("* * * * *", new TurnDay());
 		scheduler.start();
 	}
 
