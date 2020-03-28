@@ -48,7 +48,7 @@ public class TechnologyTriplaneFighter extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 12.0;
+		return 25.0;
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public class TechnologyRifledMusket extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.02;
+		return 0.1;
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public class TechnologyBombers extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 25.0;
+		return 45.0;
 	}
 
 	@Override

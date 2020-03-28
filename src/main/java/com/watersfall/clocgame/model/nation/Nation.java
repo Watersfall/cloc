@@ -10,6 +10,7 @@ import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.SqlBuilder;
+import com.watersfall.clocgame.util.Time;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 
@@ -649,7 +650,7 @@ public class Nation
 					}
 				}
 			}
-			map.forEach((key, value) -> map.compute(key, (k, v) -> v = v * -7.0));
+			map.forEach((key, value) -> map.compute(key, (k, v) -> v = v * -1.0));
 			totalProductionCosts = map;
 		}
 		return totalProductionCosts;
@@ -938,7 +939,6 @@ public class Nation
 			extractionEconBoosts(map, this.getPolicy().getEconomy());
 			if(getTotalProductionCosts().get("oil") != null)
 			{
-
 				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("oil"));
 				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("oil"));
 			}
@@ -1444,16 +1444,17 @@ public class Nation
 			if(production.getIc(this.getPolicy().getEconomy()) > 0)
 			{
 				production.getRequiredResources().forEach((k, v) -> {
+					double amount = v / (double) Time.daysPerMonth[Util.currentMonth];
 					switch(k)
 					{
 						case "steel":
-							this.getEconomy().setSteel(this.getEconomy().getSteel() - v);
+							this.getEconomy().setSteel(this.getEconomy().getSteel() - amount);
 							break;
 						case "oil":
-							this.getEconomy().setSteel(this.getEconomy().getOil() - v);
+							this.getEconomy().setSteel(this.getEconomy().getOil() - amount);
 							break;
 						case "nitrogen":
-							this.getEconomy().setNitrogen(this.getEconomy().getNitrogen() - v);
+							this.getEconomy().setNitrogen(this.getEconomy().getNitrogen() - amount);
 							break;
 					}
 				});

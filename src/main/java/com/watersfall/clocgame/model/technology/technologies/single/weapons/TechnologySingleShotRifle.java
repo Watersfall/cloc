@@ -47,7 +47,7 @@ public class TechnologySingleShotRifle extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.04;
+		return 0.2;
 	}
 
 	@Override

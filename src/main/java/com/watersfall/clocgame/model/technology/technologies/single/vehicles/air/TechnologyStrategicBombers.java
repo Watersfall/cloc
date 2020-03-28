@@ -46,7 +46,7 @@ public class TechnologyStrategicBombers extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 30.0;
+		return 48.0;
 	}
 
 	@Override

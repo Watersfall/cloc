@@ -47,7 +47,7 @@ public class TechnologyBoltActionManual extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.08;
+		return 0.3;
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class TechnologyMonoplaneFighter extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 14.0;
+		return 28.0;
 	}
 
 	@Override

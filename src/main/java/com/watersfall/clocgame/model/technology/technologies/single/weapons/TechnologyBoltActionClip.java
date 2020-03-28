@@ -49,7 +49,7 @@ public class TechnologyBoltActionClip extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.1;
+		return 0.35;
 	}
 
 	@Override

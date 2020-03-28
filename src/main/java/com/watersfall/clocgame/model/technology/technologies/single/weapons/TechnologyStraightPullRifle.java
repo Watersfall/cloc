@@ -48,7 +48,7 @@ public class TechnologyStraightPullRifle extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.12;
+		return 0.4;
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class TechnologyNeedleNoseRifle extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.06;
+		return 0.25;
 	}
 
 	@Override

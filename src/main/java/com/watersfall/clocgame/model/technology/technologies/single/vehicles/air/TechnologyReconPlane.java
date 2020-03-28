@@ -48,7 +48,7 @@ public class TechnologyReconPlane extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 15.0;
+		return 30.0;
 	}
 
 	@Override

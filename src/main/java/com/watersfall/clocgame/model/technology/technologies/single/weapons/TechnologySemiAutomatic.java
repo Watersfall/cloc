@@ -48,7 +48,7 @@ public class TechnologySemiAutomatic extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.16;
+		return 0.5;
 	}
 
 	@Override

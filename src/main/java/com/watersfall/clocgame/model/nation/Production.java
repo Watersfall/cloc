@@ -86,7 +86,7 @@ public @Data class Production
 		this.givenResources = givenResources;
 		this.requiredResources = new HashMap<>();
 		this.getProductionAsTechnology().getTechnology().getProductionResourceCost().forEach((k, v) -> {
-			this.requiredResources.put(k, (double)(v * this.factories.size()) / 7.0);
+			this.requiredResources.put(k, (double)(v * this.factories.size()));
 		});
 	}
 

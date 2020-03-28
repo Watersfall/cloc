@@ -42,7 +42,7 @@
 			<c:forEach items="${production.value.requiredResources.entrySet()}" var="res">
 				<p class="${production.value.givenResources.get(res.key) >= res.value ? '' : 'negative'} textRight">
 					<img class="tiny" src="${pageContext.request.contextPath}/images/ui/${res.key}.svg" alt="${res.key}"/>
-					${res.value * 7}
+					${res.value}
 				</p>
 			</c:forEach>
 		</div>

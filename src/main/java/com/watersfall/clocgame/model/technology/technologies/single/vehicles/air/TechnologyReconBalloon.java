@@ -47,7 +47,7 @@ public class TechnologyReconBalloon extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 10.0;
+		return 20.0;
 	}
 
 	@Override

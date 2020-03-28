@@ -47,7 +47,7 @@ public class TechnologyMachineGun extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 0.24;
+		return 0.75;
 	}
 
 	@Override

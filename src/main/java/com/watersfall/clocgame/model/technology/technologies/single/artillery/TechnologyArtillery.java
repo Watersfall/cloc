@@ -48,7 +48,7 @@ public class TechnologyArtillery extends SingleTechnology
 	@Override
 	public double getProductionICCost()
 	{
-		return 2;
+		return 4;
 	}
 
 	@Override
