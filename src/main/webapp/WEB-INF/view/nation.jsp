@@ -189,11 +189,11 @@
 						Offensive war against ${nation.offensive.nationUrl}<br>
 					</c:if>
 					<c:if test="${nation.defensive != null}">
-						Defensive war against ${nation.defensive.nationUrl}
+						Defensive war against ${nation.defensive.nationUrl}<br>
 					</c:if>
 				</c:if>
 				<c:if test="${!nation.atWar}">
-					<i>None</i>
+					<i>None</i><br>
 				</c:if>
 				<c:if test="${home.canDeclareWar(nation) == null}">
 					<button id="decc" onclick="declareWar(${nation.id})">Declare War</button><br>

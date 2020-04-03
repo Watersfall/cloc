@@ -69,7 +69,7 @@ public class News
 			case ID_NAVAL_BOMBARD:
 				return String.format("%s has bombarded the city of %s with their navy!", args);
 			case ID_AIR_BATTLE:
-				return String.format("%s has attacked our airforce! They have shot down %s ," +
+				return String.format("%s has attacked our airforce! They have shot down %s of our planes," +
 						"and we managed to shoot down %s !", args);
 			case ID_AIR_BOMBARD:
 				return String.format("%s has bombed the city of %s with their airforce!", args);

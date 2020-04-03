@@ -495,7 +495,7 @@ public class Responses
 
 	public static String offensiveCityDefeat(City city, int attacker, int defender)
 	{
-		return "<p>Defeat! Although large amounts of damage was caused to " + city.getName() + " , your forces were not able to occupy it, losing" + attacker+ "k soldiers in the attempt while only killing " + defender + "k enemy troops!</p>";
+		return "<p>Defeat! Although large amounts of damage was caused to " + city.getName() + " , your forces were not able to occupy it, losing " + attacker+ "k soldiers in the attempt while only killing " + defender + "k enemy troops!</p>";
 	}
 	
 	public static String navalBattle(int attackerBBLosses, int attackerPBLosses, int attackerCLLosses, int attackerDDLosses, int attackerSSLosses,
@@ -601,9 +601,10 @@ public class Responses
 		return "<p>You have bombarded the enemy, inflicting " + casualties + "k casualties!</p>";
 	}
 
-	public static String airBattle(String attack, String defense)
+	public static String airBattle(int attackerLosses, int defenderLosses)
 	{
-		return "<p>You have attacked the enemy airforce, destroying " + defense + ", while losing " + attack + "!</p>";
+		return "<p>You have attacked the enemy airforce, destroying " + defenderLosses + " enemy planes" +
+				", while losing " + attackerLosses + " of your own!</p>";
 	}
 
 	public static String fortified()

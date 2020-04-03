@@ -21,6 +21,7 @@ public class NationArmy extends Updatable
 	private @Getter int semiAuto;
 	private @Getter int machineGun;
 	private @Getter int artillery;
+	private @Getter int tank;
 	private @Getter int fortification;
 
 	public NationArmy(int id, ResultSet results) throws SQLException
@@ -39,6 +40,7 @@ public class NationArmy extends Updatable
 		this.machineGun = results.getInt("machine_gun");
 		this.artillery = results.getInt("artillery");
 		this.fortification = results.getInt("fortification");
+		this.tank = results.getInt("tank");
 	}
 
 	public void setSize(int size)
@@ -157,6 +159,16 @@ public class NationArmy extends Updatable
 			artillery = 2000000000;
 		this.addField("artillery", artillery);
 		this.artillery = artillery;
+	}
+
+	public void setTank(int tank)
+	{
+		if(tank < 0)
+			tank = 0;
+		else if(tank > 2000000000)
+			tank = 2000000000;
+		this.addField("tank", tank);
+		this.tank = tank;
 	}
 
 	public void setFortification(int fortification)

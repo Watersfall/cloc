@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.model;
+package com.watersfall.clocgame.model.military;
 
 import lombok.Getter;
 

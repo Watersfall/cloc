@@ -14,3 +14,6 @@ ALTER TABLE global_stats_history
 
 ALTER TABLE cloc_main
 	CHANGE week month BIGINT;
+
+ALTER TABLE cloc_army
+	ADD COLUMN tank INT;

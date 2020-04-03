@@ -6,6 +6,9 @@ import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.message.Declaration;
+import com.watersfall.clocgame.model.military.Bomber;
+import com.watersfall.clocgame.model.military.Equipment;
+import com.watersfall.clocgame.model.military.Fighter;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
@@ -508,7 +511,7 @@ public class Nation
 		for(Integer integer : cities.getCities().keySet())
 		{
 			City city = cities.getCities().get(integer);
-			city.setPopulation((long)((double)city.getPopulation() / (double)this.getTotalPopulation()) * amount);
+			city.setPopulation(city.getPopulation() - (long)((double)city.getPopulation() / (double)this.getTotalPopulation()) * amount);
 		}
 	}
 
@@ -1167,9 +1170,32 @@ public class Nation
 	 */
 	public long getTotalInfantryEquipment()
 	{
-		return army.getMusket() + army.getRifledMusket() + army.getSingleShot() + army.getNeedleNose() +
-				army.getBoltActionManual() + army.getBoltActionClip() + army.getStraightPull() +
-				army.getSemiAuto() + army.getMachineGun();
+		long total = 0;
+		for(Equipment equipment : Equipment.getInfantryEquipment())
+		{
+			total += this.getEquipment(equipment);
+		}
+		return total;
+	}
+
+	public long getTotalArmor()
+	{
+		long total = 0;
+		for(Equipment equipment : Equipment.getArmor())
+		{
+			total += this.getEquipment(equipment);
+		}
+		return total;
+	}
+
+	public long getTotalArtillery()
+	{
+		long total = 0;
+		for(Equipment equipment : Equipment.getArtillery())
+		{
+			total += this.getEquipment(equipment);
+		}
+		return total;
 	}
 
 	public LinkedHashMap<String, Integer> getEquipment()
@@ -1187,6 +1213,95 @@ public class Nation
 		return map;
 	}
 
+	public int getEquipment(Equipment equipment)
+	{
+		switch(equipment)
+		{
+			case MUSKET:
+				return this.getArmy().getMusket();
+			case RIFLED_MUSKET:
+				return this.getArmy().getRifledMusket();
+			case SINGLE_SHOT_RIFLE:
+				return this.getArmy().getSingleShot();
+			case NEEDLE_NOSE:
+				return this.getArmy().getNeedleNose();
+			case BOLT_ACTION_MANUAL:
+				return this.getArmy().getBoltActionManual();
+			case BOLT_ACTION_CLIP:
+				return this.getArmy().getBoltActionClip();
+			case STRAIGHT_PULL_RIFLE:
+				return this.getArmy().getStraightPull();
+			case SEMI_AUTOMATIC:
+				return this.getArmy().getSemiAuto();
+			case MACHINE_GUN:
+				return this.getArmy().getMachineGun();
+			case ARTILLERY:
+				return this.getArmy().getArtillery();
+			case TANK:
+				return this.getArmy().getTank();
+			default:
+				return 0;
+
+		}
+	}
+
+	public int getFighter(Fighter fighter)
+	{
+		switch(fighter)
+		{
+			case BIPLANE_FIGHTER:
+				return this.getMilitary().getBiplaneFighters();
+			case TRIPLANE_FIGHTER:
+				return this.getMilitary().getTriplaneFighters();
+			case MONOPLANE_FIGHTER:
+				return this.getMilitary().getMonoplaneFighters();
+			default:
+				return 0;
+		}
+	}
+
+	public void setFighter(Fighter fighter, int value)
+	{
+		switch(fighter)
+		{
+			case BIPLANE_FIGHTER:
+				this.getMilitary().setBiplaneFighters(value);
+				break;
+			case TRIPLANE_FIGHTER:
+				this.getMilitary().setTriplaneFighters(value);
+				break;
+			case MONOPLANE_FIGHTER:
+				this.getMilitary().setMonoplaneFighters(value);
+				break;
+		}
+	}
+
+	public int getBomber(Bomber bomber)
+	{
+		switch(bomber)
+		{
+			case ZEPPELIN_BOMBER:
+				return this.getMilitary().getZeppelins();
+			case BOMBER:
+				return this.getMilitary().getBombers();
+			default:
+				return 0;
+		}
+	}
+
+	public void setBomber(Bomber bomber, int value)
+	{
+		switch(bomber)
+		{
+			case ZEPPELIN_BOMBER:
+				this.getMilitary().setZeppelins(value);
+				break;
+			case BOMBER:
+				this.getMilitary().setBombers(value);
+				break;
+		}
+	}
+
 	/**
 	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power
@@ -1194,67 +1309,87 @@ public class Nation
 	public double getPower()
 	{
 		double power = 0e0;
-		long equipment = (long)army.getSize() * 1000L;
-		if(equipment > 0)
+		long requiredEquipment = (long)army.getSize() * 1000L;
+		for(Equipment equipment : Equipment.getInfantryEquipment())
 		{
-			long amount = (army.getMachineGun() > equipment) ? equipment : army.getMachineGun();
-			power += amount * 13.5;
-			equipment -= amount;
+			if(requiredEquipment > 0)
+			{
+				if(this.getEquipment(equipment) > 0)
+				{
+					if(this.getEquipment(equipment) > requiredEquipment)
+					{
+						power += requiredEquipment * equipment.getPower();
+						requiredEquipment = 0;
+					}
+					else
+					{
+						power += this.getEquipment(equipment) * equipment.getPower();
+						requiredEquipment -= this.getEquipment(equipment);
+					}
+				}
+			}
 		}
-		if(equipment > 0)
-		{
-			long amount = (army.getSemiAuto() > equipment) ? equipment : army.getSemiAuto();
-			power += amount * 12;
-			equipment -= amount;
-		}
-		if(equipment > 0)
-		{
-			long amount = (army.getStraightPull() > equipment) ? equipment : army.getStraightPull();
-			power += amount * 10.5;
-			equipment -= amount;
-		}
-		if(equipment > 0)
-		{
-			long amount = (army.getBoltActionClip() > equipment) ? equipment : army.getBoltActionClip();
-			power += amount * 9;
-			equipment -= amount;
-		}
-		if(equipment > 0)
-		{
-			long amount = (army.getBoltActionManual() > equipment) ? equipment : army.getBoltActionManual();
-			power += amount * 7.5;
-			equipment -= amount;
-		}
-		if(equipment > 0)
-		{
-			long amount = (army.getNeedleNose() > equipment) ? equipment : army.getNeedleNose();
-			power += amount * 6;
-			equipment -= amount;
-		}
-		if(equipment > 0)
-		{
-			long amount = (army.getSingleShot() > equipment) ? equipment : army.getSingleShot();
-			power += amount * 4.5;
-			System.out.println(power);
-			equipment -= amount;
-		}
-		if(equipment > 0)
-		{
-			long amount = (army.getRifledMusket() > equipment) ? equipment : army.getRifledMusket();
-			power += amount * 3;
-			equipment -= amount;
-		}
-		if(equipment > 0)
-		{
-			long amount = (army.getMusket() > equipment) ? equipment : army.getMusket();
-			power += amount * 1.5;
-			equipment -= amount;
-		}
-		power += army.getArtillery() * 10;
-		power += equipment * 0.5;
-		power = java.lang.Math.sqrt(power / 1000);
+		//Sticks and stones are better than nothing
+		power += requiredEquipment * 0.5;
 		power *= java.lang.Math.sqrt(army.getTraining() + 1);
-		return java.lang.Math.sqrt(power);
+		return Math.sqrt(power);
+	}
+
+	/**
+	 * Calculates the ability of this nations army to break through defenses
+	 * and generally attack better
+	 * <br>
+	 * Represented as a percentage, at 0% ignores no defender bonuses, at 100% ignores all defender bonuses
+	 * @return The army's breakthrough
+	 */
+	public double getBreakthrough()
+	{
+		int max = (int)(this.getArmy().getSize() * 5);
+		long currentTanks = this.getTotalArmor();
+		if(currentTanks > max)
+		{
+			currentTanks = max;
+		}
+		double ratio = (double)currentTanks / (double)max;
+		long currentArtillery = this.getTotalArtillery();
+		if(currentArtillery > max)
+		{
+			currentArtillery = max;
+		}
+		double artillery = ((double)currentArtillery / (double)max);
+		if(artillery > 1)
+		{
+			artillery = 1;
+		}
+		artillery /= 2;
+		ratio += artillery;
+		return ratio;
+	}
+
+	/**
+	 * Calculated the ability of this nations army to resist attacks
+	 * and generally better defense
+	 * <br>
+ *     Represented as a percentage, 0% adds no defense bonus, 100% doubles defender strength
+	 * @return The army's defense
+	 */
+	public double getDefense()
+	{
+		int max = (int)(this.getArmy().getSize() * 5);
+		double ratio = this.getArmy().getFortification() * 0.2;
+		long currentArtillery = this.getTotalArtillery();
+		if(currentArtillery > max)
+		{
+			currentArtillery = max;
+		}
+		double artillery = ((double)currentArtillery / (double)max);
+		artillery /= 3.0;
+		ratio += artillery;
+		if(ratio > 1)
+		{
+			ratio = 1;
+		}
+		return 1 + ratio;
 	}
 
 	/**
@@ -1263,11 +1398,12 @@ public class Nation
 	 */
 	public double getFighterPower()
 	{
-		long power = 0;
-		power += this.military.getBiplaneFighters() +
-				this.military.getTriplaneFighters() +
-				this.military.getMonoplaneFighters();
-		return power;
+		double power = 0;
+		for(Fighter fighter : Fighter.values())
+		{
+			power += (this.getFighter(fighter) * fighter.getPower());
+		}
+		return power / 10;
 	}
 
 	/**
@@ -1276,10 +1412,12 @@ public class Nation
 	 */
 	public double getBomberPower()
 	{
-		long power = 0;
-		power += this.military.getBombers();
-		power += (this.military.getZeppelins() * 0.5);
-		return power;
+		double power = 0;
+		for(Bomber bomber : Bomber.values())
+		{
+			power += (this.getBomber(bomber) * bomber.getPower());
+		}
+		return power / 10;
 	}
 
 	public long getTotalShipCount()
@@ -1306,53 +1444,16 @@ public class Nation
 
 	/**
 	 * Calculates the amount of casualties this army takes attacking a specified defender
-	 * @param defender The army this army is attacking
+	 * @param ourPower the power of our army
+	 * @param theirPower the power of the other army
 	 * @return The casualties taken
 	 */
-	public long getAttackingCasualties(Nation defender)
+	public int getCasualties(double ourPower, double theirPower)
 	{
-		double attackPower = this.getPower();
-		double defensePower = defender.getPower() * (1 + (double)defender.getArmy().getFortification() / 10);
-		if(attackPower > defensePower)
-		{
-			defensePower = java.lang.Math.pow(defensePower, 1.95);
-			double armyHp = this.army.getSize() * 20.0;
-			armyHp -= defensePower;
-			return (long)(this.army.getSize() - (armyHp / 20.0));
-		}
-		else
-		{
-			defensePower = java.lang.Math.pow(defensePower, 2.0);
-			double armyHp = this.army.getSize() * 20.0;
-			armyHp -= defensePower;
-			return (long)(this.army.getSize() - (armyHp / 20.0));
-		}
-	}
-
-	/**
-	 * Calculates the amount of casualties that this army takes while defending against the specified attacking army
-	 * @param attacker The specified attacking army
-	 * @return The casualties taken
-	 */
-	public long getDefendingCasualties(Nation attacker)
-	{
-		double attackPower = attacker.getPower();
-		double defensePower = this.getPower() * (1 + (double)this.getArmy().getFortification() / 10);;
-		if(attackPower > defensePower)
-		{
-			attackPower = java.lang.Math.pow(attackPower, 2.0);
-			double armyHp = this.army.getSize() * 20.0;
-			armyHp -= attackPower;
-			System.out.println((int)(this.army.getSize() - (armyHp / 20.0)));
-			return (long)(this.army.getSize() - (armyHp / 20.0));
-		}
-		else
-		{
-			attackPower = java.lang.Math.pow(attackPower, 1.95);
-			double armyHp = this.army.getSize() * 20.0;
-			armyHp -= attackPower;
-			return (long)(this.army.getSize() - (armyHp / 20.0));
-		}
+		double powerDiff = theirPower / ourPower;
+		double armyHp = this.army.getSize() * 100.0;
+		armyHp -= (powerDiff * theirPower);
+		return (int)(this.army.getSize() - (armyHp / 100.0));
 	}
 
 	/**
