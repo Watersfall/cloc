@@ -1539,7 +1539,7 @@ public class Nation
 		{
 			return;
 		}
-		String statement = "UPDATE cloc_army, cloc_military SET ";
+		String statement = "";
 		for(Production production : this.production.values())
 		{
 			if(production.getIc(this.getPolicy().getEconomy()) > 0)
@@ -1568,12 +1568,16 @@ public class Nation
 						+ production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
 			}
 		}
-		statement += "WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id";
-		statement = statement.replace(", WHERE", " WHERE");
-		PreparedStatement update = conn.prepareStatement(statement);
-		update.setInt(1, this.id);
-		update.setInt(2, this.id);
-		update.execute();
+		if(!statement.isEmpty())
+		{
+			statement = "UPDATE cloc_army, cloc_military SET ".concat(statement)
+					.concat("WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id");
+			statement = statement.replace(", WHERE", " WHERE");
+			PreparedStatement update = conn.prepareStatement(statement);
+			update.setInt(1, this.id);
+			update.setInt(2, this.id);
+			update.execute();
+		}
 	}
 
 	public LinkedHashMap<String, Integer> getApprovalChange()
@@ -1727,6 +1731,7 @@ public class Nation
 				return " from recent deconscription";
 			case "growth.conscription":
 				return " from recent conscription";
+			case "stability.net":
 			case "growth.net":
 			case "approval.net":
 				return " change per week";

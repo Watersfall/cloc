@@ -227,7 +227,6 @@ public class City extends Updatable
 			population = 100;
 		else if(population > 1000000000000000L)
 			population = 1000000000000000L;
-		System.out.println("Setting population to: " + population);
 		this.addField("population", population);
 		this.population = population;
 	}
@@ -273,7 +272,7 @@ public class City extends Updatable
 	public LinkedHashMap<String, Double> getPopulationGrowth(Nation nation)
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double base = 0.2;
+		double base = 0.5;
 		double foodPolicy = 0;
 		double manpowerPolicy = 0;
 		double economyPolicy = 0;
@@ -310,18 +309,8 @@ public class City extends Updatable
 		{
 			economyPolicy = -0.15;
 		}
-		if(this.getSize() == CitySize.VILLAGE)
-		{
-			size = 1;
-		}
-		else if(this.getSize() == CitySize.TOWN)
-		{
-			size = 0.5;
-		}
-		else if(this.getSize() == CitySize.LARGE_TOWN)
-		{
-			size = 0.25;
-		}
+		size = this.getSize().getPopGrowthBonus();
+
 		map.put("population.base", base);
 		map.put("population.foodPolicy", foodPolicy);
 		map.put("population.manpowerPolicy", manpowerPolicy);
