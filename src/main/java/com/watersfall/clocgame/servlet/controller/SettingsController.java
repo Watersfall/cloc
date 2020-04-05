@@ -2,7 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.SettingsActions;
-import com.watersfall.clocgame.model.nation.NationCosmetic;
+import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -44,26 +44,24 @@ public class SettingsController extends HttpServlet
 		}
 		String action = temp;
 		Executor exec = (conn) -> {
-			int user = UserUtils.getUser(req);
-			NationCosmetic cosmetic = NationCosmetic.getNationCosmetic(user, conn);
+			Nation nation = UserUtils.getUserNation(conn, true, req);
 			switch(action)
 			{
 				case "flag":
-					return SettingsActions.updateFlag(req, cosmetic, req.getPart("flag"), conn);
+					return SettingsActions.updateFlag(nation, req.getPart("flag"));
 				case "portrait":
-					return SettingsActions.updatePortrait(req, cosmetic, req.getPart("portrait"), conn);
+					return SettingsActions.updatePortrait(nation, req.getPart("portrait"));
 				case "nationTitle":
-					return SettingsActions.updateNationTitle(cosmetic, req.getParameter("nationTitle"), conn);
+					return SettingsActions.updateNationTitle(nation, req.getParameter("nationTitle"));
 				case "leaderTitle":
-					return SettingsActions.updateLeaderTitle(cosmetic, req.getParameter("leaderTitle"), conn);
+					return SettingsActions.updateLeaderTitle(nation, req.getParameter("leaderTitle"));
 				case "description":
-					return SettingsActions.updateDescription(cosmetic, req.getParameter("description"), conn);
+					return SettingsActions.updateDescription(nation, req.getParameter("description"));
 				case "all":
-					return SettingsActions.updateAll(cosmetic,
+					return SettingsActions.updateAll(nation,
 							req.getParameter("nationTitle"),
 							req.getParameter("leaderTitle"),
-							req.getParameter("description"),
-							conn);
+							req.getParameter("description"));
 				default:
 					return Responses.genericError();
 			}

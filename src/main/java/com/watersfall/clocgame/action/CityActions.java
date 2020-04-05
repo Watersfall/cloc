@@ -14,10 +14,9 @@ import java.util.HashMap;
 
 public class CityActions
 {
-	public static String coalMine(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String coalMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -44,10 +43,9 @@ public class CityActions
 		}
 	}
 
-	public static String ironMine(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String ironMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -74,10 +72,9 @@ public class CityActions
 		}
 	}
 
-	public static String drill(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String drill(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -104,10 +101,9 @@ public class CityActions
 		}
 	}
 
-	public static String industrialize(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String industrialize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -144,10 +140,9 @@ public class CityActions
 		}
 	}
 
-	public static String militarize(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String militarize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -178,16 +173,15 @@ public class CityActions
 			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
 			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
 			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
-			city.buildMilitaryIndustry(conn);
+			city.buildMilitaryIndustry(nation.getConn());
 			nation.update();
 			return Responses.militarize();
 		}
 	}
 
-	public static String nitrogen(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String nitrogen(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -224,10 +218,9 @@ public class CityActions
 		}
 	}
 
-	public static String university(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String university(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -264,11 +257,10 @@ public class CityActions
 		}
 	}
 
-	public static String port(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String port(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
 		NationEconomy economy = nation.getEconomy();
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -290,17 +282,16 @@ public class CityActions
 		{
 			city.setPorts(city.getPorts() + 1);
 			economy.setBudget(economy.getBudget() - cost);
-			city.update(conn);
-			economy.update(conn);
+			city.update(nation.getConn());
+			economy.update(nation.getConn());
 			return Responses.port();
 		}
 	}
 
-	public static String barrack(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String barrack(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
 		NationEconomy economy = nation.getEconomy();
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -318,17 +309,16 @@ public class CityActions
 		{
 			city.setBarracks(city.getBarracks() + 1);
 			economy.setBudget(economy.getBudget() - cost);
-			city.update(conn);
-			economy.update(conn);
+			city.update(nation.getConn());
+			economy.update(nation.getConn());
 			return Responses.barrack();
 		}
 	}
 
-	public static String railroad(Connection conn, int idNation, int idCity) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String railroad(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(conn, idNation, true);
 		NationEconomy economy = nation.getEconomy();
-		City city = nation.getCities().getCities().get(idCity);
+		City city = nation.getCities().getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -346,8 +336,8 @@ public class CityActions
 		{
 			city.setRailroads(city.getRailroads() + 1);
 			economy.setBudget(economy.getBudget() - cost);
-			city.update(conn);
-			economy.update(conn);
+			city.update(nation.getConn());
+			economy.update(nation.getConn());
 			return Responses.railway();
 		}
 	}
@@ -355,9 +345,8 @@ public class CityActions
 	/**
 	 * Called by the specific close actions with their specified type
 	 * Should probably refactor out the specific methods in favor of just using this at some point
-	 * @param conn The SQL Connection to use
-	 * @param idNation The Nation ID the city is in
-	 * @param idCity the City ID to remove from
+	 * @param nation The nation the city is in
+	 * @param cityId the City ID to remove from
 	 * @param type Column name for the building to remove
 	 * @return A displayable error message if one occurs, or null if there is no error
 	 * @throws SQLException If a database error occurs
@@ -365,10 +354,10 @@ public class CityActions
 	 * @throws CityNotFoundException If the City with the specified ID does not exist
 	 * @throws NotLoggedInException If the user attempting this is not logged in
 	 */
-	public static String remove(Connection conn, int idNation, int idCity, String type) throws SQLException, NationNotFoundException, CityNotFoundException, NotLoggedInException
+	public static String remove(Nation nation, int cityId, String type) throws SQLException, NationNotFoundException, CityNotFoundException, NotLoggedInException
 	{
-		City city = City.getCity(conn, idCity);
-		if(city.getOwner() != idNation)
+		City city = nation.getCities().getCities().get(cityId);
+		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
@@ -378,12 +367,12 @@ public class CityActions
 		}
 		else if(type.equalsIgnoreCase("military_industry"))
 		{
-			city.closeMilitaryIndustry(conn);
+			city.closeMilitaryIndustry(nation.getConn());
 		}
 		else
 		{
 			city.setByName(type, (Integer)city.getByName(type) - 1);
-			city.update(conn);
+			city.update(nation.getConn());
 		}
 		return Responses.close(type);
 	}

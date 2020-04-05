@@ -7,7 +7,6 @@ import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.text.Responses;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class PolicyActions
@@ -50,9 +49,8 @@ public class PolicyActions
 	//</editor-fold>
 
 	//<editor-fold desc="Domestic Policies">
-	public static String arrest(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String arrest(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, idNation, true);
 		long cost = nation.getPolicyCost(ID_ARREST);
 		if(nation.getEconomy().getBudget() < cost)
 		{
@@ -77,9 +75,8 @@ public class PolicyActions
 		}
 	}
 
-	public static String free(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String free(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, idNation, true);
 		long cost = nation.getPolicyCost(ID_FREE);
 		if(nation.getEconomy().getBudget() < cost)
 		{
@@ -104,9 +101,8 @@ public class PolicyActions
 		}
 	}
 
-	public static String landClearance(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String landClearance(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, idNation, true);
 		long cost = nation.getPolicyCost(ID_LAND_CLEARANCE);
 		if(nation.getEconomy().getBudget() < cost)
 		{
@@ -122,9 +118,8 @@ public class PolicyActions
 		}
 	}
 
-	public static String propaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String propaganda(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, id, true);
 		long cost = nation.getPolicyCost(ID_PROPAGANDA);
 		if(nation.getEconomy().getBudget() < cost)
 		{
@@ -143,9 +138,8 @@ public class PolicyActions
 		}
 	}
 
-	public static String warPropaganda(Connection connection, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String warPropaganda(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, id, true);
 		long cost = nation.getPolicyCost(ID_WAR_PROPAGANDA);
 		if(nation.getOffensive() == null && nation.getDefensive() == null)
 		{
@@ -170,9 +164,8 @@ public class PolicyActions
 	//</editor-fold>
 
 	//<editor-fold desc="Economic Policies">
-	public static String freeMoneyCapitalist(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String freeMoneyCapitalist(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, idNation, true);
 		NationEconomy economy = nation.getEconomy();
 		economy.setBudget(economy.getBudget() + FREE_MONEY_GAIN);
 		economy.setEconomic(economy.getEconomic() + FREE_MONEY_ECON);
@@ -180,9 +173,8 @@ public class PolicyActions
 		return Responses.freeMoneyCapitalist();
 	}
 
-	public static String freeMoneyCommunist(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String freeMoneyCommunist(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, idNation, true);
 		NationEconomy economy = nation.getEconomy();
 		economy.setBudget(economy.getBudget() + FREE_MONEY_GAIN);
 		economy.setEconomic(economy.getEconomic() - FREE_MONEY_ECON);
@@ -192,9 +184,8 @@ public class PolicyActions
 	//</editor-fold>
 
 	//<editor-fold desc="Foreign Policies">
-	private static String align(Connection connection, int idNation, int align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	private static String align(Nation nation, int align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		Nation nation = new Nation(connection, idNation, true);
 		long cost = nation.getPolicyCost(ID_ALIGN);
 		if(nation.getEconomy().getBudget() < cost)
 		{
@@ -213,26 +204,25 @@ public class PolicyActions
 		}
 	}
 
-	public static String alignEntente(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String alignEntente(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		return align(connection, idNation, 1);
+		return align(nation, 1);
 	}
 
-	public static String alignNeutral(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String alignNeutral(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		return align(connection, idNation, 0);
+		return align(nation, 0);
 	}
 
-	public static String alignCentralPowers(Connection connection, int idNation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	public static String alignCentralPowers(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		return align(connection, idNation, -1);
+		return align(nation, -1);
 	}
 	//</editor-fold>
 
 	//<editor-fold desc="Military Policies">
-	public static String conscript(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
+	public static String conscript(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		Nation nation = new Nation(conn, id, true);
 		if(nation.getFreeManpower() < 2000)
 		{
 			return Responses.noManpower();
@@ -246,9 +236,8 @@ public class PolicyActions
 		}
 	}
 
-	public static String deconscript(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
+	public static String deconscript(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		Nation nation = new Nation(conn, id, true);
 		if(nation.getArmy().getSize() <= 5)
 		{
 			return Responses.noTroops();
@@ -262,9 +251,8 @@ public class PolicyActions
 		}
 	}
 
-	public static String train(Connection conn, int id) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
+	public static String train(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		Nation nation = new Nation(conn, id, true);
 		long cost = nation.getPolicyCost(ID_TRAIN);
 		if(nation.getEconomy().getBudget() < cost)
 		{

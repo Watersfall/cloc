@@ -83,7 +83,7 @@ public class TreatyActions
 
 	public static String updateDescription(TreatyMember member, String description) throws SQLException
 	{
-		String check = check(member, description, (1 << 15) - 1);
+		String check = check(member, description, 65535);
 		if(check != null)
 		{
 			return check;

@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.PolicyActions;
+import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -33,35 +34,35 @@ public class DecisionController extends HttpServlet
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
-			int user = UserUtils.getUser(req);
+			Nation nation = UserUtils.getUserNation(conn, true, req);
 			switch(url.get("decision"))
 			{
 				case "freemoneycapitalist":
-					return PolicyActions.freeMoneyCapitalist(conn, user);
+					return PolicyActions.freeMoneyCapitalist(nation);
 				case "freemoneycommunist":
-					return PolicyActions.freeMoneyCommunist(conn, user);
+					return PolicyActions.freeMoneyCommunist(nation);
 				case "crackdown":
-					return PolicyActions.arrest(conn, user);
+					return PolicyActions.arrest(nation);
 				case "free":
-					return PolicyActions.free(conn, user);
+					return PolicyActions.free(nation);
 				case "landclearance":
-					return PolicyActions.landClearance(conn, user);
+					return PolicyActions.landClearance(nation);
 				case "propaganda":
-					return PolicyActions.propaganda(conn, user);
+					return PolicyActions.propaganda(nation);
 				case "warpropaganda":
-					return PolicyActions.warPropaganda(conn, user);
+					return PolicyActions.warPropaganda(nation);
 				case "alignentente":
-					return PolicyActions.alignEntente(conn, user);
+					return PolicyActions.alignEntente(nation);
 				case "alignneutral":
-					return PolicyActions.alignNeutral(conn, user);
+					return PolicyActions.alignNeutral(nation);
 				case "aligncentral":
-					return PolicyActions.alignCentralPowers(conn, user);
+					return PolicyActions.alignCentralPowers(nation);
 				case "conscript":
-					return PolicyActions.conscript(conn, user);
+					return PolicyActions.conscript(nation);
 				case "train":
-					return PolicyActions.train(conn, user);
+					return PolicyActions.train(nation);
 				case "deconscript":
-					return PolicyActions.deconscript(conn, user);
+					return PolicyActions.deconscript(nation);
 				default:
 					return Responses.genericError();
 			}

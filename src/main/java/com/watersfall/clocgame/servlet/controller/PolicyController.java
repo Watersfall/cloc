@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.DecisionActions;
 import com.watersfall.clocgame.model.Policy;
+import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -36,16 +37,16 @@ public class PolicyController extends HttpServlet
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
 			String decision = url.get("policy");
-			int user = UserUtils.getUser(req);
+			Nation nation = UserUtils.getUserNation(conn, true, req);
 			Policy policy = Policy.valueOf(req.getParameter("selection"));
 			switch(decision)
 			{
 				case "Manpower":
-					return DecisionActions.manpower(conn, user, policy);
+					return DecisionActions.manpower(nation, policy);
 				case "Food":
-					return DecisionActions.food(conn, user, policy);
+					return DecisionActions.food(nation, policy);
 				case "Economy":
-					return DecisionActions.economy(conn, user, policy);
+					return DecisionActions.economy(nation, policy);
 				default:
 					return Responses.genericError();
 			}

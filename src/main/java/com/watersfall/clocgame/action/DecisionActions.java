@@ -5,22 +5,19 @@ import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DecisionActions
 {
 	/**
 	 * Updates a nation's economy policy
-	 * @param connection The SQL Connection to use
-	 * @param user The nation's ID
+	 * @param nation The nation
 	 * @param policy The policy to be set
 	 * @return The message to be displayed
 	 * @throws SQLException If a database issue occurs
 	 */
-	public static String economy(Connection connection, int user, Policy policy) throws SQLException
+	public static String economy(Nation nation, Policy policy) throws SQLException
 	{
-		Nation nation = new Nation(connection, user, true);
 		if(nation.getPolicy().getEconomy() == policy)
 		{
 			return Responses.policySame();
@@ -43,15 +40,13 @@ public class DecisionActions
 
 	/**
 	 * Updates a nation's manpower policy
-	 * @param connection The SQL Connection to use
-	 * @param user The nation's id
+	 * @param nation The nation
 	 * @param policy The policy to be set
 	 * @return The response message to be displayed
 	 * @throws SQLException If a database issue happens
 	 */
-	public static String manpower(Connection connection, int user, Policy policy) throws SQLException
+	public static String manpower(Nation nation, Policy policy) throws SQLException
 	{
-		Nation nation = new Nation(connection, user, true);
 		if(nation.getPolicy().getManpower() == policy)
 		{
 			return Responses.policySame();
@@ -74,15 +69,13 @@ public class DecisionActions
 
 	/**
 	 * Updates a nation's food policy
-	 * @param connection The SQL Connection to use
-	 * @param user The nation's id
+	 * @param nation The nation
 	 * @param policy The policy to be set
 	 * @return The response message to be displayed
 	 * @throws SQLException If a database issue happens
 	 */
-	public static String food(Connection connection, int user, Policy policy) throws SQLException
+	public static String food(Nation nation, Policy policy) throws SQLException
 	{
-		Nation nation = new Nation(connection, user, true);
 		if(nation.getPolicy().getFood() == policy)
 		{
 			return Responses.policySame();

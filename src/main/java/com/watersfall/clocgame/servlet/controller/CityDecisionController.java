@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.CityActions;
+import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -33,50 +34,50 @@ public class CityDecisionController extends HttpServlet
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
-			int user = UserUtils.getUser(req);
-			int id = Integer.parseInt(url.get("id"));
+			Nation nation = UserUtils.getUserNation(conn, true, req);
+			int cityId = Integer.parseInt(url.get("id"));
 			switch(url.get("decision"))
 			{
 				case "coalmine":
-					return CityActions.coalMine(conn, user, id);
+					return CityActions.coalMine(nation, cityId);
 				case "ironmine":
-					return CityActions.ironMine(conn, user, id);
+					return CityActions.ironMine(nation, cityId);
 				case "drill":
-					return CityActions.drill(conn, user, id);
+					return CityActions.drill(nation, cityId);
 				case "industrialize":
-					return CityActions.industrialize(conn, user, id);
+					return CityActions.industrialize(nation, cityId);
 				case "militarize":
-					return CityActions.militarize(conn, user, id);
+					return CityActions.militarize(nation, cityId);
 				case "nitrogen":
-					return CityActions.nitrogen(conn, user, id);
+					return CityActions.nitrogen(nation, cityId);
 				case "university":
-					return CityActions.university(conn, user, id);
+					return CityActions.university(nation, cityId);
 				case "port":
-					return CityActions.port(conn, user, id);
+					return CityActions.port(nation, cityId);
 				case "barrack":
-					return CityActions.barrack(conn, user, id);
+					return CityActions.barrack(nation, cityId);
 				case "railroad":
-					return CityActions.railroad(conn, user, id);
+					return CityActions.railroad(nation, cityId);
 				case "uncoalmine":
-					return CityActions.remove(conn, user, id, "cloc_cities.coal_mines");
+					return CityActions.remove(nation, cityId, "cloc_cities.coal_mines");
 				case "unironmine":
-					return CityActions.remove(conn, user, id, "cloc_cities.iron_mines");
+					return CityActions.remove(nation, cityId, "cloc_cities.iron_mines");
 				case "undrill":
-					return CityActions.remove(conn, user, id, "cloc_cities.oil_wells");
+					return CityActions.remove(nation, cityId, "cloc_cities.oil_wells");
 				case "unindustrialize":
-					return CityActions.remove(conn, user, id, "cloc_cities.civilian_industry");
+					return CityActions.remove(nation, cityId, "cloc_cities.civilian_industry");
 				case "unmilitarize":
-					return CityActions.remove(conn, user, id, "military_industry");
+					return CityActions.remove(nation, cityId, "military_industry");
 				case "unnitrogen":
-					return CityActions.remove(conn, user, id, "cloc_cities.nitrogen_industry");
+					return CityActions.remove(nation, cityId, "cloc_cities.nitrogen_industry");
 				case "ununiversity":
-					return CityActions.remove(conn, user, id, "cloc_cities.universities");
+					return CityActions.remove(nation, cityId, "cloc_cities.universities");
 				case "unport":
-					return CityActions.remove(conn, user, id, "cloc_cities.ports");
+					return CityActions.remove(nation, cityId, "cloc_cities.ports");
 				case "unbarrack":
-					return CityActions.remove(conn, user, id, "cloc_cities.barracks");
+					return CityActions.remove(nation, cityId, "cloc_cities.barracks");
 				case "unrailroad":
-					return CityActions.remove(conn, user, id, "cloc_cities.railroads");
+					return CityActions.remove(nation, cityId, "cloc_cities.railroads");
 				default:
 					return Responses.genericError();
 			}

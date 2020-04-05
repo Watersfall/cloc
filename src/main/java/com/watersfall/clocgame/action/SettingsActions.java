@@ -1,27 +1,26 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class SettingsActions
 {
-	private static void uploadFlag(HttpServletRequest req, BufferedImage part, int user) throws IOException
+	private static void uploadFlag(BufferedImage part, int user) throws IOException
 	{
 		String directory = Util.DIRECTORY + File.separator + "flag" + File.separator + user + ".png";
 		Util.uploadImage(part, directory);
 	}
 
-	private static void uploadPortrait(HttpServletRequest req, BufferedImage part, int user) throws IOException
+	private static void uploadPortrait(BufferedImage part, int user) throws IOException
 	{
 		String directory = Util.DIRECTORY + File.separator + "portrait" + File.separator + user + ".png";
 		Util.uploadImage(part, directory);
@@ -105,9 +104,9 @@ public class SettingsActions
 		{
 			return Responses.nullFields();
 		}
-		else if(description.length() > 65536)
+		else if(description.length() > 65535)
 		{
-			return Responses.tooLong("Description", 65536);
+			return Responses.tooLong("Description", 65535);
 		}
 		else
 		{
@@ -116,9 +115,10 @@ public class SettingsActions
 	}
 
 
-	public static String updateFlag(HttpServletRequest req, NationCosmetic cosmetic, Part flag, Connection conn) throws SQLException, IOException
+	public static String updateFlag(Nation nation, Part part) throws SQLException, IOException
 	{
-		BufferedImage image = ImageIO.read(flag.getInputStream());
+		BufferedImage image = ImageIO.read(part.getInputStream());
+		NationCosmetic cosmetic = nation.getCosmetic();
 		String check = checkFlag(image);
 		if(check != null)
 		{
@@ -126,16 +126,17 @@ public class SettingsActions
 		}
 		else
 		{
-			uploadFlag(req, image, cosmetic.getId());
+			uploadFlag(image, cosmetic.getId());
 			cosmetic.setFlag(cosmetic.getId() + ".png");
-			cosmetic.update(conn);
+			cosmetic.update(nation.getConn());
 			return Responses.updated("Flag");
 		}
 	}
 
-	public static String updatePortrait(HttpServletRequest req, NationCosmetic cosmetic, Part portrait, Connection conn) throws SQLException, IOException
+	public static String updatePortrait(Nation nation, Part part) throws SQLException, IOException
 	{
-		BufferedImage image = ImageIO.read(portrait.getInputStream());
+		BufferedImage image = ImageIO.read(part.getInputStream());
+		NationCosmetic cosmetic = nation.getCosmetic();
 		String check = checkPortrait(image);
 		if(check != null)
 		{
@@ -143,16 +144,17 @@ public class SettingsActions
 		}
 		else
 		{
-			uploadPortrait(req, image, cosmetic.getId());
+			uploadPortrait(image, cosmetic.getId());
 			cosmetic.setPortrait(cosmetic.getId() + ".png");
-			cosmetic.update(conn);
+			cosmetic.update(nation.getConn());
 			return Responses.updated("Portrait");
 		}
 	}
 
-	public static String updateNationTitle(NationCosmetic cosmetic, String title, Connection conn) throws SQLException
+	public static String updateNationTitle(Nation nation, String title) throws SQLException
 	{
 		String check = checkNationTitle(title);
+		NationCosmetic cosmetic = nation.getCosmetic();
 		if(check != null)
 		{
 			return check;
@@ -160,14 +162,15 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setNationTitle(title);
-			cosmetic.update(conn);
+			cosmetic.update(nation.getConn());
 			return Responses.updated("Nation Title");
 		}
 	}
 
-	public static String updateLeaderTitle(NationCosmetic cosmetic, String title, Connection conn) throws SQLException
+	public static String updateLeaderTitle(Nation nation, String title) throws SQLException
 	{
 		String check = checkLeaderTitle(title);
+		NationCosmetic cosmetic = nation.getCosmetic();
 		if(check != null)
 		{
 			return check;
@@ -175,14 +178,15 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setLeaderTitle(title);
-			cosmetic.update(conn);
+			cosmetic.update(nation.getConn());
 			return Responses.updated("Leader Title");
 		}
 	}
 
-	public static String updateDescription(NationCosmetic cosmetic, String description, Connection conn) throws SQLException
+	public static String updateDescription(Nation nation, String description) throws SQLException
 	{
 		String check = checkDescription(description);
+		NationCosmetic cosmetic = nation.getCosmetic();
 		if(check != null)
 		{
 			return check;
@@ -190,14 +194,15 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setDescription(description);
-			cosmetic.update(conn);
+			cosmetic.update(nation.getConn());
 			return Responses.updated("Description");
 		}
 	}
 
-	public static String updateAll(NationCosmetic cosmetic, String nationTitle, String leaderTitle, String description, Connection conn) throws SQLException
+	public static String updateAll(Nation nation, String nationTitle, String leaderTitle, String description) throws SQLException
 	{
 		String checkNationTitle = checkNationTitle(nationTitle);
+		NationCosmetic cosmetic = nation.getCosmetic();
 		if(checkNationTitle != null)
 		{
 			return checkNationTitle;
@@ -215,7 +220,7 @@ public class SettingsActions
 		cosmetic.setNationTitle(nationTitle);
 		cosmetic.setLeaderTitle(leaderTitle);
 		cosmetic.setDescription(description);
-		cosmetic.update(conn);
+		cosmetic.update(nation.getConn());
 		return Responses.updated();
 	}
 }
