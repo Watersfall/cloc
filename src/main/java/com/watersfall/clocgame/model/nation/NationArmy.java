@@ -175,8 +175,8 @@ public class NationArmy extends Updatable
 	{
 		if(fortification < 0)
 			fortification = 0;
-		if(fortification > 5)
-			fortification = 5;
+		if(fortification > 10)
+			fortification = 10;
 		this.addField("fortification", fortification);
 		this.fortification = fortification;
 	}

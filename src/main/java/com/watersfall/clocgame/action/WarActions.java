@@ -1,7 +1,9 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Fighter;
 import com.watersfall.clocgame.model.military.LogType;
+import com.watersfall.clocgame.model.military.Plane;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
@@ -11,6 +13,8 @@ import com.watersfall.clocgame.util.Util;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class WarActions
@@ -87,6 +91,73 @@ public class WarActions
 				News.createMessage(News.ID_DEFENSIVE_CITY_WON, attacker.getNationUrl(), city.getName(), defenderCasualties, attackerCasualties));
 		update(attacker, defender);
 		return Responses.offensiveCityDefeat(city, attackerCasualties, defenderCasualties);
+	}
+	
+	private static int runFighterCalc(Nation nation, double power)
+	{
+		ArrayList<Plane> planes = Plane.getAllPlanes();
+		//Adding fighters again to double their chance of being picked
+		planes.addAll(Arrays.asList(Fighter.values()));
+		planes.removeIf(plane -> plane instanceof Fighter && nation.getFighter((Fighter)plane) <= 0 ||
+				plane instanceof Bomber && nation.getBomber((Bomber)plane) <= 0);
+		int totalLosses = 0;
+		while(power > 0)
+		{
+			Plane plane = planes.get((int)(Math.random() * planes.size()));
+			if(plane instanceof Fighter)
+			{
+				Fighter fighter = (Fighter)plane;
+				if(nation.getFighter(fighter) > 0)
+				{
+					int random = (int)(Math.random() * fighter.getPower() * 2);
+					if(random > fighter.getPower())
+					{
+						nation.setFighter(fighter, nation.getFighter(fighter) - 1);
+						power -= random;
+						totalLosses++;
+					}
+				}
+				else
+				{
+					if(nation.getFighterPower(false) < 1)
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				Bomber bomber = (Bomber)plane;
+				if(nation.getBomber(bomber) > 0)
+				{
+					int random = (int)(Math.random() * bomber.getDefense() * 2);
+					if(random > bomber.getDefense())
+					{
+						nation.setBomber(bomber, nation.getBomber(bomber) - 1);
+						power -= random;
+						totalLosses++;
+					}
+				}
+				else
+				{
+					if(nation.getFighterPower(false) < 1)
+					{
+						break;
+					}
+				}
+			}
+		}
+		return totalLosses;
+	}
+
+	private static boolean checkInterception(Nation attacker, Nation defender) throws SQLException
+	{
+		doLog(attacker, defender, LogType.AIR);
+		if(defender.getFighterPower(false) * 2 > attacker.getFighterPower(false))
+		{
+			return Math.random() < (defender.getFighterPower(false) / attacker.getFighterPower(false));
+		}
+		return false;
 	}
 
 	private static void update(Nation attacker, Nation defender) throws SQLException
@@ -227,7 +298,7 @@ public class WarActions
 		}
 	}
 
-	public static String airBattle(Nation attacker, Nation defender) throws SQLException
+	public static String airBattle(Nation attacker, Nation defender, boolean interception) throws SQLException
 	{
 		if(!attacker.isAtWarWith(defender))
 		{
@@ -237,69 +308,32 @@ public class WarActions
 		{
 			return Responses.alreadyAttacked();
 		}
-		else if(attacker.getFighterPower() == 0)
+		else if(attacker.getFighterPower(true) == 0)
 		{
 			return Responses.attackerNoAirforce();
 		}
-		else if(defender.getFighterPower() == 0)
+		else if(defender.getFighterPower(false) == 0)
 		{
 			return Responses.defenderNoAirforce();
 		}
 		else
 		{
-			double attackerPower = attacker.getFighterPower();
-			double defenderPower = defender.getFighterPower();
-			System.out.println("Attack Power:  " + attackerPower);
-			System.out.println("Defense Power: " + defenderPower);
-			int totalAttackerLosses = 0;
-			int totalDefenderLosses = 0;
-			while(attackerPower > 0)
-			{
-				Fighter fighter = Fighter.values()[(int)(Math.random() * Fighter.values().length)];
-				if(defender.getFighter(fighter) > 0)
-				{
-					int random = (int)(Math.random() * fighter.getPower() * 2);
-					if(random > fighter.getPower())
-					{
-						defender.setFighter(fighter, defender.getFighter(fighter) - 1);
-						attackerPower -= random;
-						totalDefenderLosses++;
-					}
-				}
-				else
-				{
-					if(defender.getFighterPower() < 1)
-					{
-						break;
-					}
-				}
-			}
-			while(defenderPower > 0)
-			{
-				Fighter fighter = Fighter.values()[(int)(Math.random() * Fighter.values().length)];
-				if(attacker.getFighter(fighter) > 0)
-				{
-					int random = (int)(Math.random() * fighter.getPower() * 2);
-					if(random > fighter.getPower())
-					{
-						attacker.setFighter(fighter, attacker.getFighter(fighter) - 1);
-						defenderPower -= random;
-						totalAttackerLosses++;
-					}
-				}
-				else
-				{
-					if(attacker.getFighterPower() < 1)
-					{
-						break;
-					}
-				}
-			}
+			double attackerPower = attacker.getFighterPower(true);
+			double defenderPower = defender.getFighterPower(false);
+			int totalAttackerLosses = runFighterCalc(attacker, defenderPower);
+			int totalDefenderLosses = runFighterCalc(defender, attackerPower);
 			doLog(attacker, defender, LogType.AIR);
 			News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(),
 					News.createMessage(News.ID_AIR_BATTLE, attacker.getNationUrl(), totalDefenderLosses, totalAttackerLosses));
 			update(attacker, defender);
-			return Responses.airBattle(totalAttackerLosses, totalDefenderLosses);
+			if(interception)
+			{
+				return Responses.airBattleInterception(totalAttackerLosses, totalDefenderLosses);
+			}
+			else
+			{
+				return Responses.airBattle(totalAttackerLosses, totalDefenderLosses);
+			}
 		}
 	}
 
@@ -313,20 +347,15 @@ public class WarActions
 		{
 			return Responses.alreadyAttacked();
 		}
-		else if(attacker.getFighterPower() == 0 || attacker.getBomberPower() == 0)
+		else if(attacker.getFighterPower(true) == 0 || attacker.getBomberPower() == 0)
 		{
 			return Responses.attackerNoAirforce();
 		}
 		else
 		{
-			doLog(attacker, defender, LogType.AIR);
-			if(defender.getFighterPower() * 2 > attacker.getFighterPower())
+			if(checkInterception(attacker, defender))
 			{
-				boolean intercepted = Math.random() < (defender.getFighterPower() / attacker.getFighterPower());
-				if(intercepted)
-				{
-					return airBattle(attacker, defender);
-				}
+				return airBattle(attacker, defender, true);
 			}
 			int damage = Math.max(1, (int)Math.sqrt(attacker.getBomberPower()));
 			damage = Math.min(damage, defender.getArmy().getSize() / 10);
@@ -348,7 +377,7 @@ public class WarActions
 		{
 			return Responses.alreadyAttacked();
 		}
-		else if(attacker.getFighterPower() == 0 || attacker.getBomberPower() == 0)
+		else if(attacker.getFighterPower(false) == 0 || attacker.getBomberPower() == 0)
 		{
 			return Responses.attackerNoAirforce();
 		}
@@ -362,14 +391,9 @@ public class WarActions
 			}
 			else
 			{
-				doLog(attacker, defender, LogType.AIR);
-				if(defender.getFighterPower() * 2 > attacker.getFighterPower())
+				if(checkInterception(attacker, defender))
 				{
-					boolean intercepted = Math.random() < (defender.getFighterPower() / attacker.getFighterPower());
-					if(intercepted)
-					{
-						return airBattle(attacker, defender);
-					}
+					return airBattle(attacker, defender, true);
 				}
 				City city = (City)collection.toArray()[(int)(Math.random() * collection.size())];
 				int damage = Math.max(1, (int)Math.sqrt(attacker.getBomberPower()));

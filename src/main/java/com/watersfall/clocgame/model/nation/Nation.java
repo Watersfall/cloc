@@ -1394,14 +1394,27 @@ public class Nation
 
 	/**
 	 * Calculates the ability of this nation to shoot down other planes
+	 * @param attackingOtherAirforce True if calculating the power of this airforce to
+	 *                               fight other airforces specifically
 	 * @return The fighter power
 	 */
-	public double getFighterPower()
+	public double getFighterPower(boolean attackingOtherAirforce)
 	{
 		double power = 0;
 		for(Fighter fighter : Fighter.values())
 		{
 			power += (this.getFighter(fighter) * fighter.getPower());
+		}
+		if(attackingOtherAirforce)
+		{
+			for(Bomber bomber : Bomber.values())
+			{
+				power += (this.getBomber(bomber) * bomber.getBombingPower() / 2);
+			}
+		}
+		for(Bomber bomber : Bomber.values())
+		{
+			power += (this.getBomber(bomber) * bomber.getDefense());
 		}
 		return power / 10;
 	}
@@ -1415,7 +1428,7 @@ public class Nation
 		double power = 0;
 		for(Bomber bomber : Bomber.values())
 		{
-			power += (this.getBomber(bomber) * bomber.getPower());
+			power += (this.getBomber(bomber) * bomber.getBombingPower());
 		}
 		return power / 10;
 	}

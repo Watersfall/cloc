@@ -607,6 +607,12 @@ public class Responses
 				", while losing " + attackerLosses + " of your own!</p>";
 	}
 
+	public static String airBattleInterception(int attackerLosses, int defenderLosses)
+	{
+		return "<p>Your bombers were intercepted by the enemy airforce! You have destroyed " + defenderLosses + " enemy planes" +
+				", while losing " + attackerLosses + " of your own!</p>";
+	}
+
 	public static String fortified()
 	{
 		return "<p>Your army dig's some trenches or something</p>";

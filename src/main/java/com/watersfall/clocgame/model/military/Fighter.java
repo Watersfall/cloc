@@ -2,7 +2,7 @@ package com.watersfall.clocgame.model.military;
 
 import lombok.Getter;
 
-public enum Fighter
+public enum Fighter implements Plane
 {
 	BIPLANE_FIGHTER("Biplane Fighter", 2.0),
 	TRIPLANE_FIGHTER("Triplane Fighter", 3.0),

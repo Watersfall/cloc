@@ -90,7 +90,7 @@ public class NationController extends HttpServlet
 				/*case "navy":
 					return WarActions.navyBattle(conn, sender, receiver);*/
 				case "air":
-					return WarActions.airBattle(sender, receiver);
+					return WarActions.airBattle(sender, receiver, false);
 				case "landCity":
 					return WarActions.cityBattle(sender, receiver);
 				/*case "navyCity":
