@@ -91,4 +91,22 @@ public class PolicyActions
 			return Responses.policyUpdated();
 		}
 	}
+
+	public static String fortification(Nation nation, Policy policy) throws SQLException
+	{
+		if(nation.getPolicy().getFortification() == policy)
+		{
+			return Responses.policySame();
+		}
+		else if(nation.getPolicy().getChangeFortification() + 1 > Util.month)
+		{
+			return Responses.noChange();
+		}
+		else
+		{
+			nation.getPolicy().setFortification(policy);
+			nation.update();
+			return Responses.policyUpdated();
+		}
+	}
 }

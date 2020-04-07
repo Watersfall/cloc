@@ -20,7 +20,11 @@ public enum Policy
 	SCRAPING_THE_BARREL_MANPOWER("Scraping the Barrel", 45, "policy.manpower", -25, "policy.pop_growth"),
 	RATIONING_FOOD("Mandatory Rationing", -35, "policy.food_consumption", -25, "policy.pop_growth"),
 	NORMAL_FOOD("Normal"),
-	FREE_FOOD("Free Food", 35, "policy.food_consumption", 15, "policy.pop_growth");
+	FREE_FOOD("Free Food", 35, "policy.food_consumption", 15, "policy.pop_growth"),
+	FULL_FUNDING_FORTIFICATION("Extra Garrison", 100, "policy.fortification_upkeep", 25, "policy.defense", 10, "policy.fortification_bonus"),
+	PARTIAL_FUNDING_FORTIFICATION("Standing Garrison", 25, "policy.fortification_upkeep", 5, "policy.defense"),
+	MINIMAL_FUNDING_FORTIFICATION("Minimal Garrison", -25, "policy.fortification_upkeep", -5, "policy.defense", -25, "policy.fortification_bonus"),
+	UNOCCUPIED_FORTIFICATION("Unoccupied", -100, "policy.fortification_upkeep", -25, "policy.defense", -100, "policy.fortification_bonus");
 
 	private @Getter String name;
 	private @Getter Object[] desc;
@@ -62,6 +66,12 @@ public enum Policy
 				return "% food consumption";
 			case "policy.training":
 				return " training per turn (net 0 change)";
+			case "policy.fortification_upkeep":
+				return "% fortification upkeep cost";
+			case "policy.defense":
+				return "% to defense";
+			case "policy.fortification_bonus":
+				return "% defense bonus from fortifications";
 			default:
 				return "";
 		}
@@ -73,6 +83,7 @@ public enum Policy
 		map.put("Economy", Arrays.asList(CIVILIAN_ECONOMY, EXTRACTION_ECONOMY, INDUSTRY_ECONOMY, AGRARIAN_ECONOMY, WAR_ECONOMY));
 		map.put("Manpower", Arrays.asList(DISARMED_MANPOWER, VOLUNTEER_MANPOWER, RECRUITMENT_MANPOWER, MANDATORY_MANPOWER, SCRAPING_THE_BARREL_MANPOWER));
 		map.put("Food", Arrays.asList(RATIONING_FOOD, NORMAL_FOOD, FREE_FOOD));
+		map.put("Fortification", Arrays.asList(FULL_FUNDING_FORTIFICATION, PARTIAL_FUNDING_FORTIFICATION, MINIMAL_FUNDING_FORTIFICATION, UNOCCUPIED_FORTIFICATION));
 		return map;
 	}
 }

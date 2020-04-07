@@ -186,8 +186,8 @@ public class WarActions
 		}
 		else
 		{
-			double attackerPower = attacker.getPower();
-			double defenderPower = defender.getPower();
+			double attackerPower = attacker.getPower(true);
+			double defenderPower = defender.getPower(false);
 			double defenseMod = Math.max(0, (defender.getDefense() - attacker.getBreakthrough()));
 			defenderPower = defenderPower + (defenderPower * defenseMod);
 			int attackerCasualties = attacker.getCasualties(attackerPower, defenderPower);
@@ -254,8 +254,8 @@ public class WarActions
 			else
 			{
 				City city = (City)collection.toArray()[(int)(Math.random() * collection.size())];
-				double attackerPower = attacker.getPower();
-				double defenderPower = defender.getPower();
+				double attackerPower = attacker.getPower(true);
+				double defenderPower = defender.getPower(false);
 				double attackerPowerDecideIfWin = attackerPower;
 				double defenseMod = Math.max(0, (defender.getDefense() - attacker.getBreakthrough()));
 				defenderPower = defenderPower + (defenderPower * defenseMod);
@@ -420,7 +420,7 @@ public class WarActions
 		{
 			return Responses.alreadyAttacked();
 		}
-		else if(attacker.getArmy().getFortification() >= attacker.getMaximumForticiationLevel())
+		else if(attacker.getArmy().getFortification() >= attacker.getMaximumFortificationLevel())
 		{
 			return Responses.alreadyFortified();
 		}

@@ -24,16 +24,16 @@
 					<c:forEach items="${policy.value}" var="i">
 						<p class="desc halfPad" id="policy_${policy.key}_${i.name()}_desc" style="display:${(home.policy.getPolicy(i) == i) ? 'block' : 'none'};">
 							<c:forEach items="${i.getMap(i)}" var="map">
-								<c:if test="${not fn:contains(map.key, 'consumption')}">
+								<c:if test="${not (fn:contains(map.key, 'consumption') or fn:contains(map.key, 'upkeep'))}">
 									<c:if test="${map.value > 0}">
 										<span class="positive">+${map.value}${map.key}</span>
 									</c:if>
-									<c:if test="${map.value < 0}">
+									<c:if test="${map.value <= 0}">
 										<span class="negative">${map.value}${map.key}</span>
 									</c:if>
 								</c:if>
-								<c:if test="${fn:contains(map.key, 'consumption')}">
-									<c:if test="${map.value > 0}">
+								<c:if test="${(fn:contains(map.key, 'consumption') or fn:contains(map.key, 'upkeep'))}">
+									<c:if test="${map.value >= 0}">
 										<span class="negative">+${map.value}${map.key}</span>
 									</c:if>
 									<c:if test="${map.value < 0}">

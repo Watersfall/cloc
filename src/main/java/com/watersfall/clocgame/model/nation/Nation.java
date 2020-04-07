@@ -1307,7 +1307,7 @@ public class Nation
 	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power
 	 */
-	public double getPower()
+	public double getPower(boolean attacking)
 	{
 		double power = 0e0;
 		long requiredEquipment = (long)army.getSize() * 1000L;
@@ -1333,6 +1333,24 @@ public class Nation
 		//Sticks and stones are better than nothing
 		power += requiredEquipment * 0.5;
 		power *= java.lang.Math.sqrt(army.getTraining() + 1);
+		if(!attacking)
+		{
+			switch(this.policy.getFortification())
+			{
+				case UNOCCUPIED_FORTIFICATION:
+					power += (-0.25 * power);
+					break;
+				case MINIMAL_FUNDING_FORTIFICATION:
+					power += (-0.05 * power);
+					break;
+				case PARTIAL_FUNDING_FORTIFICATION:
+					power += (0.05 * power);
+					break;
+				case FULL_FUNDING_FORTIFICATION:
+					power += (0.25 * power);
+					break;
+			}
+		}
 		return Math.sqrt(power);
 	}
 
@@ -1376,8 +1394,16 @@ public class Nation
 	 */
 	public double getDefense()
 	{
-		int max = this.getArmy().getSize() * 5;
 		double ratio = this.getArmy().getFortification() * 0.2;
+		switch(this.policy.getFortification())
+		{
+			case UNOCCUPIED_FORTIFICATION:
+				ratio += (ratio * 0.1);
+				break;
+			case FULL_FUNDING_FORTIFICATION:
+				ratio = 0;
+				break;
+		}
 		return 1 + ratio;
 	}
 
@@ -1397,7 +1423,7 @@ public class Nation
 		return minimum;
 	}
 
-	public int getMaximumForticiationLevel()
+	public int getMaximumFortificationLevel()
 	{
 		int maximum = 5;
 		if(this.hasTech(Technologies.BASIC_TRENCHES))
@@ -1663,6 +1689,15 @@ public class Nation
 		long factories = this.getTotalFactories();
 		long military = -1 * this.getUsedManpower().get("manpower.net") / 20000;
 		long conscription = economy.getRecentDeconscription() - economy.getRecentConscription();
+		long fortification = -this.getArmy().getFortification();
+		if(this.policy.getFortification() == Policy.UNOCCUPIED_FORTIFICATION)
+		{
+			fortification = 0;
+		}
+		else if(this.policy.getFortification() == Policy.FULL_FUNDING_FORTIFICATION)
+		{
+			fortification *= 2;
+		}
 		if(conscription > 0)
 		{
 			conscription = (long)((conscription + 1) * 0.75);
@@ -1675,6 +1710,7 @@ public class Nation
 		}
 		map.put("growth.factories", factories);
 		map.put("growth.military", military);
+		map.put("growth.fortification", fortification);
 		map.put("growth.net", factories + military + conscription);
 		return map;
 	}
@@ -1785,6 +1821,8 @@ public class Nation
 				return " from recent deconscription";
 			case "growth.conscription":
 				return " from recent conscription";
+			case "growth.fortification":
+				return " from fortification upkeep";
 			case "stability.net":
 			case "growth.net":
 			case "approval.net":

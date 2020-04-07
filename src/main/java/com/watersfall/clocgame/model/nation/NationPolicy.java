@@ -11,35 +11,14 @@ public class NationPolicy extends Updatable
 {
 	public static final String TABLE_NAME = "cloc_policy";
 
-	/**
-	 * Economy Types
-	 */
-	public static final int CIVILIAN_ECONOMY = 0;
-	public static final int EXTRACTION_ECONOMY = 1;
-	public static final int INDUSTRY_ECONOMY = 2;
-	public static final int AGRARIAN_ECONOMY = 3;
-	public static final int WAR_ECONOMY = 4;
-	/**
-	 * Conscription Types
-	 */
-	public static final int DISARMED_MANPOWER = 0;
-	public static final int VOLUNTEER_MANPOWER = 1;
-	public static final int RECRUITMENT_MANPOWER = 2;
-	public static final int MANDATORY_MANPOWER = 3;
-	public static final int SCRAPING_THE_BARREL_MANPOWER = 4;
-	/**
-	 * Food Types
-	 */
-	public static final int RATIONING_FOOD = 0;
-	public static final int NORMAL_FOOD = 1;
-	public static final int FREE_FOOD = 2;
-
 	private @Getter Policy manpower;
 	private @Getter int changeManpower;
 	private @Getter Policy food;
 	private @Getter int changeFood;
 	private @Getter Policy economy;
 	private @Getter int changeEconomy;
+	private @Getter Policy fortification;
+	private @Getter int changeFortification;
 
 	public NationPolicy(int id, ResultSet results) throws SQLException
 	{
@@ -50,6 +29,8 @@ public class NationPolicy extends Updatable
 		this.changeFood = results.getInt("food_change");
 		this.economy = Policy.valueOf(results.getString("economy_policy"));
 		this.changeEconomy = results.getInt("economy_change");
+		this.fortification = Policy.valueOf(results.getString("fortification_policy"));
+		this.changeFortification = results.getInt("fortification_change");
 	}
 
 	public Policy getPolicy(Policy policy)
@@ -58,6 +39,8 @@ public class NationPolicy extends Updatable
 			return this.economy;
 		else if (policy.name().contains("FOOD"))
 			return this.food;
+		else if(policy.name().contains("FORTIFICATION"))
+			return this.fortification;
 		else
 			return this.manpower;
 	}
@@ -106,5 +89,17 @@ public class NationPolicy extends Updatable
 	{
 		this.addField("economy_change", changeEconomy);
 		this.changeEconomy = changeEconomy;
+	}
+
+	public void setFortification(Policy fortification)
+	{
+		this.addField("fortification_policy", fortification);
+		this.fortification = fortification;
+	}
+
+	public void setChangeFortification(int changeFortification)
+	{
+		this.addField("fortification_change", changeFortification);
+		this.changeFortification = changeFortification;
 	}
 }
