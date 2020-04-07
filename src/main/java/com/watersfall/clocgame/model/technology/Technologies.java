@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.technology;
 import com.watersfall.clocgame.model.technology.technologies.Category;
 import com.watersfall.clocgame.model.technology.technologies.single.ammoandfeed.*;
 import com.watersfall.clocgame.model.technology.technologies.single.artillery.TechnologyArtillery;
+import com.watersfall.clocgame.model.technology.technologies.single.doctrine.*;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.TechnologyShipOil;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.TechnologyTank;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.air.*;
@@ -55,6 +56,15 @@ public enum Technologies
 	MONOPLANE_FIGHTERS(TechnologyMonoplaneFighter.getInstance(), Category.AIR, 3, 3, new String[]{"cornerBottomLeftHalf"}),
 	BOMBERS(TechnologyBombers.getInstance(), Category.AIR, 2, 3, new String[]{"vertical", "cornerBottomLeft"}),
 	STRATEGIC_BOMBERS(TechnologyStrategicBombers.getInstance(), Category.AIR, 2, 4, new String[]{"vertical"}),
+
+	/*
+	** Doctrine
+	 */
+	BASIC_TRENCHES(TechnologyTrenches.getInstance(), Category.DOCTRINE, 1, 1, new String[]{}),
+	BASIC_FORTIFICATIONS(TechnologyFortifications.getInstance(), Category.DOCTRINE, 1, 2, new String[]{"vertical"}),
+	ADVANCED_TRENCHES(TechnologyAdvancedTrenches.getInstance(), Category.DOCTRINE, 1, 3, new String[]{"vertical"}),
+	ADVANCED_FORTIFICATIONS(TechnologyReinforcedConcrete.getInstance(), Category.DOCTRINE, 1, 4, new String[]{"vertical"}),
+	MOBILE_DEFENSE(TechnologyMobileDefense.getInstance(), Category.DOCTRINE, 1, 5, new String[]{"vertical"}),
 
 
 	TANK(TechnologyTank.getInstance(), Category.LAND, 1, 1, new String[]{""}),

@@ -17,3 +17,10 @@ ALTER TABLE cloc_main
 
 ALTER TABLE cloc_army
 	ADD COLUMN tank INT;
+
+ALTER TABLE cloc_tech
+	ADD COLUMN basic_trenches_tech TINYINT UNSIGNED DEFAULT 0,
+    ADD COLUMN advanced_trenches_tech TINYINT UNSIGNED DEFAULT 0,
+	ADD COLUMN basic_fortifications_tech TINYINT UNSIGNED DEFAULT 0,
+	ADD COLUMN reinforced_concrete_tech TINYINT UNSIGNED DEFAULT 0,
+	ADD COLUMN mobile_defense_tech TINYINT UNSIGNED DEFAULT 0;

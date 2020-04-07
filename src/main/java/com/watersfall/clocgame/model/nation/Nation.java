@@ -10,6 +10,7 @@ import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
 import com.watersfall.clocgame.model.military.Fighter;
 import com.watersfall.clocgame.model.technology.Technologies;
+import com.watersfall.clocgame.model.technology.Technology;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.SqlBuilder;
@@ -1375,21 +1376,41 @@ public class Nation
 	 */
 	public double getDefense()
 	{
-		int max = (int)(this.getArmy().getSize() * 5);
+		int max = this.getArmy().getSize() * 5;
 		double ratio = this.getArmy().getFortification() * 0.2;
-		long currentArtillery = this.getTotalArtillery();
-		if(currentArtillery > max)
-		{
-			currentArtillery = max;
-		}
-		double artillery = ((double)currentArtillery / (double)max);
-		artillery /= 3.0;
-		ratio += artillery;
-		if(ratio > 1)
-		{
-			ratio = 1;
-		}
 		return 1 + ratio;
+	}
+
+	public int getMinimumFortificationLevel()
+	{
+		int minimum = 0;
+		if(this.hasTech(Technologies.BASIC_TRENCHES))
+			minimum++;
+		if(this.hasTech(Technologies.BASIC_FORTIFICATIONS))
+			minimum++;
+		if(this.hasTech(Technologies.ADVANCED_TRENCHES))
+			minimum++;
+		if(this.hasTech(Technologies.ADVANCED_FORTIFICATIONS))
+			minimum++;
+		if(this.hasTech(Technologies.MOBILE_DEFENSE))
+			minimum++;
+		return minimum;
+	}
+
+	public int getMaximumForticiationLevel()
+	{
+		int maximum = 5;
+		if(this.hasTech(Technologies.BASIC_TRENCHES))
+			maximum++;
+		if(this.hasTech(Technologies.BASIC_FORTIFICATIONS))
+			maximum++;
+		if(this.hasTech(Technologies.ADVANCED_TRENCHES))
+			maximum++;
+		if(this.hasTech(Technologies.ADVANCED_FORTIFICATIONS))
+			maximum++;
+		if(this.hasTech(Technologies.MOBILE_DEFENSE))
+			maximum++;
+		return maximum;
 	}
 
 	/**
@@ -1507,6 +1528,26 @@ public class Nation
 	public boolean hasTech(String tech)
 	{
 		return this.tech.getResearchedTechs().contains(Technologies.valueOf(tech));
+	}
+
+	/**
+	 * Checks whether the nation has researched a tech
+	 * @param tech The Technology
+	 * @return True if it's researched, false otherwise
+	 */
+	public boolean hasTech(Technology tech)
+	{
+		return this.tech.getResearchedTechs().contains(tech.getTechnology());
+	}
+
+	/**
+	 * Checks whether the nation has researched a tech
+	 * @param tech The Technology
+	 * @return True if it's researched, false otherwise
+	 */
+	public boolean hasTech(Technologies tech)
+	{
+		return this.tech.getResearchedTechs().contains(tech);
 	}
 
 	/**

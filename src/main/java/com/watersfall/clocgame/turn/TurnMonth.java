@@ -99,6 +99,11 @@ public class TurnMonth implements Runnable
 						}
 					}
 
+					if(nation.getArmy().getFortification() < nation.getMinimumFortificationLevel())
+					{
+						nation.getArmy().setFortification(nation.getArmy().getFortification() + 1);
+					}
+
 					nation.update();
 				}
 				catch(SQLException e)

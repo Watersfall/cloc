@@ -12,7 +12,7 @@ CREATE TABLE cloc_login(
 );
 
 CREATE TABLE cloc_main(
-	week BIGINT UNSIGNED DEFAULT 1,
+	month BIGINT UNSIGNED DEFAULT 1,
 	day BIGINT UNSIGNED DEFAULT 1
 );
 
@@ -49,6 +49,8 @@ CREATE TABLE cloc_economy (
 	steel DECIMAL(14, 2) UNSIGNED DEFAULT 0,
 	nitrogen DECIMAL(14, 2) UNSIGNED DEFAULT 0,
 	research DECIMAL(14, 2) UNSIGNED DEFAULT 0,
+	recent_conscription INT DEFAULT 0,
+	recent_deconscription INT DEFAULT 0,
 	FOREIGN KEY fk_economy (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
@@ -58,7 +60,6 @@ CREATE TABLE cloc_domestic(
 	government TINYINT UNSIGNED,
 	approval TINYINT UNSIGNED DEFAULT 50,
 	stability TINYINT UNSIGNED DEFAULT 50,
-	population BIGINT UNSIGNED DEFAULT 100000,
 	rebels INT UNSIGNED DEFAULT 0,
 	lost_manpower BIGINT DEFAULT 0,
 	farm_subsidies INT DEFAULT 0,
@@ -122,6 +123,7 @@ CREATE TABLE cloc_army(
 	machine_gun INT DEFAULT 0,
 	artillery INT DEFAULT 0,
 	fortification INT DEFAULT 0,
+	tank INT,
 	FOREIGN KEY fk_army (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
@@ -164,6 +166,11 @@ CREATE TABLE cloc_tech(
 	triplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
 	monoplane_fighter_tech TINYINT UNSIGNED DEFAULT 0,
 	artillery_tech TINYINT UNSIGNED DEFAULT 0,
+	basic_trenches_tech TINYINT UNSIGNED DEFAULT 0,
+	advanced_trenches_tech TINYINT UNSIGNED DEFAULT 0,
+	basic_fortifications_tech TINYINT UNSIGNED DEFAULT 0,
+	reinforced_concrete_tech TINYINT UNSIGNED DEFAULT 0,
+	mobile_defense_tech TINYINT UNSIGNED DEFAULT 0,
 	FOREIGN KEY fk_tech (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
@@ -246,7 +253,7 @@ CREATE TABLE cloc_declarations(
 );
 
 CREATE TABLE global_stats_history(
-	 week BIGINT,
+	 month BIGINT,
 	 total_nations BIGINT,
 	 total_neutral_nations BIGINT,
 	 total_entente_nations BIGINT,
@@ -272,4 +279,4 @@ CREATE TABLE factories(
 	FOREIGN KEY fk_city (city_id) REFERENCES cloc_cities(id) ON DELETE CASCADE
 );
 
-INSERT INTO cloc_main (week, day) VALUES (1, 1);
+INSERT INTO cloc_main (month, day) VALUES (1, 1);
