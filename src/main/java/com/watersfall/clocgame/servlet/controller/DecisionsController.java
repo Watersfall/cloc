@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.servlet.controller;
 
-import com.watersfall.clocgame.action.PolicyActions;
+import com.watersfall.clocgame.action.DecisionActions;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class DecisionsController extends HttpServlet
 {
 	public static final String URL = "/{decisions}";
-	public static final PolicyActions policy = new PolicyActions();
+	public static final DecisionActions policy = new DecisionActions();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException

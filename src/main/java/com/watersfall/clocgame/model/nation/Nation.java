@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.action.PolicyActions;
+import com.watersfall.clocgame.action.DecisionActions;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Region;
@@ -1501,19 +1501,19 @@ public class Nation
 	{
 		switch(policy)
 		{
-			case PolicyActions.ID_PROPAGANDA:
+			case DecisionActions.ID_PROPAGANDA:
 				return (long)(this.economy.getGdp() / 2L * (this.domestic.getApproval() / 100.0));
-			case PolicyActions.ID_WAR_PROPAGANDA:
-				return getPolicyCost(PolicyActions.ID_PROPAGANDA) / 2L;
-			case PolicyActions.ID_LAND_CLEARANCE:
+			case DecisionActions.ID_WAR_PROPAGANDA:
+				return getPolicyCost(DecisionActions.ID_PROPAGANDA) / 2L;
+			case DecisionActions.ID_LAND_CLEARANCE:
 				return (long)(this.economy.getGdp() * 2L);
-			case PolicyActions.ID_ALIGN:
-			case PolicyActions.ID_FREE:
-			case PolicyActions.ID_ARREST:
+			case DecisionActions.ID_ALIGN:
+			case DecisionActions.ID_FREE:
+			case DecisionActions.ID_ARREST:
 				return 100;
-			case PolicyActions.ID_TRAIN:
+			case DecisionActions.ID_TRAIN:
 				return (long)this.army.getSize() * (long)this.army.getSize() * (long)this.army.getTraining() / 200L;
-			case PolicyActions.ID_CREATE_TREATY:
+			case DecisionActions.ID_CREATE_TREATY:
 				return 500;
 			default:
 				return 0;

@@ -1,5 +1,5 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="policy" type="com.watersfall.clocgame.action.PolicyActions"--%>
+<%--@elvariable id="policy" type="com.watersfall.clocgame.action.DecisionActions"--%>
 <%@ include file="includes/defaultTop.jsp" %>
 <c:choose>
 	<c:when test="${empty home}">

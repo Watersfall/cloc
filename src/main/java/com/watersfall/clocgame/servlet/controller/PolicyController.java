@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
-import com.watersfall.clocgame.action.DecisionActions;
+import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
@@ -42,11 +42,11 @@ public class PolicyController extends HttpServlet
 			switch(decision)
 			{
 				case "Manpower":
-					return DecisionActions.manpower(nation, policy);
+					return PolicyActions.manpower(nation, policy);
 				case "Food":
-					return DecisionActions.food(nation, policy);
+					return PolicyActions.food(nation, policy);
 				case "Economy":
-					return DecisionActions.economy(nation, policy);
+					return PolicyActions.economy(nation, policy);
 				default:
 					return Responses.genericError();
 			}

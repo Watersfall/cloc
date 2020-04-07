@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
-import com.watersfall.clocgame.action.PolicyActions;
+import com.watersfall.clocgame.action.DecisionActions;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -38,31 +38,31 @@ public class DecisionController extends HttpServlet
 			switch(url.get("decision"))
 			{
 				case "freemoneycapitalist":
-					return PolicyActions.freeMoneyCapitalist(nation);
+					return DecisionActions.freeMoneyCapitalist(nation);
 				case "freemoneycommunist":
-					return PolicyActions.freeMoneyCommunist(nation);
+					return DecisionActions.freeMoneyCommunist(nation);
 				case "crackdown":
-					return PolicyActions.arrest(nation);
+					return DecisionActions.arrest(nation);
 				case "free":
-					return PolicyActions.free(nation);
+					return DecisionActions.free(nation);
 				case "landclearance":
-					return PolicyActions.landClearance(nation);
+					return DecisionActions.landClearance(nation);
 				case "propaganda":
-					return PolicyActions.propaganda(nation);
+					return DecisionActions.propaganda(nation);
 				case "warpropaganda":
-					return PolicyActions.warPropaganda(nation);
+					return DecisionActions.warPropaganda(nation);
 				case "alignentente":
-					return PolicyActions.alignEntente(nation);
+					return DecisionActions.alignEntente(nation);
 				case "alignneutral":
-					return PolicyActions.alignNeutral(nation);
+					return DecisionActions.alignNeutral(nation);
 				case "aligncentral":
-					return PolicyActions.alignCentralPowers(nation);
+					return DecisionActions.alignCentralPowers(nation);
 				case "conscript":
-					return PolicyActions.conscript(nation);
+					return DecisionActions.conscript(nation);
 				case "train":
-					return PolicyActions.train(nation);
+					return DecisionActions.train(nation);
 				case "deconscript":
-					return PolicyActions.deconscript(nation);
+					return DecisionActions.deconscript(nation);
 				default:
 					return Responses.genericError();
 			}
