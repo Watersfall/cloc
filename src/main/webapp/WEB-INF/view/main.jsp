@@ -234,6 +234,30 @@
 					</div>
 				</td>
 			</tr>
+			<tr>
+				<td><p>Recon Aircraft</p></td>
+				<td onclick="toggleTab('Recon');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.reconCount}"/> Planes</p>
+					<div class="toggleable detailsDown" id="Recon">
+						<p><fmt:formatNumber value="${home.reconCount}"/> Total Recon Aircraft</p>
+						<ul>
+							<c:forEach items="${reconPlanes}" var="recon">
+								<c:if test="${home.getReconPlane(recon) > 0}">
+									<li>
+										<c:if test="${home.getReconPlane(recon) > 1}">
+											<p>${home.getReconPlane(recon)} ${' '.concat(recon.name)}s</p>
+										</c:if>
+										<c:if test="${home.getReconPlane(recon) == 1}">
+											<p>${home.getReconPlane(recon)} ${' '.concat(recon.name)}</p>
+										</c:if>
+									</li>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
+				</td>
+			</tr>
 		</table>
 		<br><br>
 		<table class="standardTable nationTable">

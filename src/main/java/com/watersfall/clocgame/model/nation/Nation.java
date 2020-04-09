@@ -9,6 +9,7 @@ import com.watersfall.clocgame.model.message.Declaration;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
 import com.watersfall.clocgame.model.military.Fighter;
+import com.watersfall.clocgame.model.military.ReconPlane;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.Technology;
 import com.watersfall.clocgame.model.treaty.Treaty;
@@ -1234,6 +1235,16 @@ public class Nation
 		return total;
 	}
 
+	public int getReconCount()
+	{
+		int total = 0;
+		for(ReconPlane plane : ReconPlane.values())
+		{
+			total += this.getReconPlane(plane);
+		}
+		return total;
+	}
+
 	public int getEquipment(Equipment equipment)
 	{
 		switch(equipment)
@@ -1323,6 +1334,19 @@ public class Nation
 		}
 	}
 
+	public int getReconPlane(ReconPlane plane)
+	{
+		switch(plane)
+		{
+			case RECON_BALLOON:
+				return this.getMilitary().getReconBalloons();
+			case RECON_PLANE:
+				return this.getMilitary().getReconPlanes();
+			default:
+				return 0;
+		}
+	}
+
 	/**
 	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power
@@ -1379,6 +1403,30 @@ public class Nation
 		}
 		double artillery = ((double)currentArtillery / (double)max);
 		artillery /= 2;
+		double recon = 1;
+		int maxRecon = max / 5;
+		int currentRecon = this.getReconCount();
+		if(currentRecon > maxRecon)
+		{
+			currentRecon = maxRecon;
+		}
+		List<ReconPlane> list = Arrays.asList(ReconPlane.values());
+		Collections.reverse(list);
+		for(ReconPlane plane : list)
+		{
+			if(this.getReconPlane(plane) > currentRecon)
+			{
+				recon += (currentRecon * plane.getPower());
+				currentRecon = 0;
+			}
+			else
+			{
+				recon += (this.getReconPlane(plane) * plane.getPower());
+				currentRecon -= this.getReconPlane(plane);
+			}
+		}
+		recon = 1 + recon / maxRecon;
+		artillery *= recon;
 		ratio += artillery;
 		return ratio;
 	}

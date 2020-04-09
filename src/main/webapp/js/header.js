@@ -13,7 +13,8 @@ function toggle(id)
 
 function toggleTab(tab)
 {
-	let tabs = ["Budget", "Food", "Coal", "Iron", "Oil", "Steel", "Nitrogen", "Research", "Approval", "Stability", "Land", "Population", "Growth", "Manpower", "Equipment"];
+	let tabs = ["Budget", "Food", "Coal", "Iron", "Oil", "Steel", "Nitrogen", "Research", "Approval", "Stability", "Land",
+		"Population", "Growth", "Manpower", "Equipment", "Bombers", "Fighters", "Recon"];
 	for(let i = 0; i < tabs.length; i++)
 	{
 		if(tabs[i] !== tab)

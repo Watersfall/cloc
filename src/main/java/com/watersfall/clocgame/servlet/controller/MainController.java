@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Fighter;
+import com.watersfall.clocgame.model.military.ReconPlane;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +19,7 @@ public class MainController extends HttpServlet
 	{
 		req.setAttribute("fighters", Fighter.values());
 		req.setAttribute("bombers", Bomber.values());
+		req.setAttribute("reconPlanes", ReconPlane.values());
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);
 	}
 }
