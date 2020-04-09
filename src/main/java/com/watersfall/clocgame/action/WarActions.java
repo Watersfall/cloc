@@ -186,8 +186,8 @@ public class WarActions
 		}
 		else
 		{
-			double attackerPower = attacker.getPower(true);
-			double defenderPower = defender.getPower(false);
+			double attackerPower = attacker.getPower();
+			double defenderPower = defender.getPower();
 			double defenseMod = Math.max(0, (defender.getDefense() - attacker.getBreakthrough()));
 			defenderPower = defenderPower + (defenderPower * defenseMod);
 			int attackerCasualties = attacker.getCasualties(attackerPower, defenderPower);
@@ -202,9 +202,6 @@ public class WarActions
 				attackerCasualties = (int)(attackerCasualties * ((defender.getArmy().getSize() * 0.75) / defenderCasualties));
 				defenderCasualties = (int)(defender.getArmy().getSize() * 0.75);
 			}
-			attacker.getArmy().setFortification(attacker.getMinimumFortificationLevel());
-			defender.getArmy().setFortification((defender.getMinimumFortificationLevel() <= defender.getArmy().getFortification()
-					? defender.getMinimumFortificationLevel() : defender.getArmy().getFortification() - 1));
 			doLog(attacker, defender, LogType.LAND);
 			doCasualties(attacker, defender, attackerCasualties, defenderCasualties);
 			update(attacker, defender);
@@ -254,8 +251,8 @@ public class WarActions
 			else
 			{
 				City city = (City)collection.toArray()[(int)(Math.random() * collection.size())];
-				double attackerPower = attacker.getPower(true);
-				double defenderPower = defender.getPower(false);
+				double attackerPower = attacker.getPower();
+				double defenderPower = defender.getPower();
 				double attackerPowerDecideIfWin = attackerPower;
 				double defenseMod = Math.max(0, (defender.getDefense() - attacker.getBreakthrough()));
 				defenderPower = defenderPower + (defenderPower * defenseMod);
@@ -274,9 +271,6 @@ public class WarActions
 				}
 				doLog(attacker, defender, LogType.LAND);
 				doCasualties(attacker, defender, attackerCasualties, defenderCasualties);
-				attacker.getArmy().setFortification(attacker.getMinimumFortificationLevel());
-				defender.getArmy().setFortification((defender.getMinimumFortificationLevel() <= defender.getArmy().getFortification()
-						? defender.getMinimumFortificationLevel() : defender.getArmy().getFortification() - 1));
 				update(attacker, defender);
 				if(attackerPowerDecideIfWin > defenderPower)
 				{
@@ -426,7 +420,8 @@ public class WarActions
 		}
 		else
 		{
-			attacker.getArmy().setFortification(attacker.getArmy().getFortification() + 1);
+			int increase = Math.max(250, attacker.getMaximumFortificationLevel() / 10);
+			attacker.getArmy().setFortification(attacker.getArmy().getFortification() + increase);
 			Log.createLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.LAND, 0);
 			String news = News.createMessage(News.ID_FORTIFICATION, attacker.getNationUrl());
 			News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), news);

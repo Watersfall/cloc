@@ -1307,7 +1307,7 @@ public class Nation
 	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power
 	 */
-	public double getPower(boolean attacking)
+	public double getPower()
 	{
 		double power = 0e0;
 		long requiredEquipment = (long)army.getSize() * 1000L;
@@ -1333,24 +1333,6 @@ public class Nation
 		//Sticks and stones are better than nothing
 		power += requiredEquipment * 0.5;
 		power *= java.lang.Math.sqrt(army.getTraining() + 1);
-		if(!attacking)
-		{
-			switch(this.policy.getFortification())
-			{
-				case UNOCCUPIED_FORTIFICATION:
-					power += (-0.25 * power);
-					break;
-				case MINIMAL_FUNDING_FORTIFICATION:
-					power += (-0.05 * power);
-					break;
-				case PARTIAL_FUNDING_FORTIFICATION:
-					power += (0.05 * power);
-					break;
-				case FULL_FUNDING_FORTIFICATION:
-					power += (0.25 * power);
-					break;
-			}
-		}
 		return Math.sqrt(power);
 	}
 
@@ -1363,7 +1345,7 @@ public class Nation
 	 */
 	public double getBreakthrough()
 	{
-		int max = (int)(this.getArmy().getSize() * 5);
+		int max = this.getArmy().getSize() * 5;
 		long currentTanks = this.getTotalArmor();
 		if(currentTanks > max)
 		{
@@ -1376,10 +1358,6 @@ public class Nation
 			currentArtillery = max;
 		}
 		double artillery = ((double)currentArtillery / (double)max);
-		if(artillery > 1)
-		{
-			artillery = 1;
-		}
 		artillery /= 2;
 		ratio += artillery;
 		return ratio;
@@ -1394,49 +1372,54 @@ public class Nation
 	 */
 	public double getDefense()
 	{
-		double ratio = this.getArmy().getFortification() * 0.2;
-		switch(this.policy.getFortification())
-		{
-			case UNOCCUPIED_FORTIFICATION:
-				ratio += (ratio * 0.1);
-				break;
-			case FULL_FUNDING_FORTIFICATION:
-				ratio = 0;
-				break;
-		}
+		double ratio = this.getArmy().getFortification() / 10000.0;
 		return 1 + ratio;
 	}
 
 	public int getMinimumFortificationLevel()
 	{
-		int minimum = 0;
-		if(this.hasTech(Technologies.BASIC_TRENCHES))
-			minimum++;
-		if(this.hasTech(Technologies.BASIC_FORTIFICATIONS))
-			minimum++;
-		if(this.hasTech(Technologies.ADVANCED_TRENCHES))
-			minimum++;
-		if(this.hasTech(Technologies.ADVANCED_FORTIFICATIONS))
-			minimum++;
-		if(this.hasTech(Technologies.MOBILE_DEFENSE))
-			minimum++;
-		return minimum;
+		return 0;
 	}
 
 	public int getMaximumFortificationLevel()
 	{
-		int maximum = 5;
+		return getMaximumFortificationLevelMap().get("fortification_max.net");
+	}
+
+	public LinkedHashMap<String, Integer> getMaximumFortificationLevelMap()
+	{
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		int tech = 2000;
 		if(this.hasTech(Technologies.BASIC_TRENCHES))
-			maximum++;
+			tech += 1500;
 		if(this.hasTech(Technologies.BASIC_FORTIFICATIONS))
-			maximum++;
+			tech += 1500;
 		if(this.hasTech(Technologies.ADVANCED_TRENCHES))
-			maximum++;
+			tech += 1500;
 		if(this.hasTech(Technologies.ADVANCED_FORTIFICATIONS))
-			maximum++;
+			tech += 1500;
 		if(this.hasTech(Technologies.MOBILE_DEFENSE))
-			maximum++;
-		return maximum;
+			tech += 2000;
+		int policy = tech;
+		switch(this.policy.getFortification())
+		{
+			case UNOCCUPIED_FORTIFICATION:
+				policy *= 0.15;
+				break;
+			case MINIMAL_FUNDING_FORTIFICATION:
+				policy *= 0.4;
+				break;
+			case PARTIAL_FUNDING_FORTIFICATION:
+				policy *= 0.75;
+				break;
+		}
+		policy = tech - policy;
+		policy = -policy;
+		int net = policy + tech;
+		map.put("fortification_max.tech", tech);
+		map.put("fortification_max.policy", policy);
+		map.put("fortification_max.net", net);
+		return map;
 	}
 
 	/**
@@ -1660,6 +1643,65 @@ public class Nation
 		}
 	}
 
+	public LinkedHashMap<String, Double> getFortificationChange()
+	{
+		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		double base = Math.min(
+				this.army.getFortification() + (0.1 * ((double)this.getMaximumFortificationLevel() / (this.army.getFortification() / 100.0))),
+				this.getMaximumFortificationLevel()
+		);
+		base -= this.getArmy().getFortification();
+		if(base > 50)
+		{
+			base = 50;
+		}
+		double bonus = 0;
+		if(base > 0)
+		{
+			switch(this.policy.getFortification())
+			{
+				case UNOCCUPIED_FORTIFICATION:
+					bonus = -base * 1.25;
+					break;
+				case MINIMAL_FUNDING_FORTIFICATION:
+					bonus = -base * 0.5;
+					break;
+				case PARTIAL_FUNDING_FORTIFICATION:
+					break;
+				case FULL_FUNDING_FORTIFICATION:
+					bonus = base * 0.25;
+					break;
+				case MAX_FORTIFICATION:
+					bonus = base * 0.5;
+			}
+			map.put("fortification.base_above", base);
+		}
+		else if(base < 0)
+		{
+			switch(this.policy.getFortification())
+			{
+				case UNOCCUPIED_FORTIFICATION:
+					bonus = base;
+					break;
+				case MINIMAL_FUNDING_FORTIFICATION:
+					bonus = base * 0.5;
+					break;
+				case PARTIAL_FUNDING_FORTIFICATION:
+					break;
+				case FULL_FUNDING_FORTIFICATION:
+					bonus = -base * 0.25;
+					break;
+				case MAX_FORTIFICATION:
+					bonus = -base * 0.5;
+			}
+			map.put("fortification.base_below", base);
+		}
+		double net = base + bonus;
+		map.put("fortification.bonus", bonus);
+		map.put("fortification.net", net);
+		return map;
+	}
+
 	public LinkedHashMap<String, Integer> getApprovalChange()
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
@@ -1690,14 +1732,6 @@ public class Nation
 		long military = -1 * this.getUsedManpower().get("manpower.net") / 20000;
 		long conscription = economy.getRecentDeconscription() - economy.getRecentConscription();
 		long fortification = -this.getArmy().getFortification();
-		if(this.policy.getFortification() == Policy.UNOCCUPIED_FORTIFICATION)
-		{
-			fortification = 0;
-		}
-		else if(this.policy.getFortification() == Policy.FULL_FUNDING_FORTIFICATION)
-		{
-			fortification *= 2;
-		}
 		if(conscription > 0)
 		{
 			conscription = (long)((conscription + 1) * 0.75);
@@ -1814,9 +1848,9 @@ public class Nation
 			case "population.net":
 				return "% total growth per month";
 			case "growth.factories":
-				return " per week from factories";
+				return " per month from factories";
 			case "growth.military":
-				return " per week from military upkeep";
+				return " per month from military upkeep";
 			case "growth.deconscription":
 				return " from recent deconscription";
 			case "growth.conscription":
@@ -1826,13 +1860,14 @@ public class Nation
 			case "stability.net":
 			case "growth.net":
 			case "approval.net":
-				return " change per week";
+			case "fortification.net":
+				return " change per month";
 			case "stability.lowApproval":
-				return " per week from low approval";
+				return " per month from low approval";
 			case "stability.approval":
-				return " per week from high approval";
+				return " per month from high approval";
 			case "approval.policies":
-				return " per week from policies";
+				return " per month from policies";
 			case "manpower.army":
 				return " in the Army";
 			case "manpower.navy":
@@ -1893,6 +1928,16 @@ public class Nation
 				return " from collectivization";
 			case "farming.tech":
 				return " from technology";
+			case "fortification.base_above":
+				return " from being below max fortification";
+			case "fortification.base_below":
+				return " from being above max fortification";
+			case "fortification.bonus":
+				return " from fortification policies";
+			case "fortification_max.tech":
+				return "% from tech";
+			case "fortification_max.policy":
+				return "% from policies";
 			default:
 				return key;
 		}

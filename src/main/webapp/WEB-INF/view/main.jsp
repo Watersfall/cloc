@@ -129,6 +129,59 @@
 				<td><p>Artillery</p></td>
 				<td><p><fmt:formatNumber value="${home.army.artillery}"/> Pieces</p></td>
 			</tr>
+			<tr>
+				<td><p>Fortification</p></td>
+				<td onclick="toggleTab('Fortification');">
+					<div style="background: red; position: relative;">
+						<div style="background: green; width: ${home.army.fortification / 100}%">
+							<div style="background: black; width: 0.1em; left: ${home.maximumFortificationLevel / 100}%; height: 100%; position: absolute; top: 0;"></div>
+							<p class="neutral">Fortification:&nbsp;${home.army.fortification / 100}%</p>
+						</div>
+					</div>
+					<div class="toggleable detailsDown" id="Fortification">
+						<c:set var="net" value="fortification.net"/>
+						<c:if test="${home.fortificationChange.get(net) > 0}">
+							<p class="positive"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>%${home.getDisplayString(net)}</p>
+						</c:if>
+						<c:if test="${home.fortificationChange.get(net) < 0}">
+							<p class="negative"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>%${home.getDisplayString(net)}</p>
+						</c:if>
+						<c:if test="${home.fortificationChange.get(net) == 0}">
+							<p>No net change...</p>
+						</c:if>
+						<ul>
+							<c:forEach var="entry" items="${home.fortificationChange}">
+								<c:if test="${not fn:contains(entry.key, 'net')}">
+									<li>
+										<c:if test="${entry.value > 0}">
+											<p class="positive"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>%${home.getDisplayString(entry.key)}</p>
+										</c:if>
+										<c:if test="${entry.value < 0}">
+											<p class="negative"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>%${home.getDisplayString(entry.key)}</p>
+										</c:if>
+									</li>
+								</c:if>
+							</c:forEach>
+						</ul>
+						<br>
+						<p>Max Fortification: <fmt:formatNumber value="${home.maximumFortificationLevel / 100}" maxFractionDigits="2"/>%</p>
+						<ul>
+							<c:forEach var="entry" items="${home.maximumFortificationLevelMap}">
+								<li>
+									<c:if test="${not fn:contains(entry.key, 'net')}">
+										<c:if test="${entry.value > 0}">
+											<p class="positive">+${entry.value / 100}${home.getDisplayString(entry.key)}</p>
+										</c:if>
+										<c:if test="${entry.value < 0}">
+											<p class="negative">${entry.value / 100}${home.getDisplayString(entry.key)}</p>
+										</c:if>
+									</c:if>
+								</li>
+							</c:forEach>
+						</ul>
+					</div>
+				</td>
+			</tr>
 		</table>
 		<br><br>
 		<table class="standardTable nationTable">
