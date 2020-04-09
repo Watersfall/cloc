@@ -1799,7 +1799,7 @@ public class Nation
 		long factories = this.getTotalFactories();
 		long military = -1 * this.getUsedManpower().get("manpower.net") / 20000;
 		long conscription = economy.getRecentDeconscription() - economy.getRecentConscription();
-		long fortification = -this.getArmy().getFortification();
+		long fortification = -this.getArmy().getFortification() / 500;
 		if(conscription > 0)
 		{
 			conscription = (long)((conscription + 1) * 0.75);
@@ -1809,6 +1809,21 @@ public class Nation
 		{
 			conscription = (long)(conscription * 1.15);
 			map.put("growth.conscription", conscription);
+		}
+		switch(this.policy.getFortification())
+		{
+			case UNOCCUPIED_FORTIFICATION:
+				fortification = 0;
+				break;
+			case MINIMAL_FUNDING_FORTIFICATION:
+				fortification *= 0.5;
+				break;
+			case FULL_FUNDING_FORTIFICATION:
+				fortification *= 1.25;
+				break;
+			case MAX_FORTIFICATION:
+				fortification *= 2;
+
 		}
 		map.put("growth.factories", factories);
 		map.put("growth.military", military);
