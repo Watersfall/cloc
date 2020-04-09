@@ -1214,6 +1214,26 @@ public class Nation
 		return map;
 	}
 
+	public int getFighterCount()
+	{
+		int total = 0;
+		for(Fighter fighter : Fighter.values())
+		{
+			total += this.getFighter(fighter);
+		}
+		return total;
+	}
+
+	public int getBomberCount()
+	{
+		int total = 0;
+		for(Bomber bomber : Bomber.values())
+		{
+			total += this.getBomber(bomber);
+		}
+		return total;
+	}
+
 	public int getEquipment(Equipment equipment)
 	{
 		switch(equipment)

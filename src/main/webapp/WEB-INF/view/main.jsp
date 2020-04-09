@@ -127,7 +127,7 @@
 			</tr>
 			<tr>
 				<td><p>Artillery</p></td>
-				<td><p><fmt:formatNumber value="${home.army.artillery}"/> Pieces</p></td>
+				<td><p><fmt:formatNumber value="${home.army.artillery}"/> Pieces / <fmt:formatNumber value="${home.army.size * 5}"/> max </p></td>
 			</tr>
 			<tr>
 				<td><p>Fortification</p></td>
@@ -185,6 +185,58 @@
 		</table>
 		<br><br>
 		<table class="standardTable nationTable">
+			<caption><p>Airforce</p></caption>
+			<tr>
+				<td><p>Fighters</p></td>
+				<td onclick="toggleTab('Fighters');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.fighterCount}"/> Planes</p>
+					<div class="toggleable detailsDown" id="Fighters">
+						<p><fmt:formatNumber value="${home.fighterCount}"/> Total Fighters</p>
+						<ul>
+							<c:forEach items="${fighters}" var="fighter">
+								<c:if test="${home.getFighter(fighter) > 0}">
+									<li>
+										<c:if test="${home.getFighter(fighter) > 1}">
+											<p>${home.getFighter(fighter)} ${' '.concat(fighter.name)}s</p>
+										</c:if>
+										<c:if test="${home.getFighter(fighter) == 1}">
+											<p>${home.getFighter(fighter)} ${' '.concat(fighter.name)}</p>
+										</c:if>
+									</li>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><p>Bombers</p></td>
+				<td onclick="toggleTab('Bombers');">
+					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
+					<p class="clickable"><fmt:formatNumber value="${home.bomberCount}"/> Planes</p>
+					<div class="toggleable detailsDown" id="Bombers">
+						<p><fmt:formatNumber value="${home.bomberCount}"/> Total Bombers</p>
+						<ul>
+							<c:forEach items="${bombers}" var="bomber">
+								<c:if test="${home.getBomber(bomber) > 0}">
+									<li>
+										<c:if test="${home.getBomber(bomber) > 1}">
+											<p>${home.getBomber(bomber)} ${' '.concat(bomber.name)}s</p>
+										</c:if>
+										<c:if test="${home.getBomber(bomber) == 1}">
+											<p>${home.getBomber(bomber)} ${' '.concat(bomber.name)}</p>
+										</c:if>
+									</li>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<br><br>
+		<table class="standardTable nationTable">
 			<caption><p>Navy</p></caption>
 			<tr>
 				<td><p>Destroyers</p></td>
@@ -206,10 +258,6 @@
 				<td><p>Troop Transports</p></td>
 				<td><p><fmt:formatNumber value="${home.military.transports}"/></p></td>
 			</tr>
-		</table>
-		<br><br>
-		<table class="standardTable nationTable">
-			<caption><p>Airforce</p></caption>
 		</table>
 		<h2>Wars</h2>
 		<c:if test="${home.atWar}">
