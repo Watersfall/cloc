@@ -36,10 +36,35 @@ public class WarActions
 		}
 		updateWar.execute();
 		defender.getMilitary().setWarProtection(4);
+		defender.getArmy().setSize(10);
+		defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() - 10000);
+		int landChange = defender.getDomestic().getLand() / 10;
+		double ironChange = defender.getEconomy().getIron() / 3;
+		double coalChange = defender.getEconomy().getCoal() / 3;
+		double oilChange = defender.getEconomy().getOil() / 3;
+		double nitrogenChange = defender.getEconomy().getNitrogen() / 3;
+		double steelChange = defender.getEconomy().getSteel() / 3;
+		double budgetChange = defender.getEconomy().getBudget() / 3;
+		defender.getDomestic().setLand(defender.getDomestic().getLand() - landChange);
+		defender.getEconomy().setIron(defender.getEconomy().getIron() - ironChange);
+		defender.getEconomy().setCoal(defender.getEconomy().getCoal() - coalChange);
+		defender.getEconomy().setOil(defender.getEconomy().getOil() - oilChange);
+		defender.getEconomy().setNitrogen(defender.getEconomy().getNitrogen() - nitrogenChange);
+		defender.getEconomy().setSteel(defender.getEconomy().getSteel() - steelChange);
+		defender.getEconomy().setBudget(defender.getEconomy().getBudget() - budgetChange);
+		attacker.getDomestic().setLand(attacker.getDomestic().getLand() + landChange);
+		attacker.getEconomy().setIron(attacker.getEconomy().getIron() + ironChange);
+		attacker.getEconomy().setCoal(attacker.getEconomy().getCoal() + coalChange);
+		attacker.getEconomy().setOil(attacker.getEconomy().getOil() + oilChange);
+		attacker.getEconomy().setNitrogen(attacker.getEconomy().getNitrogen() + nitrogenChange);
+		attacker.getEconomy().setSteel(attacker.getEconomy().getSteel() + steelChange);
+		attacker.getEconomy().setBudget(attacker.getEconomy().getBudget() + budgetChange);
+		for(City city : defender.getCities().getCities().values())
+		{
+			city.setDevastation(city.getDevastation() + 25);
+		}
 		String message = News.createMessage(News.ID_WAR_LOST, attacker.getNationUrl());
 		News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
-		attacker.getArmy().setFortification(attacker.getMinimumFortificationLevel());
-		defender.getArmy().setFortification(defender.getMinimumFortificationLevel());
 		update(attacker, defender);
 		return Responses.warWon();
 	}

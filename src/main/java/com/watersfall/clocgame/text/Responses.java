@@ -523,7 +523,7 @@ public class Responses
 
 	public static String warWon()
 	{
-		return "<p>You have won the war, winning absolutely nothing because I haven't written that part yet!</p>";
+		return "<p>You have won the war, stealing parts of the enemy's land, devastating their cities, and demanding a third of their resources in reparations!</p>";
 	}
 
 	public static String updated(String field)

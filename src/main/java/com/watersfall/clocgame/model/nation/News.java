@@ -76,7 +76,7 @@ public class News
 			case ID_AIR_BOMB_TROOPS:
 				return String.format("%s has bombed our army with their airforce, killing %sk of our troops!", args);
 			case ID_WAR_LOST:
-				return String.format("%s has defeated us in war, stealing nothing because I haven't written that part yet!", args);
+				return String.format("%s has defeated us in war, stealing part of our land, devastating our cities, and demanding a third of our resources in reparations. ", args);
 			case ID_SEND_PEACE:
 				return String.format("%s has requested white peace! Should we continue the war, or halt our advances?", args);
 			case ID_PEACE_ACCEPTED:
