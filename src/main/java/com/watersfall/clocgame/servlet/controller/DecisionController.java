@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.DecisionActions;
+import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -35,34 +36,37 @@ public class DecisionController extends HttpServlet
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
 			Nation nation = UserUtils.getUserNation(conn, true, req);
-			switch(url.get("decision"))
+			Decision decision = Decision.valueOf(url.get("decision").toUpperCase());
+			switch(decision)
 			{
-				case "freemoneycapitalist":
+				case FREE_MONEY_CAPITALIST:
 					return DecisionActions.freeMoneyCapitalist(nation);
-				case "freemoneycommunist":
+				case FREE_MONEY_COMMUNIST:
 					return DecisionActions.freeMoneyCommunist(nation);
-				case "crackdown":
+				case INCREASE_ARREST_QUOTAS:
 					return DecisionActions.arrest(nation);
-				case "free":
+				case PARDON_CRIMINALS:
 					return DecisionActions.free(nation);
-				case "landclearance":
+				case LAND_CLEARANCE:
 					return DecisionActions.landClearance(nation);
-				case "propaganda":
+				case PROPAGANDA:
 					return DecisionActions.propaganda(nation);
-				case "warpropaganda":
+				case WAR_PROPAGANDA:
 					return DecisionActions.warPropaganda(nation);
-				case "alignentente":
+				case ALIGN_ENTENTE:
 					return DecisionActions.alignEntente(nation);
-				case "alignneutral":
+				case ALIGN_NEUTRAL:
 					return DecisionActions.alignNeutral(nation);
-				case "aligncentral":
+				case ALIGN_CENTRAL_POWERS:
 					return DecisionActions.alignCentralPowers(nation);
-				case "conscript":
+				case CONSCRIPT:
 					return DecisionActions.conscript(nation);
-				case "train":
+				case TRAIN:
 					return DecisionActions.train(nation);
-				case "deconscript":
+				case DECONSCRIPT:
 					return DecisionActions.deconscript(nation);
+				case FORTIFY:
+					return DecisionActions.fortify(nation);
 				default:
 					return Responses.genericError();
 			}

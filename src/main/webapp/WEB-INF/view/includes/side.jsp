@@ -58,7 +58,7 @@
 							<p>Policies</p>
 						</div>
 					</a>
-					<a href="${pageContext.request.contextPath}/decisions/">
+					<a href="${pageContext.request.contextPath}/decisions/all">
 						<div>
 							<p>Decisions</p>
 						</div>

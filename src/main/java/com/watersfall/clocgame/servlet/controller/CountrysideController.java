@@ -24,7 +24,7 @@ public class CountrysideController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		req.setAttribute("policy",DecisionsController.policy);
+		req.setAttribute("policy",DecisionsController.decision);
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/countryside.jsp").forward(req, resp);
 	}
 

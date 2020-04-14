@@ -1,10 +1,10 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.action.DecisionActions;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.message.Declaration;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
@@ -1568,32 +1568,55 @@ public class Nation
 	}
 
 	/**
-	 * Returns the cash-cost of a policy<br>
-	 * This contains most policy costs that would show up under policies->category
+	 * Returns the cash-cost of a decision<br>
+	 * This contains most policy costs that would show up under decisions->category
 	 * but does not include any that cost another resource/other resources
-	 * @param policy The ID of the policy
+	 * @param decision The ID of the decision
 	 * @return The cost of the policy
 	 */
-	public long getPolicyCost(int policy)
+	public long getDecisionCost(Decision decision)
 	{
-		switch(policy)
+		switch(decision)
 		{
-			case DecisionActions.ID_PROPAGANDA:
+			case PROPAGANDA:
 				return (long)(this.economy.getGdp() / 2L * (this.domestic.getApproval() / 100.0));
-			case DecisionActions.ID_WAR_PROPAGANDA:
-				return getPolicyCost(DecisionActions.ID_PROPAGANDA) / 2L;
-			case DecisionActions.ID_LAND_CLEARANCE:
+			case WAR_PROPAGANDA:
+				return getDecisionCost(Decision.PROPAGANDA) / 2L;
+			case LAND_CLEARANCE:
 				return (long)(this.economy.getGdp() * 2L);
-			case DecisionActions.ID_ALIGN:
-			case DecisionActions.ID_FREE:
-			case DecisionActions.ID_ARREST:
+			case ALIGN_CENTRAL_POWERS:
+			case ALIGN_ENTENTE:
+			case ALIGN_NEUTRAL:
+			case PARDON_CRIMINALS:
+			case INCREASE_ARREST_QUOTAS:
 				return 100;
-			case DecisionActions.ID_TRAIN:
+			case TRAIN:
 				return (long)this.army.getSize() * (long)this.army.getSize() * (long)this.army.getTraining() / 200L;
-			case DecisionActions.ID_CREATE_TREATY:
+			case FORM_TREATY:
 				return 500;
+			case FORTIFY:
+				return (long)(this.getMaximumFortificationLevel() / 100.0 * ((double)this.getArmy().getFortification() / (double)this.getMaximumFortificationLevel()));
 			default:
 				return 0;
+		}
+	}
+
+	public String getDecisionCostDisplayString(Decision decision)
+	{
+		long cost = getDecisionCost(decision);
+		if(cost == 0)
+		{
+			return "Free";
+		}
+		else
+		{
+			switch(decision)
+			{
+				case FORTIFY:
+					return Util.formatNumber(cost) + " Steel";
+				default:
+					return "$" + Util.formatNumber(cost);
+			}
 		}
 	}
 
@@ -1722,6 +1745,10 @@ public class Nation
 		if(base > 50)
 		{
 			base = 50;
+		}
+		if(base < -100)
+		{
+			base = -100;
 		}
 		double bonus = 0;
 		if(base > 0)

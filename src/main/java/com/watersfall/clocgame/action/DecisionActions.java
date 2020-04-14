@@ -3,6 +3,7 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.text.Responses;
@@ -13,45 +14,10 @@ public class DecisionActions
 {
 	public DecisionActions(){}
 
-	//<editor-fold desc="Constants"
-	//<editor-fold desc="IDs">
-	public static final int ID_COAL_MINE = 0;
-	public static final int ID_IRON_MINE = 1;
-	public static final int ID_DRILL = 2;
-	public static final int ID_INDUSTRIALIZE = 3;
-	public static final int ID_MILITARIZE = 4;
-	public static final int ID_NITROGEN_PLANT = 5;
-	public static final int ID_UNIVERSITY = 6;
-	public static final int ID_PORT = 7;
-	public static final int ID_BARRACK = 8;
-	public static final int ID_RAILROAD = 9;
-	public static final int ID_ARREST = 10;
-	public static final int ID_FREE = 11;
-	public static final int ID_LAND_CLEARANCE = 12;
-	public static final int ID_PROPAGANDA = 13;
-	public static final int ID_WAR_PROPAGANDA = 14;
-	public static final int ID_ALIGN = 15;
-	public static final int ID_TRAIN = 16;
-	public static final int ID_CREATE_TREATY = 17;
-	//</editor-fold>
-	//<editor-fold desc="Modifiers"
-	private static final int CRACKDOWN_STAB = 5;
-	private static final int CRACKDOWN_APPROVAL = -5;
-	private static final int CRACKDOWN_GOV = -5;
-	private static final int FREE_STAB = -5;
-	private static final int FREE_APPROVAL = 5;
-	private static final int FREE_GOV = 5;
-	private static final int FREE_MONEY_ECON = 5;
-	//</editor-fold>
-	//<editor-fold desc="Gain">
-	private static final int FREE_MONEY_GAIN = 1000;
-	//</editor-fold>
-	//</editor-fold>
-
 	//<editor-fold desc="Domestic Policies">
 	public static String arrest(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		long cost = nation.getPolicyCost(ID_ARREST);
+		long cost = nation.getDecisionCost(Decision.INCREASE_ARREST_QUOTAS);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -66,9 +32,9 @@ public class DecisionActions
 		}
 		else
 		{
-			nation.getDomestic().setStability(nation.getDomestic().getStability() + CRACKDOWN_STAB);
-			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + CRACKDOWN_APPROVAL);
-			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + CRACKDOWN_GOV);
+			nation.getDomestic().setStability(nation.getDomestic().getStability() + 5);
+			nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 5);
+			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + 5);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			nation.update();
 			return Responses.arrest();
@@ -77,7 +43,7 @@ public class DecisionActions
 
 	public static String free(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		long cost = nation.getPolicyCost(ID_FREE);
+		long cost = nation.getDecisionCost(Decision.PARDON_CRIMINALS);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -92,9 +58,9 @@ public class DecisionActions
 		}
 		else
 		{
-			nation.getDomestic().setStability(nation.getDomestic().getStability() + FREE_STAB);
-			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + FREE_APPROVAL);
-			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + FREE_GOV);
+			nation.getDomestic().setStability(nation.getDomestic().getStability() - 5);
+			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 5);
+			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() - 5);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			nation.update();
 			return Responses.free();
@@ -103,7 +69,7 @@ public class DecisionActions
 
 	public static String landClearance(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		long cost = nation.getPolicyCost(ID_LAND_CLEARANCE);
+		long cost = nation.getDecisionCost(Decision.LAND_CLEARANCE);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -120,7 +86,7 @@ public class DecisionActions
 
 	public static String propaganda(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		long cost = nation.getPolicyCost(ID_PROPAGANDA);
+		long cost = nation.getDecisionCost(Decision.PROPAGANDA);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -140,7 +106,7 @@ public class DecisionActions
 
 	public static String warPropaganda(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		long cost = nation.getPolicyCost(ID_WAR_PROPAGANDA);
+		long cost = nation.getDecisionCost(Decision.WAR_PROPAGANDA);
 		if(nation.getOffensive() == null && nation.getDefensive() == null)
 		{
 			return Responses.propagandaNoWar();
@@ -167,8 +133,8 @@ public class DecisionActions
 	public static String freeMoneyCapitalist(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationEconomy economy = nation.getEconomy();
-		economy.setBudget(economy.getBudget() + FREE_MONEY_GAIN);
-		economy.setEconomic(economy.getEconomic() + FREE_MONEY_ECON);
+		economy.setBudget(economy.getBudget() + 1000);
+		economy.setEconomic(economy.getEconomic() + 5);
 		nation.update();
 		return Responses.freeMoneyCapitalist();
 	}
@@ -176,8 +142,8 @@ public class DecisionActions
 	public static String freeMoneyCommunist(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationEconomy economy = nation.getEconomy();
-		economy.setBudget(economy.getBudget() + FREE_MONEY_GAIN);
-		economy.setEconomic(economy.getEconomic() - FREE_MONEY_ECON);
+		economy.setBudget(economy.getBudget() + 1000);
+		economy.setEconomic(economy.getEconomic() - 5);
 		nation.update();
 		return Responses.freeMoneyCommunist();
 	}
@@ -186,7 +152,7 @@ public class DecisionActions
 	//<editor-fold desc="Foreign Policies">
 	private static String align(Nation nation, int align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		long cost = nation.getPolicyCost(ID_ALIGN);
+		long cost = nation.getDecisionCost(Decision.ALIGN_NEUTRAL);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -253,7 +219,7 @@ public class DecisionActions
 
 	public static String train(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		long cost = nation.getPolicyCost(ID_TRAIN);
+		long cost = nation.getDecisionCost(Decision.TRAIN);
 		if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
@@ -270,96 +236,26 @@ public class DecisionActions
 			return Responses.train();
 		}
 	}
+
+	public static String fortify(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
+	{
+		long cost = nation.getDecisionCost(Decision.FORTIFY);
+		if(nation.getEconomy().getSteel() < cost)
+		{
+			return Responses.noSteel();
+		}
+		else if(nation.getArmy().getFortification() > 10000)
+		{
+			return Responses.alreadyFortified();
+		}
+		else
+		{
+			int increase = nation.getMaximumFortificationLevel() / 10;
+			nation.getArmy().setFortification(nation.getArmy().getFortification() + increase);
+			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost);
+			nation.update();
+			return Responses.fortified();
+		}
+	}
 	//</editor-fold>
-
-
-	public int getID_COAL_MINE()
-	{
-		return ID_COAL_MINE;
-	}
-
-	public int getID_IRON_MINE()
-	{
-		return ID_IRON_MINE;
-	}
-
-	public int getID_DRILL()
-	{
-		return ID_DRILL;
-	}
-
-	public int getID_INDUSTRIALIZE()
-	{
-		return ID_INDUSTRIALIZE;
-	}
-
-	public int getID_MILITARIZE()
-	{
-		return ID_MILITARIZE;
-	}
-
-	public int getID_NITROGEN_PLANT()
-	{
-		return ID_NITROGEN_PLANT;
-	}
-
-	public int getID_UNIVERSITY()
-	{
-		return ID_UNIVERSITY;
-	}
-
-	public int getID_PORT()
-	{
-		return ID_PORT;
-	}
-
-	public int getID_BARRACK()
-	{
-		return ID_BARRACK;
-	}
-
-	public int getID_RAILROAD()
-	{
-		return ID_RAILROAD;
-	}
-
-	public int getID_ARREST()
-	{
-		return ID_ARREST;
-	}
-
-	public int getID_FREE()
-	{
-		return ID_FREE;
-	}
-
-	public int getID_LAND_CLEARANCE()
-	{
-		return ID_LAND_CLEARANCE;
-	}
-
-	public int getID_PROPAGANDA()
-	{
-		return ID_PROPAGANDA;
-	}
-
-	public int getID_WAR_PROPAGANDA()
-	{
-		return ID_WAR_PROPAGANDA;
-	}
-
-	public int getID_ALIGN()
-	{
-		return ID_ALIGN;
-	}
-
-	public int getID_TRAIN()
-	{
-		return ID_TRAIN;
-	}
-
-	public int getID_CREATE_TREATY()
-	{
-		return ID_CREATE_TREATY;
-	}
 }
