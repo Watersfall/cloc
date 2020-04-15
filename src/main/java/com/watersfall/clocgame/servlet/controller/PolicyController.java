@@ -49,6 +49,8 @@ public class PolicyController extends HttpServlet
 					return PolicyActions.economy(nation, policy);
 				case "Fortification":
 					return PolicyActions.fortification(nation, policy);
+				case "Farm Subsidization":
+					return PolicyActions.farmSubsidization(nation, policy);
 				default:
 					return Responses.genericError();
 			}

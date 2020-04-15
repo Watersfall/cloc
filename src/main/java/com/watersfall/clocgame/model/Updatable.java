@@ -23,6 +23,10 @@ public class Updatable
 
 	public Object getByName(String name) throws SQLException
 	{
+		if(this.fields.get(name) != null)
+		{
+			return this.fields.get(name);
+		}
 		int column = results.findColumn(name);
 		Object value;
 		switch (results.getMetaData().getColumnType(column))

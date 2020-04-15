@@ -16,14 +16,14 @@ public class TechnologyAdvancedTrenches extends SingleTechnology
 	public static final String FIELD_NAME = "advancedTrenchesTech";
 
 	private TechnologyAdvancedTrenches()
-	{
-		super(NAME, DESC, COLUMN_NAME, FIELD_NAME, 1);
-		this.prerequisites = new ArrayList<>();
-		this.costs = new HashMap<>();
-		this.requirements = new HashMap<>();
-		prerequisites.add(Technologies.BASIC_FORTIFICATIONS);
-		costs.put("research", 50);
-	}
+{
+	super(NAME, DESC, COLUMN_NAME, FIELD_NAME, 1);
+	this.prerequisites = new ArrayList<>();
+	this.costs = new HashMap<>();
+	this.requirements = new HashMap<>();
+	prerequisites.add(Technologies.BASIC_FORTIFICATIONS);
+	costs.put("research", 50);
+}
 
 	public static TechnologyAdvancedTrenches getInstance()
 	{

@@ -231,6 +231,47 @@ public class City extends Updatable
 		this.population = population;
 	}
 
+	@Override
+	public Object getByName(String name) throws SQLException
+	{
+		if(this.fields.get(name) != null)
+		{
+			return this.fields.get(name);
+		}
+		else
+		{
+			switch(name)
+			{
+				case "oil_wells":
+					return this.oilWells;
+				case "iron_mines":
+					return this.ironMines;
+				case "coal_mines":
+					return this.coalMines;
+				case "industry_civilian":
+					return this.industryCivilian;
+				case "industry_nitrogen":
+					return this.industryNitrogen;
+				case "industry_military":
+					return this.militaryFactories;
+				case "name":
+					return this.name;
+				case "ports":
+					return this.ports;
+				case "railroads":
+					return this.railroads;
+				case "barracks":
+					return this.barracks;
+				case "population":
+					return this.population;
+				case "universities":
+					return this.universities;
+				default:
+					return 0;
+			}
+		}
+	}
+
 	public CitySize getSize()
 	{
 		if(this.population > CitySize.ECUMENOPOLIS.getMinimum())

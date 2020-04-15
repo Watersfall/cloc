@@ -25,7 +25,11 @@ public enum Policy
 	FULL_FUNDING_FORTIFICATION("Extra Supplies", 25, "policy.fortification_upkeep", 25, "policy.fortification_growth", 100, "policy.fortification_max"),
 	PARTIAL_FUNDING_FORTIFICATION("Standing Garrison", 0, "policy.fortification_upkeep", 75, "policy.fortification_max"),
 	MINIMAL_FUNDING_FORTIFICATION("Minimal Garrison", -25, "policy.fortification_upkeep", -50, "policy.fortification_growth", 40, "policy.fortification_max"),
-	UNOCCUPIED_FORTIFICATION("Unoccupied", -100, "policy.fortification_upkeep", -125, "policy.fortification_growth", 15, "policy.fortification_max");
+	UNOCCUPIED_FORTIFICATION("Unoccupied", -100, "policy.fortification_upkeep", -125, "policy.fortification_growth", 15, "policy.fortification_max"),
+	NO_SUBSIDIES_FARMING("No Farming Subsidies", -75, "policy.farm_upkeep", -50, "policy.farm_tech_bonus"),
+	REDUCED_SUBSIDIES_FARMING("Reduced Farming Subsidies", -25, "policy.farm_upkeep", -15, "policy.farm_tech_bonus"),
+	STANDARD_SUBSIDIES_FARMING("Standard Farming Subsidies"),
+	SUBSTANTIAL_SUBSIDIES_FARMING("Substantial Farming Subsidies", 50, "policy.farm_upkeep", 50, "policy.farm_tech_bonus");
 
 	private @Getter String name;
 	private @Getter Object[] desc;
@@ -77,6 +81,10 @@ public enum Policy
 				return "% to fortification speed";
 			case "policy.fortification_max":
 				return "% max fortification";
+			case "policy.farm_upkeep":
+				return "% farm upkeep";
+			case "policy.farm_tech_bonus":
+				return "% farming technology bonus";
 			default:
 				return "";
 		}
@@ -89,6 +97,7 @@ public enum Policy
 		map.put("Manpower", Arrays.asList(DISARMED_MANPOWER, VOLUNTEER_MANPOWER, RECRUITMENT_MANPOWER, MANDATORY_MANPOWER, SCRAPING_THE_BARREL_MANPOWER));
 		map.put("Food", Arrays.asList(RATIONING_FOOD, NORMAL_FOOD, FREE_FOOD));
 		map.put("Fortification", Arrays.asList(MAX_FORTIFICATION, FULL_FUNDING_FORTIFICATION, PARTIAL_FUNDING_FORTIFICATION, MINIMAL_FUNDING_FORTIFICATION, UNOCCUPIED_FORTIFICATION));
+		map.put("Farm Subsidization", Arrays.asList(NO_SUBSIDIES_FARMING, REDUCED_SUBSIDIES_FARMING, STANDARD_SUBSIDIES_FARMING, SUBSTANTIAL_SUBSIDIES_FARMING));
 		return map;
 	}
 }

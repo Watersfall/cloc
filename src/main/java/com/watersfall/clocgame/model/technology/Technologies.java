@@ -4,6 +4,7 @@ import com.watersfall.clocgame.model.technology.technologies.Category;
 import com.watersfall.clocgame.model.technology.technologies.single.ammoandfeed.*;
 import com.watersfall.clocgame.model.technology.technologies.single.artillery.TechnologyArtillery;
 import com.watersfall.clocgame.model.technology.technologies.single.doctrine.*;
+import com.watersfall.clocgame.model.technology.technologies.single.economy.*;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.TechnologyShipOil;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.TechnologyTank;
 import com.watersfall.clocgame.model.technology.technologies.single.vehicles.air.*;
@@ -66,7 +67,19 @@ public enum Technologies
 	ADVANCED_FORTIFICATIONS(TechnologyReinforcedConcrete.getInstance(), Category.DOCTRINE, 1, 4, new String[]{"vertical"}),
 	MOBILE_DEFENSE(TechnologyMobileDefense.getInstance(), Category.DOCTRINE, 1, 5, new String[]{"vertical"}),
 
+	/*
+	** Economy
+	 */
+	BASIC_ARTIFICIAL_FERTILIZER(TechnologyBasicArtificialFertilizer.getInstance(), Category.ECONOMY, 1, 1, new String[]{}),
+	ARTIFICIAL_FERTILIZER(TechnologyArtificialFertilizer.getInstance(), Category.ECONOMY, 2, 1, new String[]{"horizontalLeft"}),
+	ADVANCED_ARTIFICIAL_FERTILIZER(TechnologyAdvancedArtificialFertilizer.getInstance(), Category.ECONOMY, 3, 1, new String[]{"horizontalLeft"}),
+	FARMING_MACHINES(TechnologyFarmingMachines.getInstance(), Category.ECONOMY, 2, 2, new String[]{"vertical"}),
+	ADVANCED_FARMING_MACHINES(TechnologyAdvancedFarmingMachines.getInstance(), Category.ECONOMY, 3, 2, new String[]{"horizontalLeft"}),
 
+
+	/*
+	** Other
+	 */
 	TANK(TechnologyTank.getInstance(), Category.LAND, 1, 1, new String[]{""}),
 	SHIP_OIL(TechnologyShipOil.getInstance(), Category.SEA, 1, 1, new String[]{""}),
 	CHEMICAL_WEAPONS(TechnologyChemicalWeapons.getInstance(), Category.WMD, 1, 1, new String[]{""}),

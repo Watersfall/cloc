@@ -109,4 +109,22 @@ public class PolicyActions
 			return Responses.policyUpdated();
 		}
 	}
+
+	public static String farmSubsidization(Nation nation, Policy policy) throws SQLException
+	{
+		if(nation.getPolicy().getFarmingSubsidies() == policy)
+		{
+			return Responses.policySame();
+		}
+		else if(nation.getPolicy().getChangeFarmingSubsidies() + 1 > Util.month)
+		{
+			return Responses.noChange();
+		}
+		else
+		{
+			nation.getPolicy().setFarmingSubsidies(policy);
+			nation.update();
+			return Responses.policyUpdated();
+		}
+	}
 }

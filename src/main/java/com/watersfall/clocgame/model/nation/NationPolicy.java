@@ -19,6 +19,8 @@ public class NationPolicy extends Updatable
 	private @Getter int changeEconomy;
 	private @Getter Policy fortification;
 	private @Getter int changeFortification;
+	private @Getter Policy farmingSubsidies;
+	private @Getter int changeFarmingSubsidies;
 
 	public NationPolicy(int id, ResultSet results) throws SQLException
 	{
@@ -31,6 +33,8 @@ public class NationPolicy extends Updatable
 		this.changeEconomy = results.getInt("economy_change");
 		this.fortification = Policy.valueOf(results.getString("fortification_policy"));
 		this.changeFortification = results.getInt("fortification_change");
+		this.farmingSubsidies = Policy.valueOf(results.getString("farming_subsidies"));
+		this.changeFarmingSubsidies = results.getInt("farming_subsidies_change");
 	}
 
 	public Policy getPolicy(Policy policy)
@@ -41,6 +45,8 @@ public class NationPolicy extends Updatable
 			return this.food;
 		else if(policy.name().contains("FORTIFICATION"))
 			return this.fortification;
+		else if(policy.name().contains("SUBSIDIES_FARMING"))
+			return this.farmingSubsidies;
 		else
 			return this.manpower;
 	}
@@ -51,6 +57,10 @@ public class NationPolicy extends Updatable
 			return this.changeEconomy;
 		else if (policy.name().contains("FOOD"))
 			return this.changeFood;
+		else if(policy.name().contains("FORTIFICATION"))
+			return this.changeFortification;
+		else if(policy.name().contains("SUBSIDIES_FARMING"))
+			return this.changeFarmingSubsidies;
 		else
 			return this.changeManpower;
 	}
@@ -101,5 +111,17 @@ public class NationPolicy extends Updatable
 	{
 		this.addField("fortification_change", changeFortification);
 		this.changeFortification = changeFortification;
+	}
+
+	public void setFarmingSubsidies(Policy farming)
+	{
+		this.addField("farming_subsidies", farming);
+		this.farmingSubsidies = farming;
+	}
+
+	public void setChangeFarmingSubsidies(int changeFarmingSubsidies)
+	{
+		this.addField("farming_subsidies_change", changeFarmingSubsidies);
+		this.changeFarmingSubsidies = changeFarmingSubsidies;
 	}
 }

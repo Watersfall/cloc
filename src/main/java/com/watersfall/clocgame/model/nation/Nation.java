@@ -985,6 +985,25 @@ public class Nation
 				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("steel"));
 				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("steel"));
 			}
+			if(this.hasTech(Technologies.FARMING_MACHINES) || this.hasTech(Technologies.ADVANCED_FARMING_MACHINES))
+			{
+				double amount = -this.domestic.getLand() / 250.0 / 20.0;
+				if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
+				{
+					amount *= 0.25;
+				}
+				else if(this.getPolicy().getFarmingSubsidies() == Policy.REDUCED_SUBSIDIES_FARMING)
+				{
+					amount *= 0.75;
+				}
+				else if(this.getPolicy().getFarmingSubsidies() == Policy.SUBSTANTIAL_SUBSIDIES_FARMING)
+				{
+					amount *= 1.5;
+				}
+				map.put("resource.farming_demands", amount);
+				double finalAmount = amount;
+				map.compute("resource.net", (k, v) -> v = v + finalAmount);
+			}
 			steelProduction = map;
 		}
 		return steelProduction;
@@ -1022,6 +1041,25 @@ public class Nation
 			{
 				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("nitrogen"));
 				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("nitrogen"));
+			}
+			if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) || this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER))
+			{
+				double amount = -this.domestic.getLand() / 250.0 / 20.0;
+				if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
+				{
+					amount *= 0.25;
+				}
+				else if(this.getPolicy().getFarmingSubsidies() == Policy.REDUCED_SUBSIDIES_FARMING)
+				{
+					amount *= 0.75;
+				}
+				else if(this.getPolicy().getFarmingSubsidies() == Policy.SUBSTANTIAL_SUBSIDIES_FARMING)
+				{
+					amount *= 1.5;
+				}
+				map.put("resource.farming_demands", amount);
+				double finalAmount = amount;
+				map.compute("resource.net", (k, v) -> v = v + finalAmount);
 			}
 			nitrogenProduction = map;
 		}
@@ -1074,6 +1112,41 @@ public class Nation
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get("farming.net");
+		if(farming < 0)
+			farming = 0;
+		double tech = 0;
+		if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get("resource.net") + this.getEconomy().getNitrogen() >= 0)
+		{
+			tech = farming * 2;
+		}
+		else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get("resource.net") + this.getEconomy().getNitrogen() >= 0)
+		{
+			tech = farming;
+		}
+		else if(this.hasTech(Technologies.BASIC_ARTIFICIAL_FERTILIZER))
+		{
+			tech = farming * 0.5;
+		}
+		if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get("resource.net") + this.getEconomy().getSteel() > 0)
+		{
+			tech += (farming * 2);
+		}
+		else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get("resource.net") + this.getEconomy().getSteel() > 0)
+		{
+			tech += (farming);
+		}
+		if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
+		{
+			tech *= 0.5;
+		}
+		else if(this.getPolicy().getFarmingSubsidies() == Policy.REDUCED_SUBSIDIES_FARMING)
+		{
+			tech *= 0.85;
+		}
+		else if(this.getPolicy().getFarmingSubsidies() == Policy.SUBSTANTIAL_SUBSIDIES_FARMING)
+		{
+			tech *= 1.5;
+		}
 		double consumption = -this.getTotalPopulation() / 2000.0;
 		double economy = 0.0;
 		double food = 0.0;
@@ -1096,8 +1169,9 @@ public class Nation
 		{
 			food = -consumption * 0.35;
 		}
-		net += food + economy;
+		net += food + economy + tech;
 		map.put("resource.farming", farming);
+		map.put("resource.technology", tech);
 		map.put("resource.consumption", consumption);
 		map.put("resource.economy_type", economy);
 		map.put("resource.food_type", food);
@@ -2024,6 +2098,10 @@ public class Nation
 				return " from food policy";
 			case "resource.mil_factory_demands":
 				return " from military factory demands";
+			case "resource.technology":
+				return " from technology";
+			case "resource.farming_demands":
+				return " from farm upkeep";
 			case "farming.base":
 				return " from default";
 			case "farming.net":
