@@ -811,7 +811,7 @@ public class Nation
 		{
 			bonus = 0.1;
 		}
-		computeBonus(map, bonus);
+		computeBonus(map, "resource.economy_type", bonus);
 	}
 
 	private static void factoryEconBoosts(LinkedHashMap<String, Double> map, Policy policy)
@@ -829,15 +829,35 @@ public class Nation
 		{
 			bonus = -0.15;
 		}
-		computeBonus(map, bonus);
+		computeBonus(map, "resource.economy_type", bonus);
 	}
 
-	private static void computeBonus(LinkedHashMap<String, Double> map, double bonus)
+	public void doStabilityResourceEffect(LinkedHashMap<String, Double> map)
 	{
-		map.put("resource.economy_type", map.get("resource.total") * bonus);
-		map.compute("resource.net", (k, v) -> v += (map.get("resource.total") * bonus));
-		map.compute("resource.total", (k, v) -> v += v * bonus);
+		double stabilityEffect = this.getDomestic().getStability() - 50;
+		if(stabilityEffect < 0)
+		{
+			stabilityEffect = stabilityEffect / (3.0 + 1.0/3.0);
+		}
+		else
+		{
+			stabilityEffect = stabilityEffect / 5.0;
+		}
+		final double stabilityIncrease = (stabilityEffect / 100.0);
+		computeBonus(map, "resource.stability", stabilityIncrease);
 	}
+
+	private static void computeBonus(LinkedHashMap<String, Double> map, String key, double bonus)
+	{
+		map.put(key, map.get("resource.total") * bonus);
+		map.compute("resource.net", (k, v) -> v += (map.get("resource.total") * bonus));
+		if(bonus > 0)
+		{
+			map.compute("resource.total", (k, v) -> v += v * bonus);
+		}
+
+	}
+
 
 	/**
 	 * Calculates the total coal production of all cities
@@ -870,6 +890,7 @@ public class Nation
 				}
 			}
 			extractionEconBoosts(map, this.getPolicy().getEconomy());
+			doStabilityResourceEffect(map);
 			coalProduction = map;
 		}
 		return coalProduction;
@@ -906,6 +927,7 @@ public class Nation
 				}
 			}
 			extractionEconBoosts(map, this.getPolicy().getEconomy());
+			doStabilityResourceEffect(map);
 			ironProduction = map;
 		}
 		return ironProduction;
@@ -942,6 +964,7 @@ public class Nation
 				}
 			}
 			extractionEconBoosts(map, this.getPolicy().getEconomy());
+			doStabilityResourceEffect(map);
 			if(getTotalProductionCosts().get("oil") != null)
 			{
 				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("oil"));
@@ -980,6 +1003,7 @@ public class Nation
 				}
 			}
 			factoryEconBoosts(map, this.getPolicy().getEconomy());
+			doStabilityResourceEffect(map);
 			if(getTotalProductionCosts().get("steel") != null)
 			{
 				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("steel"));
@@ -1037,6 +1061,7 @@ public class Nation
 				}
 			}
 			factoryEconBoosts(map, this.getPolicy().getEconomy());
+			doStabilityResourceEffect(map);
 			if(getTotalProductionCosts().get("nitrogen") != null)
 			{
 				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("nitrogen"));
@@ -1093,6 +1118,7 @@ public class Nation
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
 				}
 			}
+			doStabilityResourceEffect(map);
 			researchProduction = map;
 		}
 		return researchProduction;
@@ -1177,6 +1203,7 @@ public class Nation
 		map.put("resource.food_type", food);
 		map.put("resource.net", net);
 		map.put("resource.total", total);
+		doStabilityResourceEffect(map);
 		return map;
 	}
 
@@ -1947,7 +1974,6 @@ public class Nation
 				break;
 			case MAX_FORTIFICATION:
 				fortification *= 2;
-
 		}
 		map.put("growth.factories", factories);
 		map.put("growth.military", military);
@@ -2131,6 +2157,8 @@ public class Nation
 				return " from technology";
 			case "resource.farming_demands":
 				return " from farm upkeep";
+			case "resource.stability":
+				return " from stability";
 			case "farming.base":
 				return " from default";
 			case "farming.net":
