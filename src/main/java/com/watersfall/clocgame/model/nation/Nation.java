@@ -1874,7 +1874,12 @@ public class Nation
 	public LinkedHashMap<String, Integer> getApprovalChange()
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		map.put("approval.net", 0);
+		int famine = (int)this.getFamineLevel();
+		if(famine < 0)
+		{
+			map.put("approval.famine", famine);
+		}
+		map.put("approval.net", famine);
 		return map;
 	}
 
@@ -1882,6 +1887,7 @@ public class Nation
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 		int approval = this.domestic.getApproval() / 20 - 2;
+		int famine = (int)this.getFamineLevel();
 		if(approval < 0)
 		{
 			map.put("stability.lowApproval", approval);
@@ -1890,8 +1896,25 @@ public class Nation
 		{
 			map.put("stability.approval", approval);
 		}
-		map.put("stability.net", approval);
+		if(famine < 0)
+		{
+			map.put("stability.famine", famine);
+		}
+		map.put("stability.net", approval + famine);
 		return map;
+	}
+
+	public double getFamineLevel()
+	{
+		double food = this.economy.getFood() + this.getFoodProduction().get("resource.net");
+		if(food > 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return -Math.sqrt(Math.abs(food)) * (Math.min(1, (this.getDomestic().getMonthsInFamine() + 1.0) / 10.0));
+		}
 	}
 
 	public LinkedHashMap<String, Long> getGrowthChange()
@@ -1929,7 +1952,7 @@ public class Nation
 		map.put("growth.factories", factories);
 		map.put("growth.military", military);
 		map.put("growth.fortification", fortification);
-		map.put("growth.net", factories + military + conscription);
+		map.put("growth.net", factories + military + conscription + fortification);
 		return map;
 	}
 
@@ -2031,6 +2054,8 @@ public class Nation
 				return "% from city size";
 			case "population.net":
 				return "% total growth per month";
+			case "population.famine":
+				return "% per month from famine";
 			case "growth.factories":
 				return " per month from factories";
 			case "growth.military":
@@ -2041,17 +2066,21 @@ public class Nation
 				return " from recent conscription";
 			case "growth.fortification":
 				return " from fortification upkeep";
-			case "stability.net":
 			case "growth.net":
+				return " change per month";
+			case "stability.net":
 			case "approval.net":
 			case "fortification.net":
-				return " change per month";
+				return "% change per month";
 			case "stability.lowApproval":
-				return " per month from low approval";
+				return "% per month from low approval";
 			case "stability.approval":
-				return " per month from high approval";
+				return "% per month from high approval";
+			case "stability.famine":
+			case "approval.famine":
+				return "% per months from famine";
 			case "approval.policies":
-				return " per month from policies";
+				return "% per month from policies";
 			case "manpower.army":
 				return " in the Army";
 			case "manpower.navy":

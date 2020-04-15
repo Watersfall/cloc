@@ -104,6 +104,10 @@ public class TurnMonth implements Runnable
 						nation.getArmy().setFortification(nation.getArmy().getFortification() + 1);
 					}
 
+					if(nation.getFamineLevel() < 0)
+					{
+						nation.getDomestic().setMonthsInFamine(nation.getDomestic().getMonthsInFamine() + 1);
+					}
 					nation.update();
 				}
 				catch(SQLException e)

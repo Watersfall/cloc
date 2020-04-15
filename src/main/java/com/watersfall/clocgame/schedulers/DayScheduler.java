@@ -48,6 +48,7 @@ public class DayScheduler
 				scheduler.schedule("5,30,55 2,7,12,17,22 * * *", new TurnDay());
 				scheduler.schedule("20,45 3,8,13,18,23 * * *", new TurnDay());
 				scheduler.schedule("10,35 4,9,14,19 * * *", new TurnDay());
+				scheduler.schedule("* * * * *", new TurnDay());
 				break;
 		}
 		scheduler.start();

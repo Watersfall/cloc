@@ -318,6 +318,7 @@ public class City extends Updatable
 		double manpowerPolicy = 0;
 		double economyPolicy = 0;
 		double size = 0;
+		double famine = nation.getFamineLevel();
 		if(nation.getPolicy().getFood() == Policy.FREE_FOOD)
 		{
 			foodPolicy = 0.15;
@@ -351,13 +352,19 @@ public class City extends Updatable
 			economyPolicy = -0.15;
 		}
 		size = this.getSize().getPopGrowthBonus();
-
+		double net = base + foodPolicy + manpowerPolicy + economyPolicy + size;
+		if(famine < 0)
+		{
+			famine = Math.min(-net, famine);
+		}
+		net += famine;
 		map.put("population.base", base);
 		map.put("population.foodPolicy", foodPolicy);
 		map.put("population.manpowerPolicy", manpowerPolicy);
 		map.put("population.economy_policy", economyPolicy);
 		map.put("population.size", size);
-		map.put("population.net", base + foodPolicy + manpowerPolicy + economyPolicy + size);
+		map.put("population.famine", famine);
+		map.put("population.net", net);
 		return map;
 	}
 

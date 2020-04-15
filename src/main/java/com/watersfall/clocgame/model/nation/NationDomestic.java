@@ -19,6 +19,7 @@ public class NationDomestic extends Updatable
 	private @Getter int farmRegulations;
 	private @Getter int farmTechnology;
 	private @Getter int farmCollectivization;
+	private @Getter int monthsInFamine;
 
 	public NationDomestic(int id, ResultSet results) throws SQLException
 	{
@@ -33,6 +34,7 @@ public class NationDomestic extends Updatable
 		this.farmRegulations = results.getInt("farm_regulations");
 		this.farmTechnology = results.getInt("farm_technology");
 		this.farmCollectivization = results.getInt("farm_collectivization");
+		this.monthsInFamine = results.getInt("months_in_famine");
 	}
 
 	public void setLand(int land)
@@ -133,5 +135,13 @@ public class NationDomestic extends Updatable
 			farm = 1000;
 		this.addField("farm_collectivization", farm);
 		this.farmCollectivization = farm;
+	}
+
+	public void setMonthsInFamine(int monthsInFamine)
+	{
+		if(monthsInFamine < 0)
+			monthsInFamine = 0;
+		this.addField("months_in_famine", monthsInFamine);
+		this.monthsInFamine = monthsInFamine;
 	}
 }
