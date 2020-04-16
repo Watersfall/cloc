@@ -11,7 +11,7 @@
 		</div>
 		<c:forEach var="policy" items="${policies.entrySet()}">
 			<div class="policy">
-				<div class="name"><p class="halfPad">${policy.key}</p></div>
+				<div class="name"><p class="halfPad">${policy.key.name}</p></div>
 				<div class="cost">
 					<label for="policy_${policy.key}"></label>
 					<select class="halfPad" id="policy_${policy.key}" onchange="updateDesc('policy_${policy.key}')"}>

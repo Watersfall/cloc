@@ -1,12 +1,12 @@
 package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationDomestic;
 import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.schedulers.DayScheduler;
 import com.watersfall.clocgame.util.Util;
 

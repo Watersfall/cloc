@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 

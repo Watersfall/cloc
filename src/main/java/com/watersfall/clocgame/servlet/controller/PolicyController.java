@@ -2,8 +2,8 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.PolicyActions;
-import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;

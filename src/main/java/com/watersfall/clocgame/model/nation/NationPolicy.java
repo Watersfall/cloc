@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 
 import java.sql.ResultSet;
@@ -39,30 +39,40 @@ public class NationPolicy extends Updatable
 
 	public Policy getPolicy(Policy policy)
 	{
-		if(policy.name().contains("ECONOMY"))
-			return this.economy;
-		else if (policy.name().contains("FOOD"))
-			return this.food;
-		else if(policy.name().contains("FORTIFICATION"))
-			return this.fortification;
-		else if(policy.name().contains("SUBSIDIES_FARMING"))
-			return this.farmingSubsidies;
-		else
-			return this.manpower;
+		switch(policy.getCategory())
+		{
+			case FOOD:
+				return this.food;
+			case ECONOMY:
+				return this.economy;
+			case MANPOWER:
+				return this.manpower;
+			case FORTIFICATION:
+				return this.fortification;
+			case FARM_SUBSIDIZATION:
+				return this.farmingSubsidies;
+			default:
+				return null;
+		}
 	}
 
 	public int getPolicyChange(Policy policy)
 	{
-		if(policy.name().contains("ECONOMY"))
-			return this.changeEconomy;
-		else if (policy.name().contains("FOOD"))
-			return this.changeFood;
-		else if(policy.name().contains("FORTIFICATION"))
-			return this.changeFortification;
-		else if(policy.name().contains("SUBSIDIES_FARMING"))
-			return this.changeFarmingSubsidies;
-		else
-			return this.changeManpower;
+		switch(policy.getCategory())
+		{
+			case FOOD:
+				return this.changeFood;
+			case ECONOMY:
+				return this.changeEconomy;
+			case MANPOWER:
+				return this.changeManpower;
+			case FORTIFICATION:
+				return this.changeFortification;
+			case FARM_SUBSIDIZATION:
+				return this.changeFarmingSubsidies;
+			default:
+				return 0;
+		}
 	}
 
 	public void setManpower(Policy manpower)

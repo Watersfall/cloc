@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.decisions.Decision;
@@ -10,6 +9,7 @@ import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
 import com.watersfall.clocgame.model.military.Fighter;
 import com.watersfall.clocgame.model.military.ReconPlane;
+import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.Technology;
 import com.watersfall.clocgame.model.treaty.Treaty;

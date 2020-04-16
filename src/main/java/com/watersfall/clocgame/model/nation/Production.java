@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.model.Policy;
+import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.technology.Technologies;
 import lombok.Data;
 

@@ -2,8 +2,8 @@ package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.model.CitySize;
 import com.watersfall.clocgame.model.CityType;
-import com.watersfall.clocgame.model.Policy;
 import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 
 import java.sql.*;
