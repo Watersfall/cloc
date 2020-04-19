@@ -13,7 +13,7 @@
 		<br>
 		<label>
 			Capital City
-			<input class="RegisterText" type="text" name="capital" maxlength="32" placeholder="Nation Name">
+			<input class="RegisterText" type="text" name="capital" maxlength="32" placeholder="Capital City">
 		</label>
 		<br>
 		<label>
