@@ -1,7 +1,9 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
+import com.watersfall.clocgame.action.EventActions;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.nation.Events;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -69,18 +71,42 @@ public class NewsController extends HttpServlet
 		Executor executor = (conn) -> {
 			int user = UserUtils.getUser(req);
 			String delete = req.getParameter("delete");
-			System.out.println(delete);
+			String event = req.getParameter("event");
 			Nation nation = new Nation(conn, user, true);
-			if(delete.equalsIgnoreCase("all"))
+			if(delete != null && !delete.isEmpty())
 			{
-				nation.getNews().deleteAll();
+				if(delete.equalsIgnoreCase("all"))
+				{
+					nation.getNews().deleteAll();
+				}
+				else
+				{
+					int id = Integer.parseInt(delete);
+					nation.getNews().getNews().get(id).delete();
+				}
+				return Responses.deleted();
+			}
+			else if(event != null && !event.isEmpty())
+			{
+				int eventId = Integer.parseInt(event);
+				EventActions.Action eventAction = EventActions.Action.valueOf(req.getParameter("event_action"));
+				Events eventById = Events.getEventById(conn, eventId);
+				switch(eventAction)
+				{
+					case STRIKE_GIVE_IN:
+						return EventActions.Strike.giveIn(nation, eventById);
+					case STRIKE_IGNORE:
+						return EventActions.Strike.ignore(nation, eventById);
+					case STRIKE_SEND_ARMY:
+						return EventActions.Strike.sendArmy(nation, eventById);
+					default:
+						return Responses.genericError();
+				}
 			}
 			else
 			{
-				int id = Integer.parseInt(delete);
-				nation.getNews().getNews().get(id).delete();
+				return Responses.genericError();
 			}
-			return Responses.deleted();
 		};
 		writer.append(Action.doAction(executor));
 	}

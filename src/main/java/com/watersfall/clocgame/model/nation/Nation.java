@@ -2159,6 +2159,8 @@ public class Nation
 				return " from farm upkeep";
 			case "resource.stability":
 				return " from stability";
+			case "resource.strike":
+				return " from strikes";
 			case "farming.base":
 				return " from default";
 			case "farming.net":

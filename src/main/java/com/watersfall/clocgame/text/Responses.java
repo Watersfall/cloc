@@ -69,6 +69,11 @@ public class Responses
 		return "<p>That username or nation name is already being used!</p>";
 	}
 
+	public static String noEvent()
+	{
+		return "<p>You do not have this event!</p>";
+	}
+
 
 	/*
 	 ** MISSING REQUIREMENTS
@@ -651,5 +656,25 @@ public class Responses
 	public static String alreadyLoggedIn()
 	{
 		return "<p>You are already logged in!</p>";
+	}
+
+	public static String strikeGiveIn()
+	{
+		return "<p>You give the strikers what they want, ending the strike but lowering their production</p>";
+	}
+
+	public static String strikeIgnore()
+	{
+		return "<p>The strikers continue, and show no signs of stopping anytime soon</p>";
+	}
+
+	public static String strikeSendArmyNoCasualties()
+	{
+		return "<p>You send in your army, ending the strike</p>";
+	}
+
+	public static String strikeSendArmyCasualties(int casualties)
+	{
+		return "<p>You send in the army, but the strikers fight back. " + casualties + " thousand of your soldiers died ending the strike</p>";
 	}
 }

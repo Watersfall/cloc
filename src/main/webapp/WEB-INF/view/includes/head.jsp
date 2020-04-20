@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <head>
 	<title>&ltCLOC - Online Nation Sim</title>
-	<c:set value="5" var="version"/>
+	<c:set value="6" var="version"/>
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css?v=${version}">
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/tech.css?v=${version}">
 	<script src="${pageContext.request.contextPath}/js/header.js?v=${version}"></script>

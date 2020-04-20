@@ -14,25 +14,33 @@ public class NationNews
 {
 	private @Getter int id;
 	private @Getter Connection conn;
-	private @Getter ResultSet results;
+	private @Getter ResultSet results, resultsEvent;
 	private @Getter boolean safe;
 	private @Getter LinkedHashMap<Integer, News> news;
+	private @Getter LinkedHashMap<Integer, Events> events;
 	private @Getter boolean anyUnread = false;
+	private @Getter boolean anyEvents = false;
 
 	public NationNews(Connection conn, int id, boolean safe) throws SQLException
 	{
 		PreparedStatement read;
+		PreparedStatement readEvents;
 		if(safe)
 		{
 			read = conn.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=? ORDER BY id DESC FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			readEvents = conn.prepareStatement("SELECT * FROM events WHERE owner=? ORDER BY id DESC FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		}
 		else
 		{
 			read = conn.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE receiver=? ORDER BY id DESC");
+			readEvents = conn.prepareStatement("SELECT * FROM events WHERE owner=? ORDER BY id DESC");
 		}
 		read.setInt(1, id);
+		readEvents.setInt(1, id);
 		this.results = read.executeQuery();
+		this.resultsEvent = readEvents.executeQuery();
 		this.news = new LinkedHashMap<>();
+		this.events = new LinkedHashMap<>();
 		this.conn = conn;
 		this.safe = safe;
 		this.id = id;
@@ -44,6 +52,12 @@ public class NationNews
 			{
 				anyUnread = true;
 			}
+		}
+		while(resultsEvent.next())
+		{
+			anyEvents = true;
+			Events temp = new Events(resultsEvent);
+			events.put(temp.getId(), temp);
 		}
 	}
 
@@ -72,6 +86,6 @@ public class NationNews
 			return list;
 		}
 		System.out.println("Min: " + min + "\nMax: " + max);
-		return list.subList(min, max);
+		return list.subList(min, max + 1);
 	}
 }

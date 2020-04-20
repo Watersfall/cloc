@@ -373,3 +373,10 @@ function loadTech(tech)
 	};
 	ajax(url, null, callback);
 }
+
+function runEvent(id, response)
+{
+	let url = "/news/";
+	let params = "event=" + id + "&event_action=" + response;
+	ajax(url, params);
+}

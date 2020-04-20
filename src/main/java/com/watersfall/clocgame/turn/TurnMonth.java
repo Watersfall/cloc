@@ -1,11 +1,9 @@
 package com.watersfall.clocgame.turn;
 
+import com.watersfall.clocgame.action.EventActions;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
-import com.watersfall.clocgame.model.nation.City;
-import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.NationDomestic;
-import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.schedulers.DayScheduler;
 import com.watersfall.clocgame.util.Util;
@@ -14,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TurnMonth implements Runnable
@@ -23,6 +22,8 @@ public class TurnMonth implements Runnable
 	{
 		Connection connection = null;
 		System.out.println("Running turn");
+		Util.month++;
+		Util.currentMonth = (int)(Util.month % 12);
 		try
 		{
 			DayScheduler.resetIncrement();
@@ -96,6 +97,7 @@ public class TurnMonth implements Runnable
 						for(City city : nation.getCities().getCities().values())
 						{
 							city.setDevastation(city.getDevastation() - ((int)(Math.random() * 5) + 5));
+							city.setStrikeLength(city.getStrikeLength() - 1);
 						}
 					}
 
@@ -108,6 +110,49 @@ public class TurnMonth implements Runnable
 					{
 						nation.getDomestic().setMonthsInFamine(nation.getDomestic().getMonthsInFamine() + 1);
 					}
+
+					/*
+					** Events
+					 */
+					if((nation.getDomestic().getStability() < 30 && nation.getDomestic().getApproval() < 30)
+						|| (nation.getDomestic().getStability() < 15 || nation.getDomestic().getApproval() < 15))
+					{
+						if(Math.random() > 0.00)
+						{
+							ArrayList<City> cities = new ArrayList<>(nation.getCities().getCities().values());
+							cities.removeIf((city -> city.getStrikeLength() > 0));
+							cities.removeIf((city -> {
+								for(Events event : nation.getNews().getEvents().values())
+								{
+									if(event.getCityId() == city.getId())
+										return true;
+								}
+								return false;
+							}));
+							if(!cities.isEmpty())
+							{
+								City city = (City)cities.toArray()[(int)(Math.random() * cities.size())];
+								Events.sendEvent(connection, nation, Event.STRIKE, Event.generateEventText(Event.STRIKE), city.getId());
+							}
+						}
+					}
+
+
+					/*
+					** Event Timeouts
+					 */
+					for(Events event : nation.getNews().getEvents().values())
+					{
+						if(Util.month - event.getMonth() > 3)
+						{
+							switch(event.getEvent())
+							{
+								case STRIKE:
+									EventActions.Strike.ignore(nation, event);
+							}
+						}
+					}
+
 					nation.update();
 				}
 				catch(SQLException e)
@@ -125,8 +170,6 @@ public class TurnMonth implements Runnable
 			 */
 			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
 			connection.commit();
-			Util.month++;
-			Util.currentMonth = (int)(Util.month % 12);
 			Stats.getInstance().updateStats();
 			Stats.getInstance().writeLog();
 		}

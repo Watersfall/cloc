@@ -42,8 +42,8 @@
 			<a href="${pageContext.request.contextPath}/news/">
 				<div>
 					<p>News</p>
-					<p class="newsBubble ${home.news.anyUnread ? 'unread' : 'read'}">
-						<fmt:formatNumber value="${home.news.news.size()}"/>
+					<p class="newsBubble ${home.news.anyUnread || home.news.anyEvents ? 'unread' : 'read'} ${home.news.anyEvents ? ' event' : ''}">
+						<fmt:formatNumber value="${home.news.news.size() + home.news.events.size()}"/>
 					</p>
 				</div>
 			</a>

@@ -4,6 +4,7 @@ import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.policies.Policy;
+import com.watersfall.clocgame.model.policies.PolicyCategory;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -36,20 +37,20 @@ public class PolicyController extends HttpServlet
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
-			String decision = url.get("policy");
+			PolicyCategory decision = PolicyCategory.valueOf(url.get("policy"));
 			Nation nation = UserUtils.getUserNation(conn, true, req);
 			Policy policy = Policy.valueOf(req.getParameter("selection"));
 			switch(decision)
 			{
-				case "Manpower":
+				case MANPOWER:
 					return PolicyActions.manpower(nation, policy);
-				case "Food":
+				case FOOD:
 					return PolicyActions.food(nation, policy);
-				case "Economy":
+				case ECONOMY:
 					return PolicyActions.economy(nation, policy);
-				case "Fortification":
+				case FORTIFICATION:
 					return PolicyActions.fortification(nation, policy);
-				case "Farm Subsidization":
+				case FARM_SUBSIDIZATION:
 					return PolicyActions.farmSubsidization(nation, policy);
 				default:
 					return Responses.genericError();

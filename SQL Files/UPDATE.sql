@@ -48,3 +48,23 @@ ALTER TABLE cloc_policy
 
 ALTER TABLE cloc_domestic
 	ADD COLUMN months_in_famine INT DEFAULT 0;
+
+CREATE TABLE events(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	owner INT,
+	event_id ENUM('STRIKE'),
+	description TEXT,
+	month BIGINT
+);
+
+ALTER TABLE cloc_cities
+	ADD COLUMN months_on_strike INT DEFAULT 0;
+
+ALTER TABLE cloc_cities
+	ADD COLUMN strike_level INT DEFAULT 0;
+
+ALTER TABLE events
+	ADD COLUMN city_id INT DEFAULT 0;
+
+ALTER TABLE events
+	ADD CONSTRAINT FOREIGN KEY fk_owner (owner) REFERENCES cloc_login(id);

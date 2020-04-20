@@ -38,6 +38,8 @@ public class City extends Updatable
 	private @Getter String name;
 	private @Getter CityType type;
 	private @Getter int devastation;
+	private @Getter int strikeLevel;
+	private @Getter int strikeLength;
 
 	public static City getCity(Connection conn, int id) throws SQLException
 	{
@@ -75,6 +77,8 @@ public class City extends Updatable
 		this.devastation = results.getInt("cloc_cities.devastation");
 		this.population = results.getLong("cloc_cities.population");
 		this.id = results.getInt("cloc_cities.id");
+		this.strikeLevel = results.getInt("cloc_cities.strike_level");
+		this.strikeLength = results.getInt("cloc_cities.months_on_strike");
 		this.results = results;
 	}
 
@@ -229,6 +233,24 @@ public class City extends Updatable
 			population = 1000000000000000L;
 		this.addField("population", population);
 		this.population = population;
+	}
+
+	public void setStrikeLevel(int strikeLevel)
+	{
+		if(strikeLevel < 0)
+			strikeLevel = 0;
+		else if(strikeLevel > 10)
+			strikeLevel = 10;
+		this.addField("strike_level", strikeLevel);
+		this.strikeLevel = strikeLevel;
+	}
+
+	public void setStrikeLength(int strikeLength)
+	{
+		if(strikeLength < 0)
+			strikeLength = 0;
+		this.addField("months_on_strike", strikeLength);
+		this.strikeLength = strikeLength;
 	}
 
 	@Override
@@ -446,6 +468,53 @@ public class City extends Updatable
 		return employment;
 	}
 
+	public double getStrikeModifier()
+	{
+		if(this.strikeLength > 0)
+			return -strikeLevel / 10.0;
+		else
+			return 0;
+	}
+
+
+	private LinkedHashMap<String, Double> doMineOutput(LinkedHashMap<String, Double> map, double mines)
+	{
+		double bonus = this.getRailroads() * 0.1 * mines;
+		double total = mines + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
+		double civilian = -this.getIndustryCivilian();
+		double military = -this.getIndustryMilitary();
+		double nitrogen = -this.getIndustryNitrogen();
+		double strike = total * this.getStrikeModifier();
+		double net = total + civilian + military + nitrogen + strike;
+		map.put("resource.mines", mines);
+		map.put("resource.infrastructure", bonus);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.strike", strike);
+		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
+		return map;
+	}
+
+	private LinkedHashMap<String, Double> doFactoryOutput(LinkedHashMap<String, Double> map, double factories)
+	{
+		double bonus = this.getRailroads() * 0.1 * factories;
+		double total = factories + bonus;
+		double devastation2 = -total * (devastation / 100.0);
+		total = total * (1 - (devastation / 100.0));
+		double strike = total * this.getStrikeModifier();
+		double net = total + strike;
+		map.put("resource.factoryProduction", factories);
+		map.put("resource.infrastructure", bonus);
+		map.put("resource.devastation", devastation2);
+		map.put("resource.strike", strike);
+		map.put("resource.net", net);
+		map.put("resource.total", total);
+		return map;
+	}
+
 	/**
 	 * Returns a HashMap with the coal production of this city with keys:
 	 * <ul>
@@ -463,21 +532,7 @@ public class City extends Updatable
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double mines = this.getCoalMines() * 10;
-		double bonus = this.getRailroads() * 0.1 * mines;
-		double total = mines + bonus;
-		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 - (devastation / 100.0));
-		double civilian = -this.getIndustryCivilian();
-		double military = -this.getIndustryMilitary();
-		double nitrogen = -this.getIndustryNitrogen();
-		double net = total + civilian + military + nitrogen;
-		map.put("resource.mines", mines);
-		map.put("resource.infrastructure", bonus);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
-		return map;
+		return doMineOutput(map, mines);
 	}
 
 	/**
@@ -497,21 +552,7 @@ public class City extends Updatable
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double mines = this.getIronMines() * 10;
-		double bonus = this.getRailroads() * 0.1 * mines;
-		double total = mines + bonus;
-		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 - (devastation / 100.0));
-		double civilian = -this.getIndustryCivilian();
-		double military = -this.getIndustryMilitary();
-		double nitrogen = -this.getIndustryNitrogen();
-		double net = total + civilian + military + nitrogen;
-		map.put("resource.mines", mines);
-		map.put("resource.infrastructure", bonus);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
-		return map;
+		return doMineOutput(map, mines);
 	}
 
 	/**
@@ -531,21 +572,7 @@ public class City extends Updatable
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double wells = this.getOilWells() * 10;
-		double bonus = this.getRailroads() * 0.1 * wells;
-		double total = wells + bonus;
-		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 - (devastation / 100.0));
-		double civilian = -this.getIndustryCivilian();
-		double military = -this.getIndustryMilitary();
-		double nitrogen = -this.getIndustryNitrogen();
-		double net = total + civilian + military + nitrogen;
-		map.put("resource.wells", wells);
-		map.put("resource.infrastructure", bonus);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
-		return map;
+		return doMineOutput(map, wells);
 	}
 
 	/**
@@ -562,17 +589,7 @@ public class City extends Updatable
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double factories = this.getIndustryCivilian() * 5;
-		double bonus = this.getRailroads() * 0.1 * factories;
-		double total = factories + bonus;
-		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 - (devastation / 100.0));
-		double net = total;
-		map.put("resource.factoryProduction", factories);
-		map.put("resource.infrastructure", bonus);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
-		return map;
+		return doFactoryOutput(map, factories);
 	}
 
 	/**
@@ -589,17 +606,7 @@ public class City extends Updatable
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
 		double factories = this.getIndustryNitrogen() * 5;
-		double bonus = this.getRailroads() * 0.1 * factories;
-		double total = factories + bonus;
-		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 - (devastation / 100.0));
-		double net = total;
-		map.put("resource.factoryProduction", factories);
-		map.put("resource.infrastructure", bonus);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
-		return map;
+		return doFactoryOutput(map, factories);
 	}
 
 	/**
@@ -622,10 +629,12 @@ public class City extends Updatable
 		double total = universities + standard;
 		double devastation2 = -total * (devastation / 100.0);
 		total = total * (1 - (devastation / 100.0));
-		double net = total;
+		double strike = total * this.getStrikeModifier();
+		double net = total + strike;
 		map.put("resource.default", standard);
 		map.put("resource.universities", universities);
 		map.put("resource.devastation", devastation2);
+		map.put("resource.strike", strike);
 		map.put("resource.net", net);
 		map.put("resource.total", total);
 		return map;
