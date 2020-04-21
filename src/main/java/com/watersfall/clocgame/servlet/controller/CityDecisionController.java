@@ -65,11 +65,11 @@ public class CityDecisionController extends HttpServlet
 				case "undrill":
 					return CityActions.remove(nation, cityId, "oil_wells");
 				case "unindustrialize":
-					return CityActions.remove(nation, cityId, "industry_civilian");
+					return CityActions.remove(nation, cityId, "civilian_industry");
 				case "unmilitarize":
-					return CityActions.remove(nation, cityId, "industry_military");
+					return CityActions.remove(nation, cityId, "military_industry");
 				case "unnitrogen":
-					return CityActions.remove(nation, cityId, "industry_nitrogen");
+					return CityActions.remove(nation, cityId, "nitrogen_industry");
 				case "ununiversity":
 					return CityActions.remove(nation, cityId, "universities");
 				case "unport":

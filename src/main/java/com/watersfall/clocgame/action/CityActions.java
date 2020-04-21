@@ -361,7 +361,7 @@ public class CityActions
 		{
 			return Responses.notYourCity();
 		}
-		else if((Integer)city.getByName(type) <= 0)
+		else if((int)city.getByName(type) <= 0)
 		{
 			return Responses.noneLeft();
 		}

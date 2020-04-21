@@ -93,7 +93,7 @@ public class City extends Updatable
 
 	public void closeMilitaryIndustry(Connection conn) throws SQLException
 	{
-		if(!this.militaryFactories.isEmpty())
+		if(this.industryMilitary > 0)
 		{
 			PreparedStatement statement = conn.prepareStatement("DELETE FROM factories WHERE city_id=? ORDER BY production_id LIMIT 1");
 			statement.setInt(1, this.id);
@@ -270,12 +270,12 @@ public class City extends Updatable
 					return this.ironMines;
 				case "coal_mines":
 					return this.coalMines;
-				case "industry_civilian":
+				case "civilian_industry":
 					return this.industryCivilian;
-				case "industry_nitrogen":
+				case "nitrogen_industry":
 					return this.industryNitrogen;
-				case "industry_military":
-					return this.militaryFactories;
+				case "military_industry":
+					return this.industryMilitary;
 				case "name":
 					return this.name;
 				case "ports":

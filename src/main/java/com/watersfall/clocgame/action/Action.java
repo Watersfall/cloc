@@ -43,6 +43,7 @@ public class Action
 		}
 		catch(NullPointerException | IllegalArgumentException | IOException | ServletException e)
 		{
+			e.printStackTrace();
 			return Responses.genericError();
 		}
 		catch(NationNotFoundException e)
