@@ -1917,6 +1917,27 @@ public class Nation
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 		int approval = this.domestic.getApproval() / 20 - 2;
 		int famine = (int)this.getFamineLevel();
+		int growth = 0;
+		if(this.getEconomy().getGrowth() < 0)
+		{
+			growth = -1;
+		}
+		if(this.getEconomy().getGrowth() < -5)
+		{
+			growth = -2;
+		}
+		if(this.getEconomy().getGrowth() < -10)
+		{
+			growth = -5;
+		}
+		if(this.getEconomy().getGrowth() < -20)
+		{
+			growth = -10;
+		}
+		if(this.getEconomy().getGrowth() < -50)
+		{
+			growth = -20;
+		}
 		if(approval < 0)
 		{
 			map.put("stability.lowApproval", approval);
@@ -1929,7 +1950,8 @@ public class Nation
 		{
 			map.put("stability.famine", famine);
 		}
-		map.put("stability.net", approval + famine);
+		map.put("stability.growth", growth);
+		map.put("stability.net", approval + famine + growth);
 		return map;
 	}
 
@@ -1951,6 +1973,11 @@ public class Nation
 		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
 		long factories = this.getTotalFactories();
 		long military = -1 * this.getUsedManpower().get("manpower.net") / 20000;
+		long overMaxManpower = 0;
+		if(this.getFreeManpower() < 0)
+		{
+			overMaxManpower = this.getFreeManpower() / 1000;
+		}
 		long conscription = economy.getRecentDeconscription() - economy.getRecentConscription();
 		long fortification = -this.getArmy().getFortification() / 500;
 		if(conscription > 0)
@@ -1979,8 +2006,9 @@ public class Nation
 		}
 		map.put("growth.factories", factories);
 		map.put("growth.military", military);
+		map.put("growth.over_max_manpower", overMaxManpower);
 		map.put("growth.fortification", fortification);
-		map.put("growth.net", factories + military + conscription + fortification);
+		map.put("growth.net", factories + military + conscription + fortification + overMaxManpower);
 		return map;
 	}
 
@@ -2094,6 +2122,8 @@ public class Nation
 				return " from recent conscription";
 			case "growth.fortification":
 				return " from fortification upkeep";
+			case "growth.over_max_manpower":
+				return " from being over manpower limit";
 			case "growth.net":
 				return " change per month";
 			case "stability.net":
@@ -2104,6 +2134,8 @@ public class Nation
 				return "% per month from low approval";
 			case "stability.approval":
 				return "% per month from high approval";
+			case "stability.growth":
+				return "% from low growth";
 			case "stability.famine":
 			case "approval.famine":
 				return "% per months from famine";
