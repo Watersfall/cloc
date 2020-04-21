@@ -141,10 +141,10 @@
 					<div class="toggleable detailsDown" id="Fortification">
 						<c:set var="net" value="fortification.net"/>
 						<c:if test="${home.fortificationChange.get(net) > 0}">
-							<p class="positive"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>%${home.getDisplayString(net)}</p>
+							<p class="positive"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>${home.getDisplayString(net)}</p>
 						</c:if>
 						<c:if test="${home.fortificationChange.get(net) < 0}">
-							<p class="negative"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>%${home.getDisplayString(net)}</p>
+							<p class="negative"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>${home.getDisplayString(net)}</p>
 						</c:if>
 						<c:if test="${home.fortificationChange.get(net) == 0}">
 							<p>No net change...</p>
