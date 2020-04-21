@@ -2,6 +2,8 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.nation.Production;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.Security;
@@ -47,7 +49,7 @@ public class LoginController extends HttpServlet
 				}
 				else
 				{
-					PreparedStatement statement = conn.prepareStatement("SELECT password, id FROM cloc_login WHERE username=?");
+					PreparedStatement statement = conn.prepareStatement("SELECT password, id, last_login FROM cloc_login WHERE username=?");
 					statement.setString(1, username);
 					ResultSet results = statement.executeQuery();
 					if(!results.first())
@@ -60,6 +62,13 @@ public class LoginController extends HttpServlet
 						{
 							req.getSession().setAttribute("user", results.getInt("id"));
 							Executor exec = (connection) -> {
+								if(results.getLong("last_login") == 0)
+								{
+									Nation nation = new Nation(connection, Integer.parseInt(req.getSession().getAttribute("user").toString()), true);
+									nation.getLargestCity().buildMilitaryIndustry(connection);
+									Production.createDefaultProduction(nation.getId(), connection);
+									nation.update();
+								}
 								PreparedStatement update = connection.prepareStatement("UPDATE cloc_login SET last_login=? WHERE id=?");
 								update.setLong(1, System.currentTimeMillis());
 								update.setInt(2, Integer.parseInt(req.getSession().getAttribute("user").toString()));
