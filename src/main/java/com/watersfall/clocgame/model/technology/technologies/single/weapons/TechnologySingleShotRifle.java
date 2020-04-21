@@ -27,6 +27,7 @@ public class TechnologySingleShotRifle extends SingleTechnology
 		costs.put("research", 50);
 		costs.put("steel", 10);
 		effects.add("Unlocks production: Single Shot Rifles");
+		prerequisites.add(Technologies.RIFLED_MUSKET);
 	}
 
 	public static TechnologySingleShotRifle getInstance()

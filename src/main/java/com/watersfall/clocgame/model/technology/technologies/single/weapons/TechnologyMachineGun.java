@@ -27,6 +27,7 @@ public class TechnologyMachineGun extends SingleTechnology
 		costs.put("research", 100);
 		costs.put("steel", 100);
 		effects.add("Unlocks production: Machine Guns");
+		prerequisites.add(Technologies.BOLT_ACTION_MANUAL);
 	}
 
 	public static TechnologyMachineGun getInstance()

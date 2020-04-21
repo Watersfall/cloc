@@ -27,6 +27,7 @@ public class TechnologyBoltActionManual extends SingleTechnology
 		costs.put("research", 50);
 		costs.put("steel", 10);
 		effects.add("Unlocks production: Clip Loaded Bolt Action Rifles");
+		prerequisites.add(Technologies.SINGLE_SHOT_RIFLE);
 	}
 
 	public static TechnologyBoltActionManual getInstance()

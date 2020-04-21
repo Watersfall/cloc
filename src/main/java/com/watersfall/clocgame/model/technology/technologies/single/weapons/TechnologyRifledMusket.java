@@ -26,6 +26,7 @@ public class TechnologyRifledMusket extends SingleTechnology
 		this.requirements = new HashMap<>();
 		costs.put("research", 50);
 		costs.put("steel", 10);
+		prerequisites.add(Technologies.MUSKET);
 		effects.add("Unlocks production: Rifled Muskets");
 	}
 
