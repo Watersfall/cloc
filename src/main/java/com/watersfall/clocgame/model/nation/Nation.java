@@ -12,6 +12,8 @@ import com.watersfall.clocgame.model.military.ReconPlane;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.Technology;
+import com.watersfall.clocgame.model.technology.technologies.single.doctrine.*;
+import com.watersfall.clocgame.model.technology.technologies.single.economy.*;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.SqlBuilder;
@@ -1011,7 +1013,7 @@ public class Nation
 			}
 			if(this.hasTech(Technologies.FARMING_MACHINES) || this.hasTech(Technologies.ADVANCED_FARMING_MACHINES))
 			{
-				double amount = -this.domestic.getLand() / 250.0 / 20.0;
+				double amount = -this.domestic.getLand() / TechnologyFarmingMachines.LAND_PER_STEEL;
 				if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
 				{
 					amount *= 0.25;
@@ -1069,7 +1071,7 @@ public class Nation
 			}
 			if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) || this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER))
 			{
-				double amount = -this.domestic.getLand() / 250.0 / 20.0;
+				double amount = -this.domestic.getLand() / TechnologyArtificialFertilizer.LAND_PER_NITROGEN;
 				if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
 				{
 					amount *= 0.25;
@@ -1143,23 +1145,23 @@ public class Nation
 		double tech = 0;
 		if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get("resource.net") + this.getEconomy().getNitrogen() >= 0)
 		{
-			tech = farming * 2;
+			tech = farming * TechnologyAdvancedArtificialFertilizer.FOOD_GAIN;
 		}
 		else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get("resource.net") + this.getEconomy().getNitrogen() >= 0)
 		{
-			tech = farming;
+			tech = farming * TechnologyArtificialFertilizer.FOOD_GAIN;
 		}
 		else if(this.hasTech(Technologies.BASIC_ARTIFICIAL_FERTILIZER))
 		{
-			tech = farming * 0.5;
+			tech = farming * TechnologyBasicArtificialFertilizer.FOOD_GAIN;
 		}
 		if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get("resource.net") + this.getEconomy().getSteel() > 0)
 		{
-			tech += (farming * 2);
+			tech += farming * TechnologyAdvancedFarmingMachines.FOOD_GAIN;
 		}
 		else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get("resource.net") + this.getEconomy().getSteel() > 0)
 		{
-			tech += (farming);
+			tech += farming * TechnologyFarmingMachines.FOOD_GAIN;
 		}
 		if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
 		{
@@ -1560,15 +1562,15 @@ public class Nation
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 		int tech = 2000;
 		if(this.hasTech(Technologies.BASIC_TRENCHES))
-			tech += 1500;
+			tech += TechnologyTrenches.BONUS * 100;
 		if(this.hasTech(Technologies.BASIC_FORTIFICATIONS))
-			tech += 1500;
+			tech += TechnologyFortifications.BONUS * 100;
 		if(this.hasTech(Technologies.ADVANCED_TRENCHES))
-			tech += 1500;
+			tech += TechnologyAdvancedTrenches.BONUS * 100;
 		if(this.hasTech(Technologies.ADVANCED_FORTIFICATIONS))
-			tech += 1500;
+			tech += TechnologyReinforcedConcrete.BONUS * 100;
 		if(this.hasTech(Technologies.MOBILE_DEFENSE))
-			tech += 2000;
+			tech += TechnologyMobileDefense.BONUS * 100;
 		int policy = tech;
 		switch(this.policy.getFortification())
 		{
