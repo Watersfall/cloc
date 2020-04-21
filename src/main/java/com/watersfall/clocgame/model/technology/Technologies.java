@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.model.technology;
 
 import com.watersfall.clocgame.model.technology.technologies.Category;
-import com.watersfall.clocgame.model.technology.technologies.single.ammoandfeed.*;
 import com.watersfall.clocgame.model.technology.technologies.single.artillery.TechnologyArtillery;
 import com.watersfall.clocgame.model.technology.technologies.single.doctrine.*;
 import com.watersfall.clocgame.model.technology.technologies.single.economy.*;
@@ -17,17 +16,6 @@ import java.util.Map;
 
 public enum Technologies
 {
-	/*
-	** Ammo and Feed
-	 */
-	BALL_AND_POWDER(TechnologyBallAndPowder.getInstance(), Category.AMMO_AND_FEED, 2, 1, new String[]{}),
-	SMOKELESS_POWDER(TechnologySmokelessPowder.getInstance(), Category.AMMO_AND_FEED, 2, 2, new String[]{"vertical"}),
-	PAPER_CARTRIDGE(TechnologyPaperCartridge.getInstance(), Category.AMMO_AND_FEED, 2, 3, new String[]{"vertical"}),
-	BRASS_CARTRIDGE(TechnologyBrassCartridge.getInstance(), Category.AMMO_AND_FEED, 2, 4, new String[]{"vertical"}),
-	RIFLE_CLIPS(TechnologyRifleClips.getInstance(), Category.AMMO_AND_FEED, 2, 5, new String[]{"vertical"}),
-	BELT(TechnologyBelt.getInstance(), Category.AMMO_AND_FEED, 1, 6, new String[]{"cornerBottomRight"}),
-	DETACHABLE_MAGAZINES(TechnologyDetachableMagazines.getInstance(), Category.AMMO_AND_FEED, 3, 6, new String[]{"cornerBottomLeft"}),
-
 	/*
 	** Weapons
 	 */
