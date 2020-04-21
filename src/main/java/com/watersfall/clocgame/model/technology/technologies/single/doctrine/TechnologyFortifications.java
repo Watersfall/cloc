@@ -14,6 +14,7 @@ public class TechnologyFortifications extends SingleTechnology
 	public static final String DESC = "Basic Fortifications";
 	public static final String COLUMN_NAME = "basic_fortifications_tech";
 	public static final String FIELD_NAME = "basicTrenchesTech";
+	public static final int BONUS = 15;
 
 	private TechnologyFortifications()
 	{
@@ -23,6 +24,7 @@ public class TechnologyFortifications extends SingleTechnology
 		this.requirements = new HashMap<>();
 		prerequisites.add(Technologies.BASIC_TRENCHES);
 		costs.put("research", 50);
+		effects.add("+" + BONUS + "% to max entrenchment");
 	}
 
 	public static TechnologyFortifications getInstance()

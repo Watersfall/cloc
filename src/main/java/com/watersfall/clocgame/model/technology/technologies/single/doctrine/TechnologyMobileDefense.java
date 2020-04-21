@@ -14,6 +14,7 @@ public class TechnologyMobileDefense extends SingleTechnology
 	public static final String DESC = "Mobile Defense";
 	public static final String COLUMN_NAME = "mobile_defense_tech";
 	public static final String FIELD_NAME = "mobileDefenseTech";
+	public static final int BONUS = 20;
 
 	private TechnologyMobileDefense()
 	{
@@ -23,6 +24,7 @@ public class TechnologyMobileDefense extends SingleTechnology
 		this.requirements = new HashMap<>();
 		prerequisites.add(Technologies.ADVANCED_FORTIFICATIONS);
 		costs.put("research", 50);
+		effects.add("+" + BONUS + "% to max entrenchment");
 	}
 
 	public static TechnologyMobileDefense getInstance()

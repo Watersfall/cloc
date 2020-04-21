@@ -14,6 +14,8 @@ public class TechnologyAdvancedArtificialFertilizer extends SingleTechnology
 	public static final String DESC = "Advanced Artificial Fertilizer";
 	public static final String COLUMN_NAME = "advanced_artificial_fertilizer";
 	public static final String FIELD_NAME = "";
+	public static final double LAND_PER_NITROGEN = 5000.0;
+	public static final double FOOD_GAIN = 2;
 
 	private TechnologyAdvancedArtificialFertilizer()
 	{
@@ -24,6 +26,8 @@ public class TechnologyAdvancedArtificialFertilizer extends SingleTechnology
 		costs.put("research", 100);
 		costs.put("nitrogen", 50);
 		prerequisites.add(Technologies.ARTIFICIAL_FERTILIZER);
+		effects.add("+" + (FOOD_GAIN * 100) + "% food production");
+		effects.add("+1 nitrogen upkeep per " + LAND_PER_NITROGEN + "km<sup>2</sup> land");
 	}
 
 	public static TechnologyAdvancedArtificialFertilizer getInstance()

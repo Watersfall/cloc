@@ -24,10 +24,10 @@ public class TechnologyStraightPullRifle extends SingleTechnology
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
-		prerequisites.add(Technologies.RIFLE_CLIPS);
 		prerequisites.add(Technologies.BOLT_ACTION_CLIP);
 		costs.put("research", 50);
 		costs.put("steel", 10);
+		effects.add("Unlocks production: Straight Pull Rifles");
 	}
 
 	public static TechnologyStraightPullRifle getInstance()

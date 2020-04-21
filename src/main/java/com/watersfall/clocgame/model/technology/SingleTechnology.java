@@ -16,6 +16,7 @@ public abstract class SingleTechnology implements Technology
 	protected @Getter String tableName;
 	protected @Getter String fieldName;
 	protected @Getter int requiredSuccesses;
+	protected @Getter ArrayList<String> effects;
 
 	/**
 	 * Default constructor
@@ -30,6 +31,7 @@ public abstract class SingleTechnology implements Technology
 		this.tableName = "NULL";
 		this.fieldName = "NULL";
 		this.requiredSuccesses = 0;
+		effects = new ArrayList<>();
 	}
 
 	/**
@@ -46,6 +48,7 @@ public abstract class SingleTechnology implements Technology
 		this.tableName = tableName;
 		this.fieldName = fieldName;
 		this.requiredSuccesses = requiredSuccesses;
+		effects = new ArrayList<>();
 	}
 
 	/**

@@ -28,6 +28,7 @@ public class TechnologyZeppelinBombers extends SingleTechnology
 		costs.put("research", 100);
 		costs.put("steel", 100);
 		costs.put("oil", 100);
+		effects.add("Unlocks production: Zeppelin Bombers");
 	}
 
 	public static TechnologyZeppelinBombers getInstance()

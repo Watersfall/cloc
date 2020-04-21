@@ -14,6 +14,7 @@ public class TechnologyReinforcedConcrete extends SingleTechnology
 	public static final String DESC = "Reinforced Concrete Bunkers";
 	public static final String COLUMN_NAME = "reinforced_concrete_tech";
 	public static final String FIELD_NAME = "reinforcedConcreteTech";
+	public static final int BONUS = 15;
 
 	private TechnologyReinforcedConcrete()
 	{
@@ -23,6 +24,7 @@ public class TechnologyReinforcedConcrete extends SingleTechnology
 		this.requirements = new HashMap<>();
 		prerequisites.add(Technologies.ADVANCED_TRENCHES);
 		costs.put("research", 50);
+		effects.add("+" + BONUS + "% to max entrenchment");
 	}
 
 	public static TechnologyReinforcedConcrete getInstance()

@@ -24,9 +24,9 @@ public class TechnologyMachineGun extends SingleTechnology
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
-		prerequisites.add(Technologies.BELT);
 		costs.put("research", 100);
 		costs.put("steel", 100);
+		effects.add("Unlocks production: Machine Guns");
 	}
 
 	public static TechnologyMachineGun getInstance()

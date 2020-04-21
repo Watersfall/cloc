@@ -14,6 +14,7 @@ public class TechnologyAdvancedTrenches extends SingleTechnology
 	public static final String DESC = "Advanced Trench Construction";
 	public static final String COLUMN_NAME = "advanced_trenches_tech";
 	public static final String FIELD_NAME = "advancedTrenchesTech";
+	public static final int BONUS = 15;
 
 	private TechnologyAdvancedTrenches()
 {
@@ -23,6 +24,7 @@ public class TechnologyAdvancedTrenches extends SingleTechnology
 	this.requirements = new HashMap<>();
 	prerequisites.add(Technologies.BASIC_FORTIFICATIONS);
 	costs.put("research", 50);
+	effects.add("+" + BONUS + "% to max entrenchment");
 }
 
 	public static TechnologyAdvancedTrenches getInstance()

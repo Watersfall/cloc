@@ -24,10 +24,10 @@ public class TechnologySemiAutomatic extends SingleTechnology
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
-		prerequisites.add(Technologies.DETACHABLE_MAGAZINES);
 		prerequisites.add(Technologies.STRAIGHT_PULL_RIFLE);
 		costs.put("research", 100);
 		costs.put("steel", 50);
+		effects.add("Unlocks production: Semi Automatic Rifles");
 	}
 
 	public static TechnologySemiAutomatic getInstance()

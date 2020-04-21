@@ -28,6 +28,7 @@ public class TechnologyArtillery extends SingleTechnology
 		costs.put("research", 50);
 		costs.put("steel", 50);
 		costs.put("nitrogen", 50);
+		effects.add("Unlocks production: Artillery");
 	}
 
 	public static TechnologyArtillery getInstance()

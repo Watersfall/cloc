@@ -24,9 +24,9 @@ public class TechnologySingleShotRifle extends SingleTechnology
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
-		prerequisites.add(Technologies.PAPER_CARTRIDGE);
 		costs.put("research", 50);
 		costs.put("steel", 10);
+		effects.add("Unlocks production: Single Shot Rifles");
 	}
 
 	public static TechnologySingleShotRifle getInstance()

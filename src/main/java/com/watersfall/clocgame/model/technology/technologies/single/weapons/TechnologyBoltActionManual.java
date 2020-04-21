@@ -24,9 +24,9 @@ public class TechnologyBoltActionManual extends SingleTechnology
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
-		prerequisites.add(Technologies.BRASS_CARTRIDGE);
 		costs.put("research", 50);
 		costs.put("steel", 10);
+		effects.add("Unlocks production: Clip Loaded Bolt Action Rifles");
 	}
 
 	public static TechnologyBoltActionManual getInstance()

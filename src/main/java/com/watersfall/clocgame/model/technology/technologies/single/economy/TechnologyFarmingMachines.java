@@ -14,6 +14,8 @@ public class TechnologyFarmingMachines extends SingleTechnology
 	public static final String DESC = "Farming Machines";
 	public static final String COLUMN_NAME = "farming_machines";
 	public static final String FIELD_NAME = "";
+	public static final double LAND_PER_STEEL = 5000.0;
+	public static final double FOOD_GAIN = 1;
 
 	private TechnologyFarmingMachines()
 	{
@@ -24,6 +26,8 @@ public class TechnologyFarmingMachines extends SingleTechnology
 		costs.put("research", 100);
 		costs.put("steel", 50);
 		prerequisites.add(Technologies.ARTIFICIAL_FERTILIZER);
+		effects.add("+" + (FOOD_GAIN * 100) + "% food production");
+		effects.add("+1 steel upkeep per " + LAND_PER_STEEL + "km<sup>2</sup> land");
 	}
 
 	public static TechnologyFarmingMachines getInstance()

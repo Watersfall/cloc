@@ -28,6 +28,7 @@ public class TechnologyTriplaneFighter extends SingleTechnology
 		costs.put("research", 100);
 		costs.put("steel", 100);
 		costs.put("oil", 100);
+		effects.add("Unlocks production: Triplane Fighters");
 	}
 
 	public static TechnologyTriplaneFighter getInstance()

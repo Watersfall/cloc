@@ -2,6 +2,7 @@ package com.watersfall.clocgame.model.technology;
 
 import com.watersfall.clocgame.model.nation.Nation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -85,4 +86,9 @@ public interface Technology
 	 * The Key represents the field name, with the Value representing the required amount
 	 */
 	Map<String, Integer> getRequirements();
+
+	/**
+	 * @return the displayable effects of researching this technology
+	 */
+	ArrayList<String> getEffects();
 }

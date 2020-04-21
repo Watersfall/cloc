@@ -97,6 +97,20 @@ public enum Technologies
 		String value = "";
 		value += "<h2 style=\"text-align: center;\">" + technology.getName() + "</h2>";
 		value += "<p class=\"textLeft\">" + technology.getDesc() + "</p>";
+		value += "<p class=\"textLeft\">Effects: </p>";
+		value += "<ul class=\"bulletList\">";
+		if(this.technology.getEffects().isEmpty())
+		{
+			value += "<li class=\"textLeft\">None</li>";
+		}
+		else
+		{
+			for(String effect : this.technology.getEffects())
+			{
+				value += "<li class=\"textLeft\">" + effect + "</li>";
+			}
+		}
+		value += "</ul><br>";
 		value += "<p class=\"textLeft\">Prerequisites: </p>";
 		value += "<ul class=\"bulletList\">";
 		if(this.technology.getPrerequisites().isEmpty())
@@ -110,7 +124,7 @@ public enum Technologies
 				value += "<li class=\"textLeft\">" + tech.getTechnology().getName() + "</ll>";
 			}
 		}
-		value += "</ul>";
+		value += "</ul><br>";
 		value += "<p class=\"textLeft\">Costs: </p>";
 		value += "<ul class=\"bulletList\">";
 		if(this.technology.getCosts().isEmpty())

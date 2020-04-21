@@ -15,6 +15,7 @@ public abstract class RepeatableTechnology implements Technology
 	protected @Getter HashMap<String, Integer> requirements;
 	protected @Getter String tableName;
 	protected @Getter double modifier;
+	protected @Getter ArrayList<String> effects;
 
 	/**
 	 * Default constructor
@@ -27,6 +28,7 @@ public abstract class RepeatableTechnology implements Technology
 		this.costs = null;
 		this.requirements = null;
 		this.tableName = "NULL";
+		this.effects = new ArrayList<>();
 	}
 
 	/**
@@ -41,6 +43,7 @@ public abstract class RepeatableTechnology implements Technology
 		this.name = name;
 		this.desc = desc;
 		this.tableName = tableName;
+		this.effects = new ArrayList<>();
 	}
 
 	/**

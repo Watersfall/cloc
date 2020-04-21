@@ -24,10 +24,10 @@ public class TechnologyNeedleNoseRifle extends SingleTechnology
 		this.prerequisites = new ArrayList<>();
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
-		prerequisites.add(Technologies.PAPER_CARTRIDGE);
 		prerequisites.add(Technologies.SINGLE_SHOT_RIFLE);
 		costs.put("research", 50);
 		costs.put("steel", 10);
+		effects.add("Unlocks production: Needle Nose Rifles");
 	}
 
 	public static TechnologyNeedleNoseRifle getInstance()

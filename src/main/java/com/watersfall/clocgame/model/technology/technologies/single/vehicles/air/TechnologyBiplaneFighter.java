@@ -28,6 +28,7 @@ public class TechnologyBiplaneFighter extends SingleTechnology
 		costs.put("research", 100);
 		costs.put("steel", 100);
 		costs.put("oil", 100);
+		effects.add("Unlocks production: Biplane Fighters");
 	}
 
 	public static TechnologyBiplaneFighter getInstance()

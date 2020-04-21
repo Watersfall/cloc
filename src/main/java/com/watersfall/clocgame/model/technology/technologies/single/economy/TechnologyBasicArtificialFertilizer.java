@@ -14,6 +14,7 @@ public class TechnologyBasicArtificialFertilizer extends SingleTechnology
 	public static final String DESC = "Basic Artificial Fertilizer";
 	public static final String COLUMN_NAME = "basic_artificial_fertilizer";
 	public static final String FIELD_NAME = "";
+	public static final double FOOD_GAIN = .50;
 
 	private TechnologyBasicArtificialFertilizer()
 	{
@@ -22,6 +23,7 @@ public class TechnologyBasicArtificialFertilizer extends SingleTechnology
 		this.costs = new HashMap<>();
 		this.requirements = new HashMap<>();
 		costs.put("research", 50);
+		effects.add("+" + (FOOD_GAIN * 100) + "% food production");
 	}
 
 	public static TechnologyBasicArtificialFertilizer getInstance()

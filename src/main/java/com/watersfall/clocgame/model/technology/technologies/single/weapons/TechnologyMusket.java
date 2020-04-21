@@ -26,6 +26,7 @@ public class TechnologyMusket extends SingleTechnology
 		this.requirements = new HashMap<>();
 		costs.put("research", 50);
 		costs.put("steel", 10);
+		effects.add("Unlocks production: Muskets");
 	}
 
 	public static TechnologyMusket getInstance()

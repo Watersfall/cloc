@@ -29,6 +29,7 @@ public class TechnologyBombers extends SingleTechnology
 		costs.put("research", 100);
 		costs.put("steel", 50);
 		costs.put("oil", 50);
+		effects.add("Unlocks production: Bombers");
 	}
 
 	public static TechnologyBombers getInstance()

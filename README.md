@@ -12,11 +12,11 @@ Todo List:
         - Improve farming infrastructure and overall infrastructure here
         - Options to increase food production:
             - ~~Collective Farms: Requires socialist/communist economy, but free/cheap and has a chance of success~~ 
-            rethinking
-            - Farming Subsidies: Costs money/growth, but chance of success
-            - Fertilizer Technology: Costs research/nitrogen but increases food production
-            - Build farming machinery: Occupies civ industry/costs steel, but increases food production
-        - Ability to found new cities at some milestone/cost
+            ~~rethinking~~
+            - ~~Farming Subsidies: Costs money/growth, but chance of success~~
+            - ~~Fertilizer Technology: Costs research/nitrogen but increases food production~~
+            - ~~Build farming machinery: Occupies civ industry/costs steel, but increases food production~~
+        - ~~Ability to found new cities at some milestone/cost~~
         
 - War
     - Improved war formulas
@@ -37,7 +37,7 @@ Todo List:
     
 - Production
     - ~~Split off factories into their own database table for more control over individual units~~
-    - Make production cost resources
+    - ~~Make production cost resources~~
     - Shipbuilding
     - Potentially split dockyards off of military factories for creating ships
     - Better and more informative interface
@@ -60,7 +60,7 @@ Todo List:
     - Add a confirmation for attacking an enemy who is (estimated to be) significantly stronger than you
     
  - Domestic/Nation
-    - More population growth mechanics
+    - ~~More population growth mechanics~~
     - Better growth and GDP mechanics
     - ~~Better system for economic system~~
     - Make switching governments, ~~economic systems~~, and alignments more difficult
