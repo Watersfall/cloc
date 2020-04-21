@@ -48,8 +48,15 @@ function displayResults()
 
 function decision(policy)
 {
-	let url = context + "/decision/" + policy;
-	ajax(url, null);
+	if(policy === "FORM_TREATY")
+	{
+		window.location.href = "/createtreaty/";
+	}
+	else
+	{
+		let url = context + "/decision/" + policy;
+		ajax(url, null);
+	}
 }
 
 function cityDecision(policy, cityId)
