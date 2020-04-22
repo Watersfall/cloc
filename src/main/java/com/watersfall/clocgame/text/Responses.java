@@ -282,7 +282,7 @@ public class Responses
 
 	public static String propagandaMaxApproval()
 	{
-		return "<p>You're people already love you! There is no need to convince them further!</p>";
+		return "<p>Your people already love you! There is no need to convince them further!</p>";
 	}
 
 	public static String propagandaNoWar()
