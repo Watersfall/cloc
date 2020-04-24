@@ -34,7 +34,7 @@ public class DecisionActions
 		{
 			nation.getDomestic().setStability(nation.getDomestic().getStability() + 5);
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 5);
-			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + 5);
+			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() - 5);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			nation.update();
 			return Responses.arrest();
@@ -60,7 +60,7 @@ public class DecisionActions
 		{
 			nation.getDomestic().setStability(nation.getDomestic().getStability() - 5);
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 5);
-			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() - 5);
+			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + 5);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			nation.update();
 			return Responses.free();
