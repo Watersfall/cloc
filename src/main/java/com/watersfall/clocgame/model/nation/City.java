@@ -327,6 +327,16 @@ public class City extends Updatable
 				+ this.industryNitrogen + this.universities;
 	}
 
+	public int getFactoryCount()
+	{
+		return this.industryCivilian + this.industryMilitary + this.industryNitrogen + this.universities;
+	}
+
+	public int getMineCount()
+	{
+		return  this.coalMines + this.ironMines + this.oilWells;
+	}
+
 	public int getFreeSlots()
 	{
 		return getBuildSlots() - getUsedSlots();
@@ -402,9 +412,9 @@ public class City extends Updatable
 	public HashMap<String, Integer> getFactoryCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("coal", (int)(50 * (1.0 + this.getUsedSlots() / 5.0)));
-		map.put("iron", (int)(50 * (1.0 + this.getUsedSlots() / 5.0)));
-		map.put("steel", (int)(5 * (1.0 + this.getUsedSlots() / 5.0)));
+		map.put("coal", (int)(50 * (1.0 + this.getFactoryCount() / 5.0)));
+		map.put("iron", (int)(50 * (1.0 + this.getFactoryCount() / 5.0)));
+		map.put("steel", (int)(5 * (1.0 + this.getFactoryCount() / 5.0)));
 		return map;
 	}
 
@@ -420,9 +430,9 @@ public class City extends Updatable
 	public HashMap<String, Integer> getUniversityCost()
 	{
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("coal", (int)(100 * (1.0 + this.getUsedSlots() / 5.0)));
-		map.put("iron", (int)(100 * (1.0 + this.getUsedSlots() / 5.0)));
-		map.put("steel", (int)(10 * (1.0 + this.getUsedSlots() / 5.0)));
+		map.put("coal", (int)(100 * (1.0 + this.getFactoryCount() / 5.0)));
+		map.put("iron", (int)(100 * (1.0 + this.getFactoryCount() / 5.0)));
+		map.put("steel", (int)(10 * (1.0 + this.getFactoryCount() / 5.0)));
 		return map;
 	}
 
@@ -432,7 +442,7 @@ public class City extends Updatable
 	 */
 	public int getMineCost()
 	{
-		return (int)(1000 * (1.0 + this.getUsedSlots() / 5.0));
+		return (int)(1000 * (1.0 + this.getMineCount() / 5.0));
 	}
 
 	/**
@@ -441,7 +451,7 @@ public class City extends Updatable
 	 */
 	public int getWellCost()
 	{
-		return (int)(1500 * (1.0 + this.getUsedSlots() / 5.0));
+		return (int)(1500 * (1.0 + this.getMineCount() / 5.0));
 	}
 
 	public int getRailCost()
