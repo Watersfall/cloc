@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.TreatyMember;
 import com.watersfall.clocgame.text.Responses;
@@ -44,7 +45,11 @@ public class TreatyActions
 
 	public static String updateFlag(HttpServletRequest req, TreatyMember member, Part flag) throws SQLException, IOException
 	{
-		if(!(member.isFounder() || member.isEdit() || member.isManage()))
+		if(Util.checkSpamAndInsertIfNot(SpamAction.UPDATE_ALLIANCE_FLAG, member.getIdTreaty(), member.getConn()))
+		{
+			return Responses.noSpam();
+		}
+		else if(!(member.isFounder() || member.isEdit() || member.isManage()))
 		{
 			return Responses.noPermission();
 		}
@@ -101,7 +106,11 @@ public class TreatyActions
 		Nation nation;
 		try
 		{
-			if(member.isInvite() || member.isManage() || member.isFounder())
+			if(Util.checkSpamAndInsertIfNot(SpamAction.SEND_INVITE, member.getId(), member.getConn()))
+			{
+				return Responses.noSpam();
+			}
+			else if(member.isInvite() || member.isManage() || member.isFounder())
 			{
 				nation = Nation.getNationByName(member.getConn(), name, member.isSafe());
 				return nation.inviteToTreaty(member.getTreaty().getId(), member);

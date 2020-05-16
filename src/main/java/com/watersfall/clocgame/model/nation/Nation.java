@@ -1928,19 +1928,23 @@ public class Nation
 		}
 		if(this.getEconomy().getGrowth() < -10)
 		{
-			growth = -5;
+			growth = -4;
 		}
 		if(this.getEconomy().getGrowth() < -20)
 		{
-			growth = -10;
+			growth = -6;
 		}
 		if(this.getEconomy().getGrowth() < -50)
 		{
-			growth = -20;
+			growth = -10;
 		}
 		if(approval < 0)
 		{
 			map.put("stability.lowApproval", approval);
+		}
+		if(this.getFreeManpower() < 0)
+		{
+			map.put("stability.manpower", (int)((double)this.getFreeManpower() / (double)this.getTotalManpower() * Math.sqrt(Math.sqrt(this.getTotalManpower()))));
 		}
 		else
 		{
@@ -2122,6 +2126,8 @@ public class Nation
 				return " from recent conscription";
 			case "growth.fortification":
 				return " from fortification upkeep";
+			case "stability.manpower":
+				return "% from being over manpower limit";
 			case "growth.over_max_manpower":
 				return " from being over manpower limit";
 			case "growth.net":

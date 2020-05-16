@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
 import com.watersfall.clocgame.text.Responses;
@@ -120,7 +121,11 @@ public class SettingsActions
 		BufferedImage image = ImageIO.read(part.getInputStream());
 		NationCosmetic cosmetic = nation.getCosmetic();
 		String check = checkFlag(image);
-		if(check != null)
+		if(Util.checkSpamAndInsertIfNot(SpamAction.UPDATE_FLAG, nation.getId(), nation.getConn()))
+		{
+			return Responses.noSpam();
+		}
+		else if(check != null)
 		{
 			return check;
 		}
@@ -138,7 +143,11 @@ public class SettingsActions
 		BufferedImage image = ImageIO.read(part.getInputStream());
 		NationCosmetic cosmetic = nation.getCosmetic();
 		String check = checkPortrait(image);
-		if(check != null)
+		if(Util.checkSpamAndInsertIfNot(SpamAction.UPDATE_PORTRAIT, nation.getId(), nation.getConn()))
+		{
+			return Responses.noSpam();
+		}
+		else if(check != null)
 		{
 			return check;
 		}

@@ -1,8 +1,10 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
 import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
@@ -11,11 +13,15 @@ public class NationActions
 {
 	public static String sendResource(String resource, double amount, Nation sender, Nation receiver) throws SQLException
 	{
-		if(amount <= 0)
+		if(Util.checkSpamAndInsertIfNot(SpamAction.SEND_RESOURCE, sender.getId(), sender.getConn()))
+		{
+			return Responses.noSpam();
+		}
+		else if(amount <= 0)
 		{
 			return Responses.negative();
 		}
-		if(amount > 999999999998.00)
+		else if(amount > 999999999998.00)
 		{
 			throw new NumberFormatException();
 		}

@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.model.message;
 
+import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
 import com.watersfall.clocgame.text.Responses;
@@ -42,7 +43,11 @@ public class Declaration
 	public static String post(Nation nation, String message, Connection conn) throws SQLException
 	{
 		int cost = COST;
-		if(nation.getEconomy().getBudget() < cost)
+		if(Util.checkSpamAndInsertIfNot(SpamAction.SEND_DECLARATION, nation.getId(), nation.getConn()))
+		{
+			return Responses.noSpam();
+		}
+		else if(nation.getEconomy().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}

@@ -677,4 +677,9 @@ public class Responses
 	{
 		return "<p>You send in the army, but the strikers fight back. " + casualties + " thousand of your soldiers died ending the strike</p>";
 	}
+
+	public static String noSpam()
+	{
+		return "<p>You are doing this too much!</p>";
+	}
 }

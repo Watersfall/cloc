@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.util;
 
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.SpamAction;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -128,5 +129,29 @@ public class Util
 		ResultSet results = statement.executeQuery();
 		results.first();
 		return results.getInt(1);
+	}
+
+	public static boolean checkSpamAndInsertIfNot(SpamAction action, int id, Connection conn) throws SQLException
+	{
+		PreparedStatement check = conn.prepareStatement("SELECT count(*) FROM anti_spam WHERE action=? AND user=? AND time>?-?");
+		check.setString(1, action.name());
+		check.setInt(2, id);
+		check.setLong(3, System.currentTimeMillis());
+		check.setLong(4, action.getTime());
+		ResultSet results = check.executeQuery();
+		results.first();
+		if(results.getInt(1) >= action.getAmount())
+		{
+			return true;
+		}
+		else
+		{
+			PreparedStatement insertSpam = conn.prepareStatement("INSERT INTO anti_spam (user, action, time) VALUES (?,?,?)");
+			insertSpam.setInt(1, id);
+			insertSpam.setString(2, action.name());
+			insertSpam.setLong(3, System.currentTimeMillis());
+			insertSpam.execute();
+			return false;
+		}
 	}
 }
