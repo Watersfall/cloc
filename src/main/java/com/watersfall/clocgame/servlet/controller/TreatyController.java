@@ -27,7 +27,7 @@ import java.util.HashMap;
 @MultipartConfig(maxFileSize = 1024 * 1024 * 4, fileSizeThreshold = 1024 * 1024 * 4)
 public class TreatyController extends HttpServlet
 {
-	private static final String URL = "/{id}";
+	private static final String URL = "/{id}/{manage}";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -46,6 +46,10 @@ public class TreatyController extends HttpServlet
 			{
 				TreatyMember member = new TreatyMember(conn, nation.getId(), nation.isSafe());
 				req.setAttribute("home", member);
+			}
+			if(url.get("manage") != null)
+			{
+				req.setAttribute("manage", true);
 			}
 		}
 		catch(Exception e)
@@ -85,7 +89,15 @@ public class TreatyController extends HttpServlet
 				case "invite":
 					return TreatyActions.invite(member, value);
 				case "kick":
-					return TreatyActions.kick(member, value);
+					return TreatyActions.kick(member, new TreatyMember(conn, Integer.parseInt(value), true));
+				case "toggle_edit":
+					return TreatyActions.toggleEdit(member, new TreatyMember(conn, Integer.parseInt(value), true));
+				case "toggle_invite":
+					return TreatyActions.toggleInvite(member, new TreatyMember(conn, Integer.parseInt(value), true));
+				case "toggle_kick":
+					return TreatyActions.toggleKick(member, new TreatyMember(conn, Integer.parseInt(value), true));
+				case "toggle_manage":
+					return TreatyActions.toggleManage(member, new TreatyMember(conn, Integer.parseInt(value), true));
 				case "resign":
 					member.leaveTreaty();
 					return Responses.resigned();

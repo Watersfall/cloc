@@ -1,8 +1,8 @@
 package com.watersfall.clocgame.model.treaty;
 
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.text.Responses;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,13 +11,13 @@ import java.sql.SQLException;
 
 public class TreatyMember extends Nation
 {
-	private @Getter boolean founder;
-	private @Getter boolean manage;
-	private @Getter boolean kick;
-	private @Getter boolean invite;
-	private @Getter boolean edit;
-	private @Getter int idTreaty;
-	private @Getter boolean member;
+	private @Getter @Setter boolean founder;
+	private @Getter @Setter boolean manage;
+	private @Getter @Setter boolean kick;
+	private @Getter @Setter boolean invite;
+	private @Getter @Setter boolean edit;
+	private @Getter @Setter int idTreaty;
+	private @Getter @Setter boolean member;
 	private @Getter ResultSet results;
 
 	public TreatyMember(Connection connection, int id, boolean safe) throws SQLException
@@ -52,53 +52,6 @@ public class TreatyMember extends Nation
 		this.invite = results.getBoolean("invite");
 		this.edit = results.getBoolean("edit");
 		this.idTreaty = results.getInt("alliance_id");
-	}
-
-	public void setFounder(boolean founder) throws SQLException
-	{
-		results.updateBoolean(1, founder);
-	}
-
-	public void setManage(boolean manage) throws SQLException
-	{
-		results.updateBoolean(2, manage);
-	}
-
-	public void setKick(boolean kick) throws SQLException
-	{
-		results.updateBoolean(3, kick);
-	}
-
-	public void setInvite(boolean invite) throws SQLException
-	{
-		results.updateBoolean(4, invite);
-	}
-
-	public void setEdit(boolean edit) throws SQLException
-	{
-		results.updateBoolean(5, edit);
-	}
-
-	public void setIdTreaty(int id) throws SQLException
-	{
-		results.updateInt(6, id);
-	}
-
-	public String kick(TreatyMember member) throws SQLException
-	{
-		if(member.getIdTreaty() != this.getIdTreaty())
-		{
-			return Responses.notYourTreaty();
-		}
-		else if(!(this.kick || this.manage || this.founder))
-		{
-			return Responses.noPermission();
-		}
-		else
-		{
-			member.leaveTreaty();
-			return Responses.kicked();
-		}
 	}
 
 	public String getRoles()
@@ -136,5 +89,19 @@ public class TreatyMember extends Nation
 			}
 		}
 		return roles;
+	}
+
+	public void update() throws SQLException
+	{
+		super.update();
+		PreparedStatement update = this.getConn().prepareStatement("UPDATE cloc_treaties_members " +
+				"SET founder=?, manage=?, kick=?, invite=?, edit=? WHERE nation_id=?");
+		update.setBoolean(1, founder);
+		update.setBoolean(2, manage);
+		update.setBoolean(3, kick);
+		update.setBoolean(4, invite);
+		update.setBoolean(5, edit);
+		update.setInt(6, this.getId());
+		update.execute();
 	}
 }

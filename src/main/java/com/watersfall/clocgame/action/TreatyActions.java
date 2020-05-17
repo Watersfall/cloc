@@ -127,9 +127,76 @@ public class TreatyActions
 
 	}
 
-	public static String kick(TreatyMember member, String name) throws SQLException
+	public static String kick(TreatyMember member, TreatyMember personToKick) throws SQLException
 	{
-		TreatyMember nation = new TreatyMember(member.getConn(), Nation.getNationByName(member.getConn(), name, member.isSafe()).getId(), member.isSafe());
-		return member.kick(nation);
+		if(member.getIdTreaty() != personToKick.getIdTreaty())
+		{
+			return Responses.notYourTreaty();
+		}
+		else if(!(member.isKick() || member.isManage() || member.isFounder()))
+		{
+			return Responses.noPermission();
+		}
+		else
+		{
+			personToKick.leaveTreaty();
+			return Responses.kicked();
+		}
+	}
+
+	public static String toggleEdit(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	{
+		if(!member.isFounder())
+		{
+			return Responses.noPermission();
+		}
+		else
+		{
+			personToToggle.setEdit(!personToToggle.isEdit());
+			personToToggle.update();
+			return Responses.updated();
+		}
+	}
+
+	public static String toggleInvite(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	{
+		if(!member.isFounder())
+		{
+			return Responses.noPermission();
+		}
+		else
+		{
+			personToToggle.setInvite(!personToToggle.isInvite());
+			personToToggle.update();
+			return Responses.updated();
+		}
+	}
+
+	public static String toggleKick(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	{
+		if(!member.isFounder())
+		{
+			return Responses.noPermission();
+		}
+		else
+		{
+			personToToggle.setKick(!personToToggle.isKick());
+			personToToggle.update();
+			return Responses.updated();
+		}
+	}
+
+	public static String toggleManage(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	{
+		if(!member.isFounder())
+		{
+			return Responses.noPermission();
+		}
+		else
+		{
+			personToToggle.setManage(!personToToggle.isManage());
+			personToToggle.update();
+			return Responses.updated();
+		}
 	}
 }

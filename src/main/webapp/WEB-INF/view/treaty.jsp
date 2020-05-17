@@ -9,6 +9,9 @@
 		<c:when test="${treaty == null}">
 			<p>No treaty with that ID!</p>
 		</c:when>
+		<c:when test="${manage && (home.treaty == null || (home.idTreaty != id || !(home.manage || home.kick || home.founder)))}">
+			<p>You do not have permission to view this</p>
+		</c:when>
 		<c:otherwise>
 			<c:if test="${home != null && home.invites.invites.contains(treaty.id)}">
 				<p>You have been invited to this alliance!</p>
@@ -59,6 +62,8 @@
 						<input type="text" id="invite"/>
 						<button onclick="updateTreaty('invite', document.getElementById('invite').value)">Invite</button>
 					</c:if>
+					<br>
+					<a href="${pageContext.request.contextPath}/treaty/${treaty.id}/manage"><button>Manage Members</button></a>
 				</div>
 			</c:if>
 			<h3>Stats</h3>
@@ -74,26 +79,50 @@
 				</table>
 			</div>
 			<h3>Members</h3>
-			<table class="standardTable">
-				<tr>
-					<th>Name</th>
-					<th>Region</th>
-					<th>Roles</th>
-					<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
-						<th>Manage</th>
-					</c:if>
-				</tr>
-				<c:forEach items="${treaty.members}" var="member">
+			<c:if test="${manage == null}">
+				<table class="standardTable">
 					<tr>
-						<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
-						<td><b><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name}">${member.foreign.region.name}</a></b></td>
-						<td>${member.roles}</td>
+						<th>Name</th>
+						<th>Region</th>
+						<th>Roles</th>
+					</tr>
+					<c:forEach items="${treaty.members}" var="member">
+						<tr>
+							<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
+							<td><b><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name}">${member.foreign.region.name}</a></b></td>
+							<td>${member.roles}</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</c:if>
+			<c:if test="${manage != null}">
+				<table class="standardTable">
+					<tr>
+						<th>Name</th>
+						<th>Roles</th>
 						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
-							<td><button>Kick</button></td>
+							<th>Manage</th>
 						</c:if>
 					</tr>
-				</c:forEach>
-			</table>
+					<c:forEach items="${treaty.members}" var="member">
+						<tr>
+							<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
+							<td>${member.roles}</td>
+							<c:if test="${home.kick || home.manage || home.founder}">
+								<td>
+								<button onclick="updateTreaty('kick', ${member.id})">Kick</button>
+								<c:if test="${home.founder}">
+									<button onclick="updateTreaty('toggle_edit', ${member.id})">Toggle Edit</button>
+									<button onclick="updateTreaty('toggle_invite', ${member.id})">Toggle Invite</button>
+									<button onclick="updateTreaty('toggle_kick', ${member.id})">Toggle Kick</button>
+									<button onclick="updateTreaty('toggle_manage', ${member.id})">Toggle Manage</button>
+								</c:if>
+								</td>
+							</c:if>
+						</tr>
+					</c:forEach>
+				</table>
+			</c:if>
 			<br>
 			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">
 				<button onclick="updateTreaty('resign', 'anything really')">Resign</button>
