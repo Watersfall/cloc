@@ -2,9 +2,11 @@ package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.model.CitySize;
 import com.watersfall.clocgame.model.CityType;
+import com.watersfall.clocgame.model.Key;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -38,8 +40,7 @@ public class City extends Updatable
 	private @Getter String name;
 	private @Getter CityType type;
 	private @Getter int devastation;
-	private @Getter int strikeLevel;
-	private @Getter int strikeLength;
+	private @Getter @Setter Nation nation;
 
 	public static City getCity(Connection conn, int id) throws SQLException
 	{
@@ -77,8 +78,6 @@ public class City extends Updatable
 		this.devastation = results.getInt("cloc_cities.devastation");
 		this.population = results.getLong("cloc_cities.population");
 		this.id = results.getInt("cloc_cities.id");
-		this.strikeLevel = results.getInt("cloc_cities.strike_level");
-		this.strikeLength = results.getInt("cloc_cities.months_on_strike");
 		this.results = results;
 	}
 
@@ -233,24 +232,6 @@ public class City extends Updatable
 			population = 1000000000000000L;
 		this.addField("population", population);
 		this.population = population;
-	}
-
-	public void setStrikeLevel(int strikeLevel)
-	{
-		if(strikeLevel < 0)
-			strikeLevel = 0;
-		else if(strikeLevel > 10)
-			strikeLevel = 10;
-		this.addField("strike_level", strikeLevel);
-		this.strikeLevel = strikeLevel;
-	}
-
-	public void setStrikeLength(int strikeLength)
-	{
-		if(strikeLength < 0)
-			strikeLength = 0;
-		this.addField("months_on_strike", strikeLength);
-		this.strikeLength = strikeLength;
 	}
 
 	@Override
@@ -478,10 +459,42 @@ public class City extends Updatable
 		return employment;
 	}
 
+	public boolean hasStrike()
+	{
+		for(Modifier modifier : nation.getModifiers())
+		{
+			if(modifier.getCity() == this.id)
+			{
+				Modifiers type = modifier.getType();
+				if(type == Modifiers.STRIKE_SENT_ARMY || type == Modifiers.STRIKE_GAVE_IN || type == Modifiers.STRIKE_IGNORED)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public Modifiers getStrikeType()
+	{
+		for(Modifier modifier : nation.getModifiers())
+		{
+			if(modifier.getCity() == this.id)
+			{
+				Modifiers type = modifier.getType();
+				if(type == Modifiers.STRIKE_SENT_ARMY || type == Modifiers.STRIKE_GAVE_IN || type == Modifiers.STRIKE_IGNORED)
+				{
+					return type;
+				}
+			}
+		}
+		return null;
+	}
+
 	public double getStrikeModifier()
 	{
-		if(this.strikeLength > 0)
-			return -strikeLevel / 10.0;
+		if(this.hasStrike())
+			return getStrikeType().getEffects().get(Key.Modifiers.RESOURCE_PRODUCTION);
 		else
 			return 0;
 	}

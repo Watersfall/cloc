@@ -20,3 +20,17 @@ CREATE TABLE anti_spam(
     time BIGINT,
     FOREIGN KEY (user) REFERENCES cloc_login (id) ON DELETE CASCADE
 );
+
+CREATE TABLE modifiers(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user INT,
+	type TEXT,
+	start BIGINT,
+	FOREIGN KEY (user) REFERENCES cloc_login (id) ON DELETE CASCADE
+);
+
+ALTER TABLE modifiers
+	ADD COLUMN city INT AFTER user;
+
+ALTER TABLE modifiers
+	ADD CONSTRAINT FOREIGN KEY (city) REFERENCES cloc_cities (id) ON DELETE CASCADE

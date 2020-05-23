@@ -97,7 +97,6 @@ public class TurnMonth implements Runnable
 						for(City city : nation.getCities().getCities().values())
 						{
 							city.setDevastation(city.getDevastation() - ((int)(Math.random() * 5) + 5));
-							city.setStrikeLength(city.getStrikeLength() - 1);
 						}
 					}
 
@@ -118,7 +117,7 @@ public class TurnMonth implements Runnable
 						if(Math.random() > 0.00)
 						{
 							ArrayList<City> cities = new ArrayList<>(nation.getCities().getCities().values());
-							cities.removeIf((city -> city.getStrikeLength() > 0));
+							cities.removeIf((City::hasStrike));
 							cities.removeIf((city -> {
 								for(Events event : nation.getNews().getEvents().values())
 								{
@@ -161,6 +160,17 @@ public class TurnMonth implements Runnable
 					statement.setString(2, e.getLocalizedMessage());
 					statement.execute();
 				}
+			}
+
+			/*
+			** Modifiers
+			 */
+			for(Modifiers modifier : Modifiers.values())
+			{
+				PreparedStatement statement = connection.prepareStatement("DELETE FROM modifiers WHERE type=? AND start<?");
+				statement.setString(1, modifier.name());
+				statement.setLong(2, Util.month - modifier.getLength());
+				statement.execute();
 			}
 
 			/*

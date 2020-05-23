@@ -1,9 +1,11 @@
 package com.watersfall.clocgame.action;
 
-import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Events;
+import com.watersfall.clocgame.model.nation.Modifier;
+import com.watersfall.clocgame.model.nation.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Util;
 
 import java.sql.SQLException;
 
@@ -27,9 +29,7 @@ public class EventActions
 			else
 			{
 				Events.deleteEventById(nation.getConn(), event.getId());
-				City city = nation.getCities().getCities().get(event.getCityId());
-				city.setStrikeLength(8 + (int)(Math.random() * 4));
-				city.setStrikeLevel(2);
+				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_GAVE_IN, Util.month);
 				nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 5);
 				nation.update();
 				return Responses.strikeGiveIn();
@@ -45,9 +45,7 @@ public class EventActions
 			else
 			{
 				Events.deleteEventById(nation.getConn(), event.getId());
-				City city = nation.getCities().getCities().get(event.getCityId());
-				city.setStrikeLength(4 + (int)(Math.random() * 6));
-				city.setStrikeLevel(3 + (int)(Math.random() * 3));
+				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_IGNORED, Util.month);
 				nation.getDomestic().setStability(nation.getDomestic().getStability() + 5);
 				nation.update();
 				return Responses.strikeIgnore();
@@ -67,9 +65,7 @@ public class EventActions
 			else
 			{
 				Events.deleteEventById(nation.getConn(), event.getId());
-				City city = nation.getCities().getCities().get(event.getCityId());
-				city.setStrikeLength(1);
-				city.setStrikeLevel(10);
+				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_SENT_ARMY, Util.month);
 				nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 50);
 				if(Math.random() > 0.5)
 				{

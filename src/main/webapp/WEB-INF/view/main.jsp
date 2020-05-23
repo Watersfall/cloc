@@ -14,6 +14,15 @@
 		<p><br><c:out value="${home.cosmetic.description}"/></p><br>
 		<img class="veryLong" src="/user/portrait/${home.cosmetic.portrait}" alt="portrait"/>
 		<h1><c:out value="${home.cosmetic.leaderTitle}"/><c:out value=" "/><c:out value=" ${home.cosmetic.username}"/></h1>
+		<h2>Modifiers</h2>
+		<table class="standardTable nationTable">
+			<c:forEach items="${home.modifiers}" var="modifier">
+				<tr>
+					<td>${modifier.type.name()}</td>
+					<td>${modifier.type.effects}</td>
+				</tr>
+			</c:forEach>
+		</table>
 		<h2>Domestic</h2>
 		<table class="standardTable nationTable">
 			<tr>

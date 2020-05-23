@@ -50,6 +50,7 @@ public class Nation
 	private @Getter ResultSet results;
 	private @Getter long freeFactories;
 	private @Getter long lastLogin;
+	private @Getter ArrayList<Modifier> modifiers;
 	private LinkedHashMap<String, Double> coalProduction = null;
 	private LinkedHashMap<String, Double> ironProduction = null;
 	private LinkedHashMap<String, Double> oilProduction = null;
@@ -220,6 +221,7 @@ public class Nation
 	{
 		production = new LinkedHashMap<>();
 		updatables = new HashSet<>();
+		modifiers = new ArrayList<>();
 		PreparedStatement get;
 		PreparedStatement getProduction;
 		PreparedStatement attacker;
@@ -275,7 +277,7 @@ public class Nation
 		this.army = new NationArmy(id, main);
 		this.news = new NationNews(conn, id, safe);
 		this.invites = new NationInvites(conn, id, safe);
-		this.cities = new NationCities(conn, id, safe);
+		this.cities = new NationCities(conn, id, safe, this);
 		updatables.add(cosmetic);
 		updatables.add(domestic);
 		updatables.add(economy);
@@ -371,6 +373,13 @@ public class Nation
 		else
 		{
 			treaty = new Treaty(conn, resultsTreaty.getInt(1), safe);
+		}
+		PreparedStatement getModifiers = conn.prepareStatement("SELECT * FROM modifiers WHERE user=?");
+		getModifiers.setInt(1, id);
+		ResultSet modifierResults = getModifiers.executeQuery();
+		while(modifierResults.next())
+		{
+			modifiers.add(new Modifier(modifierResults));
 		}
 	}
 

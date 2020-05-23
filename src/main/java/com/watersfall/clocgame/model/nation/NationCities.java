@@ -16,9 +16,11 @@ public class NationCities
 	private @Getter ResultSet results;
 	private @Getter boolean safe;
 	private @Getter HashMap<Integer, City> cities;
+	private @Getter Nation parent;
 
-	public NationCities(Connection conn, int id, boolean safe) throws SQLException
+	public NationCities(Connection conn, int id, boolean safe, Nation parent) throws SQLException
 	{
+		this.parent = parent;
 		this.conn = conn;
 		PreparedStatement read;
 		if(safe)
@@ -55,7 +57,9 @@ public class NationCities
 			this.id = id;
 			while(results.next())
 			{
-				cities.put(results.getInt("cloc_cities.id"), new City(results.getInt("cloc_cities.id"), results));
+				City city = new City(results.getInt("cloc_cities.id"), results);
+				city.setNation(parent);
+				cities.put(results.getInt("cloc_cities.id"), city);
 			}
 		}
 	}
