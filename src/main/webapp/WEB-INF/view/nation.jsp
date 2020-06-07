@@ -182,6 +182,14 @@
 							</button>
 						</td>
 					</tr>
+					<tr>
+						<td><p>Send Nitrogen</p></td>
+						<td>
+							<label for="amountNitrogen"></label><input type="number" id="amountNitrogen" name="sendnitrogen" min="0">
+							<button type="submit" onclick="send('sendnitrogen', document.getElementById('amountNitrogen').value, '${nation.id}')">Send
+							</button>
+						</td>
+					</tr>
 				</table>
 				<h2>War</h2>
 				<c:if test="${nation.atWar}">
