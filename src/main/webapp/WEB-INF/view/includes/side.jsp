@@ -84,7 +84,11 @@
 					<c:forEach items="${home.cities.cities.values()}" var="city">
 						<a href="${pageContext.request.contextPath}/cities/${city.id}">
 							<div>
-								<p><c:out value="${city.name}"/></p>
+								<p><c:out value="${city.name}"/>
+									<c:if test="${city.freeSlots > 0}">
+										+
+									</c:if>
+								</p>
 							</div>
 						</a>
 					</c:forEach>
