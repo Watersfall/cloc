@@ -8,62 +8,54 @@ Todo List:
 - Rename The Game
 
 - Cities
-    - Add a "Countryside" or similar "city" to the city list 
-        - Improve farming infrastructure and overall infrastructure here
-        - Options to increase food production:
-            - ~~Collective Farms: Requires socialist/communist economy, but free/cheap and has a chance of success~~ 
-            ~~rethinking~~
-            - ~~Farming Subsidies: Costs money/growth, but chance of success~~
-            - ~~Fertilizer Technology: Costs research/nitrogen but increases food production~~
-            - ~~Build farming machinery: Occupies civ industry/costs steel, but increases food production~~
-        - ~~Ability to found new cities at some milestone/cost~~
-        
-- War
-    - Improved war formulas
-    - Actual effects on winning and losing
-    - Allow more than just 1 offensive and 1 defensive war
+    - Combine steel factories and mil factories into one building
+- Alignment:
+    - Gain reputation points by sending equipment and other things to either the Entente or Central Powers
+    - Once you reach a certain threshold, you can choose to become aligned with one of the alliances
+        - Being aligned gives you passive reputation gain
+        - Makes you lose all reputation with the other alliance, and makes gaining reputation with them impossible 
+            until you return to neutrality
+        - Reputation can be spent on various bonuses from the alliances:
+            - Economic Bonuses
+                - Research
+            - Military Bonuses
+                - Training
+                - Equipment
+- In-game messaging
+- Improvements to graphed and charted data
+    - Switch to using SVGs generated server side rather than client side canvas
+    - Improve stat accuracy for global and alliance stats
+    - Track nation stats
+        - Troops lost
+        - Buildings built
+        - Population
+        - GDP
+        - Growth
+        - Army Size
+        - Airforce Size
+        - Navy Size
+- Give a count of how many users are currently online
+- Code Improvements:
+    - Make model classes less garbage to look at
+    - Remove unnecessary servlets/jsps (air.jsp/servlet, etc.)
+    - Make text classes less awful
+    - Convert java tag files to jsp tag files
+    - Check that BadMath.java actually isn't used and delete it
+    - Make everything front-end related better
+    - Remove unnecessary exception classes
+    - Convert more fields to enums
+- UI Improvements
+    - Create a UI/Page for managing multiple cities at once
+    - Improve functionality of the production UI
+    - Improve functionality of the research screen
+    - Detailed resource gain UI
     
-- Logging
-    - Keep logs of:
-        - Global averages and totals
-        - Totals for individual nations
-        - Casualties for wars
-        - Casualties for large-scale wars
-        - Individual treaty averages/totals
-
-- Frontend
-    - Graphs of the logged data
-    - Rewrite of the frontend for general improvements, both visually and code-wise
-    
-- Production
-    - ~~Split off factories into their own database table for more control over individual units~~
-    - ~~Make production cost resources~~
-    - Shipbuilding
-    - Potentially split dockyards off of military factories for creating ships
-    - Better and more informative interface
-    - Add images for productions
-    
-- Research & Technology
-    - Naval technologies
-    - Better air tree
-    - Land vehicles tree
-    - Doctrine trees?
-    - Economy technologies
-    - Add descriptions to all technologies
-    - Add images for technologies
-    - Show what is gained from researching a tech
-    
- - Navy, Army, Airforce
-    - Split ships into their own database so they can be named
-    - A way to visualize army, navy, and airforce strengths 
-    - Estimations of enemies strengths compared to your own
-    - Add a confirmation for attacking an enemy who is (estimated to be) significantly stronger than you
-    
- - Domestic/Nation
-    - ~~More population growth mechanics~~
-    - Better growth and GDP mechanics
-    - ~~Better system for economic system~~
-    - Make switching governments, ~~economic systems~~, and alignments more difficult
-    
- - Other
-    - ~~Further improved password security~~
+Idea List:
+-
+- Do something about nitrogen factories
+- Do something with universities
+- Improve how winning wars works (Occupation based?)
+- Improve battles (Land, air sea)
+- Events
+- Improved Political and Economic System
+- Admin stuff
