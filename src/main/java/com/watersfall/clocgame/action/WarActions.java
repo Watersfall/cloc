@@ -9,7 +9,7 @@ import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
 import com.watersfall.clocgame.model.war.Log;
 import com.watersfall.clocgame.text.Responses;
-import com.watersfall.clocgame.util.Util;
+import com.watersfall.clocgame.util.Time;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ public class WarActions
 	private static String winWar(Nation attacker, Nation defender) throws SQLException
 	{
 		PreparedStatement updateWar = attacker.getConn().prepareStatement("UPDATE cloc_war SET end=?, winner=? WHERE attacker=? AND defender=? AND end=-1");
-		updateWar.setLong(1, Util.month);
+		updateWar.setLong(1, Time.month);
 		updateWar.setInt(2, attacker.getId());
 		if(attacker.getOffensive() != null && attacker.getOffensive().getId() == defender.getId())
 		{

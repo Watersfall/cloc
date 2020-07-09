@@ -4,6 +4,7 @@ import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationCosmetic;
 import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Time;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 
@@ -63,7 +64,7 @@ public class Declaration
 		{
 			PreparedStatement post = conn.prepareStatement("INSERT INTO cloc_declarations (sender, sent, content) VALUES (?,?,?)");
 			post.setInt(1, nation.getId());
-			post.setLong(2, Util.month);
+			post.setLong(2, Time.month);
 			post.setString(3, message);
 			post.execute();
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);

@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Time;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
@@ -34,7 +35,7 @@ public class GraphsController extends HttpServlet
 				if(url.get("type").equalsIgnoreCase("globalstats"))
 				{
 					PreparedStatement statement = conn.prepareStatement("SELECT * FROM global_stats_history WHERE month>? ORDER BY month ASC LIMIT 20");
-					statement.setLong(1, Util.month - 20);
+					statement.setLong(1, Time.month - 20);
 					ResultSet results = statement.executeQuery();
 					return convert(results);
 				}

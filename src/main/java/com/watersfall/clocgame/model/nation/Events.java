@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.util.Util;
+import com.watersfall.clocgame.util.Time;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -75,7 +75,7 @@ public class Events
 		statement.setInt(1, nation.getId());
 		statement.setString(2, event.name());
 		statement.setString(3, description);
-		statement.setLong(4, Util.month);
+		statement.setLong(4, Time.month);
 		statement.setInt(5, cityId);
 		statement.execute();
 	}
@@ -86,7 +86,7 @@ public class Events
 		statement.setInt(1, nation.getId());
 		statement.setString(2, event.name());
 		statement.setString(3, description);
-		statement.setLong(4, Util.month);
+		statement.setLong(4, Time.month);
 		statement.execute();
 	}
 }

@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.schedulers;
 
 import com.watersfall.clocgame.turn.TurnDay;
-import com.watersfall.clocgame.util.Util;
+import com.watersfall.clocgame.util.Time;
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.Getter;
 
@@ -13,7 +13,7 @@ public class DayScheduler
 	private DayScheduler()
 	{
 		scheduler = new Scheduler();
-		switch(Util.currentMonth)
+		switch(Time.currentMonth)
 		{
 			case 0:
 			case 2:

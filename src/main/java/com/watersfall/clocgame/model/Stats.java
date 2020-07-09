@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model;
 
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.util.Time;
 import com.watersfall.clocgame.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -110,7 +111,7 @@ public class Stats
 					"total_population, total_soldiers, total_civilian_factories, total_military_factories, total_universities, " +
 					"total_iron_mines, total_coal_mines, total_oil_wells) " +
 					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			statement.setLong(1, Util.month);
+			statement.setLong(1, Time.month);
 			statement.setLong(2, this.totalNations);
 			statement.setLong(3, this.totalNeutralNations);
 			statement.setLong(4, this.totalEntenteNations);

@@ -4,7 +4,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.schedulers.DayScheduler;
 import com.watersfall.clocgame.schedulers.MonthScheduler;
 import com.watersfall.clocgame.schedulers.StatsScheduler;
-import com.watersfall.clocgame.util.Util;
+import com.watersfall.clocgame.util.Time;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -45,9 +45,9 @@ public class Startup implements ServletContextListener
 			conn = Database.getDataSource().getConnection();
 			ResultSet results = conn.prepareStatement("SELECT month, day FROM cloc_main").executeQuery();
 			results.first();
-			Util.month = results.getLong(1);
-			Util.day = results.getLong(2);
-			Util.currentMonth = (int)(Util.month % 12);
+			Time.month = results.getLong(1);
+			Time.day = results.getLong(2);
+			Time.currentMonth = (int)(Time.month % 12);
 		}
 		catch(SQLException e)
 		{

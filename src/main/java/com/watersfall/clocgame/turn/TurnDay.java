@@ -4,7 +4,6 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Time;
-import com.watersfall.clocgame.util.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,7 +34,7 @@ public class TurnDay implements Runnable
 					{
 						City city = nation.getCities().getCities().get(cityId);
 						city.setPopulation(city.getPopulation()
-								+ (long)(city.getPopulation() * (city.getPopulationGrowth(nation).get("population.net") / (100L * Time.daysPerMonth[Util.currentMonth]))));
+								+ (long)(city.getPopulation() * (city.getPopulationGrowth(nation).get("population.net") / (100L * Time.daysPerMonth[Time.currentMonth]))));
 					}
 					nation.processProduction();
 					nation.update();
@@ -53,7 +52,7 @@ public class TurnDay implements Runnable
 					"SET efficiency=LEAST(efficiency+(0.1 * (10000.0 / (efficiency / 100.0))), 10000) WHERE production_id IS NOT NULL");
 			updateEfficiency.execute();
 			connection.commit();
-			Util.day++;
+			Time.day++;
 		}
 		catch(SQLException e)
 		{

@@ -6,7 +6,7 @@ import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.schedulers.DayScheduler;
-import com.watersfall.clocgame.util.Util;
+import com.watersfall.clocgame.util.Time;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,8 +22,8 @@ public class TurnMonth implements Runnable
 	{
 		Connection connection = null;
 		System.out.println("Running turn");
-		Util.month++;
-		Util.currentMonth = (int)(Util.month % 12);
+		Time.month++;
+		Time.currentMonth = (int)(Time.month % 12);
 		try
 		{
 			DayScheduler.resetIncrement();
@@ -140,7 +140,7 @@ public class TurnMonth implements Runnable
 					 */
 					for(Events event : nation.getNews().getEvents().values())
 					{
-						if(Util.month - event.getMonth() > 3)
+						if(Time.month - event.getMonth() > 3)
 						{
 							switch(event.getEvent())
 							{
@@ -169,7 +169,7 @@ public class TurnMonth implements Runnable
 			{
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM modifiers WHERE type=? AND start<?");
 				statement.setString(1, modifier.name());
-				statement.setLong(2, Util.month - modifier.getLength());
+				statement.setLong(2, Time.month - modifier.getLength());
 				statement.execute();
 			}
 

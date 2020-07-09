@@ -3,7 +3,7 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.text.Responses;
-import com.watersfall.clocgame.util.Util;
+import com.watersfall.clocgame.util.Time;
 
 import java.sql.SQLException;
 
@@ -22,7 +22,7 @@ public class PolicyActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeEconomy() + 1 > Util.month)
+		else if(nation.getPolicy().getChangeEconomy() + 1 > Time.month)
 		{
 			return Responses.noChange();
 		}
@@ -51,7 +51,7 @@ public class PolicyActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeManpower() + 1 > Util.month)
+		else if(nation.getPolicy().getChangeManpower() + 1 > Time.month)
 		{
 			return Responses.noChange();
 		}
@@ -80,7 +80,7 @@ public class PolicyActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeFood() + 1 > Util.month)
+		else if(nation.getPolicy().getChangeFood() + 1 > Time.month)
 		{
 			return Responses.noChange();
 		}
@@ -98,7 +98,7 @@ public class PolicyActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeFortification() + 1 > Util.month)
+		else if(nation.getPolicy().getChangeFortification() + 1 > Time.month)
 		{
 			return Responses.noChange();
 		}
@@ -116,7 +116,7 @@ public class PolicyActions
 		{
 			return Responses.policySame();
 		}
-		else if(nation.getPolicy().getChangeFarmingSubsidies() + 1 > Util.month)
+		else if(nation.getPolicy().getChangeFarmingSubsidies() + 1 > Time.month)
 		{
 			return Responses.noChange();
 		}

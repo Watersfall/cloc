@@ -563,7 +563,7 @@ public class Nation
 			PreparedStatement declare = conn.prepareStatement("INSERT INTO cloc_war (attacker, defender, start) VALUES (?,?,?)");
 			declare.setInt(1, this.id);
 			declare.setInt(2, nation.getId());
-			declare.setLong(3, Util.month);
+			declare.setLong(3, Time.month);
 			declare.execute();
 			conn.commit();
 		}
@@ -600,7 +600,7 @@ public class Nation
 		{
 			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET end=? " +
 					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-			sendPeace.setLong(1, Util.month);
+			sendPeace.setLong(1, Time.month);
 			sendPeace.setInt(2, this.id);
 			sendPeace.setInt(3, receiver.id);
 			sendPeace.setInt(4, receiver.id);
@@ -1811,7 +1811,7 @@ public class Nation
 			if(production.getIc(this.getPolicy().getEconomy()) > 0)
 			{
 				production.getRequiredResources().forEach((k, v) -> {
-					double amount = v / (double) Time.daysPerMonth[Util.currentMonth];
+					double amount = v / (double) Time.daysPerMonth[Time.currentMonth];
 					switch(k)
 					{
 						case "steel":

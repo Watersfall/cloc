@@ -49,6 +49,7 @@ Todo List:
     - Improve functionality of the production UI
     - Improve functionality of the research screen
     - Detailed resource gain UI
+- Ability to adjust the size of your airforce and navy
     
 Idea List:
 -

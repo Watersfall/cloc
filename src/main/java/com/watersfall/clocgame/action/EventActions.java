@@ -5,7 +5,7 @@ import com.watersfall.clocgame.model.nation.Modifier;
 import com.watersfall.clocgame.model.nation.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
-import com.watersfall.clocgame.util.Util;
+import com.watersfall.clocgame.util.Time;
 
 import java.sql.SQLException;
 
@@ -29,7 +29,7 @@ public class EventActions
 			else
 			{
 				Events.deleteEventById(nation.getConn(), event.getId());
-				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_GAVE_IN, Util.month);
+				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_GAVE_IN, Time.month);
 				nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 5);
 				nation.update();
 				return Responses.strikeGiveIn();
@@ -45,7 +45,7 @@ public class EventActions
 			else
 			{
 				Events.deleteEventById(nation.getConn(), event.getId());
-				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_IGNORED, Util.month);
+				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_IGNORED, Time.month);
 				nation.getDomestic().setStability(nation.getDomestic().getStability() + 5);
 				nation.update();
 				return Responses.strikeIgnore();
@@ -65,7 +65,7 @@ public class EventActions
 			else
 			{
 				Events.deleteEventById(nation.getConn(), event.getId());
-				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_SENT_ARMY, Util.month);
+				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_SENT_ARMY, Time.month);
 				nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 50);
 				if(Math.random() > 0.5)
 				{
