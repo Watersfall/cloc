@@ -6,8 +6,8 @@
 		<div class="specialTable">
 			<div>
 				<a class="full declaration" href="${pageContext.request.contextPath}/nation/${declaration.sender.id}">
-					<img class="verySmall floatLeft halfPad" style="padding-right: 0.25em;" src="/user/flag/${declaration.sender.flag}" alt="flag">
-					<p class="textLeft halfPad"><b>${declaration.sender.nationName}</b> declares:</p>
+					<img class="verySmall floatLeft halfPad" style="padding-right: 0.25em;" src="/user/flag/${declaration.sender.cosmetic.flag}" alt="flag">
+					<p class="textLeft halfPad"><b>${declaration.sender.cosmetic.nationName}</b> declares:</p>
 				</a>
 			</div>
 			<div>

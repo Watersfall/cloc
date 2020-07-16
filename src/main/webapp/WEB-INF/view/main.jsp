@@ -295,10 +295,10 @@
 		<h2>Wars</h2>
 		<c:if test="${home.atWar}">
 			<c:if test="${home.offensive != null}">
-				Offensive war against ${home.offensive.nationUrl}<br>
+				Offensive war against ${home.offensive.defender.nationUrl}<br>
 			</c:if>
 			<c:if test="${home.defensive != null}">
-				Defensive war against ${home.defensive.nationUrl}
+				Defensive war against ${home.defensive.attacker.nationUrl}
 			</c:if>
 		</c:if>
 		<c:if test="${!home.atWar}">

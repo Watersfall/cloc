@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.dao.WarDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.war.War;
@@ -37,15 +38,16 @@ public class NewsAndStatsController extends HttpServlet
 			}
 			ArrayList<War> wars = null;
 			int totalWars = 0;
+			WarDao dao = new WarDao(conn, false);
 			if(url.get("page") == null || url.get("page").equalsIgnoreCase("ongoing"))
 			{
-				wars = War.getOngoingWarPage(conn, page);
+				wars = dao.getOngoingWarPage(page);
 				totalWars = Util.getTotalOngoingWars(conn);
 				req.setAttribute("url", "worldnews/ongoing");
 			}
 			else if(url.get("page").equalsIgnoreCase("ended"))
 			{
-				wars = War.getEndedWarPage(conn, page);
+				wars = dao.getEndedWarPage(page);
 				totalWars = Util.getTotalEndedWars(conn);
 				req.setAttribute("url", "worldnews/ended");
 			}

@@ -1,11 +1,11 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.dao.EventDao;
+import com.watersfall.clocgame.dao.ModifierDao;
 import com.watersfall.clocgame.model.nation.Events;
-import com.watersfall.clocgame.model.nation.Modifier;
 import com.watersfall.clocgame.model.nation.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
-import com.watersfall.clocgame.util.Time;
 
 import java.sql.SQLException;
 
@@ -28,10 +28,10 @@ public class EventActions
 			}
 			else
 			{
-				Events.deleteEventById(nation.getConn(), event.getId());
-				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_GAVE_IN, Time.month);
-				nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 5);
-				nation.update();
+				EventDao eventDao = new EventDao(nation.getConn(), true);
+				eventDao.deleteEventById(event.getId());
+				ModifierDao modifierDao = new ModifierDao(nation.getConn(), true);
+				modifierDao.createModifier(nation.getId(), event.getCityId(), Modifiers.STRIKE_GAVE_IN);
 				return Responses.strikeGiveIn();
 			}
 		}
@@ -44,10 +44,10 @@ public class EventActions
 			}
 			else
 			{
-				Events.deleteEventById(nation.getConn(), event.getId());
-				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_IGNORED, Time.month);
-				nation.getDomestic().setStability(nation.getDomestic().getStability() + 5);
-				nation.update();
+				EventDao eventDao = new EventDao(nation.getConn(), true);
+				eventDao.deleteEventById(event.getId());
+				ModifierDao modifierDao = new ModifierDao(nation.getConn(), true);
+				modifierDao.createModifier(nation.getId(), event.getCityId(), Modifiers.STRIKE_IGNORED);
 				return Responses.strikeIgnore();
 			}
 		}
@@ -64,17 +64,17 @@ public class EventActions
 			}
 			else
 			{
-				Events.deleteEventById(nation.getConn(), event.getId());
-				Modifier.createModifier(nation.getConn(), nation.getId(), event.getCityId(), Modifiers.STRIKE_SENT_ARMY, Time.month);
+				EventDao eventDao = new EventDao(nation.getConn(), true);
+				eventDao.deleteEventById(event.getId());
+				ModifierDao modifierDao = new ModifierDao(nation.getConn(), true);
+				modifierDao.createModifier(nation.getId(), event.getCityId(), Modifiers.STRIKE_SENT_ARMY);
 				nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 50);
 				if(Math.random() > 0.5)
 				{
 					int casualties = (int)(1 + Math.random() * 5);
 					nation.getArmy().setSize(nation.getArmy().getSize() - casualties);
-					nation.update();
 					return Responses.strikeSendArmyCasualties(casualties);
 				}
-				nation.update();
 				return Responses.strikeSendArmyNoCasualties();
 			}
 		}

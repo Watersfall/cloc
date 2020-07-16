@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
+import com.watersfall.clocgame.dao.StatsDao;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.Time;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -34,10 +34,7 @@ public class GraphsController extends HttpServlet
 			{
 				if(url.get("type").equalsIgnoreCase("globalstats"))
 				{
-					PreparedStatement statement = conn.prepareStatement("SELECT * FROM global_stats_history WHERE month>? ORDER BY month ASC LIMIT 20");
-					statement.setLong(1, Time.month - 20);
-					ResultSet results = statement.executeQuery();
-					return convert(results);
+					return convert(new StatsDao(conn, false).getGraphData(Time.month - 20));
 				}
 				else
 				{

@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.NationActions;
 import com.watersfall.clocgame.action.WarActions;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = {"/nation/*"})
@@ -29,24 +31,34 @@ public class NationController extends HttpServlet
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		if(url.get("id") != null)
+		try
 		{
-			req.setAttribute("id", url.get("id"));
-			int id = Integer.parseInt(url.get("id"));
-			try(Connection connection = Database.getDataSource().getConnection())
+
+			if(req.getSession().getAttribute("user") != null
+					&& Integer.parseInt(url.get("id")) == Integer.parseInt(req.getSession().getAttribute("user").toString()))
 			{
-				Nation nation =  new Nation(connection, id, false);
-				req.setAttribute("nation", nation);
-				req.setAttribute("description",
-						"The Nation of " + nation.getCosmetic().getNationName() +
-						", Lead by " + nation.getCosmetic().getUsername()
-				);
+				resp.sendRedirect("/main/");
+				return;
 			}
-			catch(Exception e)
+			else
 			{
-				//Ignore
-				e.printStackTrace();
+				try(Connection conn = Database.getDataSource().getConnection())
+				{
+					NationDao dao = new NationDao(conn, false);
+					req.setAttribute("id", url.get("id"));
+					req.setAttribute("nation", dao.getNationById(Integer.parseInt(url.get("id"))));
+				}
+				catch(SQLException e)
+				{
+					//Ignore
+					e.printStackTrace();
+				}
 			}
+		}
+		catch(Exception e)
+		{
+			//Ignore
+			e.printStackTrace();
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
 	}
@@ -65,45 +77,66 @@ public class NationController extends HttpServlet
 			{
 				amount = Double.parseDouble(req.getParameter("amount"));
 			}
-			Nation sender = new Nation(conn, idSender, true);
-			Nation receiver = new Nation(conn, idReceiver, true);
+			NationDao dao = new NationDao(conn, true);
+			Nation sender = dao.getNationById(idSender);
+			Nation receiver =dao.getNationById(idReceiver);
+			String response;
 			switch(action)
 			{
 				case "sendcoal":
-					return NationActions.sendResource("coal", amount, sender, receiver);
+					response = NationActions.sendCoal(amount, sender, receiver);
+					break;
 				case "sendiron":
-					return NationActions.sendResource("iron", amount, sender, receiver);
+					response = NationActions.sendIron(amount, sender, receiver);
+					break;
 				case "sendoil":
-					return NationActions.sendResource("oil", amount, sender, receiver);
+					response = NationActions.sendOil(amount, sender, receiver);
+					break;
 				case "sendsteel":
-					return NationActions.sendResource("steel", amount, sender, receiver);
+					response = NationActions.sendSteel(amount, sender, receiver);
+					break;
 				case "sendnitrogen":
-					return NationActions.sendResource("nitrogen", amount, sender, receiver);
+					response = NationActions.sendNitrogen(amount, sender, receiver);
+					break;
 				case "sendmoney":
-					return NationActions.sendResource("budget", amount, sender, receiver);
+					response = NationActions.sendMoney(amount, sender, receiver);
+					break;
 				case "war":
-					return NationActions.declareWar(sender, receiver, req);
+					response = NationActions.declareWar(sender, receiver, req);
+					break;
 				case "peace":
-					return WarActions.sendPeace(sender, receiver);
+					response = WarActions.sendPeace(sender, receiver);
+					break;
 				case "land":
-					return WarActions.infantryBattle(sender, receiver);
+					response = WarActions.infantryBattle(sender, receiver);
+					break;
 				/*case "navy":
-					return WarActions.navyBattle(conn, sender, receiver);*/
+					response = WarActions.navyBattle(conn, sender, receiver);
+					break;*/
 				case "air":
-					return WarActions.airBattle(sender, receiver, false);
+					response = WarActions.airBattle(sender, receiver, false);
+					break;
 				case "landCity":
-					return WarActions.cityBattle(sender, receiver);
+					response = WarActions.cityBattle(sender, receiver);
+					break;
 				/*case "navyCity":
-					return WarActions.navyBombard(conn, sender, receiver);*/
+					response = WarActions.navyBombard(conn, sender, receiver);
+					break;*/
 				case "airCity":
-					return WarActions.airBombCity(sender, receiver);
+					response = WarActions.airBombCity(sender, receiver);
+					break;
 				case "fortify":
-					return WarActions.entrench(sender, receiver);
+					response = WarActions.entrench(sender, receiver);
+					break;
 				case "bomb":
-					return WarActions.airBombTroops(sender, receiver);
+					response = WarActions.airBombTroops(sender, receiver);
+					break;
 				default:
-					return Responses.genericError();
+					response = Responses.genericError();
 			}
+			dao.saveNation(sender);
+			dao.saveNation(receiver);
+			return response;
 		};
 		writer.append(Action.doAction(executor));
 	}

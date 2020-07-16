@@ -6,16 +6,23 @@ import lombok.Getter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class NationTech extends Updatable
 {
 	public static final String TABLE_NAME = "cloc_tech";
+	private HashMap<String, Integer> technologies;
 	private @Getter HashSet<Technologies> researchedTechs;
 
 	public NationTech(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
+		technologies = new HashMap<>();
+		for(Technologies tech : Technologies.values())
+		{
+			technologies.put(tech.getTechnology().getTableName(), results.getInt(tech.getTechnology().getTableName()));
+		}
 		loadTechnologies();
 	}
 
@@ -24,7 +31,7 @@ public class NationTech extends Updatable
 		researchedTechs = new HashSet<>();
 		for(Technologies tech : Technologies.values())
 		{
-			if(results.getInt(tech.getTechnology().getTableName()) >= tech.getTechnology().getRequiredSuccesses())
+			if(technologies.get(tech.getTechnology().getTableName()) >= tech.getTechnology().getRequiredSuccesses())
 			{
 				researchedTechs.add(tech);
 			}
@@ -33,7 +40,7 @@ public class NationTech extends Updatable
 
 	public int getTechnology(Technologies tech) throws SQLException
 	{
-		return results.getInt(tech.getTechnology().getTableName());
+		return technologies.get(tech.getTechnology().getTableName());
 	}
 
 	public void setTechnology(Technologies tech, int value)

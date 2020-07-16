@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.dao.CityDao;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
@@ -16,7 +17,7 @@ public class CityActions
 {
 	public static String coalMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -38,14 +39,13 @@ public class CityActions
 		{
 			city.setCoalMines(city.getCoalMines() + 1);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.coalMine();
 		}
 	}
 
 	public static String ironMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -67,14 +67,13 @@ public class CityActions
 		{
 			city.setIronMines(city.getIronMines() + 1);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.ironMine();
 		}
 	}
 
 	public static String drill(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -96,14 +95,13 @@ public class CityActions
 		{
 			city.setOilWells(city.getOilWells() + 1);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.drill();
 		}
 	}
 
 	public static String industrialize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -135,14 +133,13 @@ public class CityActions
 			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
 			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
 			city.setIndustryCivilian(city.getIndustryCivilian() + 1);
-			nation.update();
 			return Responses.industrialize();
 		}
 	}
 
 	public static String militarize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -173,15 +170,15 @@ public class CityActions
 			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
 			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
 			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
-			city.buildMilitaryIndustry(nation.getConn());
-			nation.update();
+			CityDao dao = new CityDao(nation.getConn(), true);
+			dao.buildMilitaryIndustry(city);
 			return Responses.militarize();
 		}
 	}
 
 	public static String nitrogen(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -213,14 +210,13 @@ public class CityActions
 			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
 			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
 			city.setIndustryNitrogen(city.getIndustryNitrogen() + 1);
-			nation.update();
 			return Responses.militarize();
 		}
 	}
 
 	public static String university(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -252,7 +248,6 @@ public class CityActions
 			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
 			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
 			city.setUniversities(city.getUniversities() + 1);
-			nation.update();
 			return Responses.nitrogenPlant();
 		}
 	}
@@ -260,7 +255,7 @@ public class CityActions
 	public static String port(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationEconomy economy = nation.getEconomy();
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -282,8 +277,6 @@ public class CityActions
 		{
 			city.setPorts(city.getPorts() + 1);
 			economy.setBudget(economy.getBudget() - cost);
-			city.update(nation.getConn());
-			economy.update(nation.getConn());
 			return Responses.port();
 		}
 	}
@@ -291,7 +284,7 @@ public class CityActions
 	public static String barrack(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationEconomy economy = nation.getEconomy();
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -309,8 +302,6 @@ public class CityActions
 		{
 			city.setBarracks(city.getBarracks() + 1);
 			economy.setBudget(economy.getBudget() - cost);
-			city.update(nation.getConn());
-			economy.update(nation.getConn());
 			return Responses.barrack();
 		}
 	}
@@ -318,7 +309,7 @@ public class CityActions
 	public static String railroad(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationEconomy economy = nation.getEconomy();
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
@@ -336,46 +327,193 @@ public class CityActions
 		{
 			city.setRailroads(city.getRailroads() + 1);
 			economy.setBudget(economy.getBudget() - cost);
-			city.update(nation.getConn());
-			economy.update(nation.getConn());
 			return Responses.railway();
 		}
 	}
 
-	/**
-	 * Called by the specific close actions with their specified type
-	 * Should probably refactor out the specific methods in favor of just using this at some point
-	 * @param nation The nation the city is in
-	 * @param cityId the City ID to remove from
-	 * @param type Column name for the building to remove
-	 * @return A displayable error message if one occurs, or null if there is no error
-	 * @throws SQLException If a database error occurs
-	 * @throws NationNotFoundException If the Nation with the specified ID does not exist
-	 * @throws CityNotFoundException If the City with the specified ID does not exist
-	 * @throws NotLoggedInException If the user attempting this is not logged in
-	 */
-	public static String remove(Nation nation, int cityId, String type) throws SQLException, NationNotFoundException, CityNotFoundException, NotLoggedInException
+	public static String closeCoalMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		City city = nation.getCities().getCities().get(cityId);
+		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
 			return Responses.notYourCity();
 		}
-		else if((int)city.getByName(type) <= 0)
+		if(city.getCoalMines() <= 0)
 		{
-			return Responses.noneLeft();
-		}
-		else if(type.equalsIgnoreCase("military_industry"))
-		{
-			city.closeMilitaryIndustry(nation.getConn());
+			return Responses.no("coal mines");
 		}
 		else
 		{
-			city.setByName(type, (Integer)city.getByName(type) - 1);
-			city.update(nation.getConn());
+			city.setCoalMines(city.getCoalMines() - 1);
+			return Responses.close("coal mine");
 		}
-		return Responses.close(type);
 	}
+
+	public static String closeIronMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		if(city.getIronMines() <= 0)
+		{
+			return Responses.no("iron mines");
+		}
+		else
+		{
+			city.setIronMines(city.getIronMines() - 1);
+			return Responses.close("iron mine");
+		}
+	}
+
+	public static String closeDrill(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		if(city.getOilWells() <= 0)
+		{
+			return Responses.no("oil wells");
+		}
+		else
+		{
+			city.setOilWells(city.getOilWells() - 1);
+			return Responses.close("oil well");
+		}
+	}
+
+	public static String closeIndustrialize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		else if(city.getIndustryCivilian() <= 0)
+		{
+			return Responses.no("factories");
+		}
+		else
+		{
+			city.setIndustryCivilian(city.getIndustryCivilian() - 1);
+			return Responses.close("factory");
+		}
+	}
+
+	public static String closeMilitarize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		else if(city.getIndustryMilitary() <= 0)
+		{
+			return Responses.no("factories");
+		}
+		else
+		{
+			CityDao dao = new CityDao(nation.getConn(), true);
+			dao.removeMilitaryIndustry(city);
+			return Responses.close("factory");
+		}
+	}
+
+	public static String closeNitrogen(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		else if(city.getIndustryNitrogen() <= 0)
+		{
+			return Responses.no("factories");
+		}
+
+		else
+		{
+			city.setIndustryNitrogen(city.getIndustryNitrogen() - 1);
+			return Responses.close("factory");
+		}
+	}
+
+	public static String closeUniversity(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		if(city.getUniversities() <= 0)
+		{
+			return Responses.no("universities");
+		}
+		else
+		{
+			city.setUniversities(city.getUniversities() - 1);
+			return Responses.close("university");
+		}
+	}
+
+	public static String closePort(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		else if(city.getPorts() <= 0)
+		{
+			return Responses.no("ports");
+		}
+		else
+		{
+			city.setPorts(city.getPorts() - 1);
+			return Responses.close("port");
+		}
+	}
+
+	public static String closeBarrack(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		else if(city.getBarracks() <= 0)
+		{
+			return Responses.no("barracks");
+		}
+		else
+		{
+			city.setBarracks(city.getBarracks() - 1);
+			return Responses.close("barracks");
+		}
+	}
+
+	public static String closeRailroad(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	{
+		City city = nation.getCities().get(cityId);
+		if(city == null)
+		{
+			return Responses.notYourCity();
+		}
+		else if(city.getRailroads() <= 0)
+		{
+			return Responses.no("railroads");
+		}
+		else
+		{
+			city.setRailroads(city.getRailroads() - 1);
+			return Responses.close("railway");
+		}
+	}
+
+
 
 	public static String rename(City city, String name, Connection conn) throws SQLException, NullPointerException
 	{
@@ -386,7 +524,6 @@ public class CityActions
 		else
 		{
 			city.setName(name);
-			city.update(conn);
 			return Responses.updated("Name");
 		}
 	}

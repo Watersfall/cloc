@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
@@ -11,9 +12,13 @@ import java.sql.SQLException;
 
 public class NationActions
 {
-	public static String sendResource(String resource, double amount, Nation sender, Nation receiver) throws SQLException
+	public static String defaultResourceCheck(double amount, Nation sender, Nation receiver) throws SQLException
 	{
-		if(Util.checkSpamAndInsertIfNot(SpamAction.SEND_RESOURCE, sender.getId(), sender.getConn()))
+		if(sender.getId() == receiver.getId())
+		{
+			return Responses.genericError();
+		}
+		else if(Util.checkSpamAndInsertIfNot(SpamAction.SEND_RESOURCE, sender.getId(), sender.getConn()))
 		{
 			return Responses.noSpam();
 		}
@@ -23,32 +28,124 @@ public class NationActions
 		}
 		else if(amount > 999999999998.00)
 		{
-			throw new NumberFormatException();
-		}
-		else if((Double)sender.getEconomy().getByName(resource) < amount)
-		{
-			return Responses.notEnough();
-		}
-		else if(sender.getId() == receiver.getId())
-		{
-			return Responses.genericError();
+			return Responses.negative();
 		}
 		else
 		{
-			sender.getEconomy().setByName(resource, (Double)sender.getEconomy().getByName(resource) - amount);
-			receiver.getEconomy().setByName(resource, (Double)receiver.getEconomy().getByName(resource) + amount);
-			if(resource.equalsIgnoreCase("budget"))
-			{
-				News.sendNews(sender.getConn(), sender.getId(), receiver.getId(),
-						News.createMessage(News.ID_SEND_MONEY, sender.getNationUrl(), Double.toString(amount)));
-			}
-			else
-			{
-				News.sendNews(sender.getConn(), sender.getId(), receiver.getId(),
-						News.createMessage(News.ID_SEND_RESOURCE, sender.getNationUrl(), Double.toString(amount), resource));
-			}
-			sender.update();
-			receiver.update();
+			return null;
+		}
+	}
+
+	public static String sendIron(double amount, Nation sender, Nation receiver) throws SQLException
+	{
+		String check = defaultResourceCheck(amount, sender, receiver);
+		if(check != null)
+		{
+			return check;
+		}
+		else if(amount > sender.getEconomy().getIron())
+		{
+			return Responses.notEnough();
+		}
+		else
+		{
+			sender.getEconomy().setIron(sender.getEconomy().getIron() - amount);
+			receiver.getEconomy().setIron(receiver.getEconomy().getIron() + amount);
+			return Responses.sent();
+		}
+	}
+
+	public static String sendCoal(double amount, Nation sender, Nation receiver) throws SQLException
+	{
+		String check = defaultResourceCheck(amount, sender, receiver);
+		if(check != null)
+		{
+			return check;
+		}
+		else if(amount > sender.getEconomy().getCoal())
+		{
+			return Responses.notEnough();
+		}
+		else
+		{
+			sender.getEconomy().setCoal(sender.getEconomy().getCoal() - amount);
+			receiver.getEconomy().setCoal(receiver.getEconomy().getCoal() + amount);
+			return Responses.sent();
+		}
+	}
+
+	public static String sendSteel(double amount, Nation sender, Nation receiver) throws SQLException
+	{
+		String check = defaultResourceCheck(amount, sender, receiver);
+		if(check != null)
+		{
+			return check;
+		}
+		else if(amount > sender.getEconomy().getSteel())
+		{
+			return Responses.notEnough();
+		}
+		else
+		{
+			sender.getEconomy().setSteel(sender.getEconomy().getSteel() - amount);
+			receiver.getEconomy().setSteel(receiver.getEconomy().getSteel() + amount);
+			return Responses.sent();
+		}
+	}
+
+	public static String sendOil(double amount, Nation sender, Nation receiver) throws SQLException
+	{
+		String check = defaultResourceCheck(amount, sender, receiver);
+		if(check != null)
+		{
+			return check;
+		}
+		else if(amount > sender.getEconomy().getOil())
+		{
+			return Responses.notEnough();
+		}
+		else
+		{
+			sender.getEconomy().setOil(sender.getEconomy().getOil() - amount);
+			receiver.getEconomy().setOil(receiver.getEconomy().getOil() + amount);
+			return Responses.sent();
+		}
+	}
+
+	public static String sendNitrogen(double amount, Nation sender, Nation receiver) throws SQLException
+	{
+		String check = defaultResourceCheck(amount, sender, receiver);
+		if(check != null)
+		{
+			return check;
+		}
+		else if(amount > sender.getEconomy().getNitrogen())
+		{
+			return Responses.notEnough();
+		}
+		else
+		{
+			sender.getEconomy().setNitrogen(sender.getEconomy().getNitrogen() - amount);
+			receiver.getEconomy().setNitrogen(receiver.getEconomy().getNitrogen() + amount);
+			return Responses.sent();
+		}
+	}
+
+	public static String sendMoney(double amount, Nation sender, Nation receiver) throws SQLException
+	{
+		String check = defaultResourceCheck(amount, sender, receiver);
+		if(check != null)
+		{
+			return check;
+		}
+		else if(amount > sender.getEconomy().getBudget())
+		{
+			return Responses.notEnough();
+		}
+		else
+		{
+			sender.getEconomy().setBudget(sender.getEconomy().getBudget() - amount);
+			receiver.getEconomy().setBudget(receiver.getEconomy().getBudget() + amount);
 			return Responses.sent();
 		}
 	}
@@ -62,8 +159,8 @@ public class NationActions
 		}
 		else
 		{
-			News.sendNews(sender.getConn(), sender.getId(), receiver.getId(),
-					News.createMessage(News.ID_DECLARE_WAR, sender.getNationUrl()));
+			NewsDao dao = new NewsDao(sender.getConn(), true);
+			dao.createNews(sender.getId(), receiver.getId(), News.createMessage(News.ID_DECLARE_WAR, sender.getNationUrl()));
 			sender.declareWar(receiver);
 			return Responses.war();
 		}

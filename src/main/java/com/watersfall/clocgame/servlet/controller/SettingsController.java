@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.SettingsActions;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -44,27 +45,37 @@ public class SettingsController extends HttpServlet
 		}
 		String action = temp;
 		Executor exec = (conn) -> {
-			Nation nation = UserUtils.getUserNation(conn, true, req);
+			NationDao dao = new NationDao(conn, true);
+			Nation nation = dao.getNationById(UserUtils.getUser(req));
+			String response;
 			switch(action)
 			{
 				case "flag":
-					return SettingsActions.updateFlag(nation, req.getPart("flag"));
+					response = SettingsActions.updateFlag(nation, req.getPart("flag"));
+					break;
 				case "portrait":
-					return SettingsActions.updatePortrait(nation, req.getPart("portrait"));
+					response = SettingsActions.updatePortrait(nation, req.getPart("portrait"));
+					break;
 				case "nationTitle":
-					return SettingsActions.updateNationTitle(nation, req.getParameter("nationTitle"));
+					response = SettingsActions.updateNationTitle(nation, req.getParameter("nationTitle"));
+					break;
 				case "leaderTitle":
-					return SettingsActions.updateLeaderTitle(nation, req.getParameter("leaderTitle"));
+					response = SettingsActions.updateLeaderTitle(nation, req.getParameter("leaderTitle"));
+					break;
 				case "description":
-					return SettingsActions.updateDescription(nation, req.getParameter("description"));
+					response = SettingsActions.updateDescription(nation, req.getParameter("description"));
+					break;
 				case "all":
-					return SettingsActions.updateAll(nation,
+					response = SettingsActions.updateAll(nation,
 							req.getParameter("nationTitle"),
 							req.getParameter("leaderTitle"),
 							req.getParameter("description"));
+					break;
 				default:
-					return Responses.genericError();
+					response = Responses.genericError();
 			}
+			dao.saveNation(nation);
+			return response;
 		};
 		writer.append(Action.doAction(exec));
 	}

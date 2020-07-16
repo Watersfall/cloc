@@ -23,7 +23,7 @@ public class NationDomestic extends Updatable
 
 	public NationDomestic(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
 		this.land = results.getInt("land");
 		this.government = results.getInt("government");
 		this.approval = results.getInt("approval");
@@ -43,7 +43,7 @@ public class NationDomestic extends Updatable
 			land = 0;
 		else if(land > 2000000000)
 			land = 2000000000;
-		this.addField("land", land);
+		this.setField("land", land);
 		this.land = land;
 	}
 
@@ -53,7 +53,7 @@ public class NationDomestic extends Updatable
 			government = 0;
 		else if(government > 100)
 			government = 100;
-		this.addField("government", government);
+		this.setField("government", government);
 		this.government = government;
 	}
 
@@ -63,7 +63,7 @@ public class NationDomestic extends Updatable
 			approval = 0;
 		else if(approval > 100)
 			approval = 100;
-		this.addField("approval", approval);
+		this.setField("approval", approval);
 		this.approval = approval;
 	}
 
@@ -73,7 +73,7 @@ public class NationDomestic extends Updatable
 			stability = 0;
 		else if(stability > 100)
 			stability = 100;
-		this.addField("stability", stability);
+		this.setField("stability", stability);
 		this.stability = stability;
 	}
 
@@ -83,7 +83,7 @@ public class NationDomestic extends Updatable
 			manpowerLost = 0;
 		else if(manpowerLost > 1000000000000000L)
 			manpowerLost = 1000000000000000L;
-		this.addField("lost_manpower", manpowerLost);
+		this.setField("lost_manpower", manpowerLost);
 		this.manpowerLost = manpowerLost;
 	}
 
@@ -93,7 +93,7 @@ public class NationDomestic extends Updatable
 			rebels = 0;
 		else if(rebels > 100)
 			rebels = 100;
-		this.addField("rebels", rebels);
+		this.setField("rebels", rebels);
 		this.rebels = rebels;
 	}
 
@@ -103,7 +103,7 @@ public class NationDomestic extends Updatable
 			farm = 0;
 		else if(farm > 1000)
 			farm = 1000;
-		this.addField("farm_subsidies", farm);
+		this.setField("farm_subsidies", farm);
 		this.farmSubsidies = farm;
 	}
 
@@ -113,7 +113,7 @@ public class NationDomestic extends Updatable
 			farm = 0;
 		else if(farm > 1000)
 			farm = 1000;
-		this.addField("farm_regulations", farm);
+		this.setField("farm_regulations", farm);
 		this.farmRegulations = farm;
 	}
 
@@ -123,7 +123,7 @@ public class NationDomestic extends Updatable
 			farm = 0;
 		else if(farm > 1000)
 			farm = 1000;
-		this.addField("farm_technology", farm);
+		this.setField("farm_technology", farm);
 		this.farmTechnology = farm;
 	}
 
@@ -133,7 +133,7 @@ public class NationDomestic extends Updatable
 			farm = 0;
 		else if(farm > 1000)
 			farm = 1000;
-		this.addField("farm_collectivization", farm);
+		this.setField("farm_collectivization", farm);
 		this.farmCollectivization = farm;
 	}
 
@@ -141,7 +141,7 @@ public class NationDomestic extends Updatable
 	{
 		if(monthsInFamine < 0)
 			monthsInFamine = 0;
-		this.addField("months_in_famine", monthsInFamine);
+		this.setField("months_in_famine", monthsInFamine);
 		this.monthsInFamine = monthsInFamine;
 	}
 }

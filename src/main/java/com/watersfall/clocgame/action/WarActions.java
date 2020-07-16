@@ -1,5 +1,7 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.dao.LogDao;
+import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Fighter;
 import com.watersfall.clocgame.model.military.LogType;
@@ -7,7 +9,6 @@ import com.watersfall.clocgame.model.military.Plane;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
-import com.watersfall.clocgame.model.war.Log;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Time;
 
@@ -59,19 +60,20 @@ public class WarActions
 		attacker.getEconomy().setNitrogen(attacker.getEconomy().getNitrogen() + nitrogenChange);
 		attacker.getEconomy().setSteel(attacker.getEconomy().getSteel() + steelChange);
 		attacker.getEconomy().setBudget(attacker.getEconomy().getBudget() + budgetChange);
-		for(City city : defender.getCities().getCities().values())
+		for(City city : defender.getCities().values())
 		{
 			city.setDevastation(city.getDevastation() + 25);
 		}
 		String message = News.createMessage(News.ID_WAR_LOST, attacker.getNationUrl());
-		News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
-		update(attacker, defender);
+		NewsDao dao = new NewsDao(attacker.getConn(), true);
+		dao.createNews(attacker.getId(), defender.getId(), message);
 		return Responses.warWon();
 	}
 
 	private static void doLog(Nation attacker, Nation defender, LogType type) throws SQLException
 	{
-		Log.createLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), type, 0);
+		LogDao dao = new LogDao(attacker.getConn(), true);
+		dao.createLog(attacker.getId(), defender.getForeign().getRegion(), type, 0);
 	}
 
 	private static void doCasualties(Nation attacker, Nation defender, int attackerCasualties, int defenderCasualties) throws SQLException
@@ -86,35 +88,35 @@ public class WarActions
 
 	private static String battleWon(Nation attacker, Nation defender, int attackerCasualties, int defenderCasualties) throws SQLException
 	{
-		update(attacker, defender);
-		News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(),
-				News.createMessage(News.ID_DEFENSIVE_LOST, attacker.getNationUrl(), defenderCasualties, attackerCasualties));
+		String message = News.createMessage(News.ID_DEFENSIVE_LOST, attacker.getNationUrl(), defenderCasualties, attackerCasualties);
+		NewsDao dao = new NewsDao(attacker.getConn(), true);
+		dao.createNews(attacker.getId(), defender.getId(), message);
 		return Responses.offensiveVictory(attackerCasualties, defenderCasualties);
 	}
 
 	private static String battleLost(Nation attacker, Nation defender, int attackerCasualties, int defenderCasualties) throws SQLException
 	{
-		update(attacker, defender);
-		News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(),
-				News.createMessage(News.ID_DEFENSIVE_WON, attacker.getNationUrl(), defenderCasualties, attackerCasualties));
+		String message = News.createMessage(News.ID_DEFENSIVE_WON, attacker.getNationUrl(), defenderCasualties, attackerCasualties);
+		NewsDao dao = new NewsDao(attacker.getConn(), true);
+		dao.createNews(attacker.getId(), defender.getId(), message);
 		return Responses.offensiveDefeat(attackerCasualties, defenderCasualties);
 	}
 
 	private static String cityBattleWon(City city, Nation attacker, Nation defender, int attackerCasualties, int defenderCasualties) throws SQLException
 	{
 		city.setDevastation(city.getDevastation() + 5 + (int)(Math.random() * 6));
-		News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(),
-				News.createMessage(News.ID_DEFENSIVE_CITY_LOST, attacker.getNationUrl(), city.getName(), attackerCasualties, defenderCasualties));
-		update(attacker, defender);
+		String message = News.createMessage(News.ID_DEFENSIVE_CITY_LOST, attacker.getNationUrl(), city.getName(), attackerCasualties, defenderCasualties);
+		NewsDao dao = new NewsDao(attacker.getConn(), true);
+		dao.createNews(attacker.getId(), defender.getId(), message);
 		return Responses.offensiveCityVictory(city, attackerCasualties, defenderCasualties);
 	}
 
 	private static String cityBattleLost(City city, Nation attacker, Nation defender, int attackerCasualties, int defenderCasualties) throws SQLException
 	{
 		city.setDevastation(city.getDevastation() + (int)(Math.random() * 6));
-		News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(),
-				News.createMessage(News.ID_DEFENSIVE_CITY_WON, attacker.getNationUrl(), city.getName(), defenderCasualties, attackerCasualties));
-		update(attacker, defender);
+		String message = News.createMessage(News.ID_DEFENSIVE_CITY_WON, attacker.getNationUrl(), city.getName(), defenderCasualties, attackerCasualties);
+		NewsDao dao = new NewsDao(attacker.getConn(), true);
+		dao.createNews(attacker.getId(), defender.getId(), message);
 		return Responses.offensiveCityDefeat(city, attackerCasualties, defenderCasualties);
 	}
 	
@@ -185,19 +187,14 @@ public class WarActions
 		return false;
 	}
 
-	private static void update(Nation attacker, Nation defender) throws SQLException
-	{
-		attacker.update();
-		defender.update();
-	}
-
 	public static String infantryBattle(Nation attacker, Nation defender) throws SQLException
 	{
+		LogDao dao = new LogDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
-		else if(Log.checkLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
+		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -229,19 +226,12 @@ public class WarActions
 			}
 			doLog(attacker, defender, LogType.LAND);
 			doCasualties(attacker, defender, attackerCasualties, defenderCasualties);
-			update(attacker, defender);
 			if(attackerPower > defenderPower)
 			{
-				String message = News.createMessage(News.ID_DEFENSIVE_LOST
-						, attacker.getNationUrl(), Integer.toString(defenderCasualties), Integer.toString(attackerCasualties));
-				News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 				return battleWon(attacker, defender, attackerCasualties, defenderCasualties);
 			}
 			else
 			{
-				String message = News.createMessage(News.ID_DEFENSIVE_WON
-						, attacker.getNationUrl(), Integer.toString(defenderCasualties), Integer.toString(attackerCasualties));
-				News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 				return battleLost(attacker, defender, attackerCasualties, defenderCasualties);
 			}
 		}
@@ -249,11 +239,13 @@ public class WarActions
 
 	public static String cityBattle(Nation attacker, Nation defender) throws SQLException
 	{
+		LogDao dao = new LogDao(attacker.getConn(), true);
+		NewsDao newsDao = new NewsDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
-		else if(Log.checkLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
+		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -267,7 +259,7 @@ public class WarActions
 		}
 		else
 		{
-			Collection<City> collection = defender.getCities().getCities().values();
+			Collection<City> collection = defender.getCities().values();
 			collection.removeIf(city -> city.getDevastation() >= 100);
 			if(collection.isEmpty())
 			{
@@ -296,25 +288,12 @@ public class WarActions
 				}
 				doLog(attacker, defender, LogType.LAND);
 				doCasualties(attacker, defender, attackerCasualties, defenderCasualties);
-				update(attacker, defender);
 				if(attackerPowerDecideIfWin > defenderPower)
 				{
-					String message = News.createMessage(News.ID_DEFENSIVE_CITY_LOST,
-							attacker.getNationUrl(),
-							city.getName(),
-							Integer.toString(defenderCasualties),
-							Integer.toString(attackerCasualties));
-					News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 					return cityBattleWon(city, attacker, defender, attackerCasualties, defenderCasualties);
 				}
 				else
 				{
-					String message = News.createMessage(News.ID_DEFENSIVE_CITY_WON,
-							attacker.getNationUrl(),
-							city.getName(),
-							Integer.toString(attackerCasualties),
-							Integer.toString(defenderCasualties));
-					News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), message);
 					return cityBattleLost(city, attacker, defender, attackerCasualties, defenderCasualties);
 				}
 			}
@@ -323,11 +302,13 @@ public class WarActions
 
 	public static String airBattle(Nation attacker, Nation defender, boolean interception) throws SQLException
 	{
+		LogDao dao = new LogDao(attacker.getConn(), true);
+		NewsDao newsDao = new NewsDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
-		else if(Log.checkLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
+		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -346,9 +327,8 @@ public class WarActions
 			int totalAttackerLosses = runFighterCalc(attacker, defenderPower);
 			int totalDefenderLosses = runFighterCalc(defender, attackerPower);
 			doLog(attacker, defender, LogType.AIR);
-			News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(),
-					News.createMessage(News.ID_AIR_BATTLE, attacker.getNationUrl(), totalDefenderLosses, totalAttackerLosses));
-			update(attacker, defender);
+			String message = News.createMessage(News.ID_AIR_BATTLE, attacker.getNationUrl(), totalDefenderLosses, totalAttackerLosses);
+			newsDao.createNews(attacker.getId(), defender.getId(), message);
 			if(interception)
 			{
 				return Responses.airBattleInterception(totalAttackerLosses, totalDefenderLosses);
@@ -362,11 +342,13 @@ public class WarActions
 
 	public static String airBombTroops(Nation attacker, Nation defender) throws SQLException
 	{
+		LogDao dao = new LogDao(attacker.getConn(), true);
+		NewsDao newsDao = new NewsDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
-		else if(Log.checkLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
+		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -382,21 +364,22 @@ public class WarActions
 			}
 			int damage = Math.max(1, (int)Math.sqrt(attacker.getBomberPower()));
 			damage = Math.min(damage, defender.getArmy().getSize() / 10);
-			String newsMessage = News.createMessage(News.ID_AIR_BOMB_TROOPS, attacker.getNationUrl(), damage);
-			News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), newsMessage);
+			String message = News.createMessage(News.ID_AIR_BOMB_TROOPS, attacker.getNationUrl(), damage);
+			newsDao.createNews(attacker.getId(), defender.getId(), message);
 			doCasualties(attacker, defender, 0, damage);
-			update(attacker, defender);
 			return Responses.bombTroops(damage);
 		}
 	}
 
 	public static String airBombCity(Nation attacker, Nation defender) throws SQLException
 	{
+		LogDao dao = new LogDao(attacker.getConn(), true);
+		NewsDao newsDao = new NewsDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
-		else if(Log.checkLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
+		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -406,7 +389,7 @@ public class WarActions
 		}
 		else
 		{
-			Collection<City> collection = defender.getCities().getCities().values();
+			Collection<City> collection = defender.getCities().values();
 			collection.removeIf(city -> city.getDevastation() >= 100);
 			if(collection.isEmpty())
 			{
@@ -421,9 +404,8 @@ public class WarActions
 				City city = (City)collection.toArray()[(int)(Math.random() * collection.size())];
 				int damage = Math.max(1, (int)Math.sqrt(attacker.getBomberPower()));
 				city.setDevastation(city.getDevastation() + damage);
-				String newsMessage = News.createMessage(News.ID_AIR_BOMBARD, attacker.getNationUrl(), city.getName());
-				News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), newsMessage);
-				update(attacker, defender);
+				String message = News.createMessage(News.ID_AIR_BOMBARD, attacker.getNationUrl(), city.getName());
+				newsDao.createNews(attacker.getId(), defender.getId(), message);
 				return Responses.bombard();
 			}
 		}
@@ -431,11 +413,13 @@ public class WarActions
 
 	public static String entrench(Nation attacker, Nation defender) throws SQLException
 	{
+		LogDao dao = new LogDao(attacker.getConn(), true);
+		NewsDao newsDao = new NewsDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
 			return Responses.noWar();
 		}
-		else if(Log.checkLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
+		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -447,10 +431,9 @@ public class WarActions
 		{
 			int increase = Math.max(250, attacker.getMaximumFortificationLevel() / 10);
 			attacker.getArmy().setFortification(attacker.getArmy().getFortification() + increase);
-			Log.createLog(attacker.getConn(), attacker.getId(), defender.getForeign().getRegion(), LogType.LAND, 0);
-			String news = News.createMessage(News.ID_FORTIFICATION, attacker.getNationUrl());
-			News.sendNews(attacker.getConn(), attacker.getId(), defender.getId(), news);
-			update(attacker, defender);
+			doLog(attacker, defender, LogType.LAND);
+			String message = News.createMessage(News.ID_FORTIFICATION, attacker.getNationUrl());
+			newsDao.createNews(attacker.getId(), defender.getId(), message);
 			return Responses.fortified();
 		}
 	}

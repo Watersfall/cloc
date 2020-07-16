@@ -26,7 +26,7 @@ public class NationArmy extends Updatable
 
 	public NationArmy(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
 		this.size = results.getInt("size");
 		this.training = results.getInt("training");
 		this.musket = results.getInt("musket");
@@ -47,7 +47,7 @@ public class NationArmy extends Updatable
 	{
 		if(size < 0)
 			size = 0;
-		this.addField("size", size);
+		this.setField("size", size);
 		this.size = size;
 	}
 
@@ -57,7 +57,7 @@ public class NationArmy extends Updatable
 			training = 0;
 		else if (training > 100)
 			training = 100;
-		this.addField("training", training);
+		this.setField("training", training);
 		this.training = training;
 	}
 
@@ -67,7 +67,7 @@ public class NationArmy extends Updatable
 			musket = 0;
 		else if(musket > 2000000000)
 			musket = 2000000000;
-		this.addField("musket", musket);
+		this.setField("musket", musket);
 		this.musket = musket;
 	}
 
@@ -77,7 +77,7 @@ public class NationArmy extends Updatable
 			rifledMusket = 0;
 		else if(rifledMusket > 2000000000)
 			rifledMusket = 2000000000;
-		this.addField("rifled_musket", rifledMusket);
+		this.setField("rifled_musket", rifledMusket);
 		this.rifledMusket = rifledMusket;
 	}
 
@@ -87,7 +87,7 @@ public class NationArmy extends Updatable
 			singleShot = 0;
 		else if(singleShot > 2000000000)
 			singleShot = 2000000000;
-		this.addField("single_shot", singleShot);
+		this.setField("single_shot", singleShot);
 		this.singleShot = singleShot;
 	}
 
@@ -97,7 +97,7 @@ public class NationArmy extends Updatable
 			needleNose = 0;
 		else if(needleNose > 2000000000)
 			needleNose = 2000000000;
-		this.addField("needle_nose", needleNose);
+		this.setField("needle_nose", needleNose);
 		this.needleNose = needleNose;
 	}
 
@@ -107,7 +107,7 @@ public class NationArmy extends Updatable
 			boltActionManual = 0;
 		else if(boltActionManual > 2000000000)
 			boltActionManual = 2000000000;
-		this.addField("bolt_action_manual", boltActionManual);
+		this.setField("bolt_action_manual", boltActionManual);
 		this.boltActionManual = boltActionManual;
 	}
 
@@ -117,7 +117,7 @@ public class NationArmy extends Updatable
 			boltActionClip = 0;
 		else if(boltActionClip > 2000000000)
 			boltActionClip = 2000000000;
-		this.addField("bolt_action_clip", boltActionClip);
+		this.setField("bolt_action_clip", boltActionClip);
 		this.boltActionClip = boltActionClip;
 	}
 
@@ -127,7 +127,7 @@ public class NationArmy extends Updatable
 			straightPull = 0;
 		else if(straightPull > 2000000000)
 			straightPull = 2000000000;
-		this.addField("straight_pull", straightPull);
+		this.setField("straight_pull", straightPull);
 		this.straightPull = straightPull;
 	}
 
@@ -137,7 +137,7 @@ public class NationArmy extends Updatable
 			semiAuto = 0;
 		else if(semiAuto > 2000000000)
 			semiAuto = 2000000000;
-		this.addField("semi_auto", semiAuto);
+		this.setField("semi_auto", semiAuto);
 		this.semiAuto = semiAuto;
 	}
 
@@ -147,7 +147,7 @@ public class NationArmy extends Updatable
 			machineGun = 0;
 		else if(machineGun > 2000000000)
 			machineGun = 2000000000;
-		this.addField("machine_gun", machineGun);
+		this.setField("machine_gun", machineGun);
 		this.machineGun = machineGun;
 	}
 
@@ -157,7 +157,7 @@ public class NationArmy extends Updatable
 			artillery = 0;
 		else if(artillery > 2000000000)
 			artillery = 2000000000;
-		this.addField("artillery", artillery);
+		this.setField("artillery", artillery);
 		this.artillery = artillery;
 	}
 
@@ -167,7 +167,7 @@ public class NationArmy extends Updatable
 			tank = 0;
 		else if(tank > 2000000000)
 			tank = 2000000000;
-		this.addField("tank", tank);
+		this.setField("tank", tank);
 		this.tank = tank;
 	}
 
@@ -177,7 +177,7 @@ public class NationArmy extends Updatable
 			fortification = 0;
 		if(fortification > 10000)
 			fortification = 10000;
-		this.addField("fortification", fortification);
+		this.setField("fortification", fortification);
 		this.fortification = fortification;
 	}
 }

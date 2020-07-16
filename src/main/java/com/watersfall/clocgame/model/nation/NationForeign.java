@@ -15,20 +15,20 @@ public class NationForeign extends Updatable
 
 	public NationForeign(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
 		this.region = Region.getFromName(results.getString("region"));
 		this.alignment = results.getInt("alignment");
 	}
 
 	public void setRegion(Region region)
 	{
-		this.addField("region", region);
+		this.setField("region", region);
 		this.region = region;
 	}
 
 	public void setAlignment(int alignment)
 	{
-		this.addField("alignment", alignment);
+		this.setField("alignment", alignment);
 		this.alignment = alignment;
 	}
 }

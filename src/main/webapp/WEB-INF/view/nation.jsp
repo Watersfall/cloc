@@ -19,7 +19,7 @@
 			<p><br><c:out value="${nation.cosmetic.description}"/></p><br>
 			<img class="veryLong" src="/user/portrait/${nation.cosmetic.portrait}" alt="portrait"/>
 			<h1><c:out value="${nation.cosmetic.leaderTitle}"/><c:out value=" "/><c:out value=" ${nation.cosmetic.username}"/></h1>
-			<ui:lastlogin time="${nation.lastLogin}"/>
+			<ui:lastlogin time="${nation.lastSeen}"/>
 			<h2>Domestic</h2>
 			<table class="standardTable nationTable">
 				<tr>
@@ -194,10 +194,10 @@
 				<h2>War</h2>
 				<c:if test="${nation.atWar}">
 					<c:if test="${nation.offensive != null}">
-						Offensive war against ${nation.offensive.nationUrl}<br>
+						Offensive war against ${nation.offensive.defender.nationUrl}<br>
 					</c:if>
 					<c:if test="${nation.defensive != null}">
-						Defensive war against ${nation.defensive.nationUrl}<br>
+						Defensive war against ${nation.defensive.attacker.nationUrl}<br>
 					</c:if>
 				</c:if>
 				<c:if test="${!nation.atWar}">

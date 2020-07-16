@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.nation.Nation;
@@ -15,7 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = {"/map/*"})
@@ -27,38 +28,35 @@ public class MapController extends HttpServlet
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		try(Connection conn = Database.getDataSource().getConnection())
+		try(Connection connection = Database.getDataSource().getConnection())
 		{
 			if(url.get("region") != null)
 			{
-				req.setAttribute("region", url.get("region"));
-				Region region = Region.getFromName(url.get("region"));
-				if(region != null)
+				int page;
+				try
 				{
-					int page;
-					try
-					{
-						page = Integer.parseInt(url.get("page"));
-					}
-					catch(NumberFormatException | NullPointerException e)
-					{
-						page = 1;
-					}
-					String where = "region='" + region.getName() + "'";
-					Collection<Nation> nations = Nation.getNations(conn, where, "cloc_economy.gdp DESC, cloc_login.id ASC", "20 OFFSET " + ((page - 1) * 20));
-					int totalNations = Util.getTotalNationsInRegion(conn, region);
-					req.setAttribute("nations", nations);
-					req.setAttribute("url", "map/region/" + region.getName());
-					req.setAttribute("page", page);
-					req.setAttribute("maxPage", totalNations / 20 + 1);
+					page = Integer.parseInt(url.get("page"));
 				}
+				catch(NumberFormatException | NullPointerException e)
+				{
+					page = 1;
+				}
+				Region region = Region.getFromName(url.get("region"));
+				ArrayList<Nation> nations = new NationDao(connection, false).getNationPage(region, page);
+				int totalNations = Util.getTotalNationsInRegion(connection, region);
+				req.setAttribute("region", region.getName());
+				req.setAttribute("nations", nations);
+				req.setAttribute("url", "map/region/" + region.getName());
+				req.setAttribute("page", page);
+				req.setAttribute("maxPage", totalNations / 20 + 1);
 			}
 			else
 			{
+				//TODO clean this up
 				HashMap<String, HashMap<String, Double>> map = new HashMap<>();
 				for(Region region : Region.values())
 				{
-					PreparedStatement armies = conn.prepareStatement("SELECT SUM(gdp), SUM(size) FROM cloc_economy, cloc_army, cloc_foreign \n" +
+					PreparedStatement armies = connection.prepareStatement("SELECT SUM(gdp), SUM(size) FROM cloc_economy, cloc_army, cloc_foreign \n" +
 							"WHERE cloc_foreign.region=? AND cloc_economy.id = cloc_foreign.id AND cloc_foreign.id = cloc_army.id");
 					armies.setString(1, region.getName());
 					ResultSet results = armies.executeQuery();
@@ -71,11 +69,11 @@ public class MapController extends HttpServlet
 				req.setAttribute("regions", map);
 			}
 		}
-		catch(SQLException | NullPointerException e)
+		catch(SQLException e)
 		{
+			//Ignore
 			e.printStackTrace();
 		}
-
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/map.jsp").forward(req, resp);
 	}
 }

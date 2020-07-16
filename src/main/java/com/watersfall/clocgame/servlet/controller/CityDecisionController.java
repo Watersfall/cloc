@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.CityActions;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -33,55 +34,79 @@ public class CityDecisionController extends HttpServlet
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
-		Executor executor = (conn) -> {
-			Nation nation = UserUtils.getUserNation(conn, true, req);
+		Executor exec = (conn) -> {
+			NationDao dao = new NationDao(conn, true);
+			Nation nation = dao.getNationById(UserUtils.getUser(req));
 			int cityId = Integer.parseInt(url.get("id"));
+			String response;
 			switch(url.get("decision"))
 			{
 				case "coalmine":
-					return CityActions.coalMine(nation, cityId);
+					response =  CityActions.coalMine(nation, cityId);
+					break;
 				case "ironmine":
-					return CityActions.ironMine(nation, cityId);
+					response =  CityActions.ironMine(nation, cityId);
+					break;
 				case "drill":
-					return CityActions.drill(nation, cityId);
+					response =  CityActions.drill(nation, cityId);
+					break;
 				case "industrialize":
-					return CityActions.industrialize(nation, cityId);
+					response =  CityActions.industrialize(nation, cityId);
+					break;
 				case "militarize":
-					return CityActions.militarize(nation, cityId);
+					response =  CityActions.militarize(nation, cityId);
+					break;
 				case "nitrogen":
-					return CityActions.nitrogen(nation, cityId);
+					response =  CityActions.nitrogen(nation, cityId);
+					break;
 				case "university":
-					return CityActions.university(nation, cityId);
+					response =  CityActions.university(nation, cityId);
+					break;
 				case "port":
-					return CityActions.port(nation, cityId);
+					response =  CityActions.port(nation, cityId);
+					break;
 				case "barrack":
-					return CityActions.barrack(nation, cityId);
+					response =  CityActions.barrack(nation, cityId);
+					break;
 				case "railroad":
-					return CityActions.railroad(nation, cityId);
+					response =  CityActions.railroad(nation, cityId);
+					break;
 				case "uncoalmine":
-					return CityActions.remove(nation, cityId, "coal_mines");
+					response =  CityActions.closeCoalMine(nation, cityId);
+					break;
 				case "unironmine":
-					return CityActions.remove(nation, cityId, "iron_mines");
+					response =  CityActions.closeIronMine(nation, cityId);
+					break;
 				case "undrill":
-					return CityActions.remove(nation, cityId, "oil_wells");
+					response =  CityActions.closeDrill(nation, cityId);
+					break;
 				case "unindustrialize":
-					return CityActions.remove(nation, cityId, "civilian_industry");
+					response =  CityActions.closeIndustrialize(nation, cityId);
+					break;
 				case "unmilitarize":
-					return CityActions.remove(nation, cityId, "military_industry");
+					response =  CityActions.closeMilitarize(nation, cityId);
+					break;
 				case "unnitrogen":
-					return CityActions.remove(nation, cityId, "nitrogen_industry");
+					response =  CityActions.closeNitrogen(nation, cityId);
+					break;
 				case "ununiversity":
-					return CityActions.remove(nation, cityId, "universities");
+					response =  CityActions.closeUniversity(nation, cityId);
+					break;
 				case "unport":
-					return CityActions.remove(nation, cityId, "ports");
+					response =  CityActions.closePort(nation, cityId);
+					break;
 				case "unbarrack":
-					return CityActions.remove(nation, cityId, "barracks");
+					response =  CityActions.closeBarrack(nation, cityId);
+					break;
 				case "unrailroad":
-					return CityActions.remove(nation, cityId, "railroads");
+					response =  CityActions.closeRailroad(nation, cityId);
+					break;
 				default:
-					return Responses.genericError();
+					response =  Responses.genericError();
 			}
+			dao.saveNation(nation);
+			return response;
 		};
-		writer.append(Action.doAction(executor));
+		writer.append(Action.doAction(exec));
 	}
 }

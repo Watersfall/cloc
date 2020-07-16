@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.ProductionActions;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -44,20 +45,27 @@ public class ProductionController extends HttpServlet
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		Executor executor = (conn) -> {
 			int productionId = Integer.parseInt(url.get("id"));
-			Nation nation = UserUtils.getUserNation(conn, true, req);
+			NationDao dao = new NationDao(conn, true);
+			Nation nation = dao.getNationById(UserUtils.getUser(req));
+			String response;
 			switch(req.getParameter("action"))
 			{
 				case "delete":
-					return ProductionActions.delete(nation, productionId);
+					response = ProductionActions.delete(nation, productionId);
+					break;
 				case "new":
-					return ProductionActions.create(nation);
+					response = ProductionActions.create(nation);
+					break;
 				case "update":
 					int factories = Integer.parseInt(req.getParameter("factories"));
 					String newProduction = req.getParameter("production");
-					return ProductionActions.update(nation, productionId, factories, newProduction);
+					response = ProductionActions.update(nation, productionId, factories, newProduction);
+					break;
 				default:
-					return Responses.genericError();
+					response = Responses.genericError();
 			}
+			dao.saveNation(nation);
+			return response;
 		};
 		writer.append(Action.doAction(executor));
 	}

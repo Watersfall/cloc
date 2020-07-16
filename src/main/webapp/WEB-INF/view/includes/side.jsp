@@ -42,8 +42,8 @@
 			<a href="${pageContext.request.contextPath}/news/">
 				<div>
 					<p>News</p>
-					<p class="newsBubble ${home.news.anyUnread || home.news.anyEvents ? 'unread' : 'read'} ${home.news.anyEvents ? ' event' : ''}">
-						<fmt:formatNumber value="${home.news.news.size() + home.news.events.size()}"/>
+					<p class="newsBubble ${home.anyUnreadNews || home.eventCount > 0 ? 'unread' : 'read'} ${home.eventCount > 0 ? ' event' : ''}">
+						<fmt:formatNumber value="${home.newsCount + home.eventCount}"/>
 					</p>
 				</div>
 			</a>
@@ -81,7 +81,7 @@
 					<img src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 				</div>
 				<div id="cities" class="sub toggleable">
-					<c:forEach items="${home.cities.cities.values()}" var="city">
+					<c:forEach items="${home.cities.values()}" var="city">
 						<a href="${pageContext.request.contextPath}/cities/${city.id}">
 							<div>
 								<p><c:out value="${city.name}"/>

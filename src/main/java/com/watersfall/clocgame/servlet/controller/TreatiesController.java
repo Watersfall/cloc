@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.dao.TreatyDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.Util;
@@ -35,7 +36,7 @@ public class TreatiesController extends HttpServlet
 			{
 				page = 1;
 			}
-			ArrayList<Treaty> treatyPage = Treaty.getTreatyPage(conn, page);
+			ArrayList<Treaty> treatyPage = new TreatyDao(conn, false).getTreatyPage(page);
 			req.setAttribute("treaties", treatyPage);
 			int totalTreaties = Util.getTotalTreaties(conn);
 			req.setAttribute("url", "treaties");
@@ -50,7 +51,7 @@ public class TreatiesController extends HttpServlet
 			{
 				desc = desc.substring(0, desc.length() - 2);
 			}
-			req.setAttribute("description", "Page " + page + " Treaties: " + desc);
+			req.setAttribute("description", "Page " + page + "of the treaty rankings<br>\n Treaties: " + desc);
 		}
 		catch(SQLException e)
 		{

@@ -18,7 +18,7 @@ public class Factory extends Updatable
 
 	public Factory(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
 		this.id = id;
 		this.owner = results.getInt("owner");
 		this.city = results.getInt("city_id");
@@ -28,7 +28,7 @@ public class Factory extends Updatable
 
 	public Factory(int id, int owner, int city, int production, int efficiency)
 	{
-		super(TABLE_NAME, id, null);
+		super(TABLE_NAME, id);
 		this.id = id;
 		this.owner = owner;
 		this.city = city;

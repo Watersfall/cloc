@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Util;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = "/rankings/*")
@@ -24,7 +25,7 @@ public class RankingsController extends HttpServlet
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		try(Connection conn = Database.getDataSource().getConnection();)
+		try(Connection connection = Database.getDataSource().getConnection())
 		{
 			int page;
 			try
@@ -35,8 +36,8 @@ public class RankingsController extends HttpServlet
 			{
 				page = 1;
 			}
-			Collection<Nation> nations = Nation.getNations(conn, "cloc_login.id > 0", "cloc_economy.gdp DESC, cloc_login.id ASC", "20 OFFSET " + ((page - 1) * 20));
-			int totalNations = Util.getTotalNations(conn);
+			ArrayList<Nation> nations = new NationDao(connection, false).getNationPage(page);
+			int totalNations = Util.getTotalNations(connection);
 			req.setAttribute("url", "rankings");
 			req.setAttribute("page", page);
 			req.setAttribute("maxPage", totalNations / 20 + 1);
@@ -45,6 +46,7 @@ public class RankingsController extends HttpServlet
 		}
 		catch(SQLException e)
 		{
+			//Ignore
 			e.printStackTrace();
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/rankings.jsp").forward(req, resp);

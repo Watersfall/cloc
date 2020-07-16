@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.DecisionActions;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
@@ -35,41 +36,59 @@ public class DecisionController extends HttpServlet
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
-			Nation nation = UserUtils.getUserNation(conn, true, req);
+			NationDao dao = new NationDao(conn, true);
+			Nation nation = dao.getNationById(UserUtils.getUser(req));
 			Decision decision = Decision.valueOf(url.get("decision").toUpperCase());
+			String response;
 			switch(decision)
 			{
 				case FREE_MONEY_CAPITALIST:
-					return DecisionActions.freeMoneyCapitalist(nation);
+					response = DecisionActions.freeMoneyCapitalist(nation);
+					break;
 				case FREE_MONEY_COMMUNIST:
-					return DecisionActions.freeMoneyCommunist(nation);
+					response = DecisionActions.freeMoneyCommunist(nation);
+					break;
 				case INCREASE_ARREST_QUOTAS:
-					return DecisionActions.arrest(nation);
+					response = DecisionActions.arrest(nation);
+					break;
 				case PARDON_CRIMINALS:
-					return DecisionActions.free(nation);
+					response = DecisionActions.free(nation);
+					break;
 				case LAND_CLEARANCE:
-					return DecisionActions.landClearance(nation);
+					response = DecisionActions.landClearance(nation);
+					break;
 				case PROPAGANDA:
-					return DecisionActions.propaganda(nation);
+					response = DecisionActions.propaganda(nation);
+					break;
 				case WAR_PROPAGANDA:
-					return DecisionActions.warPropaganda(nation);
+					response = DecisionActions.warPropaganda(nation);
+					break;
 				case ALIGN_ENTENTE:
-					return DecisionActions.alignEntente(nation);
+					response = DecisionActions.alignEntente(nation);
+					break;
 				case ALIGN_NEUTRAL:
-					return DecisionActions.alignNeutral(nation);
+					response = DecisionActions.alignNeutral(nation);
+					break;
 				case ALIGN_CENTRAL_POWERS:
-					return DecisionActions.alignCentralPowers(nation);
+					response = DecisionActions.alignCentralPowers(nation);
+					break;
 				case CONSCRIPT:
-					return DecisionActions.conscript(nation);
+					response = DecisionActions.conscript(nation);
+					break;
 				case TRAIN:
-					return DecisionActions.train(nation);
+					response = DecisionActions.train(nation);
+					break;
 				case DECONSCRIPT:
-					return DecisionActions.deconscript(nation);
+					response = DecisionActions.deconscript(nation);
+					break;
 				case FORTIFY:
-					return DecisionActions.fortify(nation);
+					response = DecisionActions.fortify(nation);
+					break;
 				default:
-					return Responses.genericError();
+					response = Responses.genericError();
 			}
+			dao.saveNation(nation);
+			return response;
 		};
 		writer.append(Action.doAction(executor));
 	}

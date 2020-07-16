@@ -26,7 +26,7 @@ public class NationMilitary extends Updatable
 
 	public NationMilitary(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
 		this.reconBalloons = results.getInt("recon_balloons");
 		this.reconPlanes = results.getInt("recon_planes");
 		this.triplaneFighters = results.getInt("triplane_fighters");
@@ -49,7 +49,7 @@ public class NationMilitary extends Updatable
 			reconBalloons = 0;
 		else if(reconBalloons > 2000000000)
 			reconBalloons = 2000000000;
-		this.addField("recon_balloons", reconBalloons);
+		this.setField("recon_balloons", reconBalloons);
 		this.reconBalloons = reconBalloons;
 	}
 
@@ -59,7 +59,7 @@ public class NationMilitary extends Updatable
 			zeppelins = 0;
 		else if(zeppelins > 2000000000)
 			zeppelins = 2000000000;
-		this.addField("zeppelins", zeppelins);
+		this.setField("zeppelins", zeppelins);
 		this.zeppelins = zeppelins;
 	}
 
@@ -69,7 +69,7 @@ public class NationMilitary extends Updatable
 			reconPlanes = 0;
 		else if(reconPlanes > 2000000000)
 			reconPlanes = 2000000000;
-		this.addField("recon_planes", reconPlanes);
+		this.setField("recon_planes", reconPlanes);
 		this.reconPlanes = reconPlanes;
 	}
 
@@ -79,7 +79,7 @@ public class NationMilitary extends Updatable
 			biplaneFighters = 0;
 		else if(biplaneFighters > 2000000000)
 			biplaneFighters = 2000000000;
-		this.addField("biplane_fighters", biplaneFighters);
+		this.setField("biplane_fighters", biplaneFighters);
 		this.biplaneFighters = biplaneFighters;
 	}
 
@@ -89,7 +89,7 @@ public class NationMilitary extends Updatable
 			triplaneFighters = 0;
 		else if(triplaneFighters > 2000000000)
 			triplaneFighters = 2000000000;
-		this.addField("triplane_fighters", triplaneFighters);
+		this.setField("triplane_fighters", triplaneFighters);
 		this.triplaneFighters = triplaneFighters;
 	}
 
@@ -99,7 +99,7 @@ public class NationMilitary extends Updatable
 			monoplaneFighters = 0;
 		else if(monoplaneFighters > 2000000000)
 			monoplaneFighters = 2000000000;
-		this.addField("monoplane_fighters", monoplaneFighters);
+		this.setField("monoplane_fighters", monoplaneFighters);
 		this.monoplaneFighters = monoplaneFighters;
 	}
 
@@ -109,7 +109,7 @@ public class NationMilitary extends Updatable
 			bombers = 0;
 		else if(bombers > 2000000000)
 			bombers = 2000000000;
-		this.addField("bombers", bombers);
+		this.setField("bombers", bombers);
 		this.bombers = bombers;
 	}
 
@@ -119,7 +119,7 @@ public class NationMilitary extends Updatable
 			submarines = 0;
 		else if(submarines > 2000000000)
 			submarines = 2000000000;
-		this.addField("submarines", submarines);
+		this.setField("submarines", submarines);
 		this.submarines = submarines;
 	}
 
@@ -129,7 +129,7 @@ public class NationMilitary extends Updatable
 			destroyers = 0;
 		else if(destroyers > 2000000000)
 			destroyers = 2000000000;
-		this.addField("destroyers", destroyers);
+		this.setField("destroyers", destroyers);
 		this.destroyers = destroyers;
 	}
 
@@ -139,7 +139,7 @@ public class NationMilitary extends Updatable
 			cruisers = 0;
 		else if(cruisers > 2000000000)
 			cruisers = 2000000000;
-		this.addField("cruisers", cruisers);
+		this.setField("cruisers", cruisers);
 		this.cruisers = cruisers;
 	}
 
@@ -149,7 +149,7 @@ public class NationMilitary extends Updatable
 			preBattleships = 0;
 		else if(preBattleships > 2000000000)
 			preBattleships = 2000000000;
-		this.addField("pre_battleships", preBattleships);
+		this.setField("pre_battleships", preBattleships);
 		this.preBattleships = preBattleships;
 	}
 
@@ -159,7 +159,7 @@ public class NationMilitary extends Updatable
 			battleships = 0;
 		else if(battleships > 2000000000)
 			battleships = 2000000000;
-		this.addField("battleships", battleships);
+		this.setField("battleships", battleships);
 		this.battleships = battleships;
 	}
 
@@ -169,7 +169,7 @@ public class NationMilitary extends Updatable
 			transports = 0;
 		else if(transports > 2000000000)
 			transports = 2000000000;
-		this.addField("transports", transports);
+		this.setField("transports", transports);
 		this.transports = transports;
 	}
 
@@ -179,7 +179,7 @@ public class NationMilitary extends Updatable
 			warProtection = 0;
 		else if(warProtection > 127)
 			warProtection = 127;
-		this.addField("war_protection", warProtection);
+		this.setField("war_protection", warProtection);
 		this.warProtection = warProtection;
 	}
 }

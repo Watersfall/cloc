@@ -1,10 +1,8 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.exception.NationNotFoundException;
 import lombok.Getter;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -87,19 +85,6 @@ public class News
 		return "";
 	}
 
-	public static void sendNews(Connection conn, int sender, int receiver, String message) throws SQLException
-	{
-		long now = System.currentTimeMillis();
-		PreparedStatement write = conn.prepareStatement("INSERT INTO cloc_news (sender, receiver, content, image, time) " +
-				"VALUES (?,?,?,?,?)");
-		write.setInt(1, sender);
-		write.setInt(2, receiver);
-		write.setString(3, message);
-		write.setString(4, null);
-		write.setLong(5, now);
-		write.execute();
-	}
-
 	public News(Connection conn, ResultSet results) throws SQLException
 	{
 		this.conn = conn;
@@ -121,53 +106,5 @@ public class News
 		this.time = results.getLong("time");
 		this.read = results.getBoolean("is_read");
 		this.id = results.getInt("id");
-	}
-
-	public News(Connection conn, int id, boolean safe) throws SQLException
-	{
-		this.conn = conn;
-		PreparedStatement read;
-		if(safe)
-		{
-			read = conn.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE id=? FOR UPDATE ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			read = conn.prepareStatement("SELECT sender, receiver, content, image, time, is_read, id " + "FROM cloc_news " + "WHERE id=?");
-		}
-		read.setInt(1, id);
-		ResultSet results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new NationNotFoundException("No nation with that id!");
-		}
-		else
-		{
-			this.sender = results.getInt(1);
-			this.receiver = results.getInt(2);
-			this.content = results.getString(3);
-			this.image = results.getString(4);
-			this.time = results.getLong(5);
-			this.read = results.getBoolean(6);
-			this.id = results.getInt(7);
-		}
-	}
-
-	public void delete() throws SQLException
-	{
-		PreparedStatement delete = this.conn.prepareStatement("DELETE FROM cloc_news WHERE id=?");
-		delete.setInt(1, this.id);
-		delete.execute();
-	}
-
-	public void read() throws SQLException
-	{
-		if(!this.read)
-		{
-			PreparedStatement read = this.conn.prepareStatement("UPDATE cloc_news SET is_read=? WHERE id=?");
-			read.setBoolean(1, true);
-			read.setInt(2, this.id);
-			read.execute();
-		}
 	}
 }

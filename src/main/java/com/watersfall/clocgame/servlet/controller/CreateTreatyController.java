@@ -1,6 +1,8 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
+import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.dao.TreatyDao;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
@@ -35,14 +37,13 @@ public class CreateTreatyController extends HttpServlet
 			}
 			else
 			{
-				Nation nation = new Nation(conn, user, true);
+				Nation nation = new NationDao(conn, true).getNationById(user);
 				if(nation.getTreaty() != null)
 				{
 					nation.leaveTreaty();
 				}
-				Treaty treaty = Treaty.createTreaty(conn, name);
-				nation.joinTreaty(treaty.getId(), true, true);
-				conn.commit();
+				Treaty treaty = new TreatyDao(conn, true).createTreaty(name);
+				nation.joinTreaty(treaty.getId(), true);
 				response.setStatus(201);
 				return Integer.toString(treaty.getId());
 			}

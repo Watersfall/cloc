@@ -24,7 +24,7 @@ public class NationPolicy extends Updatable
 
 	public NationPolicy(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
 		this.manpower = Policy.valueOf(results.getString("manpower_policy"));
 		this.changeManpower = results.getInt("manpower_change");
 		this.food = Policy.valueOf(results.getString("food_policy"));
@@ -77,61 +77,61 @@ public class NationPolicy extends Updatable
 
 	public void setManpower(Policy manpower)
 	{
-		this.addField("manpower_policy", manpower);
+		this.setField("manpower_policy", manpower);
 		this.manpower = manpower;
 	}
 
 	public void setChangeManpower(int changeManpower)
 	{
-		this.addField("manpower_change", changeManpower);
+		this.setField("manpower_change", changeManpower);
 		this.changeManpower = changeManpower;
 	}
 
 	public void setFood(Policy food)
 	{
-		this.addField("food_policy", food);
+		this.setField("food_policy", food);
 		this.food = food;
 	}
 
 	public void setChangeFood(int changeFood)
 	{
-		this.addField("food_change", changeFood);
+		this.setField("food_change", changeFood);
 		this.changeFood = changeFood;
 	}
 
 	public void setEconomy(Policy economy)
 	{
-		this.addField("economy_policy", economy);
+		this.setField("economy_policy", economy);
 		this.economy = economy;
 	}
 
 	public void setChangeEconomy(int changeEconomy)
 	{
-		this.addField("economy_change", changeEconomy);
+		this.setField("economy_change", changeEconomy);
 		this.changeEconomy = changeEconomy;
 	}
 
 	public void setFortification(Policy fortification)
 	{
-		this.addField("fortification_policy", fortification);
+		this.setField("fortification_policy", fortification);
 		this.fortification = fortification;
 	}
 
 	public void setChangeFortification(int changeFortification)
 	{
-		this.addField("fortification_change", changeFortification);
+		this.setField("fortification_change", changeFortification);
 		this.changeFortification = changeFortification;
 	}
 
 	public void setFarmingSubsidies(Policy farming)
 	{
-		this.addField("farming_subsidies", farming);
+		this.setField("farming_subsidies", farming);
 		this.farmingSubsidies = farming;
 	}
 
 	public void setChangeFarmingSubsidies(int changeFarmingSubsidies)
 	{
-		this.addField("farming_subsidies_change", changeFarmingSubsidies);
+		this.setField("farming_subsidies_change", changeFarmingSubsidies);
 		this.changeFarmingSubsidies = changeFarmingSubsidies;
 	}
 }

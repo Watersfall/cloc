@@ -2,11 +2,12 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.TreatyActions;
+import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.dao.TreatyDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
-import com.watersfall.clocgame.model.treaty.TreatyMember;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -36,16 +37,12 @@ public class TreatyController extends HttpServlet
 		try(Connection conn = Database.getDataSource().getConnection())
 		{
 			int id = Integer.parseInt(url.get("id"));
-			Treaty treaty = new Treaty(conn, id, false);
-			treaty.getMembers();
+			Treaty treaty = new TreatyDao(conn, false).getTreatyWithMembersById(id);
 			req.setAttribute("treaty", treaty);
 			req.setAttribute("id", id);
-			req.setAttribute("description", "The Treaty of " + treaty.getName() + " : " + treaty.getDescription());
-			Nation nation = (Nation)req.getAttribute("home");
-			if(nation != null && nation.getTreaty() != null && nation.getTreaty().getId() == treaty.getId())
+			if(treaty != null)
 			{
-				TreatyMember member = new TreatyMember(conn, nation.getId(), nation.isSafe());
-				req.setAttribute("home", member);
+				req.setAttribute("description", "The Treaty of " + treaty.getName() + " : " + treaty.getDescription());
 			}
 			if(url.get("manage") != null)
 			{
@@ -54,7 +51,7 @@ public class TreatyController extends HttpServlet
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			//Ignore
 		}
 		req.setAttribute("stats", Stats.getInstance());
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
@@ -76,40 +73,56 @@ public class TreatyController extends HttpServlet
 		Executor executor = (conn) -> {
 			String value = req.getParameter("value");
 			int user = UserUtils.getUser(req);
-			TreatyMember member = new TreatyMember(conn, user, true);
-			Treaty treaty = null;
+			NationDao dao = new NationDao(conn, true);
+			Nation member = dao.getNationById(user);
+			String response;
 			switch(attribute)
 			{
 				case "name":
-					return TreatyActions.updateName(member, value);
+					response = TreatyActions.updateName(member, value);
+					break;
 				case "flag":
-					return TreatyActions.updateFlag(req, member, req.getPart("flag"));
+					response = TreatyActions.updateFlag(req, member, req.getPart("flag"));
+					break;
 				case "description":
-					return TreatyActions.updateDescription(member, value);
+					response = TreatyActions.updateDescription(member, value);
+					break;
 				case "invite":
-					return TreatyActions.invite(member, value);
+					response = TreatyActions.invite(member, value);
+					break;
 				case "kick":
-					return TreatyActions.kick(member, new TreatyMember(conn, Integer.parseInt(value), true));
+					response = TreatyActions.kick(member, dao.getCosmeticNationById(Integer.parseInt(value)));
+					break;
 				case "toggle_edit":
-					return TreatyActions.toggleEdit(member, new TreatyMember(conn, Integer.parseInt(value), true));
+					response = TreatyActions.toggleEdit(member, Integer.parseInt(value));
+					break;
 				case "toggle_invite":
-					return TreatyActions.toggleInvite(member, new TreatyMember(conn, Integer.parseInt(value), true));
+					response = TreatyActions.toggleInvite(member, Integer.parseInt(value));
+					break;
 				case "toggle_kick":
-					return TreatyActions.toggleKick(member, new TreatyMember(conn, Integer.parseInt(value), true));
+					response = TreatyActions.toggleKick(member, Integer.parseInt(value));
+					break;
 				case "toggle_manage":
-					return TreatyActions.toggleManage(member, new TreatyMember(conn, Integer.parseInt(value), true));
+					response = TreatyActions.toggleManage(member, Integer.parseInt(value));
+					break;
 				case "resign":
-					member.leaveTreaty();
-					return Responses.resigned();
+					response = TreatyActions.resign(member);
+					break;
 				case "accept":
-					treaty = new Treaty(conn, Integer.parseInt(value), true);
-					return member.getInvites().accept(treaty.getId(), member);
+					response = TreatyActions.acceptInvite(member, Integer.parseInt(req.getParameter("value")));
+					break;
 				case "decline":
-					treaty = new Treaty(conn, Integer.parseInt(value), true);
-					return member.getInvites().reject(treaty.getId());
+					response = TreatyActions.rejectInvite(member, Integer.parseInt(req.getParameter("value")));
+					break;
 				default:
-					return Responses.genericError();
+					response = Responses.genericError();
 			}
+			dao.saveNation(member);
+			if(member.getTreaty() != null)
+			{
+				new TreatyDao(conn, true).saveTreaty(member.getTreaty());
+			}
+			return response;
 		};
 		writer.append(Action.doAction(executor));
 	}

@@ -1,6 +1,8 @@
 package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.action.EventActions;
+import com.watersfall.clocgame.dao.EventDao;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.nation.*;
@@ -28,13 +30,14 @@ public class TurnMonth implements Runnable
 		{
 			DayScheduler.resetIncrement();
 			connection = Database.getDataSource().getConnection();
+			NationDao dao = new NationDao(connection, true);
 			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
 			connection.prepareStatement("UPDATE cloc_main SET month=month+1").execute();
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
 				int id = results.getInt(1);
-				Nation nation = new Nation(connection, id, true);
+				Nation nation = dao.getNationById(id);
 				try
 				{
 					NationEconomy economy = nation.getEconomy();
@@ -87,14 +90,14 @@ public class TurnMonth implements Runnable
 
 					if(nation.isAtWar())
 					{
-						for(City city : nation.getCities().getCities().values())
+						for(City city : nation.getCities().values())
 						{
 							city.setDevastation(city.getDevastation() - (int)(Math.random() * 5));
 						}
 					}
 					else
 					{
-						for(City city : nation.getCities().getCities().values())
+						for(City city : nation.getCities().values())
 						{
 							city.setDevastation(city.getDevastation() - ((int)(Math.random() * 5) + 5));
 						}
@@ -116,10 +119,10 @@ public class TurnMonth implements Runnable
 					{
 						if(Math.random() > 0.00)
 						{
-							ArrayList<City> cities = new ArrayList<>(nation.getCities().getCities().values());
+							ArrayList<City> cities = new ArrayList<>(nation.getCities().values());
 							cities.removeIf((City::hasStrike));
 							cities.removeIf((city -> {
-								for(Events event : nation.getNews().getEvents().values())
+								for(Events event : nation.getEvents())
 								{
 									if(event.getCityId() == city.getId())
 										return true;
@@ -129,7 +132,8 @@ public class TurnMonth implements Runnable
 							if(!cities.isEmpty())
 							{
 								City city = (City)cities.toArray()[(int)(Math.random() * cities.size())];
-								Events.sendEvent(connection, nation, Event.STRIKE, Event.generateEventText(Event.STRIKE), city.getId());
+								EventDao eventDao = new EventDao(connection, true);
+								eventDao.createEvent(nation.getId(), Event.STRIKE, Event.generateEventText(Event.STRIKE), city.getId());
 							}
 						}
 					}
@@ -138,7 +142,7 @@ public class TurnMonth implements Runnable
 					/*
 					** Event Timeouts
 					 */
-					for(Events event : nation.getNews().getEvents().values())
+					for(Events event : nation.getEvents())
 					{
 						if(Time.month - event.getMonth() > 3)
 						{
@@ -150,7 +154,7 @@ public class TurnMonth implements Runnable
 						}
 					}
 
-					nation.update();
+					dao.saveNation(nation);
 				}
 				catch(SQLException e)
 				{

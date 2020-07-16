@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.turn;
 
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
@@ -20,24 +21,25 @@ public class TurnDay implements Runnable
 		try
 		{
 			connection = Database.getDataSource().getConnection();
+			NationDao dao = new NationDao(connection, true);
 			connection.prepareStatement("UPDATE cloc_main SET day=day+1").execute();
 			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
 				int id = results.getInt(1);
-				Nation nation = new Nation(connection, id, true);
+				Nation nation = dao.getNationById(id);
 				try
 				{
 					nation.getEconomy().setBudget(nation.getEconomy().getBudget() + nation.getBudgetChange());
-					for(Integer cityId : nation.getCities().getCities().keySet())
+					for(Integer cityId : nation.getCities().keySet())
 					{
-						City city = nation.getCities().getCities().get(cityId);
+						City city = nation.getCities().get(cityId);
 						city.setPopulation(city.getPopulation()
 								+ (long)(city.getPopulation() * (city.getPopulationGrowth(nation).get("population.net") / (100L * Time.daysPerMonth[Time.currentMonth]))));
 					}
 					nation.processProduction();
-					nation.update();
+					dao.saveNation(nation);
 				}
 				catch(SQLException e)
 				{

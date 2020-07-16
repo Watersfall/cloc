@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.PolicyActions;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.policies.PolicyCategory;
@@ -37,24 +38,33 @@ public class PolicyController extends HttpServlet
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
+			NationDao dao = new NationDao(conn, true);
 			PolicyCategory decision = PolicyCategory.valueOf(url.get("policy"));
-			Nation nation = UserUtils.getUserNation(conn, true, req);
+			Nation nation = dao.getNationById(UserUtils.getUser(req));
 			Policy policy = Policy.valueOf(req.getParameter("selection"));
+			String response;
 			switch(decision)
 			{
 				case MANPOWER:
-					return PolicyActions.manpower(nation, policy);
+					response = PolicyActions.manpower(nation, policy);
+					break;
 				case FOOD:
-					return PolicyActions.food(nation, policy);
+					response = PolicyActions.food(nation, policy);
+					break;
 				case ECONOMY:
-					return PolicyActions.economy(nation, policy);
+					response = PolicyActions.economy(nation, policy);
+					break;
 				case FORTIFICATION:
-					return PolicyActions.fortification(nation, policy);
+					response = PolicyActions.fortification(nation, policy);
+					break;
 				case FARM_SUBSIDIZATION:
-					return PolicyActions.farmSubsidization(nation, policy);
+					response = PolicyActions.farmSubsidization(nation, policy);
+					break;
 				default:
-					return Responses.genericError();
+					response = Responses.genericError();
 			}
+			dao.saveNation(nation);
+			return response;
 		};
 		writer.append(Action.doAction(executor));
 	}

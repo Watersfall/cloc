@@ -1,9 +1,11 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
+import com.watersfall.clocgame.dao.CityDao;
+import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.dao.ProductionDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.Production;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.Security;
@@ -39,56 +41,52 @@ public class LoginController extends HttpServlet
 		{
 			writer.append(Responses.alreadyLoggedIn());
 		}
+		else if(username == null || password == null)
+		{
+			writer.append(Responses.nullFields());
+		}
 		else
 		{
+			//TODO clean this up
 			try(Connection conn = Database.getDataSource().getConnection())
 			{
-				if(username == null || password == null)
+				PreparedStatement statement = conn.prepareStatement("SELECT password, id, last_login FROM cloc_login WHERE username=?");
+				statement.setString(1, username);
+				ResultSet results = statement.executeQuery();
+				if(!results.first())
 				{
-					writer.append(Responses.nullFields());
+					writer.append(Responses.invalidLogin());
+				}
+				else if(Security.checkPassword(password, results.getString("password")))
+				{
+					Executor executor = (connection) -> {
+						req.getSession().setAttribute("user", results.getInt("id"));
+						NationDao dao = new NationDao(connection, true);
+						Nation nation = dao.getNationById(results.getInt("id"));
+						if(results.getLong("last_login") == 0)
+						{
+							CityDao cityDao = new CityDao(connection, true);
+							ProductionDao productionDao = new ProductionDao(connection, true);
+							cityDao.buildMilitaryIndustry(nation.getLargestCity());
+							productionDao.createDefaultProduction(nation.getId());
+						}
+						PreparedStatement update = connection.prepareStatement("UPDATE cloc_login SET last_login=? WHERE id=?");
+						update.setLong(1, System.currentTimeMillis());
+						update.setInt(2, Integer.parseInt(req.getSession().getAttribute("user").toString()));
+						update.execute();
+						return null;
+					};
+					Action.doAction(executor);
 				}
 				else
 				{
-					PreparedStatement statement = conn.prepareStatement("SELECT password, id, last_login FROM cloc_login WHERE username=?");
-					statement.setString(1, username);
-					ResultSet results = statement.executeQuery();
-					if(!results.first())
-					{
-						writer.append(Responses.invalidLogin());
-					}
-					else
-					{
-						if(Security.checkPassword(password, results.getString("password")))
-						{
-							req.getSession().setAttribute("user", results.getInt("id"));
-							Executor exec = (connection) -> {
-								if(results.getLong("last_login") == 0)
-								{
-									Nation nation = new Nation(connection, Integer.parseInt(req.getSession().getAttribute("user").toString()), true);
-									nation.getLargestCity().buildMilitaryIndustry(connection);
-									Production.createDefaultProduction(nation.getId(), connection);
-									nation.update();
-								}
-								PreparedStatement update = connection.prepareStatement("UPDATE cloc_login SET last_login=? WHERE id=?");
-								update.setLong(1, System.currentTimeMillis());
-								update.setInt(2, Integer.parseInt(req.getSession().getAttribute("user").toString()));
-								update.execute();
-								connection.commit();
-								return null;
-							};
-							Action.doAction(exec);
-						}
-						else
-						{
-							writer.append(Responses.invalidLogin());
-						}
-					}
+					writer.append(Responses.invalidLogin());
 				}
 			}
 			catch(SQLException e)
 			{
+				//Ignore
 				e.printStackTrace();
-				req.setAttribute("error", Responses.genericException(e));
 			}
 		}
 	}

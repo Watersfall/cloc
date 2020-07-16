@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.CityActions;
+import com.watersfall.clocgame.dao.CityDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.model.nation.City;
@@ -33,23 +34,19 @@ public class CityController extends HttpServlet
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		try(Connection conn = Database.getDataSource().getConnection())
 		{
-			if(url.get("id") != null)
+			int id = Integer.parseInt(url.get("id"));
+			City city = null;
+			if(req.getAttribute("home") != null)
 			{
-				int id = Integer.parseInt(url.get("id"));
-				req.setAttribute("id", id);
-				Nation nation = (Nation) req.getAttribute("home");
-				if(nation != null && nation.getCities().getCities().get(id) != null)
-				{
-					req.setAttribute("city", nation.getCities().getCities().get(id));
-					req.setAttribute("description", "The city of " + nation.getCities().getCities().get(id).getName());
-				}
-				else
-				{
-					City city =  City.getCity(conn, id);
-					req.setAttribute("city", city);
-					req.setAttribute("description", "The city of " + city.getName());
-				}
+				city = ((Nation)(req.getAttribute("home"))).getCities().get(id);
 			}
+			if(city == null)
+			{
+				city = new CityDao(conn, false).getCityById(id);
+			}
+			req.setAttribute("description", "The city of " + city.getName());
+			req.setAttribute("city", city);
+			req.setAttribute("id", id);
 		}
 		catch(NullPointerException | NumberFormatException | SQLException | CityNotFoundException e)
 		{
@@ -67,14 +64,17 @@ public class CityController extends HttpServlet
 		Executor executor = (conn) -> {
 			int user = UserUtils.getUser(req);
 			int cityId = Integer.parseInt(url.get("id"));
-			City city = City.getCity(conn, cityId);
+			CityDao dao = new CityDao(conn, true);
+			City city = dao.getCityById(cityId);
 			if(city.getOwner() != user)
 			{
 				return Responses.notYourCity();
 			}
 			else
 			{
-				return CityActions.rename(city, req.getParameter("name"), conn);
+				String response = CityActions.rename(city, req.getParameter("name"), conn);
+				dao.saveCity(city);
+				return response;
 			}
 		};
 		writer.append(Action.doAction(executor));

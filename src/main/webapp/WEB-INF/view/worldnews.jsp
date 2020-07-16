@@ -14,23 +14,18 @@
 			<th>Treaty</th>
 			<th>Army</th>
 		</tr>
+		<%--@elvariable id="war" type="com.watersfall.clocgame.model.war.War"--%>
 		<c:forEach items="${wars}" var="war">
 			<tr>
 				<td>${war.attacker.nationUrl}${(war.attacker == war.winner) ? ' (Winner)' : ''}</td>
-				<c:if test="${war.attackerTreaty.name != null}">
-					<td>${war.attackerTreaty.treatyUrl}</td>
-				</c:if>
-				<c:if test="${war.attackerTreaty.name == null}">
-					<td></td>
-				</c:if>
+				<td><c:if test="${war.attacker.treaty != null}">
+					${war.attacker.treaty.treatyUrl}
+				</c:if></td>
 				<td>${war.attacker.army.size}k</td>
 				<td>${war.defender.nationUrl}${(war.defender == war.winner) ? '(Winner)' : ''}</td>
-				<c:if test="${war.defenderTreaty.name != null}">
-					<td>${war.defenderTreaty.treatyUrl}</td>
-				</c:if>
-				<c:if test="${war.defenderTreaty.name == null}">
-					<td></td>
-				</c:if>
+				<td><c:if test="${war.defender.treaty != null}">
+					${war.defender.treaty.treatyUrl}
+				</c:if></td>
 				<td>${war.defender.army.size}k</td>
 			</tr>
 		</c:forEach>

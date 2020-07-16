@@ -1,9 +1,12 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.dao.InviteDao;
+import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.treaty.TreatyMember;
+import com.watersfall.clocgame.model.nation.News;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
@@ -23,7 +26,30 @@ public class TreatyActions
 		Util.uploadImage(part, directory);
 	}
 
-	private static String check(TreatyMember member, String string, int length)
+	public static String acceptInvite(Nation nation, int treaty) throws SQLException
+	{
+		return nation.joinTreaty(treaty);
+	}
+
+	public static String rejectInvite(Nation nation, int treaty) throws SQLException
+	{
+		if(nation.getInvites().contains(treaty))
+		{
+			new InviteDao(nation.getConn(), true).deleteInvite(nation.getId(), treaty);
+			return Responses.inviteRejected();
+		}
+		else
+		{
+			return Responses.noInvite();
+		}
+	}
+
+	public static String resign(Nation nation) throws SQLException
+	{
+		return nation.leaveTreaty();
+	}
+
+	private static String check(Nation member, String string, int length)
 	{
 		if(string == null)
 		{
@@ -33,7 +59,8 @@ public class TreatyActions
 		{
 			return Responses.tooLong();
 		}
-		else if(!(member.isFounder() || member.isEdit() || member.isManage()))
+		else if(!(member.getTreatyPermissions().isFounder() || member.getTreatyPermissions().isEdit()
+				|| member.getTreatyPermissions().isManage()))
 		{
 			return Responses.noPermission();
 		}
@@ -43,13 +70,14 @@ public class TreatyActions
 		}
 	}
 
-	public static String updateFlag(HttpServletRequest req, TreatyMember member, Part flag) throws SQLException, IOException
+	public static String updateFlag(HttpServletRequest req, Nation member, Part flag) throws SQLException, IOException
 	{
-		if(Util.checkSpamAndInsertIfNot(SpamAction.UPDATE_ALLIANCE_FLAG, member.getIdTreaty(), member.getConn()))
+		if(Util.checkSpamAndInsertIfNot(SpamAction.UPDATE_ALLIANCE_FLAG, member.getId(), member.getConn()))
 		{
 			return Responses.noSpam();
 		}
-		else if(!(member.isFounder() || member.isEdit() || member.isManage()))
+		else if(!(member.getTreatyPermissions().isFounder() || member.getTreatyPermissions().isEdit()
+				|| member.getTreatyPermissions().isManage()))
 		{
 			return Responses.noPermission();
 		}
@@ -66,12 +94,11 @@ public class TreatyActions
 		{
 			uploadFlag(req, image, member.getTreaty().getId());
 			member.getTreaty().setFlag(member.getTreaty().getId() + ".png");
-			member.getTreaty().update(member.getConn());
 			return Responses.updated("Flag");
 		}
 	}
 
-	public static String updateName(TreatyMember member, String name) throws SQLException
+	public static String updateName(Nation member, String name) throws SQLException
 	{
 		String check = check(member, name, 32);
 		if(check != null)
@@ -81,12 +108,11 @@ public class TreatyActions
 		else
 		{
 			member.getTreaty().setName(name);
-			member.getTreaty().update(member.getConn());
 			return Responses.updated("Name");
 		}
 	}
 
-	public static String updateDescription(TreatyMember member, String description) throws SQLException
+	public static String updateDescription(Nation member, String description) throws SQLException
 	{
 		String check = check(member, description, 65535);
 		if(check != null)
@@ -96,12 +122,11 @@ public class TreatyActions
 		else
 		{
 			member.getTreaty().setDescription(description);
-			member.getTreaty().update(member.getConn());
 			return Responses.updated("Description");
 		}
 	}
 
-	public static String invite(TreatyMember member, String name) throws SQLException
+	public static String invite(Nation member, String name) throws SQLException
 	{
 		Nation nation;
 		try
@@ -110,10 +135,29 @@ public class TreatyActions
 			{
 				return Responses.noSpam();
 			}
-			else if(member.isInvite() || member.isManage() || member.isFounder())
+			else if(member.getTreatyPermissions().isInvite() || member.getTreatyPermissions().isManage()
+					|| member.getTreatyPermissions().isFounder())
 			{
-				nation = Nation.getNationByName(member.getConn(), name, member.isSafe());
-				return nation.inviteToTreaty(member.getTreaty().getId(), member);
+				NationDao dao = new NationDao(member.getConn(), true);
+				InviteDao inviteDao = new InviteDao(member.getConn(), true);
+				nation = dao.getNationByName(name);
+				if(nation == null)
+				{
+					return Responses.noNation();
+				}
+				else if(nation.getInvites().contains(member.getTreaty().getId()))
+				{
+					return Responses.alreadyInvited();
+				}
+				else
+				{
+					inviteDao.createInvite(nation.getId(), member.getTreaty().getId());
+					NewsDao newsDao = new NewsDao(member.getConn(), true);
+					String message = News.createMessage(News.ID_TREATY_INVITE, member.getNationUrl(),
+							member.getTreaty().getTreatyUrl());
+					newsDao.createNews(member.getId(), nation.getId(), message);
+					return Responses.invited();
+				}
 			}
 			else
 			{
@@ -124,16 +168,16 @@ public class TreatyActions
 		{
 			return Responses.noNation();
 		}
-
 	}
 
-	public static String kick(TreatyMember member, TreatyMember personToKick) throws SQLException
+	public static String kick(Nation member, Nation personToKick) throws SQLException
 	{
-		if(member.getIdTreaty() != personToKick.getIdTreaty())
+		if(member.getTreaty().getId() != personToKick.getTreaty().getId())
 		{
 			return Responses.notYourTreaty();
 		}
-		else if(!(member.isKick() || member.isManage() || member.isFounder()))
+		else if(!(member.getTreatyPermissions().isKick() || member.getTreatyPermissions().isManage()
+				|| member.getTreatyPermissions().isFounder()))
 		{
 			return Responses.noPermission();
 		}
@@ -144,58 +188,66 @@ public class TreatyActions
 		}
 	}
 
-	public static String toggleEdit(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	public static String toggleEdit(Nation member, int id) throws SQLException
 	{
-		if(!member.isFounder())
+		if(!member.getTreatyPermissions().isFounder())
 		{
 			return Responses.noPermission();
 		}
 		else
 		{
-			personToToggle.setEdit(!personToToggle.isEdit());
-			personToToggle.update();
+			NationDao dao = new NationDao(member.getConn(), true);
+			Nation personToToggle = dao.getCosmeticNationById(id);
+			personToToggle.getTreatyPermissions().setEdit(!personToToggle.getTreatyPermissions().isEdit());
+			dao.saveNation(personToToggle);
 			return Responses.updated();
 		}
 	}
 
-	public static String toggleInvite(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	public static String toggleInvite(Nation member, int id) throws SQLException
 	{
-		if(!member.isFounder())
+		if(!member.getTreatyPermissions().isFounder())
 		{
 			return Responses.noPermission();
 		}
 		else
 		{
-			personToToggle.setInvite(!personToToggle.isInvite());
-			personToToggle.update();
+			NationDao dao = new NationDao(member.getConn(), true);
+			Nation personToToggle = dao.getCosmeticNationById(id);
+			personToToggle.getTreatyPermissions().setInvite(!personToToggle.getTreatyPermissions().isInvite());
+			dao.saveNation(personToToggle);
 			return Responses.updated();
 		}
 	}
 
-	public static String toggleKick(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	public static String toggleKick(Nation member, int id) throws SQLException
 	{
-		if(!member.isFounder())
+		if(!member.getTreatyPermissions().isFounder())
 		{
 			return Responses.noPermission();
 		}
 		else
 		{
-			personToToggle.setKick(!personToToggle.isKick());
-			personToToggle.update();
+			NationDao dao = new NationDao(member.getConn(), true);
+			Nation personToToggle = dao.getCosmeticNationById(id);
+			personToToggle.getTreatyPermissions().setKick(!personToToggle.getTreatyPermissions().isKick());
+			dao.saveNation(personToToggle);
 			return Responses.updated();
 		}
 	}
 
-	public static String toggleManage(TreatyMember member, TreatyMember personToToggle) throws SQLException
+	public static String toggleManage(Nation member, int id) throws SQLException
 	{
-		if(!member.isFounder())
+		if(!member.getTreatyPermissions().isFounder())
 		{
 			return Responses.noPermission();
 		}
 		else
 		{
-			personToToggle.setManage(!personToToggle.isManage());
-			personToToggle.update();
+			NationDao dao = new NationDao(member.getConn(), true);
+			Nation personToToggle = dao.getCosmeticNationById(id);
+			personToToggle.getTreatyPermissions().setManage(!personToToggle.getTreatyPermissions().isManage());
+			dao.saveNation(personToToggle);
 			return Responses.updated();
 		}
 	}

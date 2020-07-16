@@ -8,7 +8,8 @@ import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -42,24 +43,9 @@ public class City extends Updatable
 	private @Getter int devastation;
 	private @Getter @Setter Nation nation;
 
-	public static City getCity(Connection conn, int id) throws SQLException
+	public City(ResultSet results) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT cloc_cities.*, COALESCE(military_industry, 0) AS military_industry " +
-				"FROM cloc_cities " +
-				"LEFT JOIN ( " +
-				"SELECT city_id, COUNT(id) " +
-				"AS military_industry FROM factories GROUP BY city_id ) military_industry " +
-				"ON military_industry.city_id=cloc_cities.id " +
-				"WHERE cloc_cities.id=? FOR UPDATE");
-		statement.setInt(1, id);
-		ResultSet results = statement.executeQuery();
-		results.first();
-		return new City(id, results);
-	}
-
-	public City(int id, ResultSet results) throws SQLException
-	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, results.getInt("cloc_cities.id"));
 		this.owner = results.getInt("cloc_cities.owner");
 		this.capital = results.getBoolean("cloc_cities.capital");
 		this.coastal = results.getBoolean("cloc_cities.coastal");
@@ -78,37 +64,17 @@ public class City extends Updatable
 		this.devastation = results.getInt("cloc_cities.devastation");
 		this.population = results.getLong("cloc_cities.population");
 		this.id = results.getInt("cloc_cities.id");
-		this.results = results;
-	}
-
-	public void buildMilitaryIndustry(Connection conn) throws SQLException
-	{
-		PreparedStatement statement = conn.prepareStatement("INSERT INTO factories (owner, city_id, production_id) VALUES (?,?,?)");
-		statement.setInt(1, this.owner);
-		statement.setInt(2, this.id);
-		statement.setNull(3, Types.INTEGER);
-		statement.execute();
-	}
-
-	public void closeMilitaryIndustry(Connection conn) throws SQLException
-	{
-		if(this.industryMilitary > 0)
-		{
-			PreparedStatement statement = conn.prepareStatement("DELETE FROM factories WHERE city_id=? ORDER BY production_id LIMIT 1");
-			statement.setInt(1, this.id);
-			statement.execute();
-		}
 	}
 
 	public void setCapital(boolean capital)
 	{
-		this.addField("capital", capital);
+		this.setField("capital", capital);
 		this.capital = capital;
 	}
 
 	public void setCoastal(boolean coastal)
 	{
-		this.addField("coastal", coastal);
+		this.setField("coastal", coastal);
 		this.coastal = coastal;
 	}
 
@@ -118,7 +84,7 @@ public class City extends Updatable
 			railroads = 0;
 		else if(railroads > 10)
 			railroads = 10;
-		this.addField("railroads", railroads);
+		this.setField("railroads", railroads);
 		this.railroads = railroads;
 	}
 
@@ -128,7 +94,7 @@ public class City extends Updatable
 			ports = 0;
 		else if(ports > 10)
 			ports = 10;
-		this.addField("ports", ports);
+		this.setField("ports", ports);
 		this.ports = ports;
 	}
 
@@ -138,7 +104,7 @@ public class City extends Updatable
 			barracks = 0;
 		else if(barracks > 10)
 			barracks = 10;
-		this.addField("barracks", barracks);
+		this.setField("barracks", barracks);
 		this.barracks = barracks;
 	}
 
@@ -148,7 +114,7 @@ public class City extends Updatable
 			ironMines = 0;
 		else if(ironMines > 2000000000)
 			ironMines = 2000000000;
-		this.addField("iron_mines", ironMines);
+		this.setField("iron_mines", ironMines);
 		this.ironMines = ironMines;
 	}
 
@@ -158,7 +124,7 @@ public class City extends Updatable
 			coalMines = 0;
 		else if(coalMines > 2000000000)
 			coalMines = 2000000000;
-		this.addField("coal_mines", coalMines);
+		this.setField("coal_mines", coalMines);
 		this.coalMines = coalMines;
 	}
 
@@ -168,7 +134,7 @@ public class City extends Updatable
 			oilWells = 0;
 		else if(oilWells > 2000000000)
 			oilWells = 2000000000;
-		this.addField("oil_wells", oilWells);
+		this.setField("oil_wells", oilWells);
 		this.oilWells = oilWells;
 	}
 
@@ -178,7 +144,7 @@ public class City extends Updatable
 			industryCivilian = 0;
 		else if(industryCivilian > 2000000000)
 			industryCivilian = 2000000000;
-		this.addField("civilian_industry", industryCivilian);
+		this.setField("civilian_industry", industryCivilian);
 		this.industryCivilian = industryCivilian;
 	}
 
@@ -188,7 +154,7 @@ public class City extends Updatable
 			industryNitrogen = 0;
 		else if(industryNitrogen > 2000000000)
 			industryNitrogen = 2000000000;
-		this.addField("nitrogen_industry", industryNitrogen);
+		this.setField("nitrogen_industry", industryNitrogen);
 		this.industryNitrogen = industryNitrogen;
 	}
 
@@ -198,19 +164,19 @@ public class City extends Updatable
 			universities = 0;
 		else if(universities > 2000000000)
 			universities = 2000000000;
-		this.addField("universities", universities);
+		this.setField("universities", universities);
 		this.universities = universities;
 	}
 
 	public void setName(String name)
 	{
-		this.addField("name", name);
+		this.setField("name", name);
 		this.name = name;
 	}
 
 	public void setType(CityType type)
 	{
-		this.addField("type", type);
+		this.setField("type", type);
 		this.type = type;
 	}
 
@@ -220,7 +186,7 @@ public class City extends Updatable
 			devastation = 0;
 		else if(devastation > 100)
 			devastation = 100;
-		this.addField("devastation", devastation);
+		this.setField("devastation", devastation);
 		this.devastation = devastation;
 	}
 
@@ -230,49 +196,8 @@ public class City extends Updatable
 			population = 100;
 		else if(population > 1000000000000000L)
 			population = 1000000000000000L;
-		this.addField("population", population);
+		this.setField("population", population);
 		this.population = population;
-	}
-
-	@Override
-	public Object getByName(String name) throws SQLException
-	{
-		if(this.fields.get(name) != null)
-		{
-			return this.fields.get(name);
-		}
-		else
-		{
-			switch(name)
-			{
-				case "oil_wells":
-					return this.oilWells;
-				case "iron_mines":
-					return this.ironMines;
-				case "coal_mines":
-					return this.coalMines;
-				case "civilian_industry":
-					return this.industryCivilian;
-				case "nitrogen_industry":
-					return this.industryNitrogen;
-				case "military_industry":
-					return this.industryMilitary;
-				case "name":
-					return this.name;
-				case "ports":
-					return this.ports;
-				case "railroads":
-					return this.railroads;
-				case "barracks":
-					return this.barracks;
-				case "population":
-					return this.population;
-				case "universities":
-					return this.universities;
-				default:
-					return 0;
-			}
-		}
 	}
 
 	public CitySize getSize()

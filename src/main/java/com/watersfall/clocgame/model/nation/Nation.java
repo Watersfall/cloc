@@ -1,10 +1,9 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.exception.NationNotFoundException;
+import com.watersfall.clocgame.dao.*;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.decisions.Decision;
-import com.watersfall.clocgame.model.message.Declaration;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
 import com.watersfall.clocgame.model.military.Fighter;
@@ -15,394 +14,69 @@ import com.watersfall.clocgame.model.technology.Technology;
 import com.watersfall.clocgame.model.technology.technologies.single.doctrine.*;
 import com.watersfall.clocgame.model.technology.technologies.single.economy.*;
 import com.watersfall.clocgame.model.treaty.Treaty;
+import com.watersfall.clocgame.model.war.War;
 import com.watersfall.clocgame.text.Responses;
-import com.watersfall.clocgame.util.SqlBuilder;
-import com.watersfall.clocgame.util.Time;
 import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class Nation
+public class Nation extends Updatable
 {
-	private HashSet<Updatable> updatables;
 	private @Getter int id;
-	private @Getter NationCosmetic cosmetic;
-	private @Getter NationDomestic domestic;
-	private @Getter NationEconomy economy;
-	private @Getter NationForeign foreign;
-	private @Getter NationMilitary military;
-	private @Getter NationCities cities;
-	private @Getter NationArmy army;
-	private @Getter NationPolicy policy;
-	private @Getter NationTech tech;
-	private @Getter NationInvites invites;
-	private @Getter NationNews news;
-	private @Getter Nation defensive;
-	private @Getter Nation offensive;
-	private @Getter Treaty treaty;
-	private @Getter Connection conn;
-	private @Getter boolean safe;
-	private @Getter ResultSet results;
-	private @Getter long freeFactories;
-	private @Getter long lastLogin;
-	private @Getter ArrayList<Modifier> modifiers;
+	private @Getter @Setter NationCosmetic cosmetic;
+	private @Getter @Setter NationDomestic domestic;
+	private @Getter @Setter NationEconomy economy;
+	private @Getter @Setter NationForeign foreign;
+	private @Getter @Setter NationMilitary military;
+	private @Getter @Setter TreatyPermissions treatyPermissions;
+	private @Getter @Setter HashMap<Integer, City> cities;
+	private @Getter @Setter NationArmy army;
+	private @Getter @Setter NationPolicy policy;
+	private @Getter @Setter NationTech tech;
+	private @Getter @Setter ArrayList<Integer> invites;
+	private @Getter @Setter int newsCount;
+	private @Getter @Setter boolean anyUnreadNews;
+	private @Getter @Setter int eventCount;
+	private @Getter @Setter ArrayList<Events> events;
+	private @Getter @Setter War defensive;
+	private @Getter @Setter War offensive;
+	private @Getter @Setter Treaty treaty;
+	private @Getter @Setter Connection conn;
+	private @Getter @Setter boolean allowWriteAccess;
+	private @Getter @Setter long freeFactories;
+	private @Getter @Setter long lastSeen;
+	private @Getter @Setter ArrayList<Modifier> modifiers;
 	private LinkedHashMap<String, Double> coalProduction = null;
 	private LinkedHashMap<String, Double> ironProduction = null;
 	private LinkedHashMap<String, Double> oilProduction = null;
 	private LinkedHashMap<String, Double> steelProduction = null;
 	private LinkedHashMap<String, Double> nitrogenProduction = null;
 	private LinkedHashMap<String, Double> researchProduction = null;
-	private @Getter LinkedHashMap<Integer, Production> production;
+	private @Getter @Setter LinkedHashMap<Integer, Production> production;
 	private LinkedHashMap<String, LinkedHashMap<String, Double>> allProductions = null;
 	private long landUsage = -1;
 	private HashMap<String, Double> totalProductionCosts = null;
 
-	/**
-	 * @param conn The SQL conn to use
-	 * @param name The nation name to get
-	 * @param safe Whether the returned nation should be safe to write to
-	 * @return A nation object of the nation with the specified name
-	 * @throws SQLException if a database issue occurs
-	 */
-	public static Nation getNationByName(Connection conn, String name, boolean safe) throws SQLException, NationNotFoundException
+	public Nation(int id)
 	{
-		PreparedStatement read = conn.prepareStatement("SELECT id FROM cloc_cosmetic WHERE nation_name=?");
-		read.setString(1, name);
-		ResultSet results = read.executeQuery();
-		if(!results.first())
-		{
-			throw new NationNotFoundException("No nation with that name!");
-		}
-		else
-		{
-			return new Nation(conn, results.getInt(1), safe);
-		}
-	}
-
-	public static Nation getNationById(Connection conn, int id) throws SQLException
-	{
-		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
-				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
-				"WHERE cloc_login.id=?" );
-		get.setInt(1, id);
-		ResultSet results = get.executeQuery();
-		if(!results.first())
-		{
-			return null;
-		}
-		else
-		{
-			return new Nation(id, results);
-		}
-	}
-
-	/**
-	 * Returns an unordered Collection of all Nations in the database matching the where clause fed into the method
-	 *
-	 * @param conn  The SQL conn to use
-	 * @param where the SQL where clause
-	 * @return Collection of nations matching where
-	 * @throws SQLException if a database issue occurs
-	 */
-	public static Collection<Nation> getNations(Connection conn, String where) throws SQLException
-	{
-		Collection<Nation> nations = new HashSet<>();
-		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
-				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
-				"WHERE " + where);
-		ResultSet results = get.executeQuery();
-		while(results.next())
-		{
-			nations.add(new Nation(results.getInt("cloc_login.id"), results));
-		}
-		return nations;
-	}
-
-	/**
-	 * Returns an ordered Collection of all nations matching the where clause, sorted by the order clause
-	 *
-	 * @param conn  the SQL conn to use
-	 * @param where the SQL where clause
-	 * @param order the SQL order by clause
-	 * @return Collection of nations matching where
-	 * @throws SQLException if a database issue occurs
-	 */
-	public static Collection<Nation> getNations(Connection conn, String where, String order) throws SQLException
-	{
-		Collection<Nation> nations = new ArrayList<>();
-		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
-				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
-				"WHERE " + where + "\n" +
-				"ORDER BY " + order);
-		ResultSet results = get.executeQuery();
-		while(results.next())
-		{
-			nations.add(new Nation(results.getInt("cloc_login.id"), results));
-		}
-		return nations;
-	}
-
-	/**
-	 * Returns an ordered Collection of all nations matching the where clause, sorted by the order clause, with a specified limit
-	 *
-	 * @param conn  the SQL conn to use
-	 * @param where the SQL where clause
-	 * @param order the SQL order by clause
-	 * @param limit The SQL limit clause
-	 * @return Collection of nations matching where
-	 * @throws SQLException if a database issue occurs
-	 */
-	public static Collection<Nation> getNations(Connection conn, String where, String order, String limit) throws SQLException
-	{
-		Collection<Nation> nations = new ArrayList<>();
-		PreparedStatement get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
-				"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-				"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-				"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-				"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-				"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-				"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-				"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-				"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-				"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-				"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
-				"WHERE " + where + "\n" +
-				"ORDER BY " + order + "\n" +
-				"LIMIT " + limit);
-		ResultSet results = get.executeQuery();
-		while(results.next())
-		{
-			nations.add(new Nation(results.getInt("cloc_login.id"), results));
-		}
-		return nations;
-	}
-
-	/**
-	 * Primary Nation constructor that creates a Nation from an ID
-	 *
-	 * @param conn The conn object to use
-	 * @param id   The id of the nation being loaded
-	 * @param safe Whether the contents of the returned Nation object should be editable
-	 * @throws SQLException if something SQL related goes wrong
-	 */
-	public Nation(Connection conn, int id, boolean safe) throws SQLException
-	{
-		production = new LinkedHashMap<>();
-		updatables = new HashSet<>();
-		modifiers = new ArrayList<>();
-		PreparedStatement get;
-		PreparedStatement getProduction;
-		PreparedStatement attacker;
-		PreparedStatement defender;
-		if(safe)
-		{
-			get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"WHERE cloc_login.id=? FOR UPDATE");
-			getProduction = conn.prepareStatement("SELECT * FROM production " +
-					"LEFT JOIN factories ON production.id=factories.production_id " +
-					"WHERE production.owner=? FOR UPDATE");
-			attacker = conn.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1 FOR UPDATE");
-			defender = conn.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1 FOR UPDATE");
-		}
-		else
-		{
-			get = conn.prepareStatement("SELECT * FROM cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"WHERE cloc_login.id=?");
-			getProduction = conn.prepareStatement("SELECT * FROM production " +
-					"LEFT JOIN factories ON production.id=factories.production_id " +
-					"WHERE production.owner=?");
-			attacker = conn.prepareStatement("SELECT defender FROM cloc_war WHERE attacker=? AND end=-1");
-			defender = conn.prepareStatement("SELECT attacker FROM cloc_war WHERE defender=? AND end=-1");
-		}
-		get.setInt(1, id);
-		ResultSet main = get.executeQuery();
-		main.first();
-		this.results = main;
-		this.lastLogin = main.getLong("last_login");
-		this.cosmetic = new NationCosmetic(id, main);
-		this.domestic = new NationDomestic(id, main);
-		this.economy = new NationEconomy(id, main);
-		this.foreign = new NationForeign(id, main);
-		this.military = new NationMilitary(id, main);
-		this.tech = new NationTech(id, main);
-		this.policy = new NationPolicy(id, main);
-		this.army = new NationArmy(id, main);
-		this.news = new NationNews(conn, id, safe);
-		this.invites = new NationInvites(conn, id, safe);
-		this.cities = new NationCities(conn, id, safe, this);
-		updatables.add(cosmetic);
-		updatables.add(domestic);
-		updatables.add(economy);
-		updatables.add(foreign);
-		updatables.add(military);
-		updatables.add(tech);
-		updatables.add(policy);
-		updatables.add(army);
-		getProduction.setInt(1, id);
-		ResultSet resultsProduction = getProduction.executeQuery();
-		HashMap<String, Double> resources = new HashMap<>();
-		resources.put("steel", economy.getSteel());
-		resources.put("nitrogen", economy.getNitrogen());
-		resources.put("oil", economy.getOil());
-		int usedFactories = 0;
-		boolean any = resultsProduction.first();
-		if(any)
-		{
-			int lastId = resultsProduction.getInt("production_id");
-			String lastProduction = resultsProduction.getString("production");
-			int lastProgress = resultsProduction.getInt("progress");
-			HashMap<Integer, Factory> map = new HashMap<>();
-			do
-			{
-				usedFactories++;
-				if(lastId == resultsProduction.getInt("production_id"))
-				{
-					map.put(resultsProduction.getInt("factories.id"),
-							new Factory(resultsProduction.getInt("factories.id"),
-									resultsProduction.getInt("owner"),
-									resultsProduction.getInt("city_id"),
-									resultsProduction.getInt("production_id"),
-									resultsProduction.getInt("efficiency")));
-				}
-				else
-				{
-					if(!map.isEmpty())
-					{
-						production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress, resources));
-						for(HashMap.Entry<String, Double> entry : production.get(lastId).getRequiredResources().entrySet())
-						{
-							resources.compute(entry.getKey(), (key, value) -> value = value - entry.getValue());
-						}
-					}
-					map = new HashMap<>();
-					map.put(resultsProduction.getInt("id"),
-							new Factory(resultsProduction.getInt("id"),
-									resultsProduction.getInt("owner"),
-									resultsProduction.getInt("city_id"),
-									resultsProduction.getInt("production_id"),
-									resultsProduction.getInt("efficiency")));
-				}
-				lastId = resultsProduction.getInt("production_id");
-				lastProduction = resultsProduction.getString("production");
-				lastProgress = resultsProduction.getInt("progress");
-			}
-			while(resultsProduction.next());
-			production.put(lastId, new Production(lastId, this.id, map, lastProduction, lastProgress, resources));
-		}
-		this.freeFactories = getTotalMilitaryFactories() - usedFactories;
+		super("cloc_login", id);
 		this.id = id;
-		this.conn = conn;
-		this.safe = safe;
-		attacker.setInt(1, this.id);
-		defender.setInt(1, this.id);
-		ResultSet resultsAttacker = attacker.executeQuery();
-		ResultSet resultsDefender = defender.executeQuery();
-		if(!resultsAttacker.first())
-		{
-			offensive = null;
-		}
-		else
-		{
-			this.offensive = getNationById(conn, resultsAttacker.getInt(1));
-		}
-		if(!resultsDefender.first())
-		{
-			defensive = null;
-		}
-		else
-		{
-			this.defensive = getNationById(conn, resultsDefender.getInt(1));
-		}
-
-		PreparedStatement treatyCheck = conn.prepareStatement("SELECT alliance_id FROM cloc_treaties_members " +
-				"WHERE nation_id=?");
-		treatyCheck.setInt(1, this.id);
-		ResultSet resultsTreaty = treatyCheck.executeQuery();
-		if(!resultsTreaty.first())
-		{
-			treaty = null;
-		}
-		else
-		{
-			treaty = new Treaty(conn, resultsTreaty.getInt(1), safe);
-		}
-		PreparedStatement getModifiers = conn.prepareStatement("SELECT * FROM modifiers WHERE user=?");
-		getModifiers.setInt(1, id);
-		ResultSet modifierResults = getModifiers.executeQuery();
-		while(modifierResults.next())
-		{
-			modifiers.add(new Modifier(modifierResults));
-		}
 	}
 
 	/**
-	 * Constructs a partial nation from a ResultSet
+	 * Attempts to join a treaty in the standard way:
+	 * by checking if this nation has an invite and letting them in if they do
 	 *
-	 * @param results The ResultSet to build the nation from
+	 * @param id      The id of the Treaty to join
+	 * @throws SQLException If a database error occurs
 	 */
-	public Nation(int id, ResultSet results) throws SQLException
+	public String joinTreaty(Integer id) throws SQLException
 	{
-		this.id = id;
-		this.economy = new NationEconomy(id, results);
-		this.domestic = new NationDomestic(id, results);
-		this.cosmetic = new NationCosmetic(id, results);
-		this.foreign = new NationForeign(id, results);
-		this.military = new NationMilitary(id, results);
-		this.tech = new NationTech(id, results);
-		this.policy = new NationPolicy(id, results);
-		this.army = new NationArmy(id, results);
-		if(results.getInt("treaty.id") != 0)
-		{
-			this.treaty = new Treaty(results.getInt("treaty.id"), results);
-		}
+		return joinTreaty(id, false);
 	}
 
 	/**
@@ -413,37 +87,21 @@ public class Nation
 	 * @param founder Whether this Nation should be roled as founder of the treaty or not
 	 * @throws SQLException If a database error occurs
 	 */
-	public void joinTreaty(Integer id, boolean founder) throws SQLException
+	public String joinTreaty(Integer id, boolean founder) throws SQLException
 	{
-		this.joinTreaty(id, founder, false);
-	}
-
-	/**
-	 * Attempts to join a treaty
-	 *
-	 * @param id           The id of the Treaty to join
-	 * @param founder      Whether this nation should be roled as Treaty Founder
-	 * @param ignoreInvite Whether this nation should bypass the invite requirement to join
-	 * @throws SQLException If a database error occurs
-	 */
-	public void joinTreaty(Integer id, boolean founder, boolean ignoreInvite) throws SQLException
-	{
-		if((ignoreInvite) || (this.invites.getInvites().contains(id)))
+		if(this.treaty != null)
 		{
-			PreparedStatement check = conn.prepareStatement("SELECT * FROM cloc_treaties_members WHERE nation_id=?");
-			check.setInt(1, this.id);
-			if(check.executeQuery().first())
-			{
-				leaveTreaty();
-			}
-			PreparedStatement join = conn.prepareStatement("INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder) VALUES (?,?,?)");
-			join.setInt(1, id);
-			join.setInt(2, this.id);
-			join.setBoolean(3, founder);
-			join.execute();
-			PreparedStatement deleteInvite = conn.prepareStatement("DELETE FROM cloc_treaty_invites WHERE nation_id=?");
-			deleteInvite.setInt(1, this.id);
-			deleteInvite.execute();
+			this.leaveTreaty();
+		}
+		if(founder || this.invites.contains(id))
+		{
+			new InviteDao(conn, true).deleteInvite(this.id, id);
+			new TreatyDao(conn, true).joinTreaty(this.id, id, founder);
+			return Responses.inviteAccepted();
+		}
+		else
+		{
+			return Responses.noInvite();
 		}
 	}
 
@@ -452,17 +110,16 @@ public class Nation
 	 *
 	 * @throws SQLException If a database error occurs
 	 */
-	public void leaveTreaty() throws SQLException
+	public String leaveTreaty() throws SQLException
 	{
-		PreparedStatement leave = conn.prepareStatement("DELETE FROM cloc_treaties_members WHERE nation_id=?");
-		leave.setInt(1, this.id);
-		leave.execute();
-		PreparedStatement emptyCheck = conn.prepareStatement("SELECT nation_id FROM cloc_treaties_members WHERE alliance_id=?");
-		emptyCheck.setInt(1, this.treaty.getId());
-		ResultSet results = emptyCheck.executeQuery();
-		if(!results.first() && this.treaty != null)
+		if(this.treaty != null)
 		{
-			this.treaty.delete();
+			new TreatyDao(conn, true).leaveTreaty(this.id, this.treaty.getId());
+			return Responses.resigned();
+		}
+		else
+		{
+			return Responses.notYourTreaty();
 		}
 	}
 
@@ -521,9 +178,9 @@ public class Nation
 
 	public void damagePopulation(long amount)
 	{
-		for(Integer integer : cities.getCities().keySet())
+		for(Integer integer : cities.keySet())
 		{
-			City city = cities.getCities().get(integer);
+			City city = cities.get(integer);
 			city.setPopulation(city.getPopulation() - (long)((double)city.getPopulation() / (double)this.getTotalPopulation()) * amount);
 		}
 	}
@@ -536,8 +193,8 @@ public class Nation
 	 */
 	public boolean isAtWarWith(Nation nation)
 	{
-		return (this.defensive != null && this.defensive.getId() == nation.getId())
-				|| (this.offensive != null && this.offensive.getId() == nation.getId());
+		return (this.defensive != null && this.defensive.getAttacker().getId() == nation.getId())
+				|| (this.offensive != null && this.offensive.getDefender().getId() == nation.getId());
 	}
 
 	/**
@@ -558,60 +215,61 @@ public class Nation
 	 */
 	public void declareWar(Nation nation) throws SQLException
 	{
-		if(nation != null && canDeclareWar(nation) == null)
-		{
-			PreparedStatement declare = conn.prepareStatement("INSERT INTO cloc_war (attacker, defender, start) VALUES (?,?,?)");
-			declare.setInt(1, this.id);
-			declare.setInt(2, nation.getId());
-			declare.setLong(3, Time.month);
-			declare.execute();
-			conn.commit();
-		}
+		new WarDao(conn, true).createWar(this, nation);
 	}
 
 	public String sendPeace(Nation receiver) throws SQLException
 	{
-		PreparedStatement statement = this.conn.prepareStatement("SELECT attacker, defender, peace FROM cloc_war " +
-				"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-		statement.setInt(1, this.id);
-		statement.setInt(2, receiver.id);
-		statement.setInt(3, receiver.id);
-		statement.setInt(4, this.id);
-		ResultSet results = statement.executeQuery();
-		results.first();
-		if(results.getInt("peace") == -1)
+		if(this.isAtWarWith(receiver))
 		{
-			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET peace=? " +
-					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-			sendPeace.setInt(1, this.id);
-			sendPeace.setInt(2, this.id);
-			sendPeace.setInt(3, receiver.id);
-			sendPeace.setInt(4, receiver.id);
-			sendPeace.setInt(5, this.id);
-			sendPeace.execute();
-			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_SEND_PEACE, this.getNationUrl()));
-			return Responses.peaceSent();
-		}
-		else if(results.getInt("peace") == this.id)
-		{
-			return Responses.peaceAlreadySent();
-		}
-		else if(results.getInt("peace") == receiver.id)
-		{
-			PreparedStatement sendPeace = this.conn.prepareStatement("UPDATE cloc_war SET end=? " +
-					"WHERE ((attacker=? AND defender=?) OR (attacker=? AND defender=?)) AND end=-1");
-			sendPeace.setLong(1, Time.month);
-			sendPeace.setInt(2, this.id);
-			sendPeace.setInt(3, receiver.id);
-			sendPeace.setInt(4, receiver.id);
-			sendPeace.setInt(5, this.id);
-			sendPeace.execute();
-			News.sendNews(this.conn, this.id, receiver.id, News.createMessage(News.ID_PEACE_ACCEPTED, this.getNationUrl()));
-			return Responses.peaceAccepted();
+			WarDao dao = new WarDao(this.conn, true);
+			NewsDao newsDao = new NewsDao(this.conn, true);
+			if(this.offensive != null && this.offensive.getDefender().getId() == receiver.getId())
+			{
+				if(this.offensive.getPeace() == this.getId())
+				{
+					return Responses.peaceAlreadySent();
+				}
+				else if(this.offensive.getPeace() == receiver.getId())
+				{
+					String message = News.createMessage(News.ID_PEACE_ACCEPTED, this.getNationUrl());
+					newsDao.createNews(this.getId(), receiver.getId(), message);
+					dao.endWar(this.offensive);
+					return Responses.peaceAccepted();
+				}
+				else
+				{
+					String message = News.createMessage(News.ID_SEND_PEACE, this.getNationUrl());
+					newsDao.createNews(this.getId(), receiver.getId(), message);
+					dao.offerPeace(this.id, this, receiver);
+					return Responses.peaceSent();
+				}
+			}
+			else
+			{
+				if(this.defensive.getPeace() == this.getId())
+				{
+					return Responses.peaceAlreadySent();
+				}
+				else if(this.defensive.getPeace() == receiver.getId())
+				{
+					String message = News.createMessage(News.ID_PEACE_ACCEPTED, this.getNationUrl());
+					newsDao.createNews(this.getId(), receiver.getId(), message);
+					dao.endWar(this.defensive);
+					return Responses.peaceAccepted();
+				}
+				else
+				{
+					String message = News.createMessage(News.ID_SEND_PEACE, this.getNationUrl());
+					newsDao.createNews(this.getId(), receiver.getId(), message);
+					dao.offerPeace(this.id, receiver, this);
+					return Responses.peaceSent();
+				}
+			}
 		}
 		else
 		{
-			return Responses.genericError();
+			return Responses.noWar();
 		}
 	}
 
@@ -635,7 +293,7 @@ public class Nation
 		if(landUsage == -1)
 		{
 			long total = 0;
-			for(City city : cities.getCities().values())
+			for(City city : cities.values())
 			{
 				for(Long longboi : city.getLandUsage().values())
 				{
@@ -680,7 +338,7 @@ public class Nation
 	public long getTotalMilitaryFactories()
 	{
 		long total = 0;
-		for(City city : cities.getCities().values())
+		for(City city : cities.values())
 		{
 			total += city.getIndustryMilitary();
 		}
@@ -695,7 +353,7 @@ public class Nation
 	public long getTotalFactories()
 	{
 		long total = 0;
-		for(City city : cities.getCities().values())
+		for(City city : cities.values())
 		{
 			total += city.getIndustryMilitary() + city.getIndustryNitrogen() + city.getIndustryCivilian();
 		}
@@ -705,7 +363,7 @@ public class Nation
 	public long getTotalPopulation()
 	{
 		long total = 0;
-		for(City city : cities.getCities().values())
+		for(City city : cities.values())
 		{
 			total += city.getPopulation();
 		}
@@ -891,7 +549,7 @@ public class Nation
 		if(coalProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			for(City city : this.getCities().getCities().values())
+			for(City city : cities.values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getCoalProduction();
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
@@ -928,7 +586,7 @@ public class Nation
 		if(ironProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			for(City city : this.getCities().getCities().values())
+			for(City city : cities.values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getIronProduction();
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
@@ -965,7 +623,7 @@ public class Nation
 		if(oilProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			for(City city : this.getCities().getCities().values())
+			for(City city : cities.values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getOilProduction();
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
@@ -1004,7 +662,7 @@ public class Nation
 		if(steelProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			for(City city : this.getCities().getCities().values())
+			for(City city : cities.values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getSteelProduction();
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
@@ -1062,7 +720,7 @@ public class Nation
 		if(nitrogenProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			for(City city : this.getCities().getCities().values())
+			for(City city : cities.values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getNitrogenProduction();
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
@@ -1120,7 +778,7 @@ public class Nation
 		if(researchProduction == null)
 		{
 			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-			for(City city : this.getCities().getCities().values())
+			for(City city : cities.values())
 			{
 				LinkedHashMap<String, Double> cityMap = city.getResearchProduction();
 				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
@@ -1239,6 +897,7 @@ public class Nation
 	 *     <li>infrastructure</li>
 	 *     <li>net</li>
 	 * </ul>
+	 * And if it's a type with upkeep costs, it will additionally have the various costs and upkeeps
 	 * And if it's a type with upkeep costs, it will additionally have the various costs and upkeeps
 	 * <ul>
 	 *     <li>costs</li>
@@ -1768,7 +1427,7 @@ public class Nation
 	 */
 	public int getDeclarationCost()
 	{
-		return Declaration.COST;
+		return 100;
 	}
 
 	/**
@@ -1801,49 +1460,7 @@ public class Nation
 	 */
 	public void processProduction() throws SQLException
 	{
-		if(this.production.size() == 0)
-		{
-			return;
-		}
-		String statement = "";
-		for(Production production : this.production.values())
-		{
-			if(production.getIc(this.getPolicy().getEconomy()) > 0)
-			{
-				production.getRequiredResources().forEach((k, v) -> {
-					double amount = v / (double) Time.daysPerMonth[Time.currentMonth];
-					switch(k)
-					{
-						case "steel":
-							this.getEconomy().setSteel(this.getEconomy().getSteel() - amount);
-							break;
-						case "oil":
-							this.getEconomy().setSteel(this.getEconomy().getOil() - amount);
-							break;
-						case "nitrogen":
-							this.getEconomy().setNitrogen(this.getEconomy().getNitrogen() - amount);
-							break;
-					}
-				});
-				double productionIc = production.getIc(this.policy.getEconomy());
-				double ic = productionIc + (production.getProgress() / 100.0);
-				int amount = (int) (ic / production.getProductionAsTechnology().getTechnology().getProductionICCost());
-				int leftover = (int) ((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionICCost())) * 100);
-				production.setProgress(leftover);
-				statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "="
-						+ production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
-			}
-		}
-		if(!statement.isEmpty())
-		{
-			statement = "UPDATE cloc_army, cloc_military SET ".concat(statement)
-					.concat("WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id");
-			statement = statement.replace(", WHERE", " WHERE");
-			PreparedStatement update = conn.prepareStatement(statement);
-			update.setInt(1, this.id);
-			update.setInt(2, this.id);
-			update.execute();
-		}
+		new NationDao(conn, true).doNationProduction(this);
 	}
 
 	public LinkedHashMap<String, Double> getFortificationChange()
@@ -2074,7 +1691,7 @@ public class Nation
 
 	public long getRequiredSizeForNextCity()
 	{
-		return 500000L * (long)Math.pow(2, cities.getCities().size() - 1);
+		return 500000L * (long)Math.pow(2, cities.size() - 1);
 	}
 
 	public boolean canMakeNewCity()
@@ -2086,7 +1703,7 @@ public class Nation
 	{
 		long max = 0;
 		int cityId = 0;
-		for(City city : cities.getCities().values())
+		for(City city : cities.values())
 		{
 			if(city.getPopulation() > max)
 			{
@@ -2094,13 +1711,13 @@ public class Nation
 				cityId = city.getId();
 			}
 		}
-		return cities.getCities().get(cityId);
+		return cities.get(cityId);
 	}
 
 	public LinkedHashMap<String, LinkedHashMap<String, Long>> getLandUsage()
 	{
 		LinkedHashMap<String, LinkedHashMap<String, Long>> map = new LinkedHashMap<>();
-		for(City city : cities.getCities().values())
+		for(City city : cities.values())
 		{
 			map.put(city.getName(), city.getLandUsage());
 		}
@@ -2239,91 +1856,36 @@ public class Nation
 		}
 	}
 
-	/**
-	 * Writes the updated fields in this nation to the database
-	 * @throws SQLException if a database error occurs
-	 */
-	public void update() throws SQLException
+	@Override
+	public void update(Connection conn) throws SQLException
 	{
-		PreparedStatement statement;
-		String sql;
-		SqlBuilder builder = new SqlBuilder();
-		ArrayList<Object> values = new ArrayList<>();
-		for(Updatable updatable : updatables)
+		super.update(conn);
+		if(this.cities != null)
 		{
-			if(!updatable.getFields().isEmpty())
+			for(City city : this.cities.values())
 			{
-				builder.addTables(updatable.getTableName());
-				builder.addWheres(updatable.getTableName());
-				for(HashMap.Entry<String, Object> entry : updatable.getFields().entrySet())
-				{
-					builder.addFields(entry.getKey());
-					values.add(entry.getValue());
-				}
+				city.update(conn);
 			}
 		}
-		sql = builder.build();
-		statement = conn.prepareStatement(sql);
-		int index = 1;
-		for(Object object : values)
+		if(this.production != null)
 		{
-			if(object instanceof Integer)
-				statement.setInt(index, (Integer) object);
-			else if(object instanceof Double)
-				statement.setDouble(index, (Double) object);
-			else if(object instanceof Long)
-				statement.setLong(index, (Long)object);
-			else
-				statement.setString(index, object.toString());
-			index++;
+			for(Production production : this.production.values())
+			{
+				production.update(conn);
+			}
 		}
-		if(index > 1)
+		economy.update(conn);
+		domestic.update(conn);
+		foreign.update(conn);
+		army.update(conn);
+		military.update(conn);
+		cosmetic.update(conn);
+		if(treatyPermissions != null)
 		{
-			statement.setInt(index, id);
-			statement.execute();
+			treatyPermissions.update(conn);
 		}
-		cities.update();
-		updateAllProduction();
-	}
-
-	/**
-	 * Invites this Nation to the Treaty with the specified id
-	 * @param id The Treaty id to invite to
-	 * @return The displayable response message
-	 * @throws SQLException If a database error occurs
-	 */
-	public String inviteToTreaty(Integer id, Nation inviter) throws SQLException
-	{
-		PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_treaty_invites WHERE nation_id=? AND alliance_id=?");
-		check.setInt(1, this.id);
-		check.setInt(2, id);
-		ResultSet results = check.executeQuery();
-		if(results.first())
-		{
-			return Responses.alreadyInvited();
-		}
-		else
-		{
-			PreparedStatement invite = conn.prepareStatement("INSERT INTO cloc_treaty_invites (alliance_id, nation_id) VALUES (?,?)");
-			invite.setInt(1, id);
-			invite.setInt(2, this.id);
-			invite.execute();
-			String message = News.createMessage(News.ID_TREATY_INVITE, inviter.getNationUrl(), inviter.getTreaty().getTreatyUrl());
-			News.sendNews(conn, inviter.getId(), this.getId(), message);
-			return Responses.invited();
-		}
-	}
-
-	/**
-	 * Saved all this nation's productions in the database
-	 * @throws SQLException If a database error occurs
-	 */
-	public void updateAllProduction() throws SQLException
-	{
-		for(Production production : production.values())
-		{
-			production.update(this.conn);
-		}
+		tech.update(conn);
+		policy.update(conn);
 	}
 
 	@Override

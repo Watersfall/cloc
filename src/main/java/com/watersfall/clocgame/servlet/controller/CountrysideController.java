@@ -1,10 +1,5 @@
 package com.watersfall.clocgame.servlet.controller;
 
-import com.watersfall.clocgame.action.Action;
-import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.text.Responses;
-import com.watersfall.clocgame.util.Executor;
-import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
@@ -33,15 +28,5 @@ public class CountrysideController extends HttpServlet
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
-		Executor executor = (conn) -> {
-			Nation nation = UserUtils.getUserNation(conn, true, req);
-			boolean increase = Boolean.parseBoolean(req.getParameter("increase"));
-			switch(url.get("action"))
-			{
-				default:
-					return Responses.genericError();
-			}
-		};
-		writer.append(Action.doAction(executor));
 	}
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 public enum Region
 {
+	//TODO make database hold the enum name
 	NORTH_AMERICA("North America", "North American"), SOUTH_AMERICA("South America", "South American"), AFRICA("Africa", "African"), MIDDLE_EAST("Middle East", "Middle Eastern"), EUROPE("Europe", "European"), ASIA("Asia", "Asian"), OCEANIA("Oceania", "Oceanian"), SIBERIA("Siberia", "Siberian");
 
 	private @Getter String name;

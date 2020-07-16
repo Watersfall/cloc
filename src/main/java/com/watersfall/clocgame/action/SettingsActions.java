@@ -133,7 +133,6 @@ public class SettingsActions
 		{
 			uploadFlag(image, cosmetic.getId());
 			cosmetic.setFlag(cosmetic.getId() + ".png");
-			cosmetic.update(nation.getConn());
 			return Responses.updated("Flag");
 		}
 	}
@@ -155,7 +154,6 @@ public class SettingsActions
 		{
 			uploadPortrait(image, cosmetic.getId());
 			cosmetic.setPortrait(cosmetic.getId() + ".png");
-			cosmetic.update(nation.getConn());
 			return Responses.updated("Portrait");
 		}
 	}
@@ -171,7 +169,6 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setNationTitle(title);
-			cosmetic.update(nation.getConn());
 			return Responses.updated("Nation Title");
 		}
 	}
@@ -187,7 +184,6 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setLeaderTitle(title);
-			cosmetic.update(nation.getConn());
 			return Responses.updated("Leader Title");
 		}
 	}
@@ -203,7 +199,6 @@ public class SettingsActions
 		else
 		{
 			cosmetic.setDescription(description);
-			cosmetic.update(nation.getConn());
 			return Responses.updated("Description");
 		}
 	}
@@ -229,7 +224,6 @@ public class SettingsActions
 		cosmetic.setNationTitle(nationTitle);
 		cosmetic.setLeaderTitle(leaderTitle);
 		cosmetic.setDescription(description);
-		cosmetic.update(nation.getConn());
 		return Responses.updated();
 	}
 }

@@ -25,7 +25,7 @@ public class NationEconomy extends Updatable
 
 	public NationEconomy(int id, ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, id, results);
+		super(TABLE_NAME, id);
 		this.economic = results.getInt("economic");
 		this.gdp = results.getDouble("gdp");
 		this.growth = results.getDouble("growth");
@@ -47,7 +47,7 @@ public class NationEconomy extends Updatable
 			economic = 0;
 		else if(economic > 100)
 			economic = 100;
-		this.addField("economic", economic);
+		this.setField("economic", economic);
 		this.economic = economic;
 	}
 
@@ -57,7 +57,7 @@ public class NationEconomy extends Updatable
 			gdp = 100;
 		else if(gdp >= 999999999999.00)
 			gdp = 999999999999.00;
-		this.addField("gdp", gdp);
+		this.setField("gdp", gdp);
 		this.gdp = gdp;
 	}
 
@@ -65,7 +65,7 @@ public class NationEconomy extends Updatable
 	{
 		if(growth >= 999999999999.00)
 			growth = 999999999999.00;
-		this.addField("growth", growth);
+		this.setField("growth", growth);
 		this.growth = growth;
 	}
 
@@ -73,7 +73,7 @@ public class NationEconomy extends Updatable
 	{
 		if(budget >= 999999999999.00)
 			budget = 999999999999.00;
-		this.addField("budget", budget);
+		this.setField("budget", budget);
 		this.budget = budget;
 	}
 
@@ -83,7 +83,7 @@ public class NationEconomy extends Updatable
 			iron = 0;
 		else if(iron >= 999999999999.00)
 			iron = 999999999999.00;
-		this.addField("iron", iron);
+		this.setField("iron", iron);
 		this.iron = iron;
 	}
 
@@ -93,7 +93,7 @@ public class NationEconomy extends Updatable
 			coal = 0;
 		else if(coal >= 999999999999.00)
 			coal = 999999999999.00;
-		this.addField("coal", coal);
+		this.setField("coal", coal);
 		this.coal = coal;
 	}
 
@@ -103,7 +103,7 @@ public class NationEconomy extends Updatable
 			oil = 0;
 		else if(oil >= 999999999999.00)
 			oil = 999999999999.00;
-		this.addField("oil", oil);
+		this.setField("oil", oil);
 		this.oil = oil;
 	}
 
@@ -113,7 +113,7 @@ public class NationEconomy extends Updatable
 			food = 0;
 		else if(food >= 999999999999.00)
 			food = 999999999999.00;
-		this.addField("food", food);
+		this.setField("food", food);
 		this.food = food;
 	}
 
@@ -123,7 +123,7 @@ public class NationEconomy extends Updatable
 			steel = 0;
 		else if(steel >= 999999999999.00)
 			steel = 999999999999.00;
-		this.addField("steel", steel);
+		this.setField("steel", steel);
 		this.steel = steel;
 	}
 
@@ -133,7 +133,7 @@ public class NationEconomy extends Updatable
 			nitrogen = 0;
 		else if(nitrogen >= 999999999999.00)
 			nitrogen = 999999999999.00;
-		this.addField("nitrogen", nitrogen);
+		this.setField("nitrogen", nitrogen);
 		this.nitrogen = nitrogen;
 	}
 
@@ -143,7 +143,7 @@ public class NationEconomy extends Updatable
 			research = 0;
 		if(research >= 999999999999.00)
 			research = 999999999999.00;
-		this.addField("research", research);
+		this.setField("research", research);
 		this.research = research;
 	}
 
@@ -153,7 +153,7 @@ public class NationEconomy extends Updatable
 			conscription = 0;
 		else if(conscription > 2000000000)
 			conscription = 2000000000;
-		this.addField("recent_conscription", conscription);
+		this.setField("recent_conscription", conscription);
 		this.recentConscription = conscription;
 	}
 
@@ -163,7 +163,7 @@ public class NationEconomy extends Updatable
 			conscription = 0;
 		else if(conscription > 2000000000)
 			conscription = 2000000000;
-		this.addField("recent_deconscription", conscription);
+		this.setField("recent_deconscription", conscription);
 		this.recentDeconscription = conscription;
 	}
 }

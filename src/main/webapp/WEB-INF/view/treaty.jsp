@@ -1,5 +1,5 @@
 <%--@elvariable id="treaty" type="com.watersfall.clocgame.model.treaty.Treaty"--%>
-<%--@elvariable id="home" type="com.watersfall.clocgame.model.treaty.TreatyMember"--%>
+<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%--@elvariable id="stats" type="com.watersfall.clocgame.model.Stats"--%>
 <%@ include file="includes/defaultTop.jsp" %>
 	<c:choose>
@@ -9,11 +9,12 @@
 		<c:when test="${treaty == null}">
 			<p>No treaty with that ID!</p>
 		</c:when>
-		<c:when test="${manage && (home.treaty == null || (home.idTreaty != id || !(home.manage || home.kick || home.founder)))}">
+		<c:when test="${manage && (home.treaty == null || (home.treaty.id != treaty.id
+			|| !(home.treatyPermissions.manage || home.treatyPermissions.kick || home.treatyPermissions.founder)))}">
 			<p>You do not have permission to view this</p>
 		</c:when>
 		<c:otherwise>
-			<c:if test="${home != null && home.invites.invites.contains(treaty.id)}">
+			<c:if test="${home != null && home.invites.contains(treaty.id)}">
 				<p>You have been invited to this alliance!</p>
 				<button onclick="updateTreaty('accept', '${treaty.id}')">Accept</button><button onclick="updateTreaty('decline', '${treaty.id}')">Reject</button>
 			</c:if>
@@ -24,27 +25,28 @@
 			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">
 				<br>
 				<p>Your Permissions</p>
-				<c:if test="${home.founder}">
+				<c:if test="${home.treatyPermissions.founder}">
 					<p>Founder</p>
 				</c:if>
-				<c:if test="${home.manage}">
+				<c:if test="${home.treatyPermissions.manage}">
 					<p>Manage</p>
 				</c:if>
-				<c:if test="${home.kick}">
+				<c:if test="${home.treatyPermissions.kick}">
 					<p>Kick</p>
 				</c:if>
-				<c:if test="${home.invite}">
+				<c:if test="${home.treatyPermissions.invite}">
 					<p>Invite</p>
 				</c:if>
-				<c:if test="${home.edit}">
+				<c:if test="${home.treatyPermissions.edit}">
 					<p>Edit</p>
 				</c:if>
 			</c:if>
 			<br>
-			<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder || home.invite || home.edit)}">
+			<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.treatyPermissions.kick || home.treatyPermissions.manage
+				|| home.treatyPermissions.founder || home.treatyPermissions.invite || home.treatyPermissions.edit)}">
 				<button id="adminButton" onclick="display()">Show Admin Actions</button>
 				<div id="admin" class="toggleable">
-					<c:if test="${home.manage || home.founder || home.edit}">
+					<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.edit}">
 						<label for="name">Alliance Name</label>
 						<input type="text" id="name" value="${treaty.name}"/>
 						<button onclick="updateTreaty('name', document.getElementById('name').value)">Set Name</button><br>
@@ -57,7 +59,7 @@
 						<textarea style="width: 75%;" id="description">${treaty.description}</textarea><br>
 						<button onclick="updateTreaty('description', document.getElementById('description').value)">Set Description</button><br>
 					</c:if>
-					<c:if test="${home.manage || home.founder || home.invite}">
+					<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.invite}">
 						<label for="invite">Invite</label>
 						<input type="text" id="invite"/>
 						<button onclick="updateTreaty('invite', document.getElementById('invite').value)">Invite</button>
@@ -90,7 +92,7 @@
 						<tr>
 							<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
 							<td><b><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name}">${member.foreign.region.name}</a></b></td>
-							<td>${member.roles}</td>
+							<td>${member.treatyPermissions.roles}</td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -100,18 +102,18 @@
 					<tr>
 						<th>Name</th>
 						<th>Roles</th>
-						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.kick || home.manage || home.founder)}">
+						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.treatyPermissions.kick || home.treatyPermissions.manage || home.treatyPermissions.founder)}">
 							<th>Manage</th>
 						</c:if>
 					</tr>
 					<c:forEach items="${treaty.members}" var="member">
 						<tr>
 							<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
-							<td>${member.roles}</td>
-							<c:if test="${home.kick || home.manage || home.founder}">
+							<td>${member.treatyPermissions.roles}</td>
+							<c:if test="${home.treatyPermissions.kick || home.treatyPermissions.manage || home.treatyPermissions.founder}">
 								<td>
 								<button onclick="updateTreaty('kick', ${member.id})">Kick</button>
-								<c:if test="${home.founder}">
+								<c:if test="${home.treatyPermissions.founder}">
 									<button onclick="updateTreaty('toggle_edit', ${member.id})">Toggle Edit</button>
 									<button onclick="updateTreaty('toggle_invite', ${member.id})">Toggle Invite</button>
 									<button onclick="updateTreaty('toggle_kick', ${member.id})">Toggle Kick</button>

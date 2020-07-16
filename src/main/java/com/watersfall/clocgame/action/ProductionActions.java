@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.dao.ProductionDao;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.Production;
 import com.watersfall.clocgame.model.technology.Technologies;
@@ -12,8 +13,16 @@ public class ProductionActions
 {
 	public static String delete(Nation nation, int id) throws SQLException, NullPointerException
 	{
-		Production.deleteProductionById(nation.getProductionById(id).getId(), nation.getConn());
-		return Responses.deleted();
+		if(nation.getProduction().containsKey(id))
+		{
+			ProductionDao dao = new ProductionDao(nation.getConn(), true);
+			dao.deleteProductionById(id);
+			return Responses.deleted();
+		}
+		else
+		{
+			return Responses.genericError();
+		}
 	}
 
 	public static String create(Nation nation) throws SQLException
@@ -24,7 +33,8 @@ public class ProductionActions
 		}
 		else
 		{
-			Production.createDefaultProduction(nation.getId(), nation.getConn());
+			ProductionDao dao = new ProductionDao(nation.getConn(), true);
+			dao.createDefaultProduction(nation.getId());
 			return Responses.created();
 		}
 	}
@@ -61,16 +71,16 @@ public class ProductionActions
 				}
 				if(newFactoryCount != production.getFactories().size())
 				{
+					ProductionDao dao = new ProductionDao(nation.getConn(), true);
 					if(newFactoryCount > production.getFactories().size())
 					{
-						production.addFactories(newFactoryCount - production.getFactories().size(), nation.getConn());
+						dao.addFactories(production.getId(), newFactoryCount - production.getFactories().size());
 					}
 					else
 					{
-						production.removeFactories(production.getFactories().size() - newFactoryCount, nation.getConn());
+						dao.removeFactories(production.getId(), production.getFactories().size() - newFactoryCount);
 					}
 				}
-				production.update(nation.getConn());
 				return Responses.updated();
 			}
 			else

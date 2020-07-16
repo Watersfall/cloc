@@ -107,7 +107,6 @@ public class ResearchActions
 			{
 				response = Responses.researchFailed();
 			}
-			nation.update();
 			return response;
 		}
 	}

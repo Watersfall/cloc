@@ -5,22 +5,21 @@
 	</c:if>
 	<c:if test="${not empty home}">
 		<h1>National News</h1>
-		<c:if test="${!home.news.anyEvents}">
+		<c:if test="${home.eventCount <= 0}">
 			<button onclick="newsDelete('all')">Delete All</button>
 		</c:if>
-		<c:if test="${home.news.anyEvents}">
-			<c:forEach var="event" items="${home.news.events}">
+		<c:if test="${home.eventCount > 0}">
+			<c:forEach var="event" items="${home.events}">
 				<div class="specialTable">
 					<div class="full">
 						<div class="event">
-							<c:out value="${fn:replace(event.value.description, '{event.id}', event.key)}" escapeXml="false"/>
+							<c:out value="${fn:replace(event.description, '{event.id}', event.id)}" escapeXml="false"/>
 						</div>
 					</div>
-
 				</div>
 			</c:forEach>
 		</c:if>
-		<c:if test="${!home.news.anyEvents}">
+		<c:if test="${home.eventCount <= 0}">
 			<c:forEach items="${news}" var="news">
 				<jsp:useBean id="newsDate" class="java.util.Date" />
 				<jsp:setProperty name="newsDate" property="time" value="${news.time}" />
@@ -42,12 +41,11 @@
 				<br>
 			</c:forEach>
 		</c:if>
-		<c:if test="${!home.news.anyEvents}">
+		<c:if test="${home.eventCount <= 0}">
 			<%@include file="includes/pagination.jsp"%>
-		</c:if>
-		<br>
-		<c:if test="${!home.news.anyEvents}">
+			<br>
 			<button onclick="newsDelete('all')">Delete All</button>
 		</c:if>
+		<br>
 	</c:if>
 <%@ include file="includes/defaultBottom.jsp" %>

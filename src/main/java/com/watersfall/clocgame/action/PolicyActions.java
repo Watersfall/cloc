@@ -33,7 +33,6 @@ public class PolicyActions
 		else
 		{
 			nation.getPolicy().setEconomy(policy);
-			nation.update();
 			return Responses.policyUpdated();
 		}
 	}
@@ -62,7 +61,6 @@ public class PolicyActions
 		else
 		{
 			nation.getPolicy().setManpower(policy);
-			nation.update();
 			return Responses.policyUpdated();
 		}
 	}
@@ -87,7 +85,6 @@ public class PolicyActions
 		else
 		{
 			nation.getPolicy().setFood(policy);
-			nation.update();
 			return Responses.policyUpdated();
 		}
 	}
@@ -105,7 +102,6 @@ public class PolicyActions
 		else
 		{
 			nation.getPolicy().setFortification(policy);
-			nation.update();
 			return Responses.policyUpdated();
 		}
 	}
@@ -123,7 +119,6 @@ public class PolicyActions
 		else
 		{
 			nation.getPolicy().setFarmingSubsidies(policy);
-			nation.update();
 			return Responses.policyUpdated();
 		}
 	}

@@ -36,7 +36,6 @@ public class DecisionActions
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 5);
 			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() - 5);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.arrest();
 		}
 	}
@@ -62,7 +61,6 @@ public class DecisionActions
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 5);
 			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + 5);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.free();
 		}
 	}
@@ -79,7 +77,6 @@ public class DecisionActions
 			int gain = (int)(Math.random() * 2500) + 500;
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			nation.getDomestic().setLand(nation.getDomestic().getLand() + gain);
-			nation.update();
 			return Responses.landClearance(gain);
 		}
 	}
@@ -99,7 +96,6 @@ public class DecisionActions
 		{
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 10);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.propaganda();
 		}
 	}
@@ -123,7 +119,6 @@ public class DecisionActions
 		{
 			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 10);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.propaganda();
 		}
 	}
@@ -135,7 +130,6 @@ public class DecisionActions
 		NationEconomy economy = nation.getEconomy();
 		economy.setBudget(economy.getBudget() + 1000);
 		economy.setEconomic(economy.getEconomic() + 5);
-		nation.update();
 		return Responses.freeMoneyCapitalist();
 	}
 
@@ -144,7 +138,6 @@ public class DecisionActions
 		NationEconomy economy = nation.getEconomy();
 		economy.setBudget(economy.getBudget() + 1000);
 		economy.setEconomic(economy.getEconomic() - 5);
-		nation.update();
 		return Responses.freeMoneyCommunist();
 	}
 	//</editor-fold>
@@ -165,7 +158,6 @@ public class DecisionActions
 		{
 			nation.getForeign().setAlignment(align);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.align(align);
 		}
 	}
@@ -197,7 +189,6 @@ public class DecisionActions
 		{
 			nation.getArmy().setSize(nation.getArmy().getSize() + 2);
 			nation.getEconomy().setRecentConscription(nation.getEconomy().getRecentConscription() + 1);
-			nation.update();
 			return Responses.conscript();
 		}
 	}
@@ -212,7 +203,6 @@ public class DecisionActions
 		{
 			nation.getArmy().setSize(nation.getArmy().getSize() - 2);
 			nation.getEconomy().setRecentDeconscription(nation.getEconomy().getRecentDeconscription() + 1);
-			nation.update();
 			return Responses.deconscript();
 		}
 	}
@@ -232,7 +222,6 @@ public class DecisionActions
 		{
 			nation.getArmy().setTraining(nation.getArmy().getTraining() + 5);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.update();
 			return Responses.train();
 		}
 	}
@@ -253,7 +242,6 @@ public class DecisionActions
 			int increase = nation.getMaximumFortificationLevel() / 10;
 			nation.getArmy().setFortification(nation.getArmy().getFortification() + increase);
 			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost);
-			nation.update();
 			return Responses.fortified();
 		}
 	}

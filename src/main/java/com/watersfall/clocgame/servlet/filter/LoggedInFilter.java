@@ -1,8 +1,9 @@
 package com.watersfall.clocgame.servlet.filter;
 
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Time;
+import com.watersfall.clocgame.util.UserUtils;
 import lombok.Getter;
 
 import javax.servlet.*;
@@ -48,8 +49,9 @@ public class LoggedInFilter implements Filter
 				HttpSession sess = req.getSession(true);
 				if(sess != null && sess.getAttribute("user") != null)
 				{
-					int user = Integer.parseInt(sess.getAttribute("user").toString());
-					req.setAttribute("home", new Nation(connection, user, false));
+					int user = UserUtils.getUser(req);
+					NationDao dao = new NationDao(connection, false);
+					req.setAttribute("home", dao.getNationById(user));
 				}
 			}
 			catch(SQLException e)

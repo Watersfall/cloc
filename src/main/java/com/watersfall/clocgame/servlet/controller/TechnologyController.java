@@ -2,6 +2,7 @@ package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.ResearchActions;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.technologies.Category;
@@ -61,9 +62,12 @@ public class TechnologyController extends HttpServlet
 		Executor executor = (conn) -> {
 			String tech = req.getParameter("tech");
 			int user = UserUtils.getUser(req);
-			Nation nation = new Nation(conn, user, true);
+			NationDao dao = new NationDao(conn, true);
+			Nation nation = dao.getNationById(user);
 			Technologies technology = Technologies.valueOf(tech);
-			return ResearchActions.doResearch(nation, technology);
+			String response = ResearchActions.doResearch(nation, technology);
+			dao.saveNation(nation);
+			return response;
 		};
 		writer.append(Action.doAction(executor));
 	}
