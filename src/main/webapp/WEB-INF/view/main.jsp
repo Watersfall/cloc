@@ -97,7 +97,7 @@
 		<table class="standardTable nationTable">
 			<tr>
 				<td><p>Region</p></td>
-				<td><a href="${pageContext.request.contextPath}/map/region/${home.foreign.region.name}"><p>${home.foreign.region.name}</p></a></td>
+				<td><a href="${pageContext.request.contextPath}/map/region/${home.foreign.region.name()}"><p>${home.foreign.region.name}</p></a></td>
 			</tr>
 			<tr>
 				<td><p>Official Alignment</p></td>

@@ -24,14 +24,14 @@
 		<label>
 			Region
 			<select name="region" class="RegisterText">
-				<option value="North America">North America</option>
-				<option value="South America">South America</option>
-				<option value="Europe">Europe</option>
-				<option value="Africa">Africa</option>
-				<option value="Middle East">Middle East</option>
-				<option value="Asia">Asia</option>
-				<option value="Oceania">Oceania</option>
-				<option value="Siberia">Siberia</option>
+				<option value="NORTH_AMERICA">North America</option>
+				<option value="SOUTH_AMERICA">South America</option>
+				<option value="EUROPE">Europe</option>
+				<option value="AFRICA">Africa</option>
+				<option value="MIDDLE_EAST">Middle East</option>
+				<option value="ASIA">Asia</option>
+				<option value="OCEANIA">Oceania</option>
+				<option value="SIBERIA">Siberia</option>
 			</select>
 		</label>
 		<br>

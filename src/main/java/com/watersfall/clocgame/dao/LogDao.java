@@ -28,7 +28,7 @@ public class LogDao extends Dao
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CREATE_LOG_SQL_STATEMENT);
 		statement.setInt(1, id);
-		statement.setString(2, region.getName());
+		statement.setString(2, region.name());
 		statement.setString(3, type.name());
 		statement.setInt(4, amount);
 		statement.execute();
@@ -39,7 +39,7 @@ public class LogDao extends Dao
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CHECK_LOG_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
 		statement.setInt(1, id);
-		statement.setString(2, region.getName());
+		statement.setString(2, region.name());
 		statement.setString(3, type.name());
 		ResultSet results = statement.executeQuery();
 		return results.first();

@@ -4,7 +4,6 @@ import lombok.Getter;
 
 public enum Region
 {
-	//TODO make database hold the enum name
 	NORTH_AMERICA("North America", "North American"), SOUTH_AMERICA("South America", "South American"), AFRICA("Africa", "African"), MIDDLE_EAST("Middle East", "Middle Eastern"), EUROPE("Europe", "European"), ASIA("Asia", "Asian"), OCEANIA("Oceania", "Oceanian"), SIBERIA("Siberia", "Siberian");
 
 	private @Getter String name;
@@ -40,34 +39,6 @@ public enum Region
 				return false;
 		}
 	}
-
-	public static Region getFromName(String name)
-	{
-		switch(name)
-		{
-			case "North America":
-				return NORTH_AMERICA;
-			case "South America":
-				return SOUTH_AMERICA;
-			case "Africa":
-				return AFRICA;
-			case "Middle East":
-				return MIDDLE_EAST;
-			case "Europe":
-				return EUROPE;
-			case "Asia":
-				return ASIA;
-			case "Oceania":
-				return OCEANIA;
-			case "Siberia":
-				return SIBERIA;
-			default:
-				return null;
-
-		}
-	}
-
-
 }
 
 

@@ -41,12 +41,12 @@ public class MapController extends HttpServlet
 				{
 					page = 1;
 				}
-				Region region = Region.getFromName(url.get("region"));
+				Region region = Region.valueOf(url.get("region"));
 				ArrayList<Nation> nations = new NationDao(connection, false).getNationPage(region, page);
 				int totalNations = Util.getTotalNationsInRegion(connection, region);
 				req.setAttribute("region", region.getName());
 				req.setAttribute("nations", nations);
-				req.setAttribute("url", "map/region/" + region.getName());
+				req.setAttribute("url", "map/region/" + region.name());
 				req.setAttribute("page", page);
 				req.setAttribute("maxPage", totalNations / 20 + 1);
 			}
@@ -58,7 +58,7 @@ public class MapController extends HttpServlet
 				{
 					PreparedStatement armies = connection.prepareStatement("SELECT SUM(gdp), SUM(size) FROM cloc_economy, cloc_army, cloc_foreign \n" +
 							"WHERE cloc_foreign.region=? AND cloc_economy.id = cloc_foreign.id AND cloc_foreign.id = cloc_army.id");
-					armies.setString(1, region.getName());
+					armies.setString(1, region.name());
 					ResultSet results = armies.executeQuery();
 					results.first();
 					HashMap<String, Double> temp = new HashMap<>();

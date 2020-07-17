@@ -34,10 +34,10 @@ public class RegisterController extends HttpServlet
 			String nation = req.getParameter("nation");
 			String capital = req.getParameter("capital");
 			String password = req.getParameter("password");
-			String region = req.getParameter("region");
+			String regionString = req.getParameter("region");
 			String govString = req.getParameter("government");
 			String econString = req.getParameter("economy");
-			if(username.isEmpty() || nation.isEmpty() || capital.isEmpty() || password.isEmpty() || region.isEmpty() || govString.isEmpty() || econString.isEmpty())
+			if(username.isEmpty() || nation.isEmpty() || capital.isEmpty() || password.isEmpty() || regionString.isEmpty() || govString.isEmpty() || econString.isEmpty())
 			{
 				return Responses.nullFields();
 			}
@@ -63,10 +63,7 @@ public class RegisterController extends HttpServlet
 			{
 				return Responses.tooLong("Nation name", 32);
 			}
-			else if(Region.getFromName(region) == null)
-			{
-				return Responses.genericError();
-			}
+			Region region = Region.valueOf(regionString);
 			//TODO clean this up
 			PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_cosmetic WHERE nation_name=? || username=?");
 			check.setString(1, nation);
@@ -78,7 +75,7 @@ public class RegisterController extends HttpServlet
 			}
 			else
 			{
-				int id = new NationDao(conn, true).createNation(username, password, nation, capital, gov, econ, Region.getFromName(region), req.getRemoteAddr());
+				int id = new NationDao(conn, true).createNation(username, password, nation, capital, gov, econ, region, req.getRemoteAddr());
 				req.getSession().setAttribute("user", id);
 				return Responses.registered();
 			}

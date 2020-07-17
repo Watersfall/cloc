@@ -91,7 +91,7 @@
 					<c:forEach items="${treaty.members}" var="member">
 						<tr>
 							<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
-							<td><b><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name}">${member.foreign.region.name}</a></b></td>
+							<td><b><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name()}">${member.foreign.region.name}</a></b></td>
 							<td>${member.treatyPermissions.roles}</td>
 						</tr>
 					</c:forEach>

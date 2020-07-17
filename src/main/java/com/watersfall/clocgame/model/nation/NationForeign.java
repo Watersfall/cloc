@@ -16,7 +16,7 @@ public class NationForeign extends Updatable
 	public NationForeign(int id, ResultSet results) throws SQLException
 	{
 		super(TABLE_NAME, id);
-		this.region = Region.getFromName(results.getString("region"));
+		this.region = Region.valueOf(results.getString("region"));
 		this.alignment = results.getInt("alignment");
 	}
 

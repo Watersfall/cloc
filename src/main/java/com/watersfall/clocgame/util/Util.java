@@ -90,7 +90,7 @@ public class Util
 	public static int getTotalNationsInRegion(Connection conn, Region region) throws SQLException
 	{
 		PreparedStatement statement = conn.prepareStatement("SELECT count(cloc_login.id) FROM cloc_login, cloc_foreign WHERE cloc_login.id=cloc_foreign.id AND cloc_foreign.region=?");
-		statement.setString(1, region.getName());
+		statement.setString(1, region.name());
 		ResultSet results = statement.executeQuery();
 		results.first();
 		return results.getInt(1);

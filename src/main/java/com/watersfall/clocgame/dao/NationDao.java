@@ -371,7 +371,7 @@ public class NationDao extends Dao
 		create.setString(9, "Welcome to CLOC! Please change me in the settings.");
 		create.setInt(10, gov);
 		create.setInt(11, econ);
-		create.setString(12, region.getName());
+		create.setString(12, region.name());
 		create.execute();
 		ResultSet key = create.getGeneratedKeys();
 		key.first();
@@ -438,7 +438,7 @@ public class NationDao extends Dao
 	{
 		ArrayList<Nation> list = new ArrayList<>();
 		PreparedStatement statement = connection.prepareStatement(REGION_RANKINGS_SQL_STATEMENT);
-		statement.setString(1, region.getName());
+		statement.setString(1, region.name());
 		statement.setInt(2, (page - 1) * 20);
 		ResultSet results = statement.executeQuery();
 		while(results.next())

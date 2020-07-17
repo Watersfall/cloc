@@ -129,7 +129,7 @@ CREATE TABLE cloc_army(
 
 CREATE TABLE cloc_foreign(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	region ENUM('North America', 'South America', 'Africa', 'Middle East', 'Europe', 'Asia', 'Oceania', 'Siberia'),
+	region ENUM('NORTH_AMERICA', 'SOUTH_AMERICA', 'AFRICA', 'MIDDLE_EAST', 'EUROPE', 'ASIA', 'OCEANIA', 'SIBERIA'),
 	alignment TINYINT DEFAULT 0,
 	FOREIGN KEY fk_foreign (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
@@ -202,7 +202,7 @@ CREATE TABLE cloc_war(
 CREATE TABLE cloc_war_logs(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	attacker INT,
-	region ENUM('North America', 'South America', 'Africa', 'Middle East', 'Europe', 'Asia', 'Oceania', 'Siberia') DEFAULT 'Siberia',
+	region ENUM('NORTH_AMERICA', 'SOUTH_AMERICA', 'AFRICA', 'MIDDLE_EAST', 'EUROPE', 'ASIA', 'OCEANIA', 'SIBERIA') DEFAULT 'SIBERIA',
 	type ENUM('land', 'navy', 'air', 'chemical', 'transport'),
 	amount INT, -- for transports
 	FOREIGN KEY fk_logs (attacker) REFERENCES cloc_login (id) ON DELETE CASCADE
