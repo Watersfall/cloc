@@ -208,9 +208,24 @@
 				</c:if>
 				<c:if test="${home.isAtWarWith(nation)}">
 					<div class="categories">
-						<%@include file="includes/land.jsp"%>
-						<%@include file="includes/air.jsp"%>
-						<%@include file="includes/navy.jsp"%>
+						<a id="land">
+							<img src="${pageContext.request.contextPath}/images/war/army.png" alt="army"/><br>
+							<button onclick="send('land', null, ${nation.id})">Attack Army</button><br>
+							<button onclick="send('landCity', null, ${nation.id})">Siege City</button><br>
+							<button onclick="send('fortify', null, ${nation.id})">Fortify</button>
+						</a>
+						<a id="air">
+							<img src="${pageContext.request.contextPath}/images/war/air.png" alt="air"/><br>
+							<button onclick="send('air', null, ${nation.id})">Attack Airforce</button><br>
+							<button onclick="send('airCity', null, ${nation.id})">Bomb City</button><br>
+							<button onclick="send('bomb', null, ${nation.id})">Bomb Troops</button><br>
+						</a>
+						<a id="navy">
+							<img src="${pageContext.request.contextPath}/images/war/navy.png" alt="air"/><br>
+							<button onclick="send('navy', null, ${nation.id})">Naval Battle</button><br>
+							<button onclick="send('navyCity', null, ${nation.id})">Bombard City</button><br>
+							<button style="visibility: hidden">Magic</button>
+						</a>
 					</div>
 					<br>
 					<button onclick="send('peace', null, ${nation.id});">Offer Peace</button>
