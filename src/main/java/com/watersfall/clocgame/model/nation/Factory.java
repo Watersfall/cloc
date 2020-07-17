@@ -25,14 +25,4 @@ public class Factory extends Updatable
 		this.production = results.getInt("production_id");
 		this.efficiency = results.getInt("efficiency");
 	}
-
-	public Factory(int id, int owner, int city, int production, int efficiency)
-	{
-		super(TABLE_NAME, id);
-		this.id = id;
-		this.owner = owner;
-		this.city = city;
-		this.production = production;
-		this.efficiency = efficiency;
-	}
 }

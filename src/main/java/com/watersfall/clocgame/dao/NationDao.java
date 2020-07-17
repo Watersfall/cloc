@@ -259,11 +259,7 @@ public class NationDao extends Dao
 				if(productionResults.getInt("production_id") == productionResults.getInt("production.id"))
 				{
 					factories.put(productionResults.getInt("factories.id"),
-							new Factory(productionResults.getInt("factories.id"),
-									productionResults.getInt("owner"),
-									productionResults.getInt("city_id"),
-									productionResults.getInt("production_id"),
-									productionResults.getInt("efficiency")));
+							new Factory(productionResults.getInt("factories.id"), productionResults));
 				}
 				next = productionResults.next();
 			}

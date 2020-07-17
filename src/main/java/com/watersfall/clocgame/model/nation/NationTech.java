@@ -26,7 +26,7 @@ public class NationTech extends Updatable
 		loadTechnologies();
 	}
 
-	private void loadTechnologies() throws SQLException
+	private void loadTechnologies()
 	{
 		researchedTechs = new HashSet<>();
 		for(Technologies tech : Technologies.values())
@@ -38,7 +38,7 @@ public class NationTech extends Updatable
 		}
 	}
 
-	public int getTechnology(Technologies tech) throws SQLException
+	public int getTechnology(Technologies tech)
 	{
 		return technologies.get(tech.getTechnology().getTableName());
 	}

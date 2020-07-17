@@ -2,13 +2,11 @@ package com.watersfall.clocgame.model.nation;
 
 import lombok.Getter;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class News
 {
-	private @Getter Connection conn;
 	private @Getter int id;
 	private @Getter int sender;
 	private @Getter int receiver;
@@ -83,18 +81,6 @@ public class News
 				return String.format("%s has invited us to the %s treaty!", args);
 		}
 		return "";
-	}
-
-	public News(Connection conn, ResultSet results) throws SQLException
-	{
-		this.conn = conn;
-		this.sender = results.getInt(1);
-		this.receiver = results.getInt(2);
-		this.content = results.getString(3);
-		this.image = results.getString(4);
-		this.time = results.getLong(5);
-		this.read = results.getBoolean(6);
-		this.id = results.getInt(7);
 	}
 
 	public News(ResultSet results) throws SQLException

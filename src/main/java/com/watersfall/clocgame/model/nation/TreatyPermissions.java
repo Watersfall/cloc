@@ -17,16 +17,6 @@ public class TreatyPermissions extends Updatable
 	private @Getter boolean invite;
 	private @Getter boolean edit;
 
-	public TreatyPermissions(int id, boolean founder, boolean manage, boolean kick, boolean invite, boolean edit)
-	{
-		super(TABLE_NAME, id);
-		this.founder = founder;
-		this.manage = manage;
-		this.kick = kick;
-		this.invite = invite;
-		this.edit = edit;
-	}
-
 	public TreatyPermissions(ResultSet results) throws SQLException
 	{
 		super(TABLE_NAME, results.getInt("treaty_member.nation_id"));
