@@ -1,5 +1,6 @@
 <%--@elvariable id="city" type="com.watersfall.clocgame.model.nation.City"--%>
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<% pageContext.setAttribute("netPopulation", TextKey.Population.NET); %>
 <%@ include file="taglibs.jsp" %>
 <script>
 	let cityName = "";
@@ -77,7 +78,33 @@
 							<td onclick="toggleTab('Population');">
 								<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 								<p class="clickable"><fmt:formatNumber value="${city.population}"/></p>
-								<cloc:dropdown value="${city.population}" name="Population" map="${city.getPopulationGrowth(home)}" nation="${home}"/>
+								<div class="toggleable detailsDown" id="Population">
+									<c:choose>
+										<c:when test="${city.getPopulationGrowth(home).get(netPopulation) > 0}">
+											<p class="positive">+${city.getPopulationGrowth(home).get(netPopulation)}${netPopulation.text}</p>
+										</c:when>
+										<c:when test="${city.getPopulationGrowth(home).get(netPopulation) < 0}">
+											<p class="negative">${city.getPopulationGrowth(home).get(netPopulation)}${netPopulation.text}</p>
+										</c:when>
+										<c:otherwise>
+											<p class="neutral">0${netPopulation.text}</p>
+										</c:otherwise>
+									</c:choose>
+									<ul>
+										<c:forEach items="${city.getPopulationGrowth(home).entrySet()}" var="i">
+											<c:if test="${i.key != 'NET'}">
+												<c:choose>
+													<c:when test="${i.value > 0}">
+														<li><p class="positive">+${i.value}${i.key.text}</p></li>
+													</c:when>
+													<c:when test="${i.value < 0}">
+														<li><p class="negative">${i.value}${i.key.text}</p></li>
+													</c:when>
+												</c:choose>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
 							</td>
 						</tr>
 					</table>
