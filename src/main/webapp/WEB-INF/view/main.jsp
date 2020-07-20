@@ -34,7 +34,7 @@
 				<td onclick="toggleTab('Approval');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><cloc:approval value="${home.domestic.approval}"/></p>
-					<ui:dropdown value="${home.domestic.approval}" name="Approval" map="${home.approvalChange}" nation="${home}"/>
+					<cloc:dropdown value="${home.domestic.approval}" name="Approval" map="${home.approvalChange}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
@@ -42,7 +42,7 @@
 				<td onclick="toggleTab('Stability');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><cloc:stability value="${home.domestic.stability}"/></p>
-					<ui:dropdown value="${home.domestic.stability}" name="Stability" map="${home.stabilityChange}" nation="${home}"/>
+					<cloc:dropdown value="${home.domestic.stability}" name="Stability" map="${home.stabilityChange}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
@@ -50,7 +50,7 @@
 				<td onclick="toggleTab('Land');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.freeLand}"/> km<sup>2</sup> / <fmt:formatNumber value="${home.domestic.land}"/> km<sup>2</sup></p>
-					<ui:dropdown value="${home.domestic.land}" name="Land" map="${home.landUsage}" nation="${home}"/>
+					<cloc:dropdown value="${home.domestic.land}" name="Land" map="${home.landUsage}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
@@ -58,7 +58,7 @@
 				<td onclick="toggleTab('Population');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.totalPopulation}"/> People</p>
-					<ui:dropdown value="${home.totalPopulation}" name="Population" map="${home.populationGrowth}" nation="${home}"/>
+					<cloc:dropdown value="${home.totalPopulation}" name="Population" map="${home.populationGrowth}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
@@ -66,7 +66,7 @@
 				<td onclick="toggleTab('Manpower');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.freeManpower}"/> Bodies</p>
-					<ui:dropdown value="${home.totalManpower}" name="Manpower" map="${home.usedManpower}" nation="${home}"/>
+					<cloc:dropdown value="${home.totalManpower}" name="Manpower" map="${home.usedManpower}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>
@@ -89,7 +89,7 @@
 				<td onclick="toggleTab('Growth')">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.economy.growth}"/> Million per month</p>
-					<ui:dropdown value="${home.economy.growth}" name="Growth" map="${home.growthChange}" nation="${home}"/>
+					<cloc:dropdown value="${home.economy.growth}" name="Growth" map="${home.growthChange}" nation="${home}"/>
 				</td>
 			</tr>
 		</table>
@@ -131,7 +131,7 @@
 				<td onclick="toggleTab('Equipment');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.totalInfantryEquipment}"/>/<fmt:formatNumber value="${home.army.size * 1000}"/> Required</p>
-					<ui:dropdown value="${home.totalInfantryEquipment}" name="Equipment" map="${home.equipment}" nation="${home}"/>
+					<cloc:dropdown value="${home.totalInfantryEquipment}" name="Equipment" map="${home.equipment}" nation="${home}"/>
 				</td>
 			</tr>
 			<tr>

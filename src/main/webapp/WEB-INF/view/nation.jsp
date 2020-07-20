@@ -19,7 +19,7 @@
 			<p><br><c:out value="${nation.cosmetic.description}"/></p><br>
 			<img class="veryLong" src="/user/portrait/${nation.cosmetic.portrait}" alt="portrait"/>
 			<h1><c:out value="${nation.cosmetic.leaderTitle}"/><c:out value=" "/><c:out value=" ${nation.cosmetic.username}"/></h1>
-			<ui:lastlogin time="${nation.lastSeen}"/>
+			<cloc:lastlogin time="${nation.lastSeen}"/>
 			<h2>Domestic</h2>
 			<table class="standardTable nationTable">
 				<tr>

@@ -77,7 +77,7 @@
 							<td onclick="toggleTab('Population');">
 								<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 								<p class="clickable"><fmt:formatNumber value="${city.population}"/></p>
-								<ui:dropdown value="${city.population}" name="Population" map="${city.getPopulationGrowth(home)}" nation="${home}"/>
+								<cloc:dropdown value="${city.population}" name="Population" map="${city.getPopulationGrowth(home)}" nation="${home}"/>
 							</td>
 						</tr>
 					</table>

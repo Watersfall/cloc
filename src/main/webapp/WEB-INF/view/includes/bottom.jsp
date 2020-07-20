@@ -18,10 +18,10 @@
 			<a onclick="toggleTab('${resource.key}');">
 				<div>
 					<c:if test="${resource.key == 'Budget'}">
-						<p><cloc:uiFormat value="${resource.value}"/><img src="${pageContext.request.contextPath}/images/ui/${fn:toLowerCase(resource.key)}.svg" alt="resource"></p>
+						<p><cloc:formatNumber value="${resource.value}"/><img src="${pageContext.request.contextPath}/images/ui/${fn:toLowerCase(resource.key)}.svg" alt="resource"></p>
 					</c:if>
 					<c:if test="${resource.key != 'Budget'}">
-						<p><cloc:uiFormat value="${resource.value}"/><img src="${pageContext.request.contextPath}/images/ui/${fn:toLowerCase(resource.key)}.svg" alt="resource"></p>
+						<p><cloc:formatNumber value="${resource.value}"/><img src="${pageContext.request.contextPath}/images/ui/${fn:toLowerCase(resource.key)}.svg" alt="resource"></p>
 					</c:if>
 					<div id="${resource.key}" class="detailsUp toggleable">
 						<c:if test="${resource.key == 'Budget'}">
