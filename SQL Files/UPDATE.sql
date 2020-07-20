@@ -1,13 +1,17 @@
 USE cloc;
 
-UPDATE cloc_foreign SET region=NULL;
+ALTER TABLE cloc_army
+	ADD COLUMN casualties BIGINT;
 
-ALTER TABLE cloc_foreign
-	MODIFY COLUMN region ENUM('NORTH_AMERICA', 'SOUTH_AMERICA', 'AFRICA', 'MIDDLE_EAST', 'EUROPE', 'ASIA', 'OCEANIA', 'SIBERIA');
-
-UPDATE cloc_foreign SET region='NORTH_AMERICA';
-
-DELETE FROM cloc_war_logs;
-
-ALTER TABLE cloc_war_logs
-	MODIFY COLUMN region ENUM('NORTH_AMERICA', 'SOUTH_AMERICA', 'AFRICA', 'MIDDLE_EAST', 'EUROPE', 'ASIA', 'OCEANIA', 'SIBERIA');
+CREATE TABLE nation_history (
+    nation_id INT,
+    month BIGINT,
+    gdp DECIMAL(14,2),
+    growth DECIMAL(14,2),
+    population BIGINT,
+    airforce BIGINT,
+    navy BIGINT,
+    army INT,
+    casualties BIGINT,
+    FOREIGN KEY fk_nation (nation_id) REFERENCES cloc_login (id)
+);

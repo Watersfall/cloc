@@ -155,6 +155,20 @@ public class TurnMonth implements Runnable
 						}
 					}
 
+					PreparedStatement statement = connection.prepareStatement("INSERT INTO nation_history " +
+							"(nation_id, month, gdp, growth, population, airforce, navy, army, casualties) " +
+							"VALUES (?,?,?,?,?,?,?,?,?)");
+					statement.setInt(1, nation.getId());
+					statement.setLong(2, Time.month);
+					statement.setDouble(3, nation.getEconomy().getGdp());
+					statement.setDouble(4, nation.getEconomy().getGrowth());
+					statement.setLong(5, nation.getTotalPopulation());
+					statement.setLong(6, 0L);
+					statement.setLong(7, 0L);
+					statement.setInt(8, nation.getArmy().getSize());
+					statement.setLong(9, nation.getArmy().getCasualties());
+					statement.execute();
+
 					dao.saveNation(nation);
 				}
 				catch(SQLException e)

@@ -23,6 +23,7 @@ public class NationArmy extends Updatable
 	private @Getter int artillery;
 	private @Getter int tank;
 	private @Getter int fortification;
+	private @Getter long casualties;
 
 	public NationArmy(int id, ResultSet results) throws SQLException
 	{
@@ -41,6 +42,7 @@ public class NationArmy extends Updatable
 		this.artillery = results.getInt("artillery");
 		this.fortification = results.getInt("fortification");
 		this.tank = results.getInt("tank");
+		this.casualties = results.getLong("casualties");
 	}
 
 	public void setSize(int size)
@@ -179,5 +181,15 @@ public class NationArmy extends Updatable
 			fortification = 10000;
 		this.setField("fortification", fortification);
 		this.fortification = fortification;
+	}
+
+	public void setCasualties(long casualties)
+	{
+		if(casualties < 0)
+			casualties = 0;
+		if(casualties > 100000000000000L)
+			casualties = 100000000000000L;
+		this.setField("casualties", casualties);
+		this.casualties = casualties;
 	}
 }

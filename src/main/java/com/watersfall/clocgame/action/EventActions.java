@@ -73,6 +73,7 @@ public class EventActions
 				{
 					int casualties = (int)(1 + Math.random() * 5);
 					nation.getArmy().setSize(nation.getArmy().getSize() - casualties);
+					nation.getArmy().setCasualties(nation.getArmy().getCasualties() + casualties);
 					return Responses.strikeSendArmyCasualties(casualties);
 				}
 				return Responses.strikeSendArmyNoCasualties();

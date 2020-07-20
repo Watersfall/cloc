@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 @WebServlet(urlPatterns = "/graphs/*")
@@ -34,7 +31,7 @@ public class GraphsController extends HttpServlet
 			{
 				if(url.get("type").equalsIgnoreCase("globalstats"))
 				{
-					return convert(new StatsDao(conn, false).getGraphData(Time.month - 20));
+					return Util.convertToJson(new StatsDao(conn, false).getGraphData(Time.month - 20));
 				}
 				else
 				{
@@ -47,36 +44,5 @@ public class GraphsController extends HttpServlet
 			}
 		};
 		writer.append(Action.doAction(exec));
-	}
-
-	private static String convert(ResultSet results) throws SQLException
-	{
-		String string =
-				"{\n" +
-				"\t\"months\":[\n";
-		while(results.next())
-		{
-			string += "\t\t{\n";
-			ResultSetMetaData data = results.getMetaData();
-			for(int i = 1; i <= data.getColumnCount(); i++)
-			{
-				string += "\t\t\t\"" + data.getColumnName(i) + "\":" + results.getLong(i);
-				if(i != data.getColumnCount())
-				{
-					string += ", ";
-				}
-				string += "\n";
-			}
-			string += "\t\t}";
-			if(!results.isLast())
-			{
-				string += ",";
-			}
-			string += "\n";
-		}
-		string +=
-				"\t]\n" +
-				"}";
-		return string;
 	}
 }

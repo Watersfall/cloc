@@ -79,9 +79,11 @@ public class WarActions
 	private static void doCasualties(Nation attacker, Nation defender, int attackerCasualties, int defenderCasualties) throws SQLException
 	{
 		attacker.getArmy().setSize(attacker.getArmy().getSize() - attackerCasualties);
+		attacker.getArmy().setCasualties(attacker.getArmy().getCasualties() + attackerCasualties);
 		attacker.getDomestic().setManpowerLost(attacker.getDomestic().getManpowerLost() + attackerCasualties * 1000);
 		attacker.damagePopulation(attackerCasualties * 1000);
 		defender.getArmy().setSize(defender.getArmy().getSize() - defenderCasualties);
+		defender.getArmy().setCasualties(defender.getArmy().getCasualties() + defenderCasualties);
 		defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() + defenderCasualties * 1000);
 		defender.damagePopulation(defenderCasualties * 1000);
 	}

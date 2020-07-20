@@ -7,10 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
@@ -150,5 +147,36 @@ public class Util
 			insertSpam.execute();
 			return false;
 		}
+	}
+
+	public static String convertToJson(ResultSet results) throws SQLException
+	{
+		String string =
+				"{\n" +
+						"\t\"months\":[\n";
+		while(results.next())
+		{
+			string += "\t\t{\n";
+			ResultSetMetaData data = results.getMetaData();
+			for(int i = 1; i <= data.getColumnCount(); i++)
+			{
+				string += "\t\t\t\"" + data.getColumnName(i) + "\":" + results.getLong(i);
+				if(i != data.getColumnCount())
+				{
+					string += ", ";
+				}
+				string += "\n";
+			}
+			string += "\t\t}";
+			if(!results.isLast())
+			{
+				string += ",";
+			}
+			string += "\n";
+		}
+		string +=
+				"\t]\n" +
+						"}";
+		return string;
 	}
 }
