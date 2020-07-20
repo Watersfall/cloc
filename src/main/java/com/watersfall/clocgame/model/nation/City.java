@@ -1,9 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.CitySize;
-import com.watersfall.clocgame.model.CityType;
-import com.watersfall.clocgame.model.Key;
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.*;
 import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 import lombok.Setter;
@@ -248,9 +245,9 @@ public class City extends Updatable
 		return getBuildSlots() - getUsedSlots();
 	}
 
-	public LinkedHashMap<String, Double> getPopulationGrowth(Nation nation)
+	public LinkedHashMap<TextKey, Double> getPopulationGrowth(Nation nation)
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double base = 0.5;
 		double foodPolicy = 0;
 		double manpowerPolicy = 0;
@@ -296,13 +293,13 @@ public class City extends Updatable
 			famine = Math.min(-net, famine);
 		}
 		net += famine;
-		map.put("population.base", base);
-		map.put("population.foodPolicy", foodPolicy);
-		map.put("population.manpowerPolicy", manpowerPolicy);
-		map.put("population.economy_policy", economyPolicy);
-		map.put("population.size", size);
-		map.put("population.famine", famine);
-		map.put("population.net", net);
+		map.put(TextKey.Population.BASE, base);
+		map.put(TextKey.Population.FOOD_POLICY, foodPolicy);
+		map.put(TextKey.Population.MANPOWER_POLICY, manpowerPolicy);
+		map.put(TextKey.Population.ECONOMY_POLICY, economyPolicy);
+		map.put(TextKey.Population.SIZE, size);
+		map.put(TextKey.Population.FAMINE, famine);
+		map.put(TextKey.Population.NET, net);
 		return map;
 	}
 
@@ -425,7 +422,7 @@ public class City extends Updatable
 	}
 
 
-	private LinkedHashMap<String, Double> doMineOutput(LinkedHashMap<String, Double> map, double mines)
+	private LinkedHashMap<TextKey, Double> doMineOutput(LinkedHashMap<TextKey, Double> map, double mines)
 	{
 		double bonus = this.getRailroads() * 0.1 * mines;
 		double total = mines + bonus;
@@ -436,17 +433,17 @@ public class City extends Updatable
 		double nitrogen = -this.getIndustryNitrogen();
 		double strike = total * this.getStrikeModifier();
 		double net = total + civilian + military + nitrogen + strike;
-		map.put("resource.mines", mines);
-		map.put("resource.infrastructure", bonus);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.strike", strike);
-		map.put("resource.factoryUpkeep", civilian + military + nitrogen);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
+		map.put(TextKey.Resource.MINES, mines);
+		map.put(TextKey.Resource.INFRASTRUCTURE, bonus);
+		map.put(TextKey.Resource.DEVASTATION, devastation2);
+		map.put(TextKey.Resource.STRIKE, strike);
+		map.put(TextKey.Resource.FACTORY_UPKEEP, civilian + military + nitrogen);
+		map.put(TextKey.Resource.NET, net);
+		map.put(TextKey.Resource.TOTAL_GAIN, total);
 		return map;
 	}
 
-	private LinkedHashMap<String, Double> doFactoryOutput(LinkedHashMap<String, Double> map, double factories)
+	private LinkedHashMap<TextKey, Double> doFactoryOutput(LinkedHashMap<TextKey, Double> map, double factories)
 	{
 		double bonus = this.getRailroads() * 0.1 * factories;
 		double total = factories + bonus;
@@ -454,12 +451,12 @@ public class City extends Updatable
 		total = total * (1 - (devastation / 100.0));
 		double strike = total * this.getStrikeModifier();
 		double net = total + strike;
-		map.put("resource.factoryProduction", factories);
-		map.put("resource.infrastructure", bonus);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.strike", strike);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
+		map.put(TextKey.Resource.FACTORY_OUTPUT, factories);
+		map.put(TextKey.Resource.INFRASTRUCTURE, bonus);
+		map.put(TextKey.Resource.DEVASTATION, devastation2);
+		map.put(TextKey.Resource.STRIKE, strike);
+		map.put(TextKey.Resource.NET, net);
+		map.put(TextKey.Resource.TOTAL_GAIN, total);
 		return map;
 	}
 
@@ -476,9 +473,9 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A HashMap of coal production in this city
 	 */
-	public LinkedHashMap<String, Double> getCoalProduction()
+	public LinkedHashMap<TextKey, Double> getCoalProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double mines = this.getCoalMines() * 10;
 		return doMineOutput(map, mines);
 	}
@@ -496,9 +493,9 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A HashMap of iron production in this city
 	 */
-	public LinkedHashMap<String, Double> getIronProduction()
+	public LinkedHashMap<TextKey, Double> getIronProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double mines = this.getIronMines() * 10;
 		return doMineOutput(map, mines);
 	}
@@ -516,9 +513,9 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A LinkedHashMap of oil production in this city
 	 */
-	public LinkedHashMap<String, Double> getOilProduction()
+	public LinkedHashMap<TextKey, Double> getOilProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double wells = this.getOilWells() * 10;
 		return doMineOutput(map, wells);
 	}
@@ -533,9 +530,9 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A LinkedHashMap of steel production in this city
 	 */
-	public LinkedHashMap<String, Double> getSteelProduction()
+	public LinkedHashMap<TextKey, Double> getSteelProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double factories = this.getIndustryCivilian() * 5;
 		return doFactoryOutput(map, factories);
 	}
@@ -550,9 +547,9 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A LinkedHashMap of nitrogen production in this city
 	 */
-	public LinkedHashMap<String, Double> getNitrogenProduction()
+	public LinkedHashMap<TextKey, Double> getNitrogenProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double factories = this.getIndustryNitrogen() * 5;
 		return doFactoryOutput(map, factories);
 	}
@@ -567,11 +564,9 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A LinkedHashMap of research production in this city
 	 */
-	public LinkedHashMap<String, Double> getResearchProduction()
+	public LinkedHashMap<TextKey, Double> getResearchProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		//I can't name it default...
-		//Damn reserved keywords >:(
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double standard = 2;
 		double universities = this.getUniversities();
 		double total = universities + standard;
@@ -579,12 +574,12 @@ public class City extends Updatable
 		total = total * (1 - (devastation / 100.0));
 		double strike = total * this.getStrikeModifier();
 		double net = total + strike;
-		map.put("resource.default", standard);
-		map.put("resource.universities", universities);
-		map.put("resource.devastation", devastation2);
-		map.put("resource.strike", strike);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
+		map.put(TextKey.Resource.DEFAULT, standard);
+		map.put(TextKey.Resource.UNIVERSITIES, universities);
+		map.put(TextKey.Resource.DEVASTATION, devastation2);
+		map.put(TextKey.Resource.STRIKE, strike);
+		map.put(TextKey.Resource.NET, net);
+		map.put(TextKey.Resource.TOTAL_GAIN, total);
 		return map;
 	}
 
@@ -597,12 +592,12 @@ public class City extends Updatable
 	 * </ul>
 	 * @return A LinkedHashMap of land usage in this city
 	 */
-	public LinkedHashMap<String, Long> getLandUsage()
+	public LinkedHashMap<TextKey, Long> getLandUsage()
 	{
-		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
-		map.put("land.mines", City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
-		map.put("land.factories", City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
-		map.put("land.universities", City.LAND_UNIVERSITY * (this.universities));
+		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
+		map.put(TextKey.Land.MINES, City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
+		map.put(TextKey.Land.FACTORIES, City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
+		map.put(TextKey.Land.UNIVERSITIES, City.LAND_UNIVERSITY * (this.universities));
 		return map;
 	}
 }

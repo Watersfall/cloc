@@ -2,6 +2,7 @@ package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Time;
@@ -36,7 +37,7 @@ public class TurnDay implements Runnable
 					{
 						City city = nation.getCities().get(cityId);
 						city.setPopulation(city.getPopulation()
-								+ (long)(city.getPopulation() * (city.getPopulationGrowth(nation).get("population.net") / (100L * Time.daysPerMonth[Time.currentMonth]))));
+								+ (long)(city.getPopulation() * (city.getPopulationGrowth(nation).get(TextKey.Population.NET) / (100L * Time.daysPerMonth[Time.currentMonth]))));
 					}
 					nation.processProduction();
 					dao.saveNation(nation);

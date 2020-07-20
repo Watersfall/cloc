@@ -5,6 +5,7 @@ import com.watersfall.clocgame.dao.EventDao;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
+import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.schedulers.DayScheduler;
@@ -47,27 +48,27 @@ public class TurnMonth implements Runnable
 					 */
 
 					// Production
-					HashMap<String, Double> coal = nation.getTotalCoalProduction();
-					HashMap<String, Double> iron = nation.getTotalIronProduction();
-					HashMap<String, Double> oil = nation.getTotalOilProduction();
-					HashMap<String, Double> steel = nation.getTotalSteelProduction();
-					HashMap<String, Double> nitrogen = nation.getTotalNitrogenProduction();
-					HashMap<String, Double> research = nation.getTotalResearchProduction();
-					HashMap<String, Double> food = nation.getFoodProduction();
-					economy.setCoal(economy.getCoal() + coal.get("resource.total"));
-					economy.setIron(economy.getIron() + iron.get("resource.total"));
-					economy.setOil(economy.getOil() + oil.get("resource.total"));
-					economy.setResearch(economy.getResearch() + research.get("resource.net"));
-					economy.setFood(economy.getFood() + food.get("resource.net"));
-					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get("growth.net"));
+					HashMap<TextKey, Double> coal = nation.getTotalCoalProduction();
+					HashMap<TextKey, Double> iron = nation.getTotalIronProduction();
+					HashMap<TextKey, Double> oil = nation.getTotalOilProduction();
+					HashMap<TextKey, Double> steel = nation.getTotalSteelProduction();
+					HashMap<TextKey, Double> nitrogen = nation.getTotalNitrogenProduction();
+					HashMap<TextKey, Double> research = nation.getTotalResearchProduction();
+					HashMap<TextKey, Double> food = nation.getFoodProduction();
+					economy.setCoal(economy.getCoal() + coal.get(TextKey.Resource.TOTAL_GAIN));
+					economy.setIron(economy.getIron() + iron.get(TextKey.Resource.TOTAL_GAIN));
+					economy.setOil(economy.getOil() + oil.get(TextKey.Resource.TOTAL_GAIN));
+					economy.setResearch(economy.getResearch() + research.get(TextKey.Resource.NET));
+					economy.setFood(economy.getFood() + food.get(TextKey.Resource.NET));
+					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get(TextKey.Growth.NET));
 					economy.setGdp(economy.getGdp() + economy.getGrowth());
 
-					if(economy.getCoal() > coal.get("resource.factoryUpkeep")
-							&& economy.getIron() > iron.get("resource.factoryUpkeep")
-							&& economy.getOil() > oil.get("resource.factoryUpkeep"))
+					if(economy.getCoal() > coal.get(TextKey.Resource.FACTORY_UPKEEP)
+							&& economy.getIron() > iron.get(TextKey.Resource.FACTORY_UPKEEP)
+							&& economy.getOil() > oil.get(TextKey.Resource.FACTORY_UPKEEP))
 					{
-						economy.setSteel(economy.getSteel() + steel.get("resource.net"));
-						economy.setNitrogen(economy.getNitrogen() + nitrogen.get("resource.net"));
+						economy.setSteel(economy.getSteel() + steel.get(TextKey.Resource.NET));
+						economy.setNitrogen(economy.getNitrogen() + nitrogen.get(TextKey.Resource.NET));
 					}
 
 					economy.setRecentConscription(economy.getRecentConscription() / 2);
@@ -76,8 +77,8 @@ public class TurnMonth implements Runnable
 					/*
 					 ** Domestic
 					 */
-					domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get("approval.net"));
-					domestic.setStability(domestic.getStability() + nation.getStabilityChange().get("stability.net"));
+					domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get(TextKey.Approval.NET));
+					domestic.setStability(domestic.getStability() + nation.getStabilityChange().get(TextKey.Stability.NET));
 
 					/*
 					 ** Military
@@ -104,7 +105,7 @@ public class TurnMonth implements Runnable
 					}
 
 					nation.getArmy().setFortification((int)(nation.getArmy().getFortification()
-							+ nation.getFortificationChange().get("fortification.net")));
+							+ nation.getFortificationChange().get(TextKey.Fortification.NET)));
 
 					if(nation.getFamineLevel() < 0)
 					{

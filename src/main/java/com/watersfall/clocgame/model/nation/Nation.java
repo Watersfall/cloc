@@ -2,6 +2,7 @@ package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.dao.*;
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.military.Bomber;
@@ -50,14 +51,14 @@ public class Nation extends Updatable
 	private @Getter @Setter long freeFactories;
 	private @Getter @Setter long lastSeen;
 	private @Getter @Setter ArrayList<Modifier> modifiers;
-	private LinkedHashMap<String, Double> coalProduction = null;
-	private LinkedHashMap<String, Double> ironProduction = null;
-	private LinkedHashMap<String, Double> oilProduction = null;
-	private LinkedHashMap<String, Double> steelProduction = null;
-	private LinkedHashMap<String, Double> nitrogenProduction = null;
-	private LinkedHashMap<String, Double> researchProduction = null;
+	private LinkedHashMap<TextKey, Double> coalProduction = null;
+	private LinkedHashMap<TextKey, Double> ironProduction = null;
+	private LinkedHashMap<TextKey, Double> oilProduction = null;
+	private LinkedHashMap<TextKey, Double> steelProduction = null;
+	private LinkedHashMap<TextKey, Double> nitrogenProduction = null;
+	private LinkedHashMap<TextKey, Double> researchProduction = null;
 	private @Getter @Setter LinkedHashMap<Integer, Production> production;
-	private LinkedHashMap<String, LinkedHashMap<String, Double>> allProductions = null;
+	private LinkedHashMap<String, LinkedHashMap<TextKey, Double>> allProductions = null;
 	private long landUsage = -1;
 	private HashMap<String, Double> totalProductionCosts = null;
 
@@ -410,9 +411,9 @@ public class Nation extends Updatable
 	 *
 	 * @return A HashMap containing manpower usage
 	 */
-	public LinkedHashMap<String, Long> getUsedManpower()
+	public LinkedHashMap<TextKey, Long> getUsedManpower()
 	{
-		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
 		long navy = this.military.getBattleships() +
 				this.military.getCruisers() +
 				this.military.getPreBattleships() +
@@ -430,10 +431,10 @@ public class Nation extends Updatable
 		airforce *= 50;
 		long army = this.army.getSize();
 		army *= 1000;
-		map.put("manpower.navy", -navy);
-		map.put("manpower.airforce", -airforce);
-		map.put("manpower.army", -army);
-		map.put("manpower.net", navy + airforce + army);
+		map.put(TextKey.Manpower.NAVY, -navy);
+		map.put(TextKey.Manpower.AIRFORCE, -airforce);
+		map.put(TextKey.Manpower.ARMY, -army);
+		map.put(TextKey.Manpower.NET, navy + airforce + army);
 		return map;
 	}
 
@@ -444,7 +445,7 @@ public class Nation extends Updatable
 	 */
 	public long getFreeManpower()
 	{
-		return this.getTotalManpower() - this.getUsedManpower().get("manpower.net");
+		return this.getTotalManpower() - this.getUsedManpower().get(TextKey.Manpower.NET);
 	}
 
 	public LinkedHashMap<String, Double> getAllResources()
@@ -461,7 +462,7 @@ public class Nation extends Updatable
 		return map;
 	}
 
-	private static void extractionEconBoosts(LinkedHashMap<String, Double> map, Policy policy)
+	private static void extractionEconBoosts(LinkedHashMap<TextKey, Double> map, Policy policy)
 	{
 		double bonus;
 		if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY)
@@ -480,10 +481,10 @@ public class Nation extends Updatable
 		{
 			bonus = 0.1;
 		}
-		computeBonus(map, "resource.economy_type", bonus);
+		computeBonus(map, TextKey.Resource.ECONOMY_TYPE, bonus);
 	}
 
-	private static void factoryEconBoosts(LinkedHashMap<String, Double> map, Policy policy)
+	private static void factoryEconBoosts(LinkedHashMap<TextKey, Double> map, Policy policy)
 	{
 		double bonus;
 		if(policy == Policy.WAR_ECONOMY || policy == Policy.CIVILIAN_ECONOMY || policy == Policy.AGRARIAN_ECONOMY)
@@ -498,10 +499,10 @@ public class Nation extends Updatable
 		{
 			bonus = -0.15;
 		}
-		computeBonus(map, "resource.economy_type", bonus);
+		computeBonus(map, TextKey.Resource.ECONOMY_TYPE, bonus);
 	}
 
-	public void doStabilityResourceEffect(LinkedHashMap<String, Double> map)
+	public void doStabilityResourceEffect(LinkedHashMap<TextKey, Double> map)
 	{
 		double stabilityEffect = this.getDomestic().getStability() - 50;
 		if(stabilityEffect < 0)
@@ -513,18 +514,17 @@ public class Nation extends Updatable
 			stabilityEffect = stabilityEffect / 5.0;
 		}
 		final double stabilityIncrease = (stabilityEffect / 100.0);
-		computeBonus(map, "resource.stability", stabilityIncrease);
+		computeBonus(map, TextKey.Resource.STABILITY, stabilityIncrease);
 	}
 
-	private static void computeBonus(LinkedHashMap<String, Double> map, String key, double bonus)
+	private static void computeBonus(LinkedHashMap<TextKey, Double> map, TextKey key, double bonus)
 	{
-		map.put(key, map.get("resource.total") * bonus);
-		map.compute("resource.net", (k, v) -> v += (map.get("resource.total") * bonus));
+		map.put(key, map.get(TextKey.Resource.TOTAL_GAIN) * bonus);
+		map.compute(TextKey.Resource.NET, (k, v) -> v += (map.get(TextKey.Resource.TOTAL_GAIN) * bonus));
 		if(bonus > 0)
 		{
-			map.compute("resource.total", (k, v) -> v += v * bonus);
+			map.compute(TextKey.Resource.TOTAL_GAIN, (k, v) -> v += v * bonus);
 		}
-
 	}
 
 
@@ -544,15 +544,15 @@ public class Nation extends Updatable
 	 *
 	 * @return A LinkedHashMap containing the total coal production of this Nation
 	 */
-	public LinkedHashMap<String, Double> getTotalCoalProduction()
+	public LinkedHashMap<TextKey, Double> getTotalCoalProduction()
 	{
 		if(coalProduction == null)
 		{
-			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 			for(City city : cities.values())
 			{
-				LinkedHashMap<String, Double> cityMap = city.getCoalProduction();
-				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				LinkedHashMap<TextKey, Double> cityMap = city.getCoalProduction();
+				for(HashMap.Entry<TextKey, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
@@ -581,15 +581,15 @@ public class Nation extends Updatable
 	 *
 	 * @return A HashMap containing the total iron production of this Nation
 	 */
-	public LinkedHashMap<String, Double> getTotalIronProduction()
+	public LinkedHashMap<TextKey, Double> getTotalIronProduction()
 	{
 		if(ironProduction == null)
 		{
-			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 			for(City city : cities.values())
 			{
-				LinkedHashMap<String, Double> cityMap = city.getIronProduction();
-				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				LinkedHashMap<TextKey, Double> cityMap = city.getIronProduction();
+				for(HashMap.Entry<TextKey, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
@@ -618,15 +618,15 @@ public class Nation extends Updatable
 	 *
 	 * @return A LinkedHashMap containing the total iron production of this Nation
 	 */
-	public LinkedHashMap<String, Double> getTotalOilProduction()
+	public LinkedHashMap<TextKey, Double> getTotalOilProduction()
 	{
 		if(oilProduction == null)
 		{
-			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 			for(City city : cities.values())
 			{
-				LinkedHashMap<String, Double> cityMap = city.getOilProduction();
-				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				LinkedHashMap<TextKey, Double> cityMap = city.getOilProduction();
+				for(HashMap.Entry<TextKey, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
@@ -636,8 +636,8 @@ public class Nation extends Updatable
 			doStabilityResourceEffect(map);
 			if(getTotalProductionCosts().get("oil") != null)
 			{
-				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("oil"));
-				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("oil"));
+				map.put(TextKey.Resource.MILITARY_FACTORY_UPKEEP, getTotalProductionCosts().get("oil"));
+				map.compute(TextKey.Resource.NET, (k, v) -> v = v + getTotalProductionCosts().get("oil"));
 			}
 			oilProduction = map;
 		}
@@ -657,15 +657,15 @@ public class Nation extends Updatable
 	 *
 	 * @return A LinkedHashMap containing the total steel production of this Nation
 	 */
-	public LinkedHashMap<String, Double> getTotalSteelProduction()
+	public LinkedHashMap<TextKey, Double> getTotalSteelProduction()
 	{
 		if(steelProduction == null)
 		{
-			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 			for(City city : cities.values())
 			{
-				LinkedHashMap<String, Double> cityMap = city.getSteelProduction();
-				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				LinkedHashMap<TextKey, Double> cityMap = city.getSteelProduction();
+				for(HashMap.Entry<TextKey, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
@@ -675,8 +675,8 @@ public class Nation extends Updatable
 			doStabilityResourceEffect(map);
 			if(getTotalProductionCosts().get("steel") != null)
 			{
-				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("steel"));
-				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("steel"));
+				map.put(TextKey.Resource.MILITARY_FACTORY_UPKEEP, getTotalProductionCosts().get("steel"));
+				map.compute(TextKey.Resource.NET, (k, v) -> v = v + getTotalProductionCosts().get("steel"));
 			}
 			if(this.hasTech(Technologies.FARMING_MACHINES) || this.hasTech(Technologies.ADVANCED_FARMING_MACHINES))
 			{
@@ -693,9 +693,9 @@ public class Nation extends Updatable
 				{
 					amount *= 1.5;
 				}
-				map.put("resource.farming_demands", amount);
+				map.put(TextKey.Resource.FARMING_DEMANDS, amount);
 				double finalAmount = amount;
-				map.compute("resource.net", (k, v) -> v = v + finalAmount);
+				map.compute(TextKey.Resource.NET, (k, v) -> v = v + finalAmount);
 			}
 			steelProduction = map;
 		}
@@ -715,15 +715,15 @@ public class Nation extends Updatable
 	 *
 	 * @return A LinkedHashMap containing the total nitrogen production of this Nation
 	 */
-	public LinkedHashMap<String, Double> getTotalNitrogenProduction()
+	public LinkedHashMap<TextKey, Double> getTotalNitrogenProduction()
 	{
 		if(nitrogenProduction == null)
 		{
-			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 			for(City city : cities.values())
 			{
-				LinkedHashMap<String, Double> cityMap = city.getNitrogenProduction();
-				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				LinkedHashMap<TextKey, Double> cityMap = city.getNitrogenProduction();
+				for(HashMap.Entry<TextKey, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
@@ -733,8 +733,8 @@ public class Nation extends Updatable
 			doStabilityResourceEffect(map);
 			if(getTotalProductionCosts().get("nitrogen") != null)
 			{
-				map.put("resource.mil_factory_demands", getTotalProductionCosts().get("nitrogen"));
-				map.compute("resource.net", (k, v) -> v = v + getTotalProductionCosts().get("nitrogen"));
+				map.put(TextKey.Resource.MILITARY_FACTORY_UPKEEP, getTotalProductionCosts().get("nitrogen"));
+				map.compute(TextKey.Resource.NET, (k, v) -> v = v + getTotalProductionCosts().get("nitrogen"));
 			}
 			if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) || this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER))
 			{
@@ -751,9 +751,9 @@ public class Nation extends Updatable
 				{
 					amount *= 1.5;
 				}
-				map.put("resource.farming_demands", amount);
+				map.put(TextKey.Resource.FARMING_DEMANDS, amount);
 				double finalAmount = amount;
-				map.compute("resource.net", (k, v) -> v = v + finalAmount);
+				map.compute(TextKey.Resource.NET, (k, v) -> v = v + finalAmount);
 			}
 			nitrogenProduction = map;
 		}
@@ -773,15 +773,15 @@ public class Nation extends Updatable
 	 *
 	 * @return A LinkedHashMap containing the total research production of this Nation
 	 */
-	public LinkedHashMap<String, Double> getTotalResearchProduction()
+	public LinkedHashMap<TextKey, Double> getTotalResearchProduction()
 	{
 		if(researchProduction == null)
 		{
-			LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+			LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 			for(City city : cities.values())
 			{
-				LinkedHashMap<String, Double> cityMap = city.getResearchProduction();
-				for(HashMap.Entry<String, Double> entry : cityMap.entrySet())
+				LinkedHashMap<TextKey, Double> cityMap = city.getResearchProduction();
+				for(HashMap.Entry<TextKey, Double> entry : cityMap.entrySet())
 				{
 					map.putIfAbsent(entry.getKey(), 0e0);
 					map.compute(entry.getKey(), (k, v) -> v += entry.getValue());
@@ -803,18 +803,18 @@ public class Nation extends Updatable
 	 *
 	 * @return A HashMap containing food production
 	 */
-	public LinkedHashMap<String, Double> getFoodProduction()
+	public LinkedHashMap<TextKey, Double> getFoodProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get("farming.net");
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
+		double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get(TextKey.Farming.NET);
 		if(farming < 0)
 			farming = 0;
 		double tech = 0;
-		if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get("resource.net") + this.getEconomy().getNitrogen() >= 0)
+		if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getEconomy().getNitrogen() >= 0)
 		{
 			tech = farming * TechnologyAdvancedArtificialFertilizer.FOOD_GAIN;
 		}
-		else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get("resource.net") + this.getEconomy().getNitrogen() >= 0)
+		else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getEconomy().getNitrogen() >= 0)
 		{
 			tech = farming * TechnologyArtificialFertilizer.FOOD_GAIN;
 		}
@@ -822,11 +822,11 @@ public class Nation extends Updatable
 		{
 			tech = farming * TechnologyBasicArtificialFertilizer.FOOD_GAIN;
 		}
-		if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get("resource.net") + this.getEconomy().getSteel() > 0)
+		if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getEconomy().getSteel() > 0)
 		{
 			tech += farming * TechnologyAdvancedFarmingMachines.FOOD_GAIN;
 		}
-		else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get("resource.net") + this.getEconomy().getSteel() > 0)
+		else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getEconomy().getSteel() > 0)
 		{
 			tech += farming * TechnologyFarmingMachines.FOOD_GAIN;
 		}
@@ -865,13 +865,13 @@ public class Nation extends Updatable
 			food = -consumption * 0.35;
 		}
 		net += food + economy + tech;
-		map.put("resource.farming", farming);
-		map.put("resource.technology", tech);
-		map.put("resource.consumption", consumption);
-		map.put("resource.economy_type", economy);
-		map.put("resource.food_type", food);
-		map.put("resource.net", net);
-		map.put("resource.total", total);
+		map.put(TextKey.Resource.FARMING, farming);
+		map.put(TextKey.Resource.TECHNOLOGY, tech);
+		map.put(TextKey.Resource.CONSUMPTION, consumption);
+		map.put(TextKey.Resource.ECONOMY_TYPE, economy);
+		map.put(TextKey.Resource.FOOD_POLICY, food);
+		map.put(TextKey.Resource.NET, net);
+		map.put(TextKey.Resource.TOTAL_GAIN, total);
 		doStabilityResourceEffect(map);
 		return map;
 	}
@@ -906,13 +906,13 @@ public class Nation extends Updatable
 	 *
 	 * @return A HashMap containing the total weapons production of this Nation
 	 */
-	public LinkedHashMap<String, LinkedHashMap<String, Double>> getAllTotalProductions()
+	public LinkedHashMap<String, LinkedHashMap<TextKey, Double>> getAllTotalProductions()
 	{
 		if(allProductions == null)
 		{
-			LinkedHashMap<String, LinkedHashMap<String, Double>> map = new LinkedHashMap<>();
-			LinkedHashMap<String, Double> budget = new LinkedHashMap<>();
-			budget.put("resource.gdp", this.getBudgetChange());
+			LinkedHashMap<String, LinkedHashMap<TextKey, Double>> map = new LinkedHashMap<>();
+			LinkedHashMap<TextKey, Double> budget = new LinkedHashMap<>();
+			budget.put(TextKey.Resource.GDP, this.getBudgetChange());
 			map.put("Budget", budget);
 			map.put("Food", this.getFoodProduction());
 			map.put("Coal", this.getTotalCoalProduction());
@@ -926,14 +926,13 @@ public class Nation extends Updatable
 		return allProductions;
 	}
 
-	public LinkedHashMap<String, Double> getBaseFoodProduction()
+	public LinkedHashMap<TextKey, Double> getBaseFoodProduction()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double base = 1.0;
-		double tech = domestic.getFarmTechnology() / 100.0;
-		map.put("farming.base", base);
-		map.put("farming.total", base);
-		map.put("farming.net", base);
+		map.put(TextKey.Farming.BASE, base);
+		map.put(TextKey.Resource.TOTAL_GAIN, base);
+		map.put(TextKey.Farming.NET, base);
 		return map;
 	}
 
@@ -1222,12 +1221,12 @@ public class Nation extends Updatable
 
 	public int getMaximumFortificationLevel()
 	{
-		return getMaximumFortificationLevelMap().get("fortification_max.net");
+		return getMaximumFortificationLevelMap().get(TextKey.Fortification.NET);
 	}
 
-	public LinkedHashMap<String, Integer> getMaximumFortificationLevelMap()
+	public LinkedHashMap<TextKey, Integer> getMaximumFortificationLevelMap()
 	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
 		int tech = 2000;
 		if(this.hasTech(Technologies.BASIC_TRENCHES))
 			tech += TechnologyTrenches.BONUS * 100;
@@ -1255,9 +1254,9 @@ public class Nation extends Updatable
 		policy = tech - policy;
 		policy = -policy;
 		int net = policy + tech;
-		map.put("fortification_max.tech", tech);
-		map.put("fortification_max.policy", policy);
-		map.put("fortification_max.net", net);
+		map.put(TextKey.Fortification.TECHNOLOGY, tech);
+		map.put(TextKey.Fortification.POLICY, policy);
+		map.put(TextKey.Fortification.NET, net);
 		return map;
 	}
 
@@ -1463,9 +1462,9 @@ public class Nation extends Updatable
 		new NationDao(conn, true).doNationProduction(this);
 	}
 
-	public LinkedHashMap<String, Double> getFortificationChange()
+	public LinkedHashMap<TextKey, Double> getFortificationChange()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double base = Math.min(
 				this.army.getFortification() + (0.1 * ((double)this.getMaximumFortificationLevel() / (this.army.getFortification() / 100.0))),
 				this.getMaximumFortificationLevel()
@@ -1498,7 +1497,7 @@ public class Nation extends Updatable
 				case MAX_FORTIFICATION:
 					bonus = base * 0.5;
 			}
-			map.put("fortification.base_above", base);
+			map.put(TextKey.Fortification.BELOW_MAX, base);
 		}
 		else if(base < 0)
 		{
@@ -1518,29 +1517,29 @@ public class Nation extends Updatable
 				case MAX_FORTIFICATION:
 					bonus = -base * 0.5;
 			}
-			map.put("fortification.base_below", base);
+			map.put(TextKey.Fortification.ABOVE_MAX, base);
 		}
 		double net = base + bonus;
-		map.put("fortification.bonus", bonus);
-		map.put("fortification.net", net);
+		map.put(TextKey.Fortification.BONUS, bonus);
+		map.put(TextKey.Fortification.NET, net);
 		return map;
 	}
 
-	public LinkedHashMap<String, Integer> getApprovalChange()
+	public LinkedHashMap<TextKey, Integer> getApprovalChange()
 	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
 		int famine = (int)this.getFamineLevel();
 		if(famine < 0)
 		{
-			map.put("approval.famine", famine);
+			map.put(TextKey.Approval.FAMINE, famine);
 		}
-		map.put("approval.net", famine);
+		map.put(TextKey.Approval.NET, famine);
 		return map;
 	}
 
-	public LinkedHashMap<String, Integer> getStabilityChange()
+	public LinkedHashMap<TextKey, Integer> getStabilityChange()
 	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
 		int approval = this.domestic.getApproval() / 20 - 2;
 		int famine = (int)this.getFamineLevel();
 		int growth = 0;
@@ -1566,28 +1565,28 @@ public class Nation extends Updatable
 		}
 		if(approval < 0)
 		{
-			map.put("stability.lowApproval", approval);
-		}
-		if(this.getFreeManpower() < 0)
-		{
-			map.put("stability.manpower", (int)((double)this.getFreeManpower() / (double)this.getTotalManpower() * Math.sqrt(Math.sqrt(this.getTotalManpower()))));
+			map.put(TextKey.Stability.LOW_APPROVAL, approval);
 		}
 		else
 		{
-			map.put("stability.approval", approval);
+			map.put(TextKey.Stability.HIGH_APPROVAL, approval);
+		}
+		if(this.getFreeManpower() < 0)
+		{
+			map.put(TextKey.Stability.MANPOWER, (int)((double)this.getFreeManpower() / (double)this.getTotalManpower() * Math.sqrt(Math.sqrt(this.getTotalManpower()))));
 		}
 		if(famine < 0)
 		{
-			map.put("stability.famine", famine);
+			map.put(TextKey.Stability.FAMINE, famine);
 		}
-		map.put("stability.growth", growth);
-		map.put("stability.net", approval + famine + growth);
+		map.put(TextKey.Stability.GROWTH, growth);
+		map.put(TextKey.Stability.NET, approval + famine + growth);
 		return map;
 	}
 
 	public double getFamineLevel()
 	{
-		double food = this.economy.getFood() + this.getFoodProduction().get("resource.net");
+		double food = this.economy.getFood() + this.getFoodProduction().get(TextKey.Resource.NET);
 		if(food > 0)
 		{
 			return 0;
@@ -1598,11 +1597,11 @@ public class Nation extends Updatable
 		}
 	}
 
-	public LinkedHashMap<String, Long> getGrowthChange()
+	public LinkedHashMap<TextKey, Long> getGrowthChange()
 	{
-		LinkedHashMap<String, Long> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
 		long factories = this.getTotalFactories();
-		long military = -1 * this.getUsedManpower().get("manpower.net") / 20000;
+		long military = -1 * this.getUsedManpower().get(TextKey.Manpower.NET) / 20000;
 		long overMaxManpower = 0;
 		if(this.getFreeManpower() < 0)
 		{
@@ -1613,12 +1612,12 @@ public class Nation extends Updatable
 		if(conscription > 0)
 		{
 			conscription = (long)((conscription + 1) * 0.75);
-			map.put("growth.deconscription", conscription);
+			map.put(TextKey.Growth.DECONSCRIPTION, conscription);
 		}
 		else
 		{
 			conscription = (long)(conscription * 1.15);
-			map.put("growth.conscription", conscription);
+			map.put(TextKey.Growth.CONSCRIPTION, conscription);
 		}
 		switch(this.policy.getFortification())
 		{
@@ -1634,17 +1633,17 @@ public class Nation extends Updatable
 			case MAX_FORTIFICATION:
 				fortification *= 2;
 		}
-		map.put("growth.factories", factories);
-		map.put("growth.military", military);
-		map.put("growth.over_max_manpower", overMaxManpower);
-		map.put("growth.fortification", fortification);
-		map.put("growth.net", factories + military + conscription + fortification + overMaxManpower);
+		map.put(TextKey.Growth.FACTORIES, factories);
+		map.put(TextKey.Growth.MILITARY, military);
+		map.put(TextKey.Growth.OVER_MAX_MANPOWER, overMaxManpower);
+		map.put(TextKey.Growth.FORTIFICATION, fortification);
+		map.put(TextKey.Growth.NET, factories + military + conscription + fortification + overMaxManpower);
 		return map;
 	}
 
-	public LinkedHashMap<String, Double> getPopulationGrowth()
+	public LinkedHashMap<TextKey, Double> getPopulationGrowth()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
+		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double base = 2;
 		double foodPolicy = 0;
 		double manpowerPolicy = 0;
@@ -1681,11 +1680,11 @@ public class Nation extends Updatable
 		{
 			economyPolicy = -1.5;
 		}
-		map.put("population.base", base);
-		map.put("population.foodPolicy", foodPolicy);
-		map.put("population.manpowerPolicy", manpowerPolicy);
-		map.put("population.economy_policy", economyPolicy);
-		map.put("population.net", base + foodPolicy + manpowerPolicy + economyPolicy);
+		map.put(TextKey.Population.BASE, base);
+		map.put(TextKey.Population.FOOD_POLICY, foodPolicy);
+		map.put(TextKey.Population.MANPOWER_POLICY, manpowerPolicy);
+		map.put(TextKey.Population.ECONOMY_POLICY, economyPolicy);
+		map.put(TextKey.Population.NET, base + foodPolicy + manpowerPolicy + economyPolicy);
 		return map;
 	}
 
@@ -1714,9 +1713,9 @@ public class Nation extends Updatable
 		return cities.get(cityId);
 	}
 
-	public LinkedHashMap<String, LinkedHashMap<String, Long>> getLandUsage()
+	public LinkedHashMap<String, LinkedHashMap<TextKey, Long>> getLandUsage()
 	{
-		LinkedHashMap<String, LinkedHashMap<String, Long>> map = new LinkedHashMap<>();
+		LinkedHashMap<String, LinkedHashMap<TextKey, Long>> map = new LinkedHashMap<>();
 		for(City city : cities.values())
 		{
 			map.put(city.getName(), city.getLandUsage());
@@ -1724,136 +1723,9 @@ public class Nation extends Updatable
 		return map;
 	}
 
-	public String getDisplayString(String key)
+	public String getDisplayString(TextKey key)
 	{
-		switch(key)
-		{
-			case "population.base":
-				return "% from Base Growth";
-			case "population.foodPolicy":
-				return "% from Food Policy";
-			case "population.manpowerPolicy":
-				return "% from Conscription Policy";
-			case "population.economy_policy":
-				return "% from Economic Policy";
-			case "population.size":
-				return "% from city size";
-			case "population.net":
-				return "% total growth per month";
-			case "population.famine":
-				return "% per month from famine";
-			case "growth.factories":
-				return " per month from factories";
-			case "growth.military":
-				return " per month from military upkeep";
-			case "growth.deconscription":
-				return " from recent deconscription";
-			case "growth.conscription":
-				return " from recent conscription";
-			case "growth.fortification":
-				return " from fortification upkeep";
-			case "stability.manpower":
-				return "% from being over manpower limit";
-			case "growth.over_max_manpower":
-				return " from being over manpower limit";
-			case "growth.net":
-				return " change per month";
-			case "stability.net":
-			case "approval.net":
-			case "fortification.net":
-				return "% change per month";
-			case "stability.lowApproval":
-				return "% per month from low approval";
-			case "stability.approval":
-				return "% per month from high approval";
-			case "stability.growth":
-				return "% from low growth";
-			case "stability.famine":
-			case "approval.famine":
-				return "% per months from famine";
-			case "approval.policies":
-				return "% per month from policies";
-			case "manpower.army":
-				return " in the Army";
-			case "manpower.navy":
-				return " in the Navy";
-			case "manpower.airforce":
-				return " in the Airforce";
-			case "manpower.net":
-				return " total deployed";
-			case "land.mines":
-				return " from Mines";
-			case "land.factories":
-				return " from Factories";
-			case "land.universities":
-				return " from Universities";
-			case "resource.gdp":
-				return " from GDP";
-			case "resource.factoryUpkeep":
-				return " from factory demands";
-			case "resource.factoryProduction":
-				return " from factories";
-			case "resource.mines":
-				return " from mining";
-			case "resource.wells":
-				return " from oil wells";
-			case "resource.infrastructure":
-				return " from infrastructure";
-			case "resource.farming":
-				return " from farming";
-			case "resource.consumption":
-				return " from consumption";
-			case "resource.net":
-				return " net production";
-			case "resource.totalGain":
-				return " total production";
-			case "resource.totalLoss":
-				return " total upkeep";
-			case "resource.devastation":
-				return " from devastation";
-			case "resource.default":
-				return " from population";
-			case "resource.economy_type":
-				return " from economic focus";
-			case "resource.food_type":
-				return " from food policy";
-			case "resource.mil_factory_demands":
-				return " from military factory demands";
-			case "resource.technology":
-				return " from technology";
-			case "resource.farming_demands":
-				return " from farm upkeep";
-			case "resource.stability":
-				return " from stability";
-			case "resource.strike":
-				return " from strikes";
-			case "farming.base":
-				return " from default";
-			case "farming.net":
-				return "";
-			case "farming.regulations":
-				return " from current regulations";
-			case "farming.deregulation":
-				return " from deregulation";
-			case "farming.subsidies":
-				return " from subsidies";
-			case "farming.collectives":
-				return " from collectivization";
-			case "farming.tech":
-				return " from technology";
-			case "fortification.base_above":
-				return " from being below max fortification";
-			case "fortification.base_below":
-				return " from being above max fortification";
-			case "fortification.bonus":
-				return " from fortification policies";
-			case "fortification_max.tech":
-				return "% from tech";
-			case "fortification_max.policy":
-				return "% from policies";
-			default:
-				return key;
-		}
+		return key.getText();
 	}
 
 	@Override

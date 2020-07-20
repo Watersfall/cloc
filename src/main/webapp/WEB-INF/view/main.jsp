@@ -1,4 +1,8 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<% pageContext.setAttribute("netApproval", TextKey.Approval.NET); %>
+<% pageContext.setAttribute("netStability", TextKey.Stability.NET); %>
+<% pageContext.setAttribute("netManpower", TextKey.Manpower.NET); %>
+<% pageContext.setAttribute("netGrowth", TextKey.Growth.NET); %>
 <%@ include file="includes/defaultTop.jsp" %>
 	<c:if test="${sessionScope.user == null}">
 		<p>You must be logged in to view this page!</p>
@@ -34,7 +38,34 @@
 				<td onclick="toggleTab('Approval');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><cloc:approval value="${home.domestic.approval}"/></p>
-					<cloc:dropdown value="${home.domestic.approval}" name="Approval" map="${home.approvalChange}" nation="${home}"/>
+					<div class="toggleable detailsDown" id="Approval">
+						<p>${home.domestic.approval}% Approval</p>
+						<c:choose>
+							<c:when test="${home.approvalChange.get(netApproval) > 0}">
+								<p class="positive">+${home.approvalChange.get(netApproval)}${netApproval.text}</p>
+							</c:when>
+							<c:when test="${home.approvalChange.get(netApproval) < 0}">
+								<p class="negative">${home.approvalChange.get(netApproval)}${netApproval.text}</p>
+							</c:when>
+							<c:otherwise>
+								<p class="neutral">0${netApproval.text}</p>
+							</c:otherwise>
+						</c:choose>
+						<ul class="bulletList">
+							<c:forEach items="${home.approvalChange.entrySet()}" var="i">
+								<c:if test="${i.key != 'NET'}">
+									<c:choose>
+										<c:when test="${i.value > 0}">
+											<li><p class="positive">+${i.value}${i.key.text}</p></li>
+										</c:when>
+										<c:when test="${i.value < 0}">
+											<li><p class="negative">${i.value}${i.key.text}</p></li>
+										</c:when>
+									</c:choose>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -42,7 +73,35 @@
 				<td onclick="toggleTab('Stability');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><cloc:stability value="${home.domestic.stability}"/></p>
-					<cloc:dropdown value="${home.domestic.stability}" name="Stability" map="${home.stabilityChange}" nation="${home}"/>
+					<div class="toggleable detailsDown" id="Stability">
+						<p>${home.domestic.stability}% Stability</p>
+						<c:choose>
+							<c:when test="${home.stabilityChange.get(netStability) > 0}">
+								<p class="positive">+${home.stabilityChange.get(netStability)}${netStability.text}</p>
+							</c:when>
+							<c:when test="${home.stabilityChange.get(netStability) < 0}">
+								<p class="negative">${home.stabilityChange.get(netStability)}${netStability.text}</p>
+							</c:when>
+							<c:otherwise>
+								<p class="neutral">0${netStability.text}</p>
+							</c:otherwise>
+						</c:choose>
+						<ul class="bulletList">
+							<c:forEach items="${home.stabilityChange.entrySet()}" var="i">
+								<c:if test="${i.key != 'NET'}">
+									<c:choose>
+										<c:when test="${i.value > 0}">
+											<li><p class="positive">+${i.value}${i.key.text}</p></li>
+										</c:when>
+										<c:when test="${i.value < 0}">
+											<li><p class="negative">${i.value}${i.key.text}</p></li>
+										</c:when>
+									</c:choose>
+								</c:if>
+							</c:forEach>
+						</ul>
+
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -50,23 +109,42 @@
 				<td onclick="toggleTab('Land');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.freeLand}"/> km<sup>2</sup> / <fmt:formatNumber value="${home.domestic.land}"/> km<sup>2</sup></p>
-					<cloc:dropdown value="${home.domestic.land}" name="Land" map="${home.landUsage}" nation="${home}"/>
+					<div class="toggleable detailsDown" id="Land">
+						<p><fmt:formatNumber value="${home.totalLandUsage}"/>km<sup>2</sup> Total Land Used</p>
+						<ul class="bulletList">
+							<c:forEach items="${home.landUsage.entrySet()}" var="i">
+								<li><p>${i.key}</p></li>
+								<ul class="bulletList">
+									<c:forEach items="${i.value.entrySet()}" var="entry">
+										<c:if test="${entry.value > 0}">
+											<li><p class="negative"><fmt:formatNumber value="${entry.value}"/>km<sup>2</sup>${entry.key.text}</p></li>
+										</c:if>
+									</c:forEach>
+								</ul>
+							</c:forEach>
+						</ul>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<td><p>Population</p></td>
-				<td onclick="toggleTab('Population');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.totalPopulation}"/> People</p>
-					<cloc:dropdown value="${home.totalPopulation}" name="Population" map="${home.populationGrowth}" nation="${home}"/>
-				</td>
+				<td><p><fmt:formatNumber value="${home.totalPopulation}"/> People</p></td>
 			</tr>
 			<tr>
 				<td><p>Manpower</p></td>
 				<td onclick="toggleTab('Manpower');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.freeManpower}"/> Bodies</p>
-					<cloc:dropdown value="${home.totalManpower}" name="Manpower" map="${home.usedManpower}" nation="${home}"/>
+					<div class="toggleable detailsDown" id="Manpower">
+						<p><fmt:formatNumber value="${home.totalManpower}"/> Total Manpower</p>
+						<ul class="bulletList">
+							<c:forEach items="${home.usedManpower.entrySet()}" var="i">
+								<c:if test="${i.value < 0}">
+									<li><p class="negative"><fmt:formatNumber value="${i.value * -1}"/>${i.key.text}</p></li>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -89,7 +167,33 @@
 				<td onclick="toggleTab('Growth')">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.economy.growth}"/> Million per month</p>
-					<cloc:dropdown value="${home.economy.growth}" name="Growth" map="${home.growthChange}" nation="${home}"/>
+					<div class="toggleable detailsDown" id="Growth">
+						<c:choose>
+							<c:when test="${home.growthChange.get(netGrowth) > 0}">
+								<p class="positive">+${home.growthChange.get(netGrowth)}${netGrowth.text}</p>
+							</c:when>
+							<c:when test="${home.growthChange.get(netGrowth) < 0}">
+								<p class="negative">${home.growthChange.get(netGrowth)}${netGrowth.text}</p>
+							</c:when>
+							<c:otherwise>
+								<p class="neutral">0${netGrowth.text}</p>
+							</c:otherwise>
+						</c:choose>
+						<ul>
+							<c:forEach items="${home.growthChange.entrySet()}" var="i">
+								<c:if test="${i.key != 'NET'}">
+									<c:choose>
+										<c:when test="${i.value > 0}">
+											<li><p class="positive">+${i.value}${i.key.text}</p></li>
+										</c:when>
+										<c:when test="${i.value < 0}">
+											<li><p class="negative">${i.value}${i.key.text}</p></li>
+										</c:when>
+									</c:choose>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -131,7 +235,16 @@
 				<td onclick="toggleTab('Equipment');">
 					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
 					<p class="clickable"><fmt:formatNumber value="${home.totalInfantryEquipment}"/>/<fmt:formatNumber value="${home.army.size * 1000}"/> Required</p>
-					<cloc:dropdown value="${home.totalInfantryEquipment}" name="Equipment" map="${home.equipment}" nation="${home}"/>
+					<div class="toggleable detailsDown" id="Equipment">
+						<p><fmt:formatNumber value="${home.totalInfantryEquipment}"/> Total Infantry Equipment</p>
+						<ul>
+							<c:forEach items="${home.equipment.entrySet()}" var="i">
+								<c:if test="${i.value > 0}">
+									<li><p><fmt:formatNumber value="${i.value}"/>${' '}${i.key}</p></li>
+								</c:if>
+							</c:forEach>
+						</ul>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -163,10 +276,10 @@
 								<c:if test="${not fn:contains(entry.key, 'net')}">
 									<li>
 										<c:if test="${entry.value > 0}">
-											<p class="positive"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>%${home.getDisplayString(entry.key)}</p>
+											<p class="positive"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>${home.getDisplayString(entry.key)}</p>
 										</c:if>
 										<c:if test="${entry.value < 0}">
-											<p class="negative"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>%${home.getDisplayString(entry.key)}</p>
+											<p class="negative"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>${home.getDisplayString(entry.key)}</p>
 										</c:if>
 									</li>
 								</c:if>
