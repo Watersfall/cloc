@@ -11,8 +11,7 @@ public class Time
 	public static String getCurrentDate()
 	{
 		long year = day / 365;
-		day = day % 365;
-		long temp = day;
+		long temp = day % 365;
 		int i = 0;
 		while(temp > daysPerMonth[i])
 		{
