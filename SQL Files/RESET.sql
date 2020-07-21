@@ -46,3 +46,6 @@ DELETE FROM events;
 DELETE FROM factories;
 DELETE FROM global_stats_history;
 DELETE FROM production;
+DELETE FROM modifiers;
+DELETE FROM nation_history;
+DELETE FROM anti_spam;
