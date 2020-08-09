@@ -79,7 +79,7 @@ public class CitiesController extends HttpServlet
 					return String.valueOf(dao.createNewCity(nation.getId()));
 				}
 			});
-			Action.doAction(exec);
+			writer.append(Action.doAction(exec));
 		}
 	}
 }

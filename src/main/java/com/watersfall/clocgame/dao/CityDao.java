@@ -111,7 +111,7 @@ public class CityDao extends Dao
 	public int createNewCity(int owner) throws SQLException
 	{
 		requireWriteAccess();
-		PreparedStatement statement = connection.prepareStatement(CREATE_CITY_SQL_STATEMENT);
+		PreparedStatement statement = connection.prepareStatement(CREATE_CITY_SQL_STATEMENT, Statement.RETURN_GENERATED_KEYS);
 		statement.setInt(1, owner);
 		statement.setBoolean(2, false);
 		statement.setBoolean(3, false);
