@@ -124,6 +124,7 @@ CREATE TABLE cloc_army(
 	artillery INT DEFAULT 0,
 	fortification INT DEFAULT 0,
 	tank INT,
+	casualties BIGINT,
 	FOREIGN KEY fk_army (id) REFERENCES cloc_login(id) ON DELETE CASCADE
 );
 
@@ -279,6 +280,19 @@ CREATE TABLE factories(
 	FOREIGN KEY fk_production (production) REFERENCES production (id) ON DELETE SET NULL,
 	FOREIGN KEY fk_owner (owner) REFERENCES cloc_login(id) ON DELETE CASCADE,
 	FOREIGN KEY fk_city (city_id) REFERENCES cloc_cities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE nation_history (
+	nation_id INT,
+	month BIGINT,
+	gdp DECIMAL(14,2),
+	growth DECIMAL(14,2),
+	population BIGINT,
+	airforce BIGINT,
+	navy BIGINT,
+	army INT,
+	casualties BIGINT,
+	FOREIGN KEY fk_nation (nation_id) REFERENCES cloc_login (id)
 );
 
 INSERT INTO cloc_main (month, day) VALUES (1, 1);
