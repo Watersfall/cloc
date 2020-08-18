@@ -35,7 +35,7 @@ public enum Events
 	public String getDescription(Nation nation, Event event)
 	{
 		String temp = description;
-		temp = temp.replace("${city.name}", nation.getCities().get(event.getCityId()).getName());
+		temp = temp.replace("${city.name}", nation.getCities().get(event.getCityId()).getUrl());
 		return temp;
 	}
 }
