@@ -1,1 +1,0 @@
-<canvas id="${stat.key}" width="650" height="450"></canvas>

@@ -28,6 +28,11 @@ public class NewsDao extends Dao
 	private static final String DELETE_NEWS_SQL_STATEMENT =
 					"DELETE FROM cloc_news\n" +
 					"WHERE id=?\n";
+	private static final String UNREAD_NEWS_SQL_STATEMENT =
+					"SELECT * \n" +
+					"FROM cloc_news\n" +
+					"WHERE receiver=? AND is_read=FALSE\n" +
+					"LIMIT ?\n";
 
 	public NewsDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -63,6 +68,20 @@ public class NewsDao extends Dao
 	public ArrayList<News> getNewsPage(int page, Nation nation) throws SQLException
 	{
 		return getNewsPage(page, nation.getId());
+	}
+
+	public ArrayList<News> getUnreadNews(int nation) throws SQLException
+	{
+		PreparedStatement getNews = connection.prepareStatement(UNREAD_NEWS_SQL_STATEMENT);
+		getNews.setInt(1, nation);
+		getNews.setInt(2, 10);
+		ResultSet results = getNews.executeQuery();
+		ArrayList<News> list = new ArrayList<>();
+		while(results.next())
+		{
+			list.add(new News(results));
+		}
+		return list;
 	}
 
 	public void markNewsAsRead(int nation) throws SQLException
