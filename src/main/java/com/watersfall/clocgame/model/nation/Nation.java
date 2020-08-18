@@ -5,6 +5,7 @@ import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.decisions.Decision;
+import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
 import com.watersfall.clocgame.model.military.Fighter;
@@ -42,7 +43,7 @@ public class Nation extends Updatable
 	private @Getter @Setter int newsCount;
 	private @Getter @Setter boolean anyUnreadNews;
 	private @Getter @Setter int eventCount;
-	private @Getter @Setter ArrayList<Events> events;
+	private @Getter @Setter ArrayList<Event> events;
 	private @Getter @Setter War defensive;
 	private @Getter @Setter War offensive;
 	private @Getter @Setter Treaty treaty;

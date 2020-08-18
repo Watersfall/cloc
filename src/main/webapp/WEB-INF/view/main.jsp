@@ -232,10 +232,16 @@
 					<div class="tile">
 						<div class="title">Events</div>
 						<%--@elvariable id="news" type="java.util.List"--%>
-						<%--@elvariable id="event" type="com.watersfall.clocgame.model.nation.Events"--%>
+							<%--@elvariable id="event" type="com.watersfall.clocgame.model.event.Event"--%>
 						<c:forEach var="event" items="${home.events}">
-							<div>
-								${event.description}
+							<div class="subtile">
+								<div class="title">${event.event.title}</div>
+								<div class="description">
+									${event.event.getDescription(home, event)}
+								</div>
+								<c:forEach var="action" items="${event.event.getPossibleResponses(home)}">
+									<button>${action.text}</button>
+								</c:forEach>
 							</div>
 						</c:forEach>
 					</div>

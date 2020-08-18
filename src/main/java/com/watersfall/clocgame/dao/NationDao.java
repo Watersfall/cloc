@@ -3,6 +3,7 @@ package com.watersfall.clocgame.dao;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.Security;
@@ -200,10 +201,10 @@ public class NationDao extends Dao
 		newsResults.first();
 		nation.setNewsCount(newsResults.getInt("count"));
 		nation.setAnyUnreadNews(newsResults.getInt("unread") > 0);
-		ArrayList<Events> events = new ArrayList<>();
+		ArrayList<Event> events = new ArrayList<>();
 		while(eventResults.next())
 		{
-			events.add(new Events(eventResults));
+			events.add(new Event(eventResults));
 		}
 		nation.setEvents(events);
 		nation.setEventCount(events.size());

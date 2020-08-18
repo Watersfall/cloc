@@ -2,7 +2,7 @@ package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.dao.EventDao;
 import com.watersfall.clocgame.dao.ModifierDao;
-import com.watersfall.clocgame.model.nation.Events;
+import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.nation.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
@@ -11,16 +11,10 @@ import java.sql.SQLException;
 
 public class EventActions
 {
-	public enum Action
-	{
-		STRIKE_GIVE_IN,
-		STRIKE_IGNORE,
-		STRIKE_SEND_ARMY
-	}
 
 	public static class Strike
 	{
-		public static String giveIn(Nation nation, Events event) throws SQLException
+		public static String giveIn(Nation nation, Event event) throws SQLException
 		{
 			if(event.getOwner() != nation.getId())
 			{
@@ -36,7 +30,7 @@ public class EventActions
 			}
 		}
 
-		public static String ignore(Nation nation, Events event) throws SQLException
+		public static String ignore(Nation nation, Event event) throws SQLException
 		{
 			if(event.getOwner() != nation.getId())
 			{
@@ -52,7 +46,7 @@ public class EventActions
 			}
 		}
 
-		public static String sendArmy(Nation nation, Events event) throws SQLException
+		public static String sendArmy(Nation nation, Event event) throws SQLException
 		{
 			if(event.getOwner() != nation.getId())
 			{

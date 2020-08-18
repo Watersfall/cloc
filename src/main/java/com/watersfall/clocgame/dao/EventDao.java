@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.dao;
 
-import com.watersfall.clocgame.model.nation.Event;
-import com.watersfall.clocgame.model.nation.Events;
+import com.watersfall.clocgame.model.event.Event;
+import com.watersfall.clocgame.model.event.Events;
 import com.watersfall.clocgame.util.Time;
 
 import java.sql.*;
@@ -13,8 +13,8 @@ public class EventDao extends Dao
 					"DELETE FROM events\n" +
 					"WHERE id=?\n";
 	private static final String CREATE_EVENT_SQL_STATEMENT =
-					"INSERT INTO events (owner, event_id, description, month, city_id)\n" +
-					"VALUES (?,?,?,?,?)\n";
+					"INSERT INTO events (owner, event_id, month, city_id)\n" +
+					"VALUES (?,?,?,?)\n";
 	private static final String GET_EVENT_SQL_STATEMENT =
 					"SELECT *\n" +
 					"FROM events\n" +
@@ -37,7 +37,7 @@ public class EventDao extends Dao
 		statement.execute();
 	}
 
-	public void createEvent(int receiver, Event type, String message) throws SQLException
+	public void createEvent(int receiver, Events type, String message) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CREATE_EVENT_SQL_STATEMENT);
@@ -49,19 +49,18 @@ public class EventDao extends Dao
 		statement.execute();
 	}
 
-	public void createEvent(int receiver, Event type, String message, int city) throws SQLException
+	public void createEvent(int receiver, Events type, int city) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CREATE_EVENT_SQL_STATEMENT);
 		statement.setInt(1, receiver);
 		statement.setString(2, type.name());
-		statement.setString(3, message);
-		statement.setLong(4, Time.month);
-		statement.setInt(5, city);
+		statement.setLong(3, Time.month);
+		statement.setInt(4, city);
 		statement.execute();
 	}
 
-	public Events getEventById(int id) throws SQLException
+	public Event getEventById(int id) throws SQLException
 	{
 		PreparedStatement statement;
 		if(allowWriteAccess)
@@ -75,12 +74,12 @@ public class EventDao extends Dao
 		statement.setInt(1, id);
 		ResultSet results = statement.executeQuery();
 		results.first();
-		return new Events(results);
+		return new Event(results);
 	}
 
-	public ArrayList<Events> getEventsByNationId(int id) throws SQLException
+	public ArrayList<Event> getEventsByNationId(int id) throws SQLException
 	{
-		ArrayList<Events> list = new ArrayList<>();
+		ArrayList<Event> list = new ArrayList<>();
 		PreparedStatement statement;
 		if(allowWriteAccess)
 		{
@@ -94,7 +93,7 @@ public class EventDao extends Dao
 		ResultSet results = statement.executeQuery();
 		while(results.next())
 		{
-			list.add(new Events(results));
+			list.add(new Event(results));
 		}
 		return list;
 	}
