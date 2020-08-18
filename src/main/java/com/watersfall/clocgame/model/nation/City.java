@@ -600,4 +600,9 @@ public class City extends Updatable
 		map.put(TextKey.Land.UNIVERSITIES, City.LAND_UNIVERSITY * (this.universities));
 		return map;
 	}
+
+	public String getUrl()
+	{
+		return "<a href=\"/cities/" + id + "\"><b>" + this.name + "</b></a>";
+	}
 }
