@@ -2,13 +2,52 @@
 	--light-text-color: #919191;
 	--text-color: #515151;
 	--dark-color: #191b1c;
-	--light-color: #efede1;
+	--light-color: #95A0A5;
+	--very-light-color: #E5EAE8;
+	--lightest-color: mintcream;
+}
+
+.light_text {
+	color: var(--light-text-color);
+}
+
+.dark_text {
+	color: #515151;
+}
+
+.dark {
+	background-color: #191b1c;
+}
+
+.light {
+	background-color: #95A0A5;
+}
+
+.very_light {
+	background-color: #DCE2DF;
+}
+
+.lightest {
+	background-color: mintcream;
+}
+
+ul {
+	text-align: left;
+}
+
+li {
+	text-align: left;
+}
+
+hr {
+	border: none;
+	border-top: 1px solid var(--light-color)
 }
 
 html, body {
 	min-height: 100%;
 	color: #919191;
-	line-height: 1.2;
+	line-height: 1.4;
 }
 
 a:hover {
@@ -117,16 +156,17 @@ form .error {
 }
 
 button {
+	margin: 0.25rem;
 	padding: 0.5rem;
 	outline: none;
 	border: none;
 	border-radius: 0.125rem;
-	background-color: var(--light-text-color);
+	background-color: var(--lightest-color);
 	transition: background-color 0.5s;
 }
 
 button:hover {
-	background-color: white;
+	background-color: var(--light-color);
 }
 
 #login_form {
@@ -266,6 +306,7 @@ main {
 	max-width: 30rem;
 	margin: 0 auto;
 	border-collapse: collapse;
+	line-height: 1.2;
 }
 
 .nation tr:nth-child(odd) {
@@ -309,7 +350,7 @@ main {
 }
 
 .tiling .column .tile {
-	background-color: mintcream;
+	background-color: var(--very-light-color);
 	display: block;
 	padding: 1.5rem;
 	margin: 1rem;
@@ -324,8 +365,16 @@ main {
 	text-align: center;
 }
 
+.tile .subtitle {
+	color: var(--text-color);
+	background-color: var(--very-light-color);
+	font-size: 1.5rem;
+	text-align: left;
+	border-bottom: 1px solid var(--light-color);
+}
+
 .tile .subtile {
-	background-color: mintcream;
+	background-color: var(--lightest-color);
 	padding: 1rem;
 	margin: 0.75rem;
 	outline: 1px solid var(--light-text-color);
@@ -333,35 +382,53 @@ main {
 	display: block;
 	text-align: left;
 }
+
 .subtile .title {
 	color: var(--text-color);
-	background-color: mintcream;
+	background-color: var(--lightest-color);
 	font-size: 1.5rem;
 	text-align: left;
 	border-bottom: 1px solid var(--light-color);
+}
+
+.subtile .subtitle {
+	background-color: var(--lightest-color);
+	font-size: 1.15rem;
+	font-weight: bold;
+	text-align: left;
 }
 
 .description {
 	padding: 1rem 0;
 }
 
+.event_effects {
+	padding: 0;
+	margin: 0.25rem 0 0.25rem 1rem;
+}
+
 .blue {
-	background-color: cornflowerblue;
-	color: white;
+	background-color: cornflowerblue !important;
+	color: white !important;
 }
 
 .red {
-	background-color: darkred;
-	color: white;
+	background-color: darkred !important;
+	color: white !important;
 }
 
 .green {
-	background-color: green;
-	color: white;
+	background-color: green !important;
+	color: white !important;
 }
 
 .gold {
-	background-color: gold;
+	background-color: gold !important;
+}
+
+.caption {
+	font-size: 0.9rem;
+	color: var(--text-color);
 }
 
 @media screen and (max-width: 60rem) {

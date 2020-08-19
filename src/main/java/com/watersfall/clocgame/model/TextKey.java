@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.model;
 
+import com.watersfall.clocgame.model.nation.City;
 import lombok.Getter;
 
 public interface TextKey
@@ -157,6 +158,34 @@ public interface TextKey
 		Fortification(String text)
 		{
 			this.text = text;
+		}
+	}
+
+	enum Modifiers implements TextKey
+	{
+		RESOURCE_PRODUCTION("% to resource production", false),
+		COAL_PRODUCTION("% to coal production", false),
+		IRON_PRODUCTION("% to iron production", false),
+		OIL_PRODUCTION("% to oil production", false),
+		MINE_PRODUCTION("% to all mining output", false),
+		CIVILIAN_INDUSTRY_PRODUCTION("% to steel production", false),
+		MILITARY_INDUSTRY_PRODUCTION("% to military factory output", false),
+		FACTORY_PRODUCTION("% to all factory output", false),
+		STABILITY_PER_MONTH("% stability per month", true),
+		APPROVAL_PER_MONTH("% approval per month", true),
+		POPULATION_GROWTH("% population growth", false);
+
+		private @Getter String text;
+		private @Getter boolean global;
+		Modifiers(String text, boolean global)
+		{
+			this.text = text;
+			this.global = global;
+		}
+
+		public String getText(City city)
+		{
+			return this.text + " in " + city.getUrl();
 		}
 	}
 }

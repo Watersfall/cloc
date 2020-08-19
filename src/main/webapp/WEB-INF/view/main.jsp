@@ -214,6 +214,46 @@
 					</table>
 					<br>
 				</div>
+				<div class="tile">
+					<div class="title">
+						Modifiers
+					</div>
+					<div class="description">
+						<c:forEach items="${home.modifiers}" var="modifier">
+							<div class="subtitle">${modifier.type.name}</div>
+							<div>
+								<ul class="event_effects">
+									<c:forEach var="current" items="${modifier.type.effects.entrySet()}">
+										<li>
+											<c:choose>
+												<c:when test="${current.value > 0}">
+													<c:choose>
+														<c:when test="${current.key.global || modifier.city <= 0}">
+															+<fmt:formatNumber value="${current.value}"/>${current.key.text}
+														</c:when>
+														<c:otherwise>
+															+<fmt:formatNumber value="${current.value}"/>${current.key.getText(home.cities.get(modifier.city))}
+														</c:otherwise>
+													</c:choose>
+												</c:when>
+												<c:otherwise>
+													<c:choose>
+														<c:when test="${current.key.global || modifier.city <= 0}">
+															<fmt:formatNumber value="${current.value}"/>${current.key.text}
+														</c:when>
+														<c:otherwise>
+															<fmt:formatNumber value="${current.value}"/>${current.key.getText(home.cities.get(modifier.city))}
+														</c:otherwise>
+													</c:choose>
+												</c:otherwise>
+											</c:choose>
+										</li>
+									</c:forEach>
+								</ul>
+							</div>
+						</c:forEach>
+					</div>
+				</div>
 			</div>
 			<div id="column_2" class="column">
 				<c:if test="${home.eventCount <= 0 && home.anyUnreadNews}">
@@ -232,16 +272,67 @@
 					<div class="tile">
 						<div class="title">Events</div>
 						<%--@elvariable id="news" type="java.util.List"--%>
-							<%--@elvariable id="event" type="com.watersfall.clocgame.model.event.Event"--%>
+						<%--@elvariable id="event" type="com.watersfall.clocgame.model.event.Event"--%>
 						<c:forEach var="event" items="${home.events}">
 							<div class="subtile">
-								<div class="title">${event.event.title}</div>
+								<div class="${event.event.color} title">${event.event.title}</div>
 								<div class="description">
 									${event.event.getDescription(home, event)}
 								</div>
+								<%--@elvariable id="action" type="com.watersfall.clocgame.model.event.EventActions"--%>
 								<c:forEach var="action" items="${event.event.getPossibleResponses(home)}">
-									<button>${action.text}</button>
+									<div>
+										<div class="subtitle">${action.text}</div>
+										<div>
+											${action.description}
+											<ul class="event_effects">
+												<c:forEach var="effect" items="${action.effects}">
+													<li>
+														<c:choose>
+															<c:when test="${effect.getClass().simpleName == 'Modifiers'}">
+																Creates modifier "${effect.name}" for <b>${effect.length} months</b> with effects:
+																<ul>
+																	<c:forEach var="modifier" items="${effect.effects.entrySet()}">
+																		<li>
+																			<c:choose>
+																				<c:when test="${modifier.value > 0}">
+																					<c:choose>
+																						<c:when test="${modifier.key.global || event.cityId <= 0}">
+																							+<fmt:formatNumber value="${modifier.value}"/>${modifier.key.text}
+																						</c:when>
+																						<c:otherwise>
+																							+<fmt:formatNumber value="${modifier.value}"/>${modifier.key.getText(home.cities.get(event.cityId))}
+																						</c:otherwise>
+																					</c:choose>
+																				</c:when>
+																				<c:otherwise>
+																					<c:choose>
+																						<c:when test="${modifier.key.global || event.cityId <= 0}">
+																							<fmt:formatNumber value="${modifier.value}"/>${modifier.key.text}
+																						</c:when>
+																						<c:otherwise>
+																							<fmt:formatNumber value="${modifier.value}"/>${modifier.key.getText(home.cities.get(event.cityId))}
+																						</c:otherwise>
+																					</c:choose>
+																				</c:otherwise>
+																			</c:choose>
+																		</li>
+																	</c:forEach>
+																</ul>
+															</c:when>
+															<c:otherwise>
+																${effect.display}
+															</c:otherwise>
+														</c:choose>
+													</li>
+												</c:forEach>
+											</ul>
+										</div>
+										<button>Select</button>
+										<hr>
+									</div>
 								</c:forEach>
+								<span class="caption">Expires in ${turn - event.month + 4} months</span>
 							</div>
 						</c:forEach>
 					</div>

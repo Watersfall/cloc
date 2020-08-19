@@ -9,14 +9,16 @@ public enum Events
 {
 	STRIKE("Strike!", "Workers unions across the country have organized strikes and have ground the economy of " +
 			"${city.name} to a halt. We can either negotiate with the union leaders, ignore the situation or issue an " +
-			"injunction and enforce it with the army.");
+			"injunction and enforce it with the army.", "red");
 
 	private @Getter String title;
 	private @Getter String description;
-	Events(String title, String description)
+	private @Getter String color;
+	Events(String title, String description, String color)
 	{
 		this.title = title;
 		this.description = description;
+		this.color  = color;
 	}
 
 	public ArrayList<EventActions> getPossibleResponses(Nation nation)

@@ -1,6 +1,9 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.*;
+import com.watersfall.clocgame.model.CitySize;
+import com.watersfall.clocgame.model.CityType;
+import com.watersfall.clocgame.model.TextKey;
+import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 import lombok.Setter;
@@ -416,7 +419,7 @@ public class City extends Updatable
 	public double getStrikeModifier()
 	{
 		if(this.hasStrike())
-			return getStrikeType().getEffects().get(Key.Modifiers.RESOURCE_PRODUCTION);
+			return getStrikeType().getEffects().get(TextKey.Modifiers.RESOURCE_PRODUCTION) / 100.0;
 		else
 			return 0;
 	}
