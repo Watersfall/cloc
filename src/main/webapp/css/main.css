@@ -3,6 +3,7 @@
 	--text-color: #515151;
 	--dark-color: #191b1c;
 	--light-color: #95A0A5;
+	--lighter-color: #C2C6C5;
 	--very-light-color: #E5EAE8;
 	--lightest-color: mintcream;
 }
@@ -161,8 +162,16 @@ button {
 	outline: none;
 	border: none;
 	border-radius: 0.125rem;
-	background-color: var(--lightest-color);
+	background-color: inherit;
 	transition: background-color 0.5s;
+}
+
+.light_text_button {
+	color: var(--light-text-color);
+}
+
+.light_text_button:hover {
+	color: #191b1c;
 }
 
 button:hover {
@@ -358,7 +367,7 @@ main {
 	box-shadow: 0 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.2), 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.19);
 }
 
-.tile .title {
+.title {
 	background-color: var(--dark-color);
 	color: var(--light-text-color);
 	font-size: 2rem;
@@ -402,6 +411,18 @@ main {
 	padding: 1rem 0;
 }
 
+.left_text {
+	text-align: left;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
 .event_effects {
 	padding: 0;
 	margin: 0.25rem 0 0.25rem 1rem;
@@ -429,6 +450,22 @@ main {
 .caption {
 	font-size: 0.9rem;
 	color: var(--text-color);
+}
+
+.pagination {
+	margin: 1rem;
+	font-size: 0;
+}
+
+.pagination a {
+	background-color: var(--very-light-color);
+	padding: 1rem;
+	font-size: 1rem;
+	transition: background-color 0.5s;
+}
+
+.pagination a:hover {
+	background-color: var(--lighter-color);
 }
 
 @media screen and (max-width: 60rem) {

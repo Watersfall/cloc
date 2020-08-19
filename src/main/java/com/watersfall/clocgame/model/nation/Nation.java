@@ -6,6 +6,7 @@ import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.event.Event;
+import com.watersfall.clocgame.model.message.Message;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
 import com.watersfall.clocgame.model.military.Fighter;
@@ -62,6 +63,8 @@ public class Nation extends Updatable
 	private LinkedHashMap<String, LinkedHashMap<TextKey, Double>> allProductions = null;
 	private long landUsage = -1;
 	private HashMap<String, Double> totalProductionCosts = null;
+	private @Getter @Setter ArrayList<Message> unreadMessages = null;
+	private @Getter @Setter int lastReadMessage;
 
 	public Nation(int id)
 	{

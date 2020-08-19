@@ -123,7 +123,7 @@
 							<label> Password
 								<input id="password" type="password" name="password" placeholder="Password">
 							</label><br><br>
-							<button type="submit">Login</button>
+							<button class="light_text_button" type="submit">Login</button>
 							<div id="login_error" class="toggleable-default-off error">
 
 							</div>

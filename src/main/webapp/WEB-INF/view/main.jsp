@@ -343,7 +343,21 @@
 					</div>
 				</c:if>
 				<div class="tile">
-					<div class="title">No Unread Messages</div>
+					<c:choose>
+						<c:when test="${home.unreadMessages == null || home.unreadMessages.size() <= 0}">
+							<div class="title">No Unread Messages</div>
+						</c:when>
+						<c:otherwise>
+							<div class="title">Unread Messages</div>
+							<c:forEach items="${home.unreadMessages}" var="message">
+								<div class="subtile">
+									<div class="title">Message From: ${message.senderNation.nationUrl}</div>
+									<div class="description">${message.content}</div>
+								</div>
+							</c:forEach>
+							<button>Mark as Read</button>
+						</c:otherwise>
+					</c:choose>
 				</div>
 				<c:if test="${home.offensive != null}">
 					<c:set var="defender" value="${home.offensive.defender}"/>

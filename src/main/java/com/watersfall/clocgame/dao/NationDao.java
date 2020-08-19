@@ -184,6 +184,7 @@ public class NationDao extends Dao
 		nation.setTech(new NationTech(id, statsResults));
 		nation.setCosmetic(new NationCosmetic(id, statsResults));
 		nation.setForeign(new NationForeign(id, statsResults));
+		nation.setLastReadMessage(statsResults.getInt("last_message"));
 		HashMap<Integer, City> cities = new HashMap<>();
 		while(citiesResults.next())
 		{
@@ -268,6 +269,8 @@ public class NationDao extends Dao
 		nation.setProduction(production);
 		nation.setFreeFactories(nation.getTotalMilitaryFactories() - usedFactories);
 		nation.setConn(connection);
+		MessageDao messageDao = new MessageDao(connection, allowWriteAccess);
+		nation.setUnreadMessages(messageDao.getUnreadMessages(nation.getId(), nation.getLastReadMessage()));
 		return nation;
 	}
 

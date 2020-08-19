@@ -4,6 +4,7 @@ import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.SpamAction;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -125,6 +126,24 @@ public class Util
 		return results.getInt(1);
 	}
 
+	public static int getTotalSentMessages(Connection conn, int id) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM messages WHERE sender=?");
+		statement.setInt(1, id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
+	}
+
+	public static int getTotalReceivedMessages(Connection conn, int id) throws SQLException
+	{
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM messages WHERE receiver=?");
+		statement.setInt(1, id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return results.getInt(1);
+	}
+
 	public static boolean checkSpamAndInsertIfNot(SpamAction action, int id, Connection conn) throws SQLException
 	{
 		PreparedStatement check = conn.prepareStatement("SELECT count(*) FROM anti_spam WHERE action=? AND user=? AND time>?-?");
@@ -178,5 +197,12 @@ public class Util
 				"\t]\n" +
 						"}";
 		return string;
+	}
+
+	public static void setPaginationAttributes(HttpServletRequest req, int page, String url, int maxPage)
+	{
+		req.setAttribute("url", url);
+		req.setAttribute("page", page);
+		req.setAttribute("maxPage", maxPage);
 	}
 }
