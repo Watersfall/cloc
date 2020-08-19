@@ -468,6 +468,25 @@ main {
 	background-color: var(--lighter-color);
 }
 
+.news {
+	margin: -1rem;
+}
+
+.news div:first-child {
+	border-bottom: 1px solid var(--light-color);
+	padding: 0.5rem;
+}
+
+.news div:last-child {
+	padding-left: 0.5rem;
+	padding-top: 0.25rem;
+	color: var(--light-text-color);
+}
+
+.news button {
+	margin: -0.125rem 0 0;
+}
+
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;
