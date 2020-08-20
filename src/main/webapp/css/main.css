@@ -240,6 +240,7 @@ main {
 	width: 100%;
 	display: flex;
 	align-items: center;
+	z-index: 2;
 }
 
 #resources ul {
@@ -480,6 +481,7 @@ main {
 	margin: 0 auto;
 	justify-content: center;
 	width: fit-content;
+	flex-wrap: wrap;
 }
 
 .pagination a {
@@ -604,6 +606,141 @@ main {
 	padding-left: 0.5rem;
 }
 
+.tech_tree {
+	display: grid;
+}
+
+.tech_tile {
+
+}
+
+.tech_wrapper {
+	position: relative;
+	text-align: center;
+}
+
+.tech {
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	background-color: var(--lightest-color);
+	padding: 1rem;
+	margin: 0.75rem;
+	outline: 1px solid var(--light-text-color);
+	box-shadow: 0 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.2), 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.19);
+	z-index: 1;
+}
+
+.green_tech {
+	border-color: green !important;
+}
+
+.gold_tech {
+	border-color: gold !important;
+}
+
+.vertical{
+	position:absolute;
+	bottom: 50%;
+	left: calc(50% - 0.5rem);
+	width: 1rem;
+	height: 100%;
+	background-color: var(--light-color);
+	border: 2px solid var(--lightest-color);
+	z-index: 0;
+}
+
+.horizontalLeft{
+	position:absolute;
+	top: calc(50% - 0.5rem);
+	left: calc(-50% - 0.5rem);
+	width: calc(100% + 0.5rem);
+	height: 1rem;
+	background-color: var(--light-color);
+	border: 2px solid var(--lightest-color);
+	z-index: 0;
+}
+
+.horizontalRight{
+	position:absolute;
+	top: calc(50% - 0.5rem);
+	right: -50%;
+	width: 100%;
+	height: 1rem;
+	background-color: var(--light-color);
+	border: 2px solid var(--lightest-color);
+	z-index: 0;
+}
+
+.verticalLeft {
+	position:absolute;
+	bottom: 50%;
+	left: calc(-50% - 0.5rem);
+	width: 1rem;
+	height: 100%;
+	background-color: var(--light-color);
+	border: 2px solid var(--lightest-color);
+	z-index: 0;
+}
+
+.verticalRight {
+	position:absolute;
+	bottom: 50%;
+	left: calc(150% - 0.5rem);
+	width: 1rem;
+	height: 100%;
+	background-color: var(--light-color);
+	border:2px solid var(--lightest-color);
+	z-index: 0;
+}
+
+.verticalHalfLeft {
+	position:absolute;
+	bottom: calc(50% - 0.5rem);
+	left: -0.5rem;
+	height: calc(100% - 0.5rem + 4px);
+	width: 1rem;
+	background-color: var(--light-color);
+	border: 2px solid var(--lightest-color);
+	border-top: 0 transparent;
+	z-index: 0;
+}
+
+.halfHorizontalLeft {
+	position:absolute;
+	top: calc(50% - 0.5rem);
+	left: calc(0rem - 0.5rem);
+	width: calc(50% + 0.5rem);
+	height: 1rem;
+	background-color: var(--light-color);
+	border: 2px solid var(--lightest-color);
+	z-index: 0;
+}
+
+.halfBottomLeft {
+	position:absolute;
+	top: calc(50% - 0.5rem);
+	left: calc(0rem - 0.5rem);
+	width: calc(1rem);
+	height: calc(1rem + 2px);
+	background-color: var(--light-color);
+	border-left: 2px solid var(--lightest-color);
+	border-bottom: 2px solid var(--lightest-color);
+	z-index: 1;
+}
+
+.bottomLeft {
+	position:absolute;
+	top: calc(50% - 0.5rem);
+	left: calc(-50% - 0.5rem);
+	width: calc(1rem);
+	height: calc(1rem + 2px);
+	background-color: var(--light-color);
+	border-left: 2px solid var(--lightest-color);
+	border-bottom: 2px solid var(--lightest-color);
+	z-index: 1;
+}
+
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;
@@ -704,5 +841,11 @@ main {
 	.production .factories .factory img {
 		width: 1.5rem;
 		height: 1.5rem;
+	}
+
+	.tech {
+		padding: 0.5rem;
+		margin: 0.5rem;
+		z-index: 1;
 	}
 }

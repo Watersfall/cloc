@@ -64,7 +64,7 @@
 								<a href="${pageContext.request.contextPath}/production/">Production</a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/technology/">Technology</a>
+								<a href="${pageContext.request.contextPath}/technology/tree">Technology</a>
 							</li>
 						</ul>
 					</li>

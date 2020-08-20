@@ -42,8 +42,8 @@ public enum Technologies
 	ZEPPELIN_BOMBERS(TechnologyZeppelinBombers.getInstance(), Category.AIR, 1, 2, new String[]{"vertical"}),
 	BIPLANE_FIGHTERS(TechnologyBiplaneFighter.getInstance(), Category.AIR, 2, 2, new String[]{"vertical", "horizontalRight"}),
 	TRIPLANE_FIGHTERS(TechnologyTriplaneFighter.getInstance(), Category.AIR, 3, 2, new String[]{}),
-	MONOPLANE_FIGHTERS(TechnologyMonoplaneFighter.getInstance(), Category.AIR, 3, 3, new String[]{"cornerBottomLeftHalf"}),
-	BOMBERS(TechnologyBombers.getInstance(), Category.AIR, 2, 3, new String[]{"vertical", "cornerBottomLeft"}),
+	MONOPLANE_FIGHTERS(TechnologyMonoplaneFighter.getInstance(), Category.AIR, 3, 3, new String[]{"verticalHalfLeft", "halfHorizontalLeft", "halfBottomLeft"}),
+	BOMBERS(TechnologyBombers.getInstance(), Category.AIR, 2, 3, new String[]{"verticalLeft", "horizontalLeft", "vertical", "bottomLeft"}),
 	STRATEGIC_BOMBERS(TechnologyStrategicBombers.getInstance(), Category.AIR, 2, 4, new String[]{"vertical"}),
 
 	/*
