@@ -387,6 +387,13 @@ main {
 	border-bottom: 1px solid var(--light-color);
 }
 
+.button_right {
+	padding-bottom: 0.25rem;
+}
+
+.button_right button {
+}
+
 .tile .subtile {
 	background-color: var(--lightest-color);
 	padding: 1rem;
@@ -418,6 +425,10 @@ main {
 
 .left_text {
 	text-align: left;
+}
+
+.right_text {
+	text-align: right;
 }
 
 .left {

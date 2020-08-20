@@ -58,7 +58,7 @@
 								<a href="${pageContext.request.contextPath}/policy/">Policy</a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/decisions/">Decisions</a>
+								<a href="${pageContext.request.contextPath}/decisions/all">Decisions</a>
 							</li>
 							<li>
 								<a href="${pageContext.request.contextPath}/production/">Production</a>
