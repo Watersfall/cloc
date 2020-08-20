@@ -43,12 +43,12 @@ public enum Policy
 		this.desc = desc;
 	}
 
-	public LinkedHashMap<String, Integer> getMap(Policy policy)
+	public LinkedHashMap<String, Integer> getMap()
 	{
 		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		for(int i = 0; i < policy.desc.length; i += 2)
+		for(int i = 0; i < this.desc.length; i += 2)
 		{
-			map.put(getDescFromKey((String)policy.desc[i + 1]), (Integer)policy.desc[i]);
+			map.put(getDescFromKey((String)this.desc[i + 1]), (Integer)this.desc[i]);
 		}
 		return map;
 	}

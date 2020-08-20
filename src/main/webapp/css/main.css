@@ -32,6 +32,11 @@
 	background-color: mintcream;
 }
 
+select {
+	padding: 0.25rem;
+	margin: 0.5rem;
+}
+
 ul {
 	text-align: left;
 }
