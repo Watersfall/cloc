@@ -325,6 +325,10 @@ main {
 	line-height: 1.2;
 }
 
+.nation_left {
+	margin: 0;
+}
+
 .nation tr:nth-child(odd) {
 	border-top: 1px solid var(--light-color);
 }
@@ -739,6 +743,11 @@ main {
 	border-left: 2px solid var(--lightest-color);
 	border-bottom: 2px solid var(--lightest-color);
 	z-index: 1;
+}
+
+.match_text {
+	max-height: 0.75em;
+	max-width: 0.75em;
 }
 
 @media screen and (max-width: 60rem) {
