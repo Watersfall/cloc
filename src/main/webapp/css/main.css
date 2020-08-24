@@ -778,6 +778,20 @@ main {
 	padding: 0.125rem;
 }
 
+#world-map {
+	max-width: 75%;
+}
+
+#world-map #world path {
+	fill: var(--dark-color);
+	transition: fill 0.5s;
+}
+
+#world-map #world path:hover {
+	fill: var(--text-color);
+	transition: fill 0.5s;
+}
+
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;
@@ -824,6 +838,10 @@ main {
 	#container {
 		top: 3rem;
 		left: 0;
+	}
+
+	#world-map {
+		max-width: 100%;
 	}
 }
 
