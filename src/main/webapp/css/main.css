@@ -792,6 +792,11 @@ main {
 	transition: fill 0.5s;
 }
 
+.small_flag {
+	max-height: 1em;
+	max-width: 3em;
+}
+
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;
