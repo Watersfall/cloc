@@ -102,7 +102,7 @@ public class NationController extends HttpServlet
 					response = NationActions.sendMoney(amount, sender, receiver);
 					break;
 				case "war":
-					response = NationActions.declareWar(sender, receiver, req);
+					response = NationActions.declareWar(sender, receiver, req.getParameter("war_name"));
 					break;
 				case "peace":
 					response = WarActions.sendPeace(sender, receiver);

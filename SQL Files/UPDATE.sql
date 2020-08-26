@@ -1,5 +1,8 @@
 USE cloc;
 
+ALTER TABLE cloc_war
+    ADD COLUMN name TEXT;
+
 ALTER TABLE cloc_login
 	ADD COLUMN last_message BIGINT;
 

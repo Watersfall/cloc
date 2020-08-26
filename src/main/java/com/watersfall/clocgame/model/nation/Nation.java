@@ -218,9 +218,9 @@ public class Nation extends Updatable
 	 * @param nation The Nation to declare war on
 	 * @throws SQLException If a database error occurs
 	 */
-	public void declareWar(Nation nation) throws SQLException
+	public void declareWar(Nation nation, String name) throws SQLException
 	{
-		new WarDao(conn, true).createWar(this, nation);
+		new WarDao(conn, true).createWar(this, nation, name);
 	}
 
 	public String sendPeace(Nation receiver) throws SQLException

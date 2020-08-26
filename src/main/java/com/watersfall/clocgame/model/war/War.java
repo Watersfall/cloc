@@ -16,6 +16,7 @@ public class War
 	private @Getter @Setter int id;
 	private @Getter @Setter int peace;
 	private @Getter @Setter Nation winner;
+	private @Getter @Setter String name;
 
 	public War(int id, ResultSet results) throws SQLException
 	{
@@ -23,5 +24,6 @@ public class War
 		this.end = results.getInt("cloc_war.end");
 		this.id = id;
 		this.peace = results.getInt("cloc_war.peace");
+		this.name = results.getString("cloc_war.name");
 	}
 }
