@@ -353,8 +353,23 @@ main {
 	color: var(--light-text-color);
 }
 
-.center {
-	text-align: center;
+.wars {
+	display: flex;
+	text-align: left;
+	width: 100%;
+	outline: none;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+.wars div {
+	padding-right: 2rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
+.wars div span {
+	color: var(--text-color);
 }
 
 .tiling {
@@ -870,6 +885,10 @@ main {
 }
 
 @media screen and (max-width: 25rem) {
+	body {
+		font-size: 0.825em;
+	}
+
 	#resources a {
 		font-size: 0.825rem;
 	}
@@ -909,7 +928,9 @@ main {
 		z-index: 1;
 	}
 
-	.rankings {
-		font-size: 0.825rem;
+	.wars div {
+		padding-right: 1rem;
+		padding-top: 0.75rem;
+		padding-bottom: 0.75rem;
 	}
 }
