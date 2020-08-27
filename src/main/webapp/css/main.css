@@ -460,6 +460,11 @@ main {
 	float: right;
 }
 
+.centered {
+	margin: 0 auto;
+	text-align: center;
+}
+
 .event_effects {
 	padding: 0;
 	margin: 0.25rem 0 0.25rem 1rem;
