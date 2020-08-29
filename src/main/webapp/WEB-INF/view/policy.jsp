@@ -1,5 +1,6 @@
 <%@ include file="includes/top.jsp" %>
 	<%--@elvariable id="policies" type="java.util.LinkedHashMap"--%>
+	<%--@elvariable id="policy" type="com.watersfall.clocgame.model.policies.Policy"--%>
 	<div class="tiling">
 		<div class="column">
 			<div class="title">Policy</div>
@@ -8,29 +9,34 @@
 					<div class="subtile">
 						<div class="title">
 							<label for="${category.key.name()}">${category.key.name}</label>
-							<select id="${category.key.name()}">
+							<select onchange="policyDesc('${category.key.name()}')" id="${category.key.name()}">
 								<c:forEach var="policy" items="${category.value}">
-									<option ${home.policy.getPolicy(policy) == policy ? 'selected' : ''}>
+									<option value="${policy.name()}" ${home.policy.getPolicy(policy) == policy ? 'selected' : ''}>
 											${policy.name}
 									</option>
 								</c:forEach>
 							</select>
-							<button class="right blue">Apply</button>
+							<button onclick="policy('${category.key.name()}')" class="right blue">Apply</button>
 						</div>
 						<div class="left_text">
 							<c:forEach var="policy" items="${category.value}">
-								<c:choose>
-									<c:when test="${policy.map.entrySet().isEmpty()}">
-										<div id="${policy.name}" class="${home.policy.getPolicy(policy) == policy ? '' : 'toggleable-default-off'}">
-											No effects
-										</div>
-									</c:when>
-								</c:choose>
-								<c:forEach var="effect" items="${policy.map.entrySet()}">
-									<div id="${policy.name}" class="${home.policy.getPolicy(policy) == policy ? '' : 'toggleable-default-off'}">
-											${effect.value}${effect.key}
+								<c:if test="${policy.map.size() <= 0}">
+									<div id="${policy.name()}_DESC">
+										No Effects
 									</div>
-								</c:forEach>
+								</c:if>
+								<c:if test="${policy.map.size() > 0}">
+									<div id="${policy.name()}_DESC" class="${home.policy.getPolicy(policy) == policy ? '' : 'toggleable-default-off'}">
+										<c:forEach var="effect" items="${policy.map}">
+											<c:if test="${effect.value >= 0}">
+												<span class="positive">+${effect.value}${effect.key}</span><br>
+											</c:if>
+											<c:if test="${effect.value < 0}">
+												<span class="negative">${effect.value}${effect.key}</span><br>
+											</c:if>
+										</c:forEach>
+									</div>
+								</c:if>
 							</c:forEach>
 						</div>
 					</div>

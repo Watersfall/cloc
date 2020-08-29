@@ -139,3 +139,23 @@ function decision(decision)
 		ajax(url, null);
 	}
 }
+
+function policy(policy)
+{
+	let url = "/policy/" + policy;
+	let params = 'selection=' + document.getElementById(policy).value;
+	ajax(url, params);
+}
+
+function policyDesc(policyId)
+{
+	let policy = document.getElementById(policyId);
+	let selection = policy.options[policy.selectedIndex].value;
+	for(let i = 0; i < policy.options.length; i++)
+	{
+		let element = document.getElementById(policy.options[i].value + "_DESC");
+		element.style.display = 'none';
+	}
+	let element = document.getElementById(selection + "_DESC");
+	element.style.display = 'block';
+}
