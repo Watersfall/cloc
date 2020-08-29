@@ -520,13 +520,9 @@ main {
 	background-color: var(--lighter-color);
 }
 
-.news {
-	margin: -1rem;
-}
-
 .news div:first-child {
 	border-bottom: 1px solid var(--light-color);
-	padding: 0.5rem;
+	padding: 0 0.5rem 0.5rem;
 }
 
 .news div:last-child {
@@ -820,6 +816,11 @@ main {
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;
+		margin: 1rem 0;
+	}
+
+	.tiling .column .tile {
+		margin: 1rem 0;
 	}
 
 	nav {
@@ -871,6 +872,10 @@ main {
 }
 
 @media screen and (max-width: 40rem) {
+	.tile .subtile {
+		margin: 0.75rem -0.75rem;
+	}
+
 	#resources a {
 		font-size: 1rem;
 	}
@@ -886,6 +891,20 @@ main {
 
 	#resources span {
 		font-size: 1rem;
+	}
+
+	.tile .subtitle {
+		font-size: 1.25rem;
+	}
+
+	.subtile .title {
+		font-size: 1.25rem;
+	}
+
+	select {
+		padding: 0.125rem;
+		margin: 0.25rem;
+		font: inherit;
 	}
 }
 
@@ -927,6 +946,10 @@ main {
 		height: 1.5rem;
 	}
 
+	.tiling .column .tile {
+		padding: 0.5rem
+	}
+
 	.tech {
 		padding: 0.5rem;
 		margin: 0.5rem;
@@ -937,5 +960,15 @@ main {
 		padding-right: 1rem;
 		padding-top: 0.75rem;
 		padding-bottom: 0.75rem;
+	}
+
+	select {
+		padding: 0.05rem;
+		margin: 0.25rem;
+		font-size: 1rem;
+	}
+
+	.news div:first-child {
+		padding: 0.5rem;
 	}
 }
