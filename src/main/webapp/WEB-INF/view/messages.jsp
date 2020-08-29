@@ -25,8 +25,8 @@
 							<c:out value="${message.content}"/>
 						</div>
 						<div class="left_text">
-							<button class="red">Delete</button>
-							<button>Reply</button>
+							<button onclick="deleteMessage(${message.id})" class="red">Delete</button>
+							<a href="/nation/${message.senderId}" class="button">Reply</a>
 						</div>
 					</div>
 				</c:forEach>

@@ -166,3 +166,10 @@ function deleteNews(id)
 	let params = "delete=" + id;
 	ajax(url, params);
 }
+
+function deleteMessage(id)
+{
+	let url = "/messages/";
+	let params = "delete=" + id;
+	ajax(url, params);
+}

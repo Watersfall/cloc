@@ -15,6 +15,8 @@ public class MessageDao extends Dao
 	private static final String GET_RECEIVED_MESSAGE_PAGE = "SELECT * FROM messages WHERE receiver=? LIMIT 50 OFFSET ?";
 	private static final String GET_SENT_MESSAGE_PAGE = "SELECT * FROM messages WHERE sender=? LIMIT 50 OFFSET ?";
 	private static final String GET_UNREAD_MESSAGES = "SELECT * FROM messages WHERE receiver=? AND id>? LIMIT 10";
+	private static final String GET_MESSAGE_BY_ID = "SELECT * FROM messages WHERE id=? ";
+	private static final String DELETE_MESSAGE_BY_ID = "DELETE FROM messages WHERE id=? ";
 
 	public MessageDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -100,5 +102,21 @@ public class MessageDao extends Dao
 			list.add(message);
 		}
 		return list;
+	}
+
+	public Message getMessageById(long id) throws SQLException
+	{
+		PreparedStatement statement = connection.prepareStatement(GET_MESSAGE_BY_ID);
+		statement.setLong(1, id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return new Message(results);
+	}
+
+	public void deleteMessageById(long id) throws SQLException
+	{
+		PreparedStatement statement = connection.prepareStatement(DELETE_MESSAGE_BY_ID);
+		statement.setLong(1, id);
+		statement.execute();
 	}
 }

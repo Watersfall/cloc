@@ -1,8 +1,13 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.dao.MessageDao;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.message.Message;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
@@ -11,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -63,5 +69,26 @@ public class MessagesController extends HttpServlet
 			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/messages.jsp").forward(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+	{
+		PrintWriter writer = resp.getWriter();
+		Executor executor = (connection -> {
+			int user = UserUtils.getUser(req);
+			MessageDao dao = new MessageDao(connection, true);
+			Message message = dao.getMessageById(Integer.parseInt(req.getParameter("delete")));
+			if(user == message.getReceiverId())
+			{
+				dao.deleteMessageById(message.getId());
+				return Responses.deleted();
+			}
+			else
+			{
+				return Responses.genericError();
+			}
+		});
+		writer.append(Action.doAction(executor));
 	}
 }
