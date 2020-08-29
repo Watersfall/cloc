@@ -471,12 +471,12 @@ main {
 }
 
 .blue {
-	background-color: cornflowerblue !important;
+	background-color: cornflowerblue;
 	color: white !important;
 }
 
 .red {
-	background-color: darkred !important;
+	background-color: darkred;
 	color: white !important;
 }
 
@@ -485,12 +485,26 @@ main {
 }
 
 .green {
-	background-color: green !important;
+	background-color: green;
 	color: white !important;
 }
 
 .gold {
-	background-color: gold !important;
+	background-color: gold;
+}
+
+button.blue:hover {
+	background-color: #5077BE !important;
+	color: white !important;
+}
+
+button.red:hover {
+	background-color: #620000 !important;
+	color: white !important;
+}
+
+button.gold:hover {
+	background-color: #CCAC00 !important;
 }
 
 .caption {
