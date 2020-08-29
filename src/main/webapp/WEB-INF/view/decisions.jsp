@@ -19,7 +19,7 @@
 					<div class="subtile">
 						<div class="title button_right">
 								${decision.name}: ${home.getDecisionCostDisplayString(decision)}
-							<button class="blue right">${decision.buttonText}</button>
+							<button onclick="decision('${decision.name()}')" class="blue right">${decision.buttonText}</button>
 						</div>
 						<div class="left_text description">
 								${decision.description}<br>

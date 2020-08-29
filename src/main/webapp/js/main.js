@@ -22,7 +22,7 @@ function ajax(url, params, callback, method)
 		{
 			if(xhttp.readyState === 4 && xhttp.status === 200)
 			{
-				document.getElementById("result").innerHTML = xhttp.responseText;
+				document.getElementById("results_content").innerHTML = xhttp.responseText;
 				return xhttp.responseText;
 			}
 		};
@@ -35,8 +35,8 @@ function ajax(url, params, callback, method)
 
 function displayResults()
 {
-	document.getElementById('resultsContainer').style.display = "block";
-	document.getElementById("result").innerHTML = "<p>Loading...</p>";
+	document.getElementById('results').style.display = "block";
+	document.getElementById("results_content").innerHTML = "<p>Loading...</p>";
 }
 
 
@@ -119,4 +119,23 @@ function login()
 		}
 	};
 	ajax(url, params, callback);
+}
+
+function cityDecision(decision, cityId)
+{
+	let url = "/decision/city/" + cityId + "/" + decision;
+	ajax(url, null);
+}
+
+function decision(decision)
+{
+	if(decision === "FORM_TREATY")
+	{
+		window.location.href = "/createtreaty/";
+	}
+	else
+	{
+		let url = "/decision/" + decision;
+		ajax(url, null);
+	}
 }
