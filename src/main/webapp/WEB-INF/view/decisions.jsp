@@ -16,14 +16,15 @@
 			<%--@elvariable id="category" type="com.watersfall.clocgame.model.decisions.DecisionCategory"--%>
 			<c:forEach var="decision" items="${decisions}">
 				<c:if test="${decision.category == category || category == 'ALL'}">
-					<div class="subtitle button_right">
-						${decision.name}: ${home.getDecisionCostDisplayString(decision)}
-						<button class="blue right">${decision.buttonText}</button>
+					<div class="subtile">
+						<div class="title button_right">
+								${decision.name}: ${home.getDecisionCostDisplayString(decision)}
+							<button class="blue right">${decision.buttonText}</button>
+						</div>
+						<div class="left_text description">
+								${decision.description}<br>
+						</div>
 					</div>
-					<div class="left_text description">
-						${decision.description}<br>
-					</div>
-					<br>
 				</c:if>
 			</c:forEach>
 		</div>
