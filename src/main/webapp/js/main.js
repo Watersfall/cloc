@@ -159,3 +159,10 @@ function policyDesc(policyId)
 	let element = document.getElementById(selection + "_DESC");
 	element.style.display = 'block';
 }
+
+function deleteNews(id)
+{
+	let url = "/news/";
+	let params = "delete=" + id;
+	ajax(url, params);
+}

@@ -12,7 +12,7 @@
 							<jsp:useBean id="newsDate" class="java.util.Date" />
 							<jsp:setProperty name="newsDate" property="time" value="${item.time}" />
 							<fmt:formatDate value="${newsDate}" pattern="yyyy-MM-dd hh:mm:ss"/>
-							<button class="red right">Delete</button>
+							<button onclick="deleteNews('${item.id}')" class="red right">Delete</button>
 						</div>
 					</div>
 				</div>

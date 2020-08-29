@@ -4,7 +4,10 @@ import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -62,6 +66,21 @@ public class NewsController extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-
+		PrintWriter writer = resp.getWriter();
+		Executor executor = (connection -> {
+			int user = UserUtils.getUser(req);
+			NewsDao dao = new NewsDao(connection, true);
+			News news = dao.getNewsById(Integer.parseInt(req.getParameter("delete")));
+			if(user == news.getReceiver())
+			{
+				dao.deleteNewsById(news.getId());
+				return Responses.deleted();
+			}
+			else
+			{
+				return Responses.genericError();
+			}
+		});
+		writer.append(Action.doAction(executor));
 	}
 }

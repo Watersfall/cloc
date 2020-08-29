@@ -33,6 +33,10 @@ public class NewsDao extends Dao
 					"FROM cloc_news\n" +
 					"WHERE receiver=? AND is_read=FALSE\n" +
 					"LIMIT ?\n";
+	private static final String GET_NEWS_BY_ID =
+					"SELECT * \n" +
+					"FROM cloc_news \n" +
+					"WHERE id=? \n";
 
 	public NewsDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -117,5 +121,14 @@ public class NewsDao extends Dao
 		PreparedStatement delete = connection.prepareStatement(DELETE_NEWS_SQL_STATEMENT);
 		delete.setInt(1, id);
 		delete.execute();
+	}
+
+	public News getNewsById(int id) throws SQLException
+	{
+		PreparedStatement statement = connection.prepareStatement(GET_NEWS_BY_ID);
+		statement.setInt(1, id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return new News(results);
 	}
 }
