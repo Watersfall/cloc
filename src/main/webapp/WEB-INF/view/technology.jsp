@@ -19,7 +19,7 @@
 							<div class="tech_tile" style="grid-column: ${tech.x}; grid-row: ${tech.y}">
 								<div class="tech_wrapper">
 									<c:choose>
-										<c:when test="${home.hasTech(tech)}">
+										<c:when test="${home.hasTech(tech.technology)}">
 											<div class="tech green">
 												${tech.technology.name}
 											</div>
@@ -37,7 +37,7 @@
 									</c:choose>
 									<c:forEach items="${tech.cssClass}" var="cssClass">
 										<c:choose>
-											<c:when test="${home.hasTech(tech)}">
+											<c:when test="${home.hasTech(tech.technology)}">
 												<div class="green ${cssClass}"></div>
 											</c:when>
 											<c:when test="${tech.technology.isAvailable(home)}">
