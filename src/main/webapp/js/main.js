@@ -173,3 +173,173 @@ function deleteMessage(id)
 	let params = "delete=" + id;
 	ajax(url, params);
 }
+
+/*
+ * Production
+ */
+
+const FACTORY = document.createElement("img", {"src": "/images/production/factory.svg"});
+const BLANK = document.createElement("img");
+let freeFactories = 0;
+
+function setFreeFactories(num)
+{
+	freeFactories = num;
+	document.getElementById("free_factories").innerText = freeFactories;
+}
+
+function setFactories(id, amount)
+{
+	FACTORY.src = "/images/production/factory.svg";
+	FACTORY.alt = "factory";
+	BLANK.src = "/images/production/blank.svg";
+	BLANK.alt = "blank";
+	let production = document.getElementById("factories_" + id);
+	let currentFactoryCount = 0;
+	for(let i = 0; i < 15; i++)
+	{
+		if(production.children.item(i).children.item(0).src.indexOf("factory") > 0)
+		{
+			currentFactoryCount++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	let max = freeFactories + currentFactoryCount;
+	for(let i = 0; i < amount; i++)
+	{
+		if(i < max)
+		{
+			production.children.item(i).children.item(0).replaceWith(FACTORY.cloneNode());
+		}
+		else
+		{
+			amount = i;
+			break;
+		}
+	}
+	for(let i = amount; i < 15; i++)
+	{
+		production.children.item(i).children.item(0).replaceWith(BLANK.cloneNode());
+	}
+	setFreeFactories(freeFactories - (amount - currentFactoryCount));
+}
+
+function updateProduction(id)
+{
+	let production = document.getElementById("factories_" + id);
+	let factories = 0;
+	for(let i = 0; i < 15; i++)
+	{
+		if(production.children.item(i).children.item(0).src.indexOf("factory") > 0)
+		{
+			factories++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	let select = document.getElementById("select_" + id);
+	let name = select.options[select.selectedIndex].value;
+	let url = "/production/" + id;
+	let params = "action=update&factories=" + factories + "&production=" + name;
+	let callback = function()
+	{
+		displayResults();
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("results_content").innerHTML = this.responseText;
+			if(this.responseText.indexOf("Updated") !== -1)
+			{
+				reloadProduction(id);
+			}
+		}
+	};
+	ajax(url, params, callback);
+}
+
+function reloadProduction(id)
+{
+	let url = "/production/" + id;
+	let element = document.getElementById("production_" + id);
+	let callback = function()
+	{
+		if(this.readyState === 4 && this.status === 200)
+		{
+			let placeholder = document.createElement("div");
+			placeholder.innerHTML = this.responseText;
+			element.replaceWith(placeholder);
+		}
+	};
+	ajax(url, null, callback, "GET");
+}
+
+function deleteProduction(id)
+{
+	displayResults();
+	let div = document.getElementById("production_" + id);
+	let factoryDiv = document.getElementById("factories_" + id);
+	let factories = 0;
+	for(let i = 0; i < 15; i++)
+	{
+		if(factoryDiv.children.item(i).children.item(0).src.indexOf("factory") > 0)
+		{
+			factories++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	let url = "/production/" + id;
+	let params = "action=delete";
+	let callback = function()
+	{
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("results_content").innerHTML = this.responseText;
+			if(this.responseText.indexOf("Deleted") !== -1)
+			{
+				freeFactories += factories;
+				setFreeFactories(freeFactories);
+				div.remove();
+			}
+		}
+	};
+	ajax(url, params, callback);
+}
+
+function createNewProduction()
+{
+	displayResults();
+	let url = "/production/0";
+	let params = "action=new";
+	let callback = function()
+	{
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("results_content").innerHTML = this.responseText;
+			if(!Number.isNaN(this.responseText))
+			{
+				let id = this.responseText;
+				freeFactories -= 1;
+				setFreeFactories(freeFactories);
+				let url = "/production/" + this.responseText;
+				let callback = function()
+				{
+					if(this.readyState === 4 && this.status === 200)
+					{
+						let placeholder = document.createElement("div");
+						placeholder.innerHTML = this.responseText;
+						document.getElementsByClassName("column").item(id % 2).appendChild(placeholder);
+					}
+				};
+				ajax(url, null, callback, "GET");
+			}
+		}
+	};
+	ajax(url, params, callback);
+}

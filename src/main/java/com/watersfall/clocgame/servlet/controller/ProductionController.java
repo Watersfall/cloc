@@ -31,6 +31,12 @@ public class ProductionController extends HttpServlet
 		{
 			request.getRequestDispatcher("/WEB-INF/view/includes/allproduction.jsp").forward(request, response);
 		}
+		else if(url.get("id") != null)
+		{
+			int id = Integer.parseInt(url.get("id"));
+			request.setAttribute("production", ((Nation)request.getAttribute("home")).getProductionById(id));
+			request.getRequestDispatcher("/WEB-INF/view/api/production.jsp").forward(request, response);
+		}
 		else
 		{
 			request.getRequestDispatcher("/WEB-INF/view/production.jsp").forward(request, response);
