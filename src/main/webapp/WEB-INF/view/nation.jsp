@@ -165,6 +165,24 @@
 				</table>
 				<br>
 			</div>
+			<div class="tile">
+				<div class="title">Wars</div>
+				<c:if test="${nation.defensive == null && nation.offensive == null}">
+					<div class="subtile">
+						No wars
+					</div>
+				</c:if>
+				<c:if test="${nation.offensive != null}">
+					<div class="subtile">
+						<div class="title">Offensive War Against: ${nation.offensive.defender.nationUrl}</div>
+					</div>
+				</c:if>
+				<c:if test="${nation.defensive != null}">
+					<div class="subtile">
+						<div class="title">Defensive War Against: ${nation.defensive.attacker.nationUrl}</div>
+					</div>
+				</c:if>
+			</div>
 		</div>
 		<c:if test="${not empty home}">
 			<div class="column">
