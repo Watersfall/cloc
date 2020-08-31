@@ -107,28 +107,28 @@ public class NationController extends HttpServlet
 				case "peace":
 					response = WarActions.sendPeace(sender, receiver);
 					break;
-				case "land":
+				case "land_land":
 					response = WarActions.infantryBattle(sender, receiver);
 					break;
 				/*case "navy":
 					response = WarActions.navyBattle(conn, sender, receiver);
 					break;*/
-				case "air":
+				case "air_air":
 					response = WarActions.airBattle(sender, receiver, false);
 					break;
-				case "landCity":
+				case "land_city":
 					response = WarActions.cityBattle(sender, receiver);
 					break;
 				/*case "navyCity":
 					response = WarActions.navyBombard(conn, sender, receiver);
 					break;*/
-				case "airCity":
+				case "air_city":
 					response = WarActions.airBombCity(sender, receiver);
 					break;
-				case "fortify":
+				case "land_fortify":
 					response = WarActions.entrench(sender, receiver);
 					break;
-				case "bomb":
+				case "air_land":
 					response = WarActions.airBombTroops(sender, receiver);
 					break;
 				default:

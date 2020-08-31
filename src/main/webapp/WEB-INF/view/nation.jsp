@@ -174,42 +174,42 @@
 						<label>
 							<div class="title">Send Money</div>
 							<input type="number" id="send_budget"/>
-							<button class="blue">Send</button>
+							<button onclick="nation(${nation.id}, 'sendmoney', document.getElementById('send_budget').value)" class="blue">Send</button>
 						</label>
 					</div>
 					<div class="subtile">
 						<label>
 							<div class="title">Send Coal</div>
 							<input type="number" id="send_coal"/>
-							<button class="blue">Send</button>
+							<button onclick="nation(${nation.id}, 'sendcoal', document.getElementById('send_coal').value)" class="blue">Send</button>
 						</label>
 					</div>
 					<div class="subtile">
 						<label>
 							<div class="title">Send Iron</div>
 							<input type="number" id="send_iron"/>
-							<button class="blue">Send</button>
+							<button onclick="nation(${nation.id}, 'sendiron', document.getElementById('send_iron').value)" class="blue">Send</button>
 						</label>
 					</div>
 					<div class="subtile">
 						<label>
 							<div class="title">Send Oil</div>
 							<input type="number" id="send_oil"/>
-							<button class="blue">Send</button>
+							<button onclick="nation(${nation.id}, 'sendoil', document.getElementById('send_oil').value)" class="blue">Send</button>
 						</label>
 					</div>
 					<div class="subtile">
 						<label>
 							<div class="title">Send Steel</div>
 							<input type="number" id="send_steel"/>
-							<button class="blue">Send</button>
+							<button onclick="nation(${nation.id}, 'sendsteel', document.getElementById('send_steel').value)" class="blue">Send</button>
 						</label>
 					</div>
 					<div class="subtile">
 						<label>
 							<div class="title">Send Nitrogen</div>
 							<input type="number" id="send_nitrogen"/>
-							<button class="blue">Send</button>
+							<button onclick="nation(${nation.id}, 'sendnitrogen', document.getElementById('send_nitrogen').value)" class="blue">Send</button>
 						</label>
 					</div>
 				</div>
@@ -221,21 +221,21 @@
 							Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
 							Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
 						</div>
-						<button>Field Battle</button>
-						<button>Siege City</button>
-						<button>Fortify</button>
+						<button onclick="nation(${nation.id}, 'land_land', 0);">Field Battle</button>
+						<button onclick="nation(${nation.id}, 'land_city', 0);">Siege City</button>
+						<button onclick="nation(${nation.id}, 'land_fortify', 0);">Fortify</button>
 					</div>
 					<div class="subtile">
 						<div class="title">Air</div>
 						<div class="description">
 							Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
 						</div>
-						<button>Bomb Airforce</button>
-						<button>Bomb Troops</button>
-						<button>Bomb City</button>
+						<button onclick="nation(${nation.id}, 'air_air', 0);">Bomb Airforce</button>
+						<button onclick="nation(${nation.id}, 'air_land', 0);">Bomb Troops</button>
+						<button onclick="nation(${nation.id}, 'air_city', 0);">Bomb City</button>
 					</div>
 					<div class="subtile">
-						<div class="title">Sea</div>
+						<div class="title">Sea (Non-functional)</div>
 						<div class="description">
 							Your navy can be used similar to your airforce, but only on targets on or near the water
 						</div>

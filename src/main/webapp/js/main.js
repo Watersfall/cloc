@@ -408,3 +408,10 @@ function settings(attribute, value)
 	let params = "action=" + attribute + "&value=" + value;
 	ajax(url, params);
 }
+
+function nation(id, attribute, value)
+{
+	let url = "/nation/" + id;
+	let params = "action=" + attribute + "&amount=" + value;
+	ajax(url, params);
+}
