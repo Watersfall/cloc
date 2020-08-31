@@ -57,19 +57,13 @@ public class SettingsController extends HttpServlet
 					response = SettingsActions.updatePortrait(nation, req.getPart("portrait"));
 					break;
 				case "nationTitle":
-					response = SettingsActions.updateNationTitle(nation, req.getParameter("nationTitle"));
+					response = SettingsActions.updateNationTitle(nation, req.getParameter("value"));
 					break;
 				case "leaderTitle":
-					response = SettingsActions.updateLeaderTitle(nation, req.getParameter("leaderTitle"));
+					response = SettingsActions.updateLeaderTitle(nation, req.getParameter("value"));
 					break;
 				case "description":
-					response = SettingsActions.updateDescription(nation, req.getParameter("description"));
-					break;
-				case "all":
-					response = SettingsActions.updateAll(nation,
-							req.getParameter("nationTitle"),
-							req.getParameter("leaderTitle"),
-							req.getParameter("description"));
+					response = SettingsActions.updateDescription(nation, req.getParameter("value"));
 					break;
 				default:
 					response = Responses.genericError();

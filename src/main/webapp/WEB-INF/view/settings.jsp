@@ -5,43 +5,47 @@
 			<div class="tile">
 				<div class="title">Game Settings</div>
 				<div class="subtile">
-					<label>
-						<div class="title">Update Flag</div>
-						<input type="file" accept="image/png"/>
-					</label>
-					<button class="blue">Update Flag</button>
+					<form enctype="multipart/form-data" action="${pageContext.request.contextPath}/settings/" method="POST">
+						<label>
+							<div class="title">Update Flag</div>
+							<input name="flag" type="file" accept="image/png"/>
+						</label>
+						<button type="submit" class="blue">Update Flag</button>
+					</form>
 				</div>
 				<div class="subtile">
-					<label>
-						<div class="title">Update Portrait</div>
-						<input type="file" accept="image/png"/>
-					</label>
-					<button class="blue">Update Portrait</button>
+					<form enctype="multipart/form-data" action="${pageContext.request.contextPath}/settings/" method="POST">
+						<label>
+							<div class="title">Update Portrait</div>
+							<input name="portrait" type="file" accept="image/png"/>
+						</label>
+						<button type="submit" class="blue">Update Portrait</button>
+					</form>
 				</div>
 				<div class="subtile">
 					<label>
 						<div class="title">Update Nation Title</div>
-						<input type="text" maxlength="32"/>
+						<input id="nation_title" type="text" maxlength="32"/>
 					</label>
-					<button class="blue">Update Title</button>
+					<button onclick="settings('nationTitle', document.getElementById('nation_title').value);" class="blue">Update Title</button>
 				</div>
 				<div class="subtile">
 					<label>
 						<div class="title">Update Leader Title</div>
-						<input type="text" maxlength="32"/>
+						<input id="leader_title" type="text" maxlength="32"/>
 					</label>
-					<button class="blue">Update Title</button>
+					<button onclick="settings('leaderTitle', document.getElementById('leader_title').value);" class="blue">Update Title</button>
 				</div>
 				<div class="subtile">
 					<label>
 						<div class="title">Update Nation Description</div>
-						<textarea><c:out value="${home.cosmetic.description}"/></textarea>
+						<textarea id="description"><c:out value="${home.cosmetic.description}"/></textarea>
 					</label>
-					<button class="blue">Update Description</button>
+					<button onclick="settings('description', document.getElementById('description').value);" class="blue">Update Description</button>
 				</div>
 			</div>
 			<div class="tile">
-				<div class="title">Account Settings</div>
+				<div class="title">Account Settings (Currently non-functional)</div>
 				<div class="subtile">
 					<div class="title">Update Email Address</div>
 					<label>

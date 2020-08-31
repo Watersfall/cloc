@@ -401,3 +401,10 @@ function updateTreaty(attribute, value)
 	let params = "attribute=" + attribute + "&value=" + value;
 	ajax(url, params);
 }
+
+function settings(attribute, value)
+{
+	let url = "/settings/";
+	let params = "action=" + attribute + "&value=" + value;
+	ajax(url, params);
+}
