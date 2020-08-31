@@ -394,3 +394,10 @@ function postDeclaration(content)
 	let params = "message=" + content;
 	ajax(url, params);
 }
+
+function updateTreaty(attribute, value)
+{
+	let url = "/treaty/";
+	let params = "attribute=" + attribute + "&value=" + value;
+	ajax(url, params);
+}

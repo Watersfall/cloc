@@ -15,37 +15,39 @@
 									<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.edit || home.treatyPermissions.founder}">
 										<label>
 											Treaty Name<br>
-											<input type="text" placeholder="${treaty.name}"/><br>
-											<button class="blue">Change Name</button><br>
+											<input type="text" id="name" placeholder="${treaty.name}"/><br>
+											<button onclick="updateTreaty('name', document.getElementById('name').value);" class="blue">Change Name</button><br>
 										</label>
 										<br>
 									</c:if>
 									<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.edit || home.treatyPermissions.founder}">
-										<label>
-											Treaty Flag<br>
-											<input type="file" accept="image/png"/><br>
-											<button class="blue">Change Flag</button><br>
-										</label>
-										<br>
+										<form method="POST" action="/treaty/${treaty.id}" enctype="multipart/form-data">
+											<label>
+												Treaty Flag<br>
+												<input name="flag" id="flag" type="file" accept="image/png"/><br>
+												<button class="blue" type="submit">Change Flag</button><br>
+											</label>
+											<br>
+										</form>
 									</c:if>
 									<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.edit || home.treatyPermissions.founder}">
 										<label>
 											Treaty Description<br>
-											<textarea cols="25" rows="3">${treaty.description}</textarea><br>
-											<button class="blue">Update Description</button><br>
+											<textarea id="description" cols="25" rows="3">${treaty.description}</textarea><br>
+											<button onclick="updateTreaty('description', document.getElementById('description').value);" class="blue">Update Description</button><br>
 										</label>
 										<br>
 									</c:if>
 									<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.invite}">
 										<label>
 											Invite<br>
-											<input type="text"/><br>
-											<button class="blue">Send Invite</button><br>
+											<input id="invite" type="text"/><br>
+											<button onclick="updateTreaty('invite', document.getElementById('invite').value);" class="blue">Send Invite</button><br>
 										</label>
 										<br>
 									</c:if>
 									<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick}">
-										<button class="blue">Manage Members</button>
+										<a href="${treaty.id}/manage" class="button blue">Manage Members</a>
 									</c:if>
 								</div>
 							</div>
@@ -83,7 +85,7 @@
 					</div>
 				</c:forEach>
 				<br>
-				<button class="red">Resign</button>
+				<button onclick="updateTreaty('resign', 1);" class="red">Resign</button>
 			</div>
 		</div>
 	</div>
