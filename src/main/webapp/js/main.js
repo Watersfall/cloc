@@ -343,3 +343,47 @@ function createNewProduction()
 	};
 	ajax(url, params, callback);
 }
+
+function loadTech(tech)
+{
+	let url = "/tech/" + tech;
+	let callback = function() {
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("tech").style.display = "";
+			document.getElementById("tech").innerHTML = this.responseText;
+		}
+	};
+	ajax(url, null, callback, "GET");
+}
+
+function research(tech, category)
+{
+	displayResults();
+	let url = "/technology/";
+	let params = "tech=" + tech;
+	let callback = function() {
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("results_content").innerHTML = this.responseText;
+			if(this.responseText.indexOf("Researched") >= 0)
+			{
+				let url = "/techtree/" + category;
+				let callback = function ()
+				{
+					if(this.readyState === 4 && this.status === 200)
+					{
+						let element = document.getElementById("tech_tree");
+						let placeholder = document.createElement("div");
+						placeholder.className = "tech_tree";
+						placeholder.id = "tech_tree";
+						placeholder.innerHTML = this.responseText;
+						element.replaceWith(placeholder);
+					}
+				};
+				ajax(url, null, callback, "GET");
+			}
+		}
+	};
+	ajax(url, params, callback);
+}

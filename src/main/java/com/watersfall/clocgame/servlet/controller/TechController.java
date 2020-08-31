@@ -24,8 +24,8 @@ public class TechController extends HttpServlet
 		PrintWriter writer = resp.getWriter();
 		try
 		{
-			Technologies tech = Technologies.valueOf(url.get("tech"));
-			writer.append(tech.toString());
+			req.setAttribute("technology", Technologies.valueOf(url.get("tech")).getTechnology());
+			req.getRequestDispatcher("/WEB-INF/view/api/technology.jsp").forward(req, resp);
 		}
 		catch(IllegalArgumentException e)
 		{

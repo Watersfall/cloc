@@ -34,6 +34,6 @@ public class TechTreeController extends HttpServlet
 				req.setAttribute("category", "WEAPONS");
 			}
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/includes/techtree.jsp").forward(req, resp);
+		req.getServletContext().getRequestDispatcher("/WEB-INF/view/api/techtree.jsp").forward(req, resp);
 	}
 }
