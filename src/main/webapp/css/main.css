@@ -856,6 +856,12 @@ button.gold:hover {
 	background-color: var(--dark-color);
 }
 
+.registration input {
+	padding: 0.25rem;
+	margin: 0.5rem;
+	font: inherit;
+}
+
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;
