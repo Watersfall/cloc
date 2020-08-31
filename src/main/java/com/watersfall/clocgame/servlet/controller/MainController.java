@@ -1,10 +1,14 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.action.Action;
+import com.watersfall.clocgame.dao.MessageDao;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Fighter;
 import com.watersfall.clocgame.model.military.ReconPlane;
+import com.watersfall.clocgame.text.Responses;
+import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -37,5 +41,26 @@ public class MainController extends HttpServlet
 			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+	{
+		Executor executor = (connection -> {
+			if(req.getParameter("mark").equalsIgnoreCase("news"))
+			{
+				NewsDao dao = new NewsDao(connection, true);
+				dao.markNewsAsRead(UserUtils.getUser(req));
+				return Responses.marked();
+			}
+			else if(req.getParameter("mark").equalsIgnoreCase("messages"))
+			{
+				MessageDao dao = new MessageDao(connection, true);
+				dao.markMessagesAtRead(UserUtils.getUser(req));
+				return Responses.marked();
+			}
+			return Responses.genericError();
+		});
+		resp.getWriter().append(Action.doAction(executor));
 	}
 }

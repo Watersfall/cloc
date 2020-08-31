@@ -682,4 +682,9 @@ public class Responses
 	{
 		return "<p>You are doing this too much!</p>";
 	}
+
+	public static String marked()
+	{
+		return "<p>Marked!</p>";
+	}
 }

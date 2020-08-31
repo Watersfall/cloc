@@ -415,3 +415,10 @@ function nation(id, attribute, value)
 	let params = "action=" + attribute + "&amount=" + value;
 	ajax(url, params);
 }
+
+function mark(type)
+{
+	let url = "/main/";
+	let params = "mark=" + type;
+	ajax(url, params);
+}

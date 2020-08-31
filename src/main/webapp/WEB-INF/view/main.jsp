@@ -355,7 +355,7 @@
 									<div class="description">${message.content}</div>
 								</div>
 							</c:forEach>
-							<button>Mark as Read</button>
+							<button onclick="mark('messages');">Mark as Read</button>
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -412,21 +412,21 @@
 								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
 								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
 							</div>
-							<button>Field Battle</button>
-							<button>Siege City</button>
-							<button>Fortify</button>
+							<button onclick="nation(${defender.id}, 'land_land', 0);">Field Battle</button>
+							<button onclick="nation(${defender.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="nation(${defender.id}, 'land_fortify', 0);">Fortify</button>
 						</div>
 						<div class="subtile">
 							<div class="title">Air</div>
 							<div class="description">
 								Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
 							</div>
-							<button>Bomb Airforce</button>
-							<button>Bomb Troops</button>
-							<button>Bomb City</button>
+							<button onclick="nation(${defender.id}, 'air_air', 0);">Bomb Airforce</button>
+							<button onclick="nation(${defender.id}, 'air_land', 0);">Bomb Troops</button>
+							<button onclick="nation(${defender.id}, 'air_city', 0);">Bomb City</button>
 						</div>
 						<div class="subtile">
-							<div class="title">Sea</div>
+							<div class="title">Sea (Non-functional)</div>
 							<div class="description">
 								Your navy can be used similar to your airforce, but only on targets on or near the water
 							</div>
@@ -489,21 +489,21 @@
 								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
 								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
 							</div>
-							<button>Field Battle</button>
-							<button>Siege City</button>
-							<button>Fortify</button>
+							<button onclick="nation(${attacker.id}, 'land_land', 0);">Field Battle</button>
+							<button onclick="nation(${attacker.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="nation(${attacker.id}, 'land_fortify', 0);">Fortify</button>
 						</div>
 						<div class="subtile">
 							<div class="title">Air</div>
 							<div class="description">
 								Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
 							</div>
-							<button>Bomb Airforce</button>
-							<button>Bomb Troops</button>
-							<button>Bomb City</button>
+							<button onclick="nation(${attacker.id}, 'air_air', 0);">Bomb Airforce</button>
+							<button onclick="nation(${attacker.id}, 'air_land', 0);">Bomb Troops</button>
+							<button onclick="nation(${attacker.id}, 'air_city', 0);">Bomb City</button>
 						</div>
 						<div class="subtile">
-							<div class="title">Sea</div>
+							<div class="title">Sea (Non-functional)</div>
 							<div class="description">
 								Your navy can be used similar to your airforce, but only on targets on or near the water
 							</div>

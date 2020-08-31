@@ -17,6 +17,8 @@ public class MessageDao extends Dao
 	private static final String GET_UNREAD_MESSAGES = "SELECT * FROM messages WHERE receiver=? AND id>? LIMIT 10";
 	private static final String GET_MESSAGE_BY_ID = "SELECT * FROM messages WHERE id=? ";
 	private static final String DELETE_MESSAGE_BY_ID = "DELETE FROM messages WHERE id=? ";
+	private static final String MARK_AS_READ = "UPDATE cloc_login SET last_message=? WHERE id=? ";
+	private static final String GET_MAX_MESSAGE_ID = "SELECT MAX(id) FROM messages WHERE receiver=? ";
 
 	public MessageDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -118,5 +120,17 @@ public class MessageDao extends Dao
 		PreparedStatement statement = connection.prepareStatement(DELETE_MESSAGE_BY_ID);
 		statement.setLong(1, id);
 		statement.execute();
+	}
+
+	public void markMessagesAtRead(int nation) throws SQLException
+	{
+		PreparedStatement id = connection.prepareStatement(GET_MAX_MESSAGE_ID);
+		id.setInt(1, nation);
+		ResultSet results = id.executeQuery();
+		results.first();
+		PreparedStatement read = connection.prepareStatement(MARK_AS_READ);
+		read.setLong(1, results.getLong(1));
+		read.setInt(2, nation);
+		read.execute();
 	}
 }
