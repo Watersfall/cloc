@@ -5,6 +5,7 @@
 			<div class="tile">
 				<div class="title"><c:out value="${treaty.name}"/></div><br>
 				<img class="large_flag" src="/user/treaty/${treaty.flag}" alt="flag"/><br>
+				<div class="description"><c:out value="${treaty.description}"/></div>
 				<c:if test="${home.treaty.id == treaty.id}">
 					Your Permissions: <br>${home.treatyPermissions.roles}<br>
 					<c:if test="${not empty home.treatyPermissions.roles}">
