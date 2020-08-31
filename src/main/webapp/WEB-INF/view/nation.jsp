@@ -215,34 +215,47 @@
 				</div>
 				<div class="tile">
 					<div class="title">War</div>
-					<div class="subtile">
-						<div class="title">Land</div>
-						<div class="description">
-							Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
-							Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
+					<c:if test="${home.isAtWarWith(nation)}">
+						<div class="subtile">
+							<div class="title">Land</div>
+							<div class="description">
+								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
+								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
+							</div>
+							<button onclick="nation(${nation.id}, 'land_land', 0);">Field Battle</button>
+							<button onclick="nation(${nation.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="nation(${nation.id}, 'land_fortify', 0);">Fortify</button>
 						</div>
-						<button onclick="nation(${nation.id}, 'land_land', 0);">Field Battle</button>
-						<button onclick="nation(${nation.id}, 'land_city', 0);">Siege City</button>
-						<button onclick="nation(${nation.id}, 'land_fortify', 0);">Fortify</button>
-					</div>
-					<div class="subtile">
-						<div class="title">Air</div>
-						<div class="description">
-							Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
+						<div class="subtile">
+							<div class="title">Air</div>
+							<div class="description">
+								Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
+							</div>
+							<button onclick="nation(${nation.id}, 'air_air', 0);">Bomb Airforce</button>
+							<button onclick="nation(${nation.id}, 'air_land', 0);">Bomb Troops</button>
+							<button onclick="nation(${nation.id}, 'air_city', 0);">Bomb City</button>
 						</div>
-						<button onclick="nation(${nation.id}, 'air_air', 0);">Bomb Airforce</button>
-						<button onclick="nation(${nation.id}, 'air_land', 0);">Bomb Troops</button>
-						<button onclick="nation(${nation.id}, 'air_city', 0);">Bomb City</button>
-					</div>
-					<div class="subtile">
-						<div class="title">Sea (Non-functional)</div>
-						<div class="description">
-							Your navy can be used similar to your airforce, but only on targets on or near the water
+						<div class="subtile">
+							<div class="title">Sea (Non-functional)</div>
+							<div class="description">
+								Your navy can be used similar to your airforce, but only on targets on or near the water
+							</div>
+							<button>Engage Fleet</button>
+							<button>Bombard Troops</button>
+							<button>Bombard Cities</button>
 						</div>
-						<button>Engage Fleet</button>
-						<button>Bombard Troops</button>
-						<button>Bombard Cities</button>
-					</div>
+						<div class="subtile">
+							<button onclick="nation(${nation.id}, 'peace', 0);" class="blue">Send Peace</button>
+						</div>
+					</c:if>
+					<c:if test="${!home.isAtWarWith(nation)}">
+						<c:if test="${home.canDeclareWar(nation)}">
+							<button onclick="nation(${nation.id}, 'war', 0);" class="red">Declare War</button>
+						</c:if>
+						<c:if test="${!home.canDeclareWar(nation)}">
+							You can not declare war on this nation
+						</c:if>
+					</c:if>
 				</div>
 			</div>
 		</c:if>
