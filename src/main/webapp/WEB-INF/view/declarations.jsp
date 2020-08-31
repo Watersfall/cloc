@@ -20,9 +20,9 @@
 					Post Declaration
 				</div>
 				<div class="description">
-					<form>
+					<form onsubmit="postDeclaration(document.getElementById('content').value); return false;">
 						<label>Message<br>
-							<textarea></textarea>
+							<textarea id="content"></textarea>
 						</label><br>
 						<button class="blue" type="submit">Post</button>
 					</form>

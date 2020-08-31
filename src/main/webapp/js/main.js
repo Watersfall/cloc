@@ -387,3 +387,10 @@ function research(tech, category)
 	};
 	ajax(url, params, callback);
 }
+
+function postDeclaration(content)
+{
+	let url = "/declarations/";
+	let params = "message=" + content;
+	ajax(url, params);
+}
