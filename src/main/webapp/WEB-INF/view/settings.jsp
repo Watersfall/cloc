@@ -2,7 +2,7 @@
 	<div class="title">Settings</div>
 	<div class="tiling">
 		<div class="column">
-			<div class="tile">
+			<div class="tile settings">
 				<div class="title">Game Settings</div>
 				<div class="subtile">
 					<form enctype="multipart/form-data" action="${pageContext.request.contextPath}/settings/" method="POST">

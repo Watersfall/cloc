@@ -862,6 +862,10 @@ button.gold:hover {
 	font: inherit;
 }
 
+.settings form {
+	padding: 0;
+}
+
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;
