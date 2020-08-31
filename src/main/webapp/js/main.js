@@ -422,3 +422,22 @@ function mark(type)
 	let params = "mark=" + type;
 	ajax(url, params);
 }
+
+function createTreaty(name)
+{
+	displayResults();
+	let url = "/createtreaty/";
+	let params = "name=" + name;
+	let callback = function()
+	{
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("result").innerHTML = this.responseText;
+		}
+		if(this.readyState === 4 && this.status === 201)
+		{
+			window.location.href = "/treaty/" + this.responseText;
+		}
+	};
+	ajax(url, params, callback);
+}
