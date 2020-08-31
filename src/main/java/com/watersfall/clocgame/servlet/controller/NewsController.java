@@ -5,6 +5,7 @@ import com.watersfall.clocgame.dao.EventDao;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.event.EventActions;
 import com.watersfall.clocgame.model.nation.Nation;
@@ -33,38 +34,46 @@ public class NewsController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		if(req.getSession().getAttribute("user") != null)
+		if(UserUtils.checkLogin(req))
 		{
-			HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-			Nation nation = (Nation)req.getAttribute("home");
-			int page;
-			try
+			if(req.getSession().getAttribute("user") != null)
 			{
-				page = Integer.parseInt(url.get("page"));
+				HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+				Nation nation = (Nation)req.getAttribute("home");
+				int page;
+				try
+				{
+					page = Integer.parseInt(url.get("page"));
+				}
+				catch(NumberFormatException | NullPointerException e)
+				{
+					page = 1;
+				}
+				try(Connection connection = Database.getDataSource().getConnection())
+				{
+					Executor executor = (conn) -> {
+						new NewsDao(conn, true).markNewsAsRead(nation);
+						return null;
+					};
+					req.setAttribute("news", new NewsDao(connection, false).getNewsPage(page, nation));
+					req.setAttribute("url", "news");
+					req.setAttribute("page", page);
+					req.setAttribute("maxPage", (int)(nation.getNewsCount() / 100.0 + 1));
+					Action.doAction(executor);
+				}
+				catch(SQLException e)
+				{
+					//Ignore
+					e.printStackTrace();
+				}
 			}
-			catch(NumberFormatException | NullPointerException e)
-			{
-				page = 1;
-			}
-			try(Connection connection = Database.getDataSource().getConnection())
-			{
-				Executor executor = (conn) -> {
-					new NewsDao(conn, true).markNewsAsRead(nation);
-					return null;
-				};
-				req.setAttribute("news", new NewsDao(connection, false).getNewsPage(page, nation));
-				req.setAttribute("url", "news");
-				req.setAttribute("page", page);
-				req.setAttribute("maxPage", (int)(nation.getNewsCount() / 100.0 + 1));
-				Action.doAction(executor);
-			}
-			catch(SQLException e)
-			{
-				//Ignore
-				e.printStackTrace();
-			}
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/news.jsp").forward(req, resp);
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/news.jsp").forward(req, resp);
+		else
+		{
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
+		}
 	}
 
 	@Override

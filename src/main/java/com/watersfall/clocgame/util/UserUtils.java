@@ -24,4 +24,13 @@ public class UserUtils
 			throw new NotLoggedInException();
 		}
 	}
+
+	public static boolean checkLogin(HttpServletRequest request)
+	{
+		if(request.getSession() != null && request.getSession().getAttribute("user") != null)
+		{
+			return true;
+		}
+		return false;
+	}
 }

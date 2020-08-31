@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.ResearchActions;
 import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.technologies.Category;
@@ -27,32 +28,40 @@ public class TechnologyController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		if(req.getSession().getAttribute("user") != null)
+		if(UserUtils.checkLogin(req))
 		{
-			req.setAttribute("techs", Technologies.values());
-		}
-		if(url.get("type") != null)
-		{
-			req.setAttribute("type", url.get("type"));
-			if(url.get("type").equals("tree"))
+			HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+			if(req.getSession().getAttribute("user") != null)
 			{
-				req.setAttribute("categories", Category.values());
-				if(url.get("category") != null)
+				req.setAttribute("techs", Technologies.values());
+			}
+			if(url.get("type") != null)
+			{
+				req.setAttribute("type", url.get("type"));
+				if(url.get("type").equals("tree"))
 				{
-					req.setAttribute("category", url.get("category"));
-				}
-				else
-				{
-					req.setAttribute("category", "WEAPONS");
+					req.setAttribute("categories", Category.values());
+					if(url.get("category") != null)
+					{
+						req.setAttribute("category", url.get("category"));
+					}
+					else
+					{
+						req.setAttribute("category", "WEAPONS");
+					}
 				}
 			}
+			else
+			{
+				req.setAttribute("type", "standard");
+			}
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/technology.jsp").forward(req, resp);
 		}
 		else
 		{
-			req.setAttribute("type", "standard");
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/technology.jsp").forward(req, resp);
 	}
 
 	@Override

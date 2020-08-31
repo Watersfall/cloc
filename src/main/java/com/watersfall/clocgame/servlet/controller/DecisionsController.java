@@ -3,6 +3,8 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.DecisionActions;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.decisions.DecisionCategory;
+import com.watersfall.clocgame.model.error.Errors;
+import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
@@ -22,11 +24,19 @@ public class DecisionsController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		req.setAttribute("decision", decision);
-		DecisionCategory category = DecisionCategory.valueOf(url.get("decisions").toUpperCase());
-		req.setAttribute("category", category);
-		req.setAttribute("decisions", Decision.values());
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/decisions.jsp").forward(req, resp);
+		if(UserUtils.checkLogin(req))
+		{
+			HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+			req.setAttribute("decision", decision);
+			DecisionCategory category = DecisionCategory.valueOf(url.get("decisions").toUpperCase());
+			req.setAttribute("category", category);
+			req.setAttribute("decisions", Decision.values());
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/decisions.jsp").forward(req, resp);
+		}
+		else
+		{
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
+		}
 	}
 }

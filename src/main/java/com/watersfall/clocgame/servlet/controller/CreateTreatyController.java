@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.dao.TreatyDao;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
@@ -22,7 +23,15 @@ public class CreateTreatyController extends HttpServlet
 {
 	@Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/createtreaty.jsp").forward(req, resp);
+		if(!UserUtils.checkLogin(req))
+		{
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp");
+		}
+		else
+		{
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/createtreaty.jsp").forward(req, resp);
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
