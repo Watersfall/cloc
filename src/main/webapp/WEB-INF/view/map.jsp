@@ -123,7 +123,7 @@
 							</table>
 						</div>
 					</c:forEach>
-					<button class="blue">Return to Map</button>
+					<a href="${pageContext.request.contextPath}/map/" class="button blue">Return to Map</a>
 				</c:if>
 			</div>
 		</div>

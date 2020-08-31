@@ -497,6 +497,29 @@ main {
 	background-color: var(--light-color);
 }
 
+a.button {
+	margin: 0.25rem;
+	padding: 0.5rem;
+	outline: none;
+	border: none;
+	border-radius: 0.125rem;
+	transition: background-color 0.5s;
+}
+
+a.button.blue:hover {
+	background-color: #5077BE !important;
+	color: white !important;
+}
+
+a.button.red:hover {
+	background-color: #620000 !important;
+	color: white !important;
+}
+
+a.button.gold:hover {
+	background-color: #CCAC00 !important;
+}
+
 button.blue:hover {
 	background-color: #5077BE !important;
 	color: white !important;
