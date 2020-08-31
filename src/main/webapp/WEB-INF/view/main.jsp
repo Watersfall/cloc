@@ -328,7 +328,7 @@
 												</c:forEach>
 											</ul>
 										</div>
-										<button>Select</button>
+										<button onclick="doEvent(${event.id}, '${action.name()}')">Select</button>
 										<hr>
 									</div>
 								</c:forEach>

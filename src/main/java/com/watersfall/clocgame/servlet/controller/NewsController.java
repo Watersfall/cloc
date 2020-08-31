@@ -1,8 +1,12 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
+import com.watersfall.clocgame.dao.EventDao;
+import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.event.Event;
+import com.watersfall.clocgame.model.event.EventActions;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
 import com.watersfall.clocgame.text.Responses;
@@ -69,12 +73,38 @@ public class NewsController extends HttpServlet
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (connection -> {
 			int user = UserUtils.getUser(req);
-			NewsDao dao = new NewsDao(connection, true);
-			News news = dao.getNewsById(Integer.parseInt(req.getParameter("delete")));
-			if(user == news.getReceiver())
+			if(req.getParameter("delete") != null)
 			{
-				dao.deleteNewsById(news.getId());
-				return Responses.deleted();
+				NewsDao dao = new NewsDao(connection, true);
+				News news = dao.getNewsById(Integer.parseInt(req.getParameter("delete")));
+				if(user == news.getReceiver())
+				{
+					dao.deleteNewsById(news.getId());
+					return Responses.deleted();
+				}
+				else
+				{
+					return Responses.genericError();
+				}
+			}
+			else if(req.getParameter("event") != null)
+			{
+				int eventId = Integer.parseInt(req.getParameter("event"));
+				EventActions eventAction = EventActions.valueOf(req.getParameter("event_action"));
+				Event eventById = new EventDao(connection, true).getEventById(eventId);
+				Nation nation = new NationDao(connection, true).getNationById(UserUtils.getUser(req));
+				switch(eventAction)
+				{
+					//TODO fix this
+					case STRIKE_GIVE_IN:
+						return com.watersfall.clocgame.action.EventActions.Strike.giveIn(nation, eventById);
+					case STRIKE_IGNORE:
+						return com.watersfall.clocgame.action.EventActions.Strike.ignore(nation, eventById);
+					case STRIKE_SEND_ARMY:
+						return com.watersfall.clocgame.action.EventActions.Strike.sendArmy(nation, eventById);
+					default:
+						return Responses.genericError();
+				}
 			}
 			else
 			{

@@ -441,3 +441,10 @@ function createTreaty(name)
 	};
 	ajax(url, params, callback);
 }
+
+function doEvent(id, response)
+{
+	let url = "/news/";
+	let params = "event=" + id + "&event_action=" + response;
+	ajax(url, params);
+}
