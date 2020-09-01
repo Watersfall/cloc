@@ -8,6 +8,7 @@ import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -39,7 +40,7 @@ public class CreateTreatyController extends HttpServlet
 		PrintWriter writer = response.getWriter();
 		Executor executor = (conn) -> {
 			int user = UserUtils.getUser(request);
-			String name = request.getParameter("name");
+			String name = Security.sanitize(request.getParameter("name"));
 			if(name.length() > 32)
 			{
 				return Responses.tooLong();

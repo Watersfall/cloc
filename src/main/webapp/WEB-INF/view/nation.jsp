@@ -3,9 +3,9 @@
 	<div class="tiling">
 		<div class="column">
 			<div class="tile">
-				<h1><c:out value="${nation.cosmetic.nationTitle}"/><br>of<br><c:out value="${nation.cosmetic.nationName}"/></h1>
+				<h1><c:out escapeXml="false" value="${nation.cosmetic.nationTitle}"/><br>of<br><c:out escapeXml="false" value="${nation.cosmetic.nationName}"/></h1>
 				<img class="large_flag" src="/user/flag/${nation.cosmetic.flag}" alt="flag"/>
-				<h2><c:out value="${nation.cosmetic.leaderTitle} "/><c:out value="${nation.cosmetic.username}"/></h2>
+				<h2><c:out escapeXml="false" value="${nation.cosmetic.leaderTitle} "/><c:out escapeXml="false" value="${nation.cosmetic.username}"/></h2>
 			</div>
 		</div>
 	</div>

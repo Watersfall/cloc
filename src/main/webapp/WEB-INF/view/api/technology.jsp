@@ -11,17 +11,17 @@
 		<div class="subtile">
 			<div class="title">${technology.name}</div>
 			<div class="description">
-				<c:out value="${technology.desc}"/>
+				<c:out escapeXml="false" value="${technology.desc}"/>
 				Effects:
 				<ul>
 					<c:forEach var="effect" items="${technology.effects}">
-						<li><c:out value="${effect}"/></li>
+						<li><c:out escapeXml="false" value="${effect}"/></li>
 					</c:forEach>
 				</ul>
 				Prerequisites:
 				<ul>
 					<c:forEach var="pre" items="${technology.prerequisites}">
-						<li><c:out value="${pre.technology.name}"/></li>
+						<li><c:out escapeXml="false" value="${pre.technology.name}"/></li>
 					</c:forEach>
 				</ul>
 				Costs:

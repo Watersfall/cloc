@@ -7,6 +7,7 @@ import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -66,13 +67,13 @@ public class SettingsController extends HttpServlet
 					response = SettingsActions.updatePortrait(nation, req.getPart("portrait"));
 					break;
 				case "nationTitle":
-					response = SettingsActions.updateNationTitle(nation, req.getParameter("value"));
+					response = SettingsActions.updateNationTitle(nation, Security.sanitize(req.getParameter("value")));
 					break;
 				case "leaderTitle":
-					response = SettingsActions.updateLeaderTitle(nation, req.getParameter("value"));
+					response = SettingsActions.updateLeaderTitle(nation, Security.sanitize(req.getParameter("value")));
 					break;
 				case "description":
-					response = SettingsActions.updateDescription(nation, req.getParameter("value"));
+					response = SettingsActions.updateDescription(nation, Security.sanitize(req.getParameter("value")));
 					break;
 				default:
 					response = Responses.genericError();

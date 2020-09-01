@@ -5,7 +5,7 @@
 		<p>You have visited this page incorrectly!</p>
 	</c:when>
 	<c:otherwise>
-		<c:out value="${error.message}" escapeXml="false"/>
+		<c:out escapeXml="false" value="${error.message}" escapeXml="false"/>
 	</c:otherwise>
 </c:choose>
 <%@ include file="../includes/bottom.jsp" %>

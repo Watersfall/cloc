@@ -19,7 +19,7 @@
 								<td>Treaty</td>
 							</tr>
 							<tr>
-								<td><c:out value="${nation.cosmetic.username}"/></td>
+								<td><c:out escapeXml="false" value="${nation.cosmetic.username}"/></td>
 								<td>$<fmt:formatNumber value="${nation.economy.gdp}"/></td>
 								<td>${nation.foreign.region.name}</td>
 								<td>

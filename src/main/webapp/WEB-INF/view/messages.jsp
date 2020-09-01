@@ -12,7 +12,7 @@
 					<div class="tile">
 						<div class="subtitle">Message Sent To: ${message.receiverNation.nationUrl}</div>
 						<div class="description left_text">
-							<c:out value="${message.content}"/>
+							<c:out escapeXml="false" value="${message.content}"/>
 						</div>
 					</div>
 				</c:forEach>
@@ -22,7 +22,7 @@
 					<div class="tile">
 						<div class="subtitle">Message From: ${message.senderNation.nationUrl}</div>
 						<div class="description left_text">
-							<c:out value="${message.content}"/>
+							<c:out escapeXml="false" value="${message.content}"/>
 						</div>
 						<div class="left_text">
 							<button onclick="deleteMessage(${message.id})" class="red">Delete</button>

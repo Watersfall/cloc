@@ -3,9 +3,9 @@
 	<div class="tiling">
 		<div class="column">
 			<div class="tile">
-				<div class="title"><c:out value="${treaty.name}"/></div><br>
+				<div class="title"><c:out escapeXml="false" value="${treaty.name}"/></div><br>
 				<img class="large_flag" src="/user/treaty/${treaty.flag}" alt="flag"/><br>
-				<div class="description"><c:out value="${treaty.description}"/></div>
+				<div class="description"><c:out escapeXml="false" value="${treaty.description}"/></div>
 				<c:if test="${home.treaty.id == treaty.id}">
 					Your Permissions: <br>${home.treatyPermissions.roles}<br>
 					<c:if test="${not empty home.treatyPermissions.roles}">
@@ -70,7 +70,7 @@
 								<td>Roles</td>
 							</tr>
 							<tr>
-								<td><c:out value="${nation.cosmetic.username}"/></td>
+								<td><c:out escapeXml="false" value="${nation.cosmetic.username}"/></td>
 								<td>$<fmt:formatNumber value="${nation.economy.gdp}"/></td>
 								<td>${nation.foreign.region.name}</td>
 								<td>

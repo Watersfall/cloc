@@ -10,6 +10,7 @@ import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -71,7 +72,7 @@ public class TreatyController extends HttpServlet
 		}
 		String attribute = temp;
 		Executor executor = (conn) -> {
-			String value = req.getParameter("value");
+			String value = Security.sanitize(req.getParameter("value"));
 			int user = UserUtils.getUser(req);
 			NationDao dao = new NationDao(conn, true);
 			Nation member = dao.getNationById(user);

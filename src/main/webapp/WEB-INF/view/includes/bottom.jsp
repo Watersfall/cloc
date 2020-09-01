@@ -13,7 +13,7 @@
 									<cloc:formatNumber value="${entry.value}"/>
 								</a>
 								<div class="dropdown toggleable-default-off" id="${resource}_production">
-									<span><fmt:formatNumber value="${entry.value}" maxFractionDigits="2"/> <c:out value=" ${entry.key}"/></span><br>
+									<span><fmt:formatNumber value="${entry.value}" maxFractionDigits="2"/> <c:out escapeXml="false" value=" ${entry.key}"/></span><br>
 									<c:set var="net" value="${home.allTotalProductions.get(entry.key).get(netKey)}"/>
 									<c:if test="${net > 0}">
 										<span class="positive">+<fmt:formatNumber value="${net}" maxFractionDigits="2"/>${' '}${netKey.text}</span>

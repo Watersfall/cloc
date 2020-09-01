@@ -5,6 +5,7 @@ import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,13 +31,13 @@ public class RegisterController extends HttpServlet
 	{
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
-			String username = req.getParameter("username");
-			String nation = req.getParameter("nation");
-			String capital = req.getParameter("capital");
+			String username = Security.sanitize(req.getParameter("username"));
+			String nation = Security.sanitize(req.getParameter("nation"));
+			String capital = Security.sanitize(req.getParameter("capital"));
 			String password = req.getParameter("password");
-			String regionString = req.getParameter("region");
-			String govString = req.getParameter("government");
-			String econString = req.getParameter("economy");
+			String regionString = Security.sanitize(req.getParameter("region"));
+			String govString = Security.sanitize(req.getParameter("government"));
+			String econString = Security.sanitize(req.getParameter("economy"));
 			if(username.isEmpty() || nation.isEmpty() || capital.isEmpty() || password.isEmpty() || regionString.isEmpty() || govString.isEmpty() || econString.isEmpty())
 			{
 				return Responses.nullFields();

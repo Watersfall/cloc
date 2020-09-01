@@ -39,7 +39,7 @@
 				<div class="subtile">
 					<label>
 						<div class="title">Update Nation Description</div>
-						<textarea id="description"><c:out value="${home.cosmetic.description}"/></textarea>
+						<textarea id="description"><c:out escapeXml="false" value="${home.cosmetic.description}"/></textarea>
 					</label>
 					<button onclick="settings('description', document.getElementById('description').value);" class="blue">Update Description</button>
 				</div>

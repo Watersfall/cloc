@@ -12,7 +12,7 @@
 						<img src="/user/flag/${declaration.sender.cosmetic.flag}" alt="flag" class="small_flag"/>
 						${declaration.sender.nationUrl} Declared:
 					</div>
-					<div class="description left_text"><c:out value="${declaration.content}"/></div>
+					<div class="description left_text"><c:out escapeXml="false" value="${declaration.content}"/></div>
 				</c:forEach>
 			</div>
 			<div class="tile">

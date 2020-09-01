@@ -8,7 +8,7 @@
 		<div class="column">
 			<div class="tile">
 				<c:forEach var="city" items="${home.cities.values()}">
-					<div class="subtitle"><c:out value="${city.url} " escapeXml="false"/> <img title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit"/> (${city.freeSlots} free slots)</div>
+					<div class="subtitle"><c:out escapeXml="false" value="${city.url} "/> <img title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit"/> (${city.freeSlots} free slots)</div>
 					<table class="nation nation_left">
 						<tr>
 							<td colspan="3">Coal Mines</td>
@@ -62,7 +62,7 @@
 		<div class="column">
 			<div class="tile">
 				<div class="subtitle">
-					<c:out value="${city.size.name} "/><img title="Edit City Name" class="match_text black" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit"/>
+					<c:out escapeXml="false" value="${city.size.name} "/><img title="Edit City Name" class="match_text black" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit"/>
 				</div>
 				<div class="description left_text">
 					${city.freeSlots} Free Build Slots (out of ${city.buildSlots} total)<br>

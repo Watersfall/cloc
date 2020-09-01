@@ -8,6 +8,7 @@ import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -62,7 +63,7 @@ public class DeclarationsController extends HttpServlet
 	{
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
-			String message = req.getParameter("message");
+			String message = Security.sanitize(req.getParameter("message"));
 			if(message == null)
 			{
 				return Responses.genericError();
