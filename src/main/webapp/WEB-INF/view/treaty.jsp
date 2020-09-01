@@ -1,9 +1,9 @@
 <%@ include file="includes/top.jsp" %>
 <%--@elvariable id="treaty" type="com.watersfall.clocgame.model.treaty.Treaty"--%>
-	<c:if test="${manage && !(home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick)}">
+	<c:if test="${manage && (!(home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick) || (home.treaty.id != treaty.id))}">
 		You do not have permission to do this!
 	</c:if>
-	<c:if test="${!manage || (home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick)}">
+	<c:if test="${!manage || ((home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick) && home.treaty.id == treaty.id)}">
 		<div class="tiling">
 			<div class="column">
 				<div class="tile">
