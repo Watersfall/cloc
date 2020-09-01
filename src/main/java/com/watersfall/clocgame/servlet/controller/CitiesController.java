@@ -32,32 +32,40 @@ public class CitiesController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		if(url.get("id") != null)
+		if(UserUtils.checkLogin(req))
 		{
-			try(Connection conn = Database.getDataSource().getConnection())
+			HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+			if(url.get("id") != null)
 			{
-				int id = Integer.parseInt(url.get("id"));
-				City city = null;
-				if(req.getAttribute("home") != null)
+				try(Connection conn = Database.getDataSource().getConnection())
 				{
-					city = ((Nation)(req.getAttribute("home"))).getCities().get(id);
+					int id = Integer.parseInt(url.get("id"));
+					City city = null;
+					if(req.getAttribute("home") != null)
+					{
+						city = ((Nation)(req.getAttribute("home"))).getCities().get(id);
+					}
+					if(city == null)
+					{
+						city = new CityDao(conn, false).getCityById(id);
+					}
+					req.setAttribute("description", "The city of " + city.getName());
+					req.setAttribute("city", city);
+					req.setAttribute("id", id);
 				}
-				if(city == null)
+				catch(NullPointerException | NumberFormatException | SQLException | CityNotFoundException e)
 				{
-					city = new CityDao(conn, false).getCityById(id);
+					req.setAttribute("error", Errors.CITY_DOES_NOT_EXIST);
+					req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 				}
-				req.setAttribute("description", "The city of " + city.getName());
-				req.setAttribute("city", city);
-				req.setAttribute("id", id);
 			}
-			catch(NullPointerException | NumberFormatException | SQLException | CityNotFoundException e)
-			{
-				req.setAttribute("error", Errors.CITY_DOES_NOT_EXIST);
-				req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
-			}
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/cities.jsp").forward(req, resp);
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/cities.jsp").forward(req, resp);
+		else
+		{
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
+		}
 	}
 
 	@Override
