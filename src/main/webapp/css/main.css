@@ -1012,6 +1012,10 @@ button.gold:hover {
 		padding: 0.5rem
 	}
 
+	.tile .subtile {
+		margin: 0.75rem -0.5rem;
+	}
+
 	.tech {
 		padding: 0.5rem;
 		margin: 0.5rem;
