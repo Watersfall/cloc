@@ -6,6 +6,7 @@ import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.dao.TreatyDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
@@ -49,13 +50,14 @@ public class TreatyController extends HttpServlet
 			{
 				req.setAttribute("manage", true);
 			}
+			req.setAttribute("stats", Stats.getInstance());
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
 		}
 		catch(Exception e)
 		{
-			//Ignore
+			req.setAttribute("error", Errors.TREATY_DOES_NOT_EXIST);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 		}
-		req.setAttribute("stats", Stats.getInstance());
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
 	}
 
 	@Override

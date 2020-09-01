@@ -5,6 +5,7 @@ import com.watersfall.clocgame.action.NationActions;
 import com.watersfall.clocgame.action.WarActions;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -54,13 +55,13 @@ public class NationController extends HttpServlet
 					e.printStackTrace();
 				}
 			}
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
 		}
 		catch(Exception e)
 		{
-			//Ignore
-			e.printStackTrace();
+			req.setAttribute("error", Errors.NATION_DOES_NOT_EXIST);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
 	}
 
 	@Override

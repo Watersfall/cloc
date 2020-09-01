@@ -39,9 +39,19 @@ public class Responses
 		return "<p>Nation does not exist!</p>";
 	}
 
+	public static String noTreaty()
+	{
+		return "<p>Treaty does not exist!</p>";
+	}
+
 	public static String noCity()
 	{
 		return "<p>City does not exist!</p>";
+	}
+
+	public static String noRegion()
+	{
+		return "<p>Region does not exist!</p>";
 	}
 
 	public static String tooLong()

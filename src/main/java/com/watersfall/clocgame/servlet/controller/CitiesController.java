@@ -5,6 +5,7 @@ import com.watersfall.clocgame.dao.CityDao;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.exception.CityNotFoundException;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
@@ -52,8 +53,8 @@ public class CitiesController extends HttpServlet
 			}
 			catch(NullPointerException | NumberFormatException | SQLException | CityNotFoundException e)
 			{
-				//Ignore
-				e.printStackTrace();
+				req.setAttribute("error", Errors.CITY_DOES_NOT_EXIST);
+				req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 			}
 		}
 		req.getServletContext().getRequestDispatcher("/WEB-INF/view/cities.jsp").forward(req, resp);
