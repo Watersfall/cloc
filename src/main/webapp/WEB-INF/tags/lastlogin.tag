@@ -10,9 +10,9 @@
 		<p>Online Now</p>
 	</c:when>
 	<c:when test="${lastLogin < 2}">
-		<p>Last Online: 1 hour ago</p>
+		<p>Last Seen: 1 hour ago</p>
 	</c:when>
 	<c:otherwise>
-		<p>Last Online: <fmt:formatNumber value="${lastLogin}" maxFractionDigits="0"/> hours ago</p>
+		<p>Last Seen: <fmt:formatNumber value="${lastLogin}" maxFractionDigits="0"/> hours ago</p>
 	</c:otherwise>
 </c:choose>
