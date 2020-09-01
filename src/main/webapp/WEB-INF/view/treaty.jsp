@@ -112,7 +112,9 @@
 						</c:forEach>
 					</c:if>
 					<br>
-					<button onclick="updateTreaty('resign', 1);" class="red">Resign</button>
+					<c:if test="${home.treaty.id == treaty.id}">
+						<button onclick="updateTreaty('resign', 1);" class="red">Resign</button>
+					</c:if>
 				</div>
 			</div>
 		</div>
