@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.dao;
 
+import com.watersfall.clocgame.exception.TreatyNotFoundException;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 
@@ -75,7 +76,7 @@ public class TreatyDao extends Dao
 		Treaty treaty = getCosmeticTreatyById(id);
 		if(treaty == null)
 		{
-			return null;
+			throw new TreatyNotFoundException();
 		}
 		else
 		{

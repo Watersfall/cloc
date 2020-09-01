@@ -5,6 +5,7 @@ import com.watersfall.clocgame.action.NationActions;
 import com.watersfall.clocgame.action.WarActions;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -54,13 +55,13 @@ public class NationController extends HttpServlet
 					e.printStackTrace();
 				}
 			}
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
 		}
 		catch(Exception e)
 		{
-			//Ignore
-			e.printStackTrace();
+			req.setAttribute("error", Errors.NATION_DOES_NOT_EXIST);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/nation.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -102,33 +103,33 @@ public class NationController extends HttpServlet
 					response = NationActions.sendMoney(amount, sender, receiver);
 					break;
 				case "war":
-					response = NationActions.declareWar(sender, receiver, req);
+					response = NationActions.declareWar(sender, receiver, req.getParameter("war_name"));
 					break;
 				case "peace":
 					response = WarActions.sendPeace(sender, receiver);
 					break;
-				case "land":
+				case "land_land":
 					response = WarActions.infantryBattle(sender, receiver);
 					break;
 				/*case "navy":
 					response = WarActions.navyBattle(conn, sender, receiver);
 					break;*/
-				case "air":
+				case "air_air":
 					response = WarActions.airBattle(sender, receiver, false);
 					break;
-				case "landCity":
+				case "land_city":
 					response = WarActions.cityBattle(sender, receiver);
 					break;
 				/*case "navyCity":
 					response = WarActions.navyBombard(conn, sender, receiver);
 					break;*/
-				case "airCity":
+				case "air_city":
 					response = WarActions.airBombCity(sender, receiver);
 					break;
-				case "fortify":
+				case "land_fortify":
 					response = WarActions.entrench(sender, receiver);
 					break;
-				case "bomb":
+				case "air_land":
 					response = WarActions.airBombTroops(sender, receiver);
 					break;
 				default:

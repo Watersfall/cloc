@@ -1,134 +1,122 @@
+<%@ include file="includes/top.jsp" %>
 <%--@elvariable id="treaty" type="com.watersfall.clocgame.model.treaty.Treaty"--%>
-<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="stats" type="com.watersfall.clocgame.model.Stats"--%>
-<%@ include file="includes/defaultTop.jsp" %>
-	<c:choose>
-		<c:when test="${empty id}">
-			<p>You have visited this page incorrectly!</p>
-		</c:when>
-		<c:when test="${treaty == null}">
-			<p>No treaty with that ID!</p>
-		</c:when>
-		<c:when test="${manage && (home.treaty == null || (home.treaty.id != treaty.id
-			|| !(home.treatyPermissions.manage || home.treatyPermissions.kick || home.treatyPermissions.founder)))}">
-			<p>You do not have permission to view this</p>
-		</c:when>
-		<c:otherwise>
-			<c:if test="${home != null && home.invites.contains(treaty.id)}">
-				<p>You have been invited to this alliance!</p>
-				<button onclick="updateTreaty('accept', '${treaty.id}')">Accept</button><button onclick="updateTreaty('decline', '${treaty.id}')">Reject</button>
-			</c:if>
-			<h1><c:out value="${treaty.name}"/></h1>
-			<img class="veryLarge" src="${pageContext.request.contextPath}/user/treaty/<c:out value="${treaty.flag}"/>" alt="flag"/>
-			<br>
-			<p><c:out value="${treaty.description}"/></p>
-			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">
-				<br>
-				<p>Your Permissions</p>
-				<c:if test="${home.treatyPermissions.founder}">
-					<p>Founder</p>
-				</c:if>
-				<c:if test="${home.treatyPermissions.manage}">
-					<p>Manage</p>
-				</c:if>
-				<c:if test="${home.treatyPermissions.kick}">
-					<p>Kick</p>
-				</c:if>
-				<c:if test="${home.treatyPermissions.invite}">
-					<p>Invite</p>
-				</c:if>
-				<c:if test="${home.treatyPermissions.edit}">
-					<p>Edit</p>
-				</c:if>
-			</c:if>
-			<br>
-			<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.treatyPermissions.kick || home.treatyPermissions.manage
-				|| home.treatyPermissions.founder || home.treatyPermissions.invite || home.treatyPermissions.edit)}">
-				<button id="adminButton" onclick="display()">Show Admin Actions</button>
-				<div id="admin" class="toggleable">
-					<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.edit}">
-						<label for="name">Alliance Name</label>
-						<input type="text" id="name" value="${treaty.name}"/>
-						<button onclick="updateTreaty('name', document.getElementById('name').value)">Set Name</button><br>
-						<label for="flag">Alliance Flag</label>
-						<form id="flagForm" action="${pageContext.request.contextPath}/treaty/${treaty.id}" method="POST" enctype="multipart/form-data">
-							<input type="file" id="flag" name="flag" accept="image/png"/>
-						</form>
-						<button onclick="document.getElementById('flagForm').submit();">Set Flag</button><br>
-						<label for="description">Description<br></label>
-						<textarea style="width: 75%;" id="description">${treaty.description}</textarea><br>
-						<button onclick="updateTreaty('description', document.getElementById('description').value)">Set Description</button><br>
+	<c:if test="${manage && (!(home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick) || (home.treaty.id != treaty.id))}">
+		You do not have permission to do this!
+	</c:if>
+	<c:if test="${!manage || ((home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick) && home.treaty.id == treaty.id)}">
+		<div class="tiling">
+			<div class="column">
+				<div class="tile">
+					<div class="title"><c:out escapeXml="false" value="${treaty.name}"/></div><br>
+					<img class="large_flag" src="/user/treaty/${treaty.flag}" alt="flag"/><br>
+					<div class="description"><c:out escapeXml="false" value="${treaty.description}"/></div>
+					<c:if test="${home.treaty.id == treaty.id}">
+						Your Permissions: <br>${home.treatyPermissions.roles}<br>
+						<c:if test="${not empty home.treatyPermissions.roles}">
+							<button class="blue" onclick="toggle('admin_actions')">Toggle Admin Actions</button><br>
+							<div class="toggleable-default-off" id="admin_actions">
+								<div class="subtile">
+									<div class="centered">
+										<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.edit || home.treatyPermissions.founder}">
+											<label>
+												Treaty Name<br>
+												<input type="text" id="name" placeholder="${treaty.name}"/><br>
+												<button onclick="updateTreaty('name', document.getElementById('name').value);" class="blue">Change Name</button><br>
+											</label>
+											<br>
+										</c:if>
+										<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.edit || home.treatyPermissions.founder}">
+											<form method="POST" action="/treaty/${treaty.id}" enctype="multipart/form-data">
+												<label>
+													Treaty Flag<br>
+													<input name="flag" id="flag" type="file" accept="image/png"/><br>
+													<button class="blue" type="submit">Change Flag</button><br>
+												</label>
+												<br>
+											</form>
+										</c:if>
+										<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.edit || home.treatyPermissions.founder}">
+											<label>
+												Treaty Description<br>
+												<textarea id="description" cols="25" rows="3">${treaty.description}</textarea><br>
+												<button onclick="updateTreaty('description', document.getElementById('description').value);" class="blue">Update Description</button><br>
+											</label>
+											<br>
+										</c:if>
+										<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.invite}">
+											<label>
+												Invite<br>
+												<input id="invite" type="text"/><br>
+												<button onclick="updateTreaty('invite', document.getElementById('invite').value);" class="blue">Send Invite</button><br>
+											</label>
+											<br>
+										</c:if>
+										<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick}">
+											<a href="${treaty.id}/manage" class="button blue">Manage Members</a>
+										</c:if>
+									</div>
+								</div>
+							</div>
+						</c:if>
 					</c:if>
-					<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.invite}">
-						<label for="invite">Invite</label>
-						<input type="text" id="invite"/>
-						<button onclick="updateTreaty('invite', document.getElementById('invite').value)">Invite</button>
+					<h2>Members</h2>
+					<c:if test="${!manage}">
+						<c:forEach var="nation" items="${treaty.members}">
+							<div class="rankings">
+								<div class="subtitle">
+									<img src="/user/flag/${nation.cosmetic.flag}" alt="flag"/>
+										${nation.nationUrl}
+								</div>
+								<table>
+									<tr>
+										<td>Leader</td>
+										<td>GDP</td>
+										<td>Region</td>
+										<td>Roles</td>
+									</tr>
+									<tr>
+										<td><c:out escapeXml="false" value="${nation.cosmetic.username}"/></td>
+										<td>$<fmt:formatNumber value="${nation.economy.gdp}"/></td>
+										<td>${nation.foreign.region.name}</td>
+										<td>
+											<c:if test="${empty nation.treatyPermissions.roles}">
+												Member
+											</c:if>
+											<c:if test="${not empty nation.treatyPermissions.roles}">
+												${nation.treatyPermissions.roles}
+											</c:if>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</c:forEach>
+					</c:if>
+					<c:if test="${manage}">
+						<c:forEach var="nation" items="${treaty.members}">
+							<div class="rankings">
+								<div class="subtitle">
+									<img src="/user/flag/${nation.cosmetic.flag}" alt="flag"/>
+										${nation.nationUrl}
+								</div>
+								<div>
+									Current Roles: <c:out value="${nation.treatyPermissions.roles}"/><br>
+									<button onclick="updateTreaty('kick', ${nation.id});" class="red">Kick</button>
+									<c:if test="${home.treatyPermissions.founder}">
+										<button onclick="updateTreaty('toggle_edit', ${nation.id});" class="blue">Toggle Edit</button>
+										<button onclick="updateTreaty('toggle_invite', ${nation.id});" class="blue">Toggle Invite</button>
+										<button onclick="updateTreaty('toggle_kick', ${nation.id});" class="blue">Toggle Kick</button>
+										<button onclick="updateTreaty('toggle_manage', ${nation.id});" class="blue">Toggle Manage</button>
+									</c:if>
+								</div>
+							</div>
+						</c:forEach>
 					</c:if>
 					<br>
-					<a href="${pageContext.request.contextPath}/treaty/${treaty.id}/manage"><button>Manage Members</button></a>
+					<c:if test="${home.treaty.id == treaty.id}">
+						<button onclick="updateTreaty('resign', 1);" class="red">Resign</button>
+					</c:if>
 				</div>
-			</c:if>
-			<h3>Stats</h3>
-			<button id="statsButton" onclick="stats();">Show Stats</button>
-			<div id="stats" class="toggleable">
-				<table class="standardTable">
-					<c:forEach items="${stats.getTreatyStats(treaty.id).map}" var="stat">
-						<tr>
-							<td>${stat.key}</td>
-							<td>${stat.value}</td>
-						</tr>
-					</c:forEach>
-				</table>
 			</div>
-			<h3>Members</h3>
-			<c:if test="${manage == null}">
-				<table class="standardTable">
-					<tr>
-						<th>Name</th>
-						<th>Region</th>
-						<th>Roles</th>
-					</tr>
-					<c:forEach items="${treaty.members}" var="member">
-						<tr>
-							<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
-							<td><b><a href="${pageContext.request.contextPath}/map/region/${member.foreign.region.name()}">${member.foreign.region.name}</a></b></td>
-							<td>${member.treatyPermissions.roles}</td>
-						</tr>
-					</c:forEach>
-				</table>
-			</c:if>
-			<c:if test="${manage != null}">
-				<table class="standardTable">
-					<tr>
-						<th>Name</th>
-						<th>Roles</th>
-						<c:if test="${(home.treaty != null && home.treaty.id == treaty.id) && (home.treatyPermissions.kick || home.treatyPermissions.manage || home.treatyPermissions.founder)}">
-							<th>Manage</th>
-						</c:if>
-					</tr>
-					<c:forEach items="${treaty.members}" var="member">
-						<tr>
-							<td><b><a href="${pageContext.request.contextPath}/nation/${member.id}"><c:out value="${member.cosmetic.nationName}"/></a></b></td>
-							<td>${member.treatyPermissions.roles}</td>
-							<c:if test="${home.treatyPermissions.kick || home.treatyPermissions.manage || home.treatyPermissions.founder}">
-								<td>
-								<button onclick="updateTreaty('kick', ${member.id})">Kick</button>
-								<c:if test="${home.treatyPermissions.founder}">
-									<button onclick="updateTreaty('toggle_edit', ${member.id})">Toggle Edit</button>
-									<button onclick="updateTreaty('toggle_invite', ${member.id})">Toggle Invite</button>
-									<button onclick="updateTreaty('toggle_kick', ${member.id})">Toggle Kick</button>
-									<button onclick="updateTreaty('toggle_manage', ${member.id})">Toggle Manage</button>
-								</c:if>
-								</td>
-							</c:if>
-						</tr>
-					</c:forEach>
-				</table>
-			</c:if>
-			<br>
-			<c:if test="${home.treaty != null && home.treaty.id == treaty.id}">
-				<button onclick="updateTreaty('resign', 'anything really')">Resign</button>
-			</c:if>
-		</c:otherwise>
-	</c:choose>
-<%@ include file="includes/defaultBottom.jsp" %>
+		</div>
+	</c:if>
+<%@ include file="includes/bottom.jsp" %>

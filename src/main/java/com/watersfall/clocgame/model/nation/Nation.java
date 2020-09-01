@@ -5,6 +5,8 @@ import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.decisions.Decision;
+import com.watersfall.clocgame.model.event.Event;
+import com.watersfall.clocgame.model.message.Message;
 import com.watersfall.clocgame.model.military.Bomber;
 import com.watersfall.clocgame.model.military.Equipment;
 import com.watersfall.clocgame.model.military.Fighter;
@@ -42,7 +44,7 @@ public class Nation extends Updatable
 	private @Getter @Setter int newsCount;
 	private @Getter @Setter boolean anyUnreadNews;
 	private @Getter @Setter int eventCount;
-	private @Getter @Setter ArrayList<Events> events;
+	private @Getter @Setter ArrayList<Event> events;
 	private @Getter @Setter War defensive;
 	private @Getter @Setter War offensive;
 	private @Getter @Setter Treaty treaty;
@@ -61,6 +63,8 @@ public class Nation extends Updatable
 	private LinkedHashMap<String, LinkedHashMap<TextKey, Double>> allProductions = null;
 	private long landUsage = -1;
 	private HashMap<String, Double> totalProductionCosts = null;
+	private @Getter @Setter ArrayList<Message> unreadMessages = null;
+	private @Getter @Setter int lastReadMessage;
 
 	public Nation(int id)
 	{
@@ -214,9 +218,9 @@ public class Nation extends Updatable
 	 * @param nation The Nation to declare war on
 	 * @throws SQLException If a database error occurs
 	 */
-	public void declareWar(Nation nation) throws SQLException
+	public void declareWar(Nation nation, String name) throws SQLException
 	{
-		new WarDao(conn, true).createWar(this, nation);
+		new WarDao(conn, true).createWar(this, nation, name);
 	}
 
 	public String sendPeace(Nation receiver) throws SQLException

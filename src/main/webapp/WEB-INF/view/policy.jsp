@@ -1,54 +1,47 @@
-<%--@elvariable id="policies" type="java.util.LinkedHashMap"--%>
-<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%@ include file="includes/defaultTop.jsp" %>
-	<h1>State Policy</h1>
-	<div class="specialTable">
-		<div class="header">
-			<div class="name"><p class="halfPad">Decision</p></div>
-			<div class="cost"><p class="halfPad">Options</p></div>
-			<div class="description"><p class="halfPad">Description</p></div>
-			<div class="button"><p class="halfPad">Apply</p></div>
-		</div>
-		<c:forEach var="policy" items="${policies.entrySet()}">
-			<div class="policy">
-				<div class="name"><p class="halfPad">${policy.key.name}</p></div>
-				<div class="cost">
-					<label for="policy_${policy.key}"></label>
-					<select class="halfPad" id="policy_${policy.key}" onchange="updateDesc('policy_${policy.key}')">
-						<c:forEach items="${policy.value}" var="i">
-							<option id="policy_${policy.key}_${i.name()}" ${(home.policy.getPolicy(i) == i) ? 'selected' : ''} value="${i.name()}">${i.name}</option>
-						</c:forEach>
-					</select>
-				</div>
-				<div class="description">
-					<c:forEach items="${policy.value}" var="i">
-						<p class="desc halfPad" id="policy_${policy.key}_${i.name()}_desc" style="display:${(home.policy.getPolicy(i) == i) ? 'block' : 'none'};">
-							<c:forEach items="${i.getMap(i)}" var="map">
-								<c:if test="${not (fn:contains(map.key, 'consumption') or fn:contains(map.key, 'upkeep'))}">
-									<c:if test="${map.value > 0}">
-										<span class="positive">+${map.value}${map.key}</span>
-									</c:if>
-									<c:if test="${map.value <= 0}">
-										<span class="negative">${map.value}${map.key}</span>
-									</c:if>
+<%@ include file="includes/top.jsp" %>
+	<%--@elvariable id="policies" type="java.util.LinkedHashMap"--%>
+	<%--@elvariable id="policy" type="com.watersfall.clocgame.model.policies.Policy"--%>
+	<div class="tiling">
+		<div class="column">
+			<div class="title">Policy</div>
+			<div class="tile">
+				<c:forEach var="category" items="${policies}">
+					<div class="subtile">
+						<div class="title">
+							<label for="${category.key.name()}">${category.key.name}</label>
+							<select onchange="policyDesc('${category.key.name()}')" id="${category.key.name()}">
+								<c:forEach var="policy" items="${category.value}">
+									<option value="${policy.name()}" ${home.policy.getPolicy(policy) == policy ? 'selected' : ''}>
+											${policy.name}
+									</option>
+								</c:forEach>
+							</select>
+							<button onclick="policy('${category.key.name()}')" class="right blue">Apply</button>
+						</div>
+						<div class="left_text">
+							<c:forEach var="policy" items="${category.value}">
+								<c:if test="${policy.map.size() <= 0}">
+									<div id="${policy.name()}_DESC">
+										No Effects
+									</div>
 								</c:if>
-								<c:if test="${(fn:contains(map.key, 'consumption') or fn:contains(map.key, 'upkeep'))}">
-									<c:if test="${map.value >= 0}">
-										<span class="negative">+${map.value}${map.key}</span>
-									</c:if>
-									<c:if test="${map.value < 0}">
-										<span class="positive">${map.value}${map.key}</span>
-									</c:if>
+								<c:if test="${policy.map.size() > 0}">
+									<div id="${policy.name()}_DESC" class="${home.policy.getPolicy(policy) == policy ? '' : 'toggleable-default-off'}">
+										<c:forEach var="effect" items="${policy.map}">
+											<c:if test="${effect.value >= 0}">
+												<span class="positive">+${effect.value}${effect.key}</span><br>
+											</c:if>
+											<c:if test="${effect.value < 0}">
+												<span class="negative">${effect.value}${effect.key}</span><br>
+											</c:if>
+										</c:forEach>
+									</div>
 								</c:if>
-								<br>
 							</c:forEach>
-						</p>
-					</c:forEach>
-				</div>
-				<div class="button">
-					<button onclick="policy('${policy.key}')">Update</button>
-				</div>
+						</div>
+					</div>
+				</c:forEach>
 			</div>
-		</c:forEach>
+		</div>
 	</div>
-<%@ include file="includes/defaultBottom.jsp" %>
+<%@ include file="includes/bottom.jsp" %>

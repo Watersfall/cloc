@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.ProductionActions;
 import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -26,16 +27,29 @@ public class ProductionController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		HashMap<String, String> url = Util.urlConvert(URL, request.getPathInfo());
-		if(url.get("id") != null && url.get("id").equalsIgnoreCase("all"))
+		if(UserUtils.checkLogin(request))
 		{
-			request.getRequestDispatcher("/WEB-INF/view/includes/allproduction.jsp").forward(request, response);
+			HashMap<String, String> url = Util.urlConvert(URL, request.getPathInfo());
+			if(url.get("id") != null && url.get("id").equalsIgnoreCase("all"))
+			{
+				request.getRequestDispatcher("/WEB-INF/view/includes/allproduction.jsp").forward(request, response);
+			}
+			else if(url.get("id") != null)
+			{
+				int id = Integer.parseInt(url.get("id"));
+				request.setAttribute("production", ((Nation)request.getAttribute("home")).getProductionById(id));
+				request.getRequestDispatcher("/WEB-INF/view/api/production.jsp").forward(request, response);
+			}
+			else
+			{
+				request.getRequestDispatcher("/WEB-INF/view/production.jsp").forward(request, response);
+			}
 		}
 		else
 		{
-			request.getRequestDispatcher("/WEB-INF/view/production.jsp").forward(request, response);
+			request.setAttribute("error", Errors.NOT_LOGGED_IN);
+			request.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(request, response);
 		}
-
 	}
 
 	@Override

@@ -1,236 +1,281 @@
-<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%@ include file="includes/top.jsp" %>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="id" type="java.lang.Integer"--%>
-<%--@elvariable id="user" type="java.lang.Integer"--%>
-<%@ include file="includes/defaultTop.jsp" %>
-	<c:choose>
-		<c:when test="${empty id}">
-			<p>You have visited this page incorrectly!</p>
-		</c:when>
-		<c:when test="${nation == null}">
-			<p>This nation does not exist!</p>
-		</c:when>
-		<c:when test="${not empty user and not empty nation and nation.id == user}">
-			<c:redirect url="/main/"/>
-		</c:when>
-		<c:otherwise>
-			<h1><c:out value="${nation.cosmetic.nationTitle}"/><br>of<br>${nation.cosmetic.nationName}</h1>
-			<img class="veryLarge" src="/user/flag/${nation.cosmetic.flag}" alt="flag"/>
-			<p><br><c:out value="${nation.cosmetic.description}"/></p><br>
-			<img class="veryLong" src="/user/portrait/${nation.cosmetic.portrait}" alt="portrait"/>
-			<h1><c:out value="${nation.cosmetic.leaderTitle}"/><c:out value=" "/><c:out value=" ${nation.cosmetic.username}"/></h1>
-			<cloc:lastlogin time="${nation.lastSeen}"/>
-			<h2>Domestic</h2>
-			<table class="standardTable nationTable">
-				<tr>
-					<td><p>Approval</p></td>
-					<td><p><cloc:approval value="${nation.domestic.approval}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Government</p></td>
-					<td><p><cloc:government value="${nation.domestic.government}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Stability</p></td>
-					<td><p><cloc:stability value="${nation.domestic.stability}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Land</p></td>
-					<td><p><fmt:formatNumber value="${nation.domestic.land}"/>km<sup>2</sup></p></td>
-				</tr>
-				<tr>
-					<td><p>Rebel Threat</p></td>
-					<td><p><cloc:rebels value="${nation.domestic.rebels}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Population</p></td>
-					<td><p><fmt:formatNumber value="${nation.totalPopulation}"/> People</p></td>
-				</tr>
-			</table>
-			<h2>Economy</h2>
-			<table class="standardTable nationTable">
-				<tr>
-					<td><p>Economic System</p></td>
-					<td><p><cloc:economic value="${nation.economy.economic}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Gross Domestic Product</p></td>
-					<td><p>$<fmt:formatNumber value="${nation.economy.gdp}"/> Million</p></td>
-				</tr>
-				<tr>
-					<td><p>Growth</p></td>
-					<td><p>$<fmt:formatNumber value="${nation.economy.growth}"/> Million per Month</p></td>
-				</tr>
-			</table>
-			<h2>Foreign</h2>
-			<table class="standardTable nationTable">
-				<tr>
-					<td><p>Region</p></td>
-					<td><p><c:out value="${nation.foreign.region.name}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Official Alignment</p></td>
-					<td><p><cloc:alignment value="${nation.foreign.alignment}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Treaty Membership</p></td>
-					<td><p>
-						<c:if test="${nation.treaty != null}">
-							<a href="${pageContext.request.contextPath}/treaty/${nation.treaty.id}"><c:out value="${nation.treaty.name}"/></a>
-						</c:if>
-						<c:if test="${nation.treaty == null}">
-							None
-						</c:if>
-					</p></td>
-				</tr>
-			</table>
-			<h2>Military</h2>
-			<table class="standardTable nationTable">
-				<caption><p>Army</p></caption>
-				<tr>
-					<td><p>Size</p></td>
-					<td><p><fmt:formatNumber value="${nation.army.size}"/>k Personnel</p></td>
-				</tr>
-				<tr>
-					<td><p>Training</p></td>
-					<td><p>${nation.army.training}%</p></td>
-				</tr>
-				<tr>
-					<td><p>Equipment</p></td>
-					<td><p><fmt:formatNumber value="${nation.totalInfantryEquipment}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> needed</p></td>
-				</tr>
-				<tr>
-					<td><p>Artillery</p></td>
-					<td><p><fmt:formatNumber value="${nation.army.artillery}"/> Pieces</p></td>
-				</tr>
-			</table>
-			<br><br>
-			<table class="standardTable nationTable">
-				<caption><p>Navy</p></caption>
-				<tr>
-					<td><p>Destroyers</p></td>
-					<td><p><fmt:formatNumber value="${nation.military.destroyers}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Cruisers</p></td>
-					<td><p><fmt:formatNumber value="${nation.military.cruisers}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Battleships</p></td>
-					<td><p><fmt:formatNumber value="${nation.military.battleships}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Submarines</p></td>
-					<td><p><fmt:formatNumber value="${nation.military.submarines}"/></p></td>
-				</tr>
-				<tr>
-					<td><p>Troop Transports</p></td>
-					<td><p><fmt:formatNumber value="${nation.military.transports}"/></p></td>
-				</tr>
-			</table>
-			<br><br>
-			<table class="standardTable nationTable">
-				<caption><p>Airforce</p></caption>
-				<tr>
-					<td><p>Fighters</p></td>
-					<td><p><i>Unknown</i></p></td>
-				</tr>
-				<tr>
-					<td><p>Zeppelins</p></td>
-					<td><p><i>Unknown</i></p></td>
-				</tr>
-			</table>
-			<c:if test="${not empty user}">
-				<h2>Diplomacy</h2>
-				<table class="standardTable nationTable">
+	<div class="tiling">
+		<div class="column">
+			<div class="tile">
+				<h1><c:out escapeXml="false" value="${nation.cosmetic.nationTitle}"/><br>of<br><c:out escapeXml="false" value="${nation.cosmetic.nationName}"/></h1>
+				<img class="large_flag" src="/user/flag/${nation.cosmetic.flag}" alt="flag"/>
+				<h2><c:out escapeXml="false" value="${nation.cosmetic.leaderTitle} "/><c:out escapeXml="false" value="${nation.cosmetic.username}"/></h2>
+			</div>
+		</div>
+	</div>
+	<div class="tiling">
+		<div class="column">
+			<div id="stats" class="tile">
+				<div class="title">Stats</div>
+				<table class="nation">
+					<thead class="blue">
 					<tr>
-						<td><p>Send Money</p></td>
-						<td>
-							<label for="amountCash"></label><input type="number" id="amountCash" name="sendcash" min="0">
-							<button type="submit" onclick="send('sendmoney', document.getElementById('amountCash').value, '${nation.id}')">Send</button>
-						</td>
+						<td colspan="2">Domestic</td>
+					</tr>
+					</thead>
+					<tr>
+						<td colspan="2">Government</td>
 					</tr>
 					<tr>
-						<td><p>Send Iron</p></td>
-						<td>
-							<label for="amountIron"></label><input type="number" id="amountIron" name="sendiron" min="0">
-							<button type="submit" onclick="send('sendiron', document.getElementById('amountIron').value, '${nation.id}')">Send
-							</button>
-						</td>
+						<td colspan="2"><cloc:government value="${nation.domestic.government}"/></td>
 					</tr>
 					<tr>
-						<td><p>Send Coal</p></td>
-						<td>
-							<label for="amountCoal"></label><input type="number" id="amountCoal" name="sendcoal" min="0">
-							<button type="submit" onclick="send('sendcoal', document.getElementById('amountCoal').value, '${nation.id}')">Send
-							</button>
-						</td>
+						<td colspan="2">Approval</td>
 					</tr>
 					<tr>
-						<td><p>Send Oil</p></td>
-						<td>
-							<label for="amountOil"></label><input type="number" id="amountOil" name="sendoil" min="0">
-							<button type="submit" onclick="send('sendoil', document.getElementById('amountOil').value, '${nation.id}')">Send
-							</button>
-						</td>
+						<td>${nation.domestic.approval}%</td>
 					</tr>
 					<tr>
-						<td><p>Send Steel</p></td>
-						<td>
-							<label for="amountSteel"></label><input type="number" id="amountSteel" name="sendsteel" min="0">
-							<button type="submit" onclick="send('sendsteel', document.getElementById('amountSteel').value, '${nation.id}')">Send
-							</button>
-						</td>
+						<td colspan="2">Stability</td>
 					</tr>
 					<tr>
-						<td><p>Send Nitrogen</p></td>
-						<td>
-							<label for="amountNitrogen"></label><input type="number" id="amountNitrogen" name="sendnitrogen" min="0">
-							<button type="submit" onclick="send('sendnitrogen', document.getElementById('amountNitrogen').value, '${nation.id}')">Send
-							</button>
+						<td>${nation.domestic.stability}%</td>
+					</tr>
+					<tr>
+						<td colspan="2">Land</td>
+
+					</tr>
+					<tr>
+						<td><fmt:formatNumber value="${nation.freeLand}"/>km<sup>2</sup> Free</td>
+						<td><fmt:formatNumber value="${nation.domestic.land}"/>km<sup>2</sup> Total</td>
+					</tr>
+					<tr>
+						<td colspan="2">Population</td>
+					</tr>
+					<tr>
+						<td colspan="2"><fmt:formatNumber value="${nation.totalPopulation}"/> People</td>
+					</tr>
+				</table>
+				<br>
+				<table class="nation">
+					<thead class="gold">
+					<tr>
+						<td colspan="2">Economy</td>
+					</tr>
+					</thead>
+					<tr>
+						<td colspan="2">Gross Domestic Product</td>
+					</tr>
+					<tr>
+						<td colspan="2">$<fmt:formatNumber value="${nation.economy.gdp}"/> Million</td>
+					</tr>
+					<tr>
+						<td colspan="2">Growth</td>
+					</tr>
+					<tr>
+						<td><fmt:formatNumber value="${nation.economy.growth}"/> Million per month</td>
+					</tr>
+				</table>
+				<br>
+				<table class="nation">
+					<thead class="green">
+					<tr>
+						<td colspan="2">Foreign</td>
+					</tr>
+					</thead>
+					<tr>
+						<td colspan="2">Region</td>
+					</tr>
+					<tr>
+						<td colspan="2">${nation.foreign.region.name}</td>
+					</tr>
+					<tr>
+						<td colspan="2">Official Alignment</td>
+					</tr>
+					<tr>
+						<td colspan="2"><cloc:alignment value="${nation.foreign.alignment}"/></td>
+					</tr>
+					<tr>
+						<td colspan="2">Treaty Membership</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<c:if test="${nation.treaty == null}">
+								None
+							</c:if>
+							<c:if test="${nation.treaty != null}">
+								${nation.treaty.treatyUrl}
+							</c:if>
 						</td>
 					</tr>
 				</table>
-				<h2>War</h2>
-				<c:if test="${nation.atWar}">
-					<c:if test="${nation.offensive != null}">
-						Offensive war against ${nation.offensive.defender.nationUrl}<br>
-					</c:if>
-					<c:if test="${nation.defensive != null}">
-						Defensive war against ${nation.defensive.attacker.nationUrl}<br>
-					</c:if>
-				</c:if>
-				<c:if test="${!nation.atWar}">
-					<i>None</i><br>
-				</c:if>
-				<c:if test="${home.canDeclareWar(nation) == null}">
-					<button id="decc" onclick="declareWar(${nation.id})">Declare War</button><br>
-				</c:if>
-				<c:if test="${home.isAtWarWith(nation)}">
-					<div class="categories">
-						<a id="land">
-							<img src="${pageContext.request.contextPath}/images/war/army.png" alt="army"/><br>
-							<button onclick="send('land', null, ${nation.id})">Attack Army</button><br>
-							<button onclick="send('landCity', null, ${nation.id})">Siege City</button><br>
-							<button onclick="send('fortify', null, ${nation.id})">Fortify</button>
-						</a>
-						<a id="air">
-							<img src="${pageContext.request.contextPath}/images/war/air.png" alt="air"/><br>
-							<button onclick="send('air', null, ${nation.id})">Attack Airforce</button><br>
-							<button onclick="send('airCity', null, ${nation.id})">Bomb City</button><br>
-							<button onclick="send('bomb', null, ${nation.id})">Bomb Troops</button><br>
-						</a>
-						<a id="navy">
-							<img src="${pageContext.request.contextPath}/images/war/navy.png" alt="air"/><br>
-							<button onclick="send('navy', null, ${nation.id})">Naval Battle</button><br>
-							<button onclick="send('navyCity', null, ${nation.id})">Bombard City</button><br>
-							<button style="visibility: hidden">Magic</button>
-						</a>
+				<br>
+				<table class="nation">
+					<thead class="red">
+					<tr>
+						<td colspan="2">Army</td>
+					</tr>
+					</thead>
+					<tr>
+						<td colspan="2">Active Personnel</td>
+					</tr>
+					<tr>
+						<td colspan="2"><fmt:formatNumber value="${nation.army.size}"/>k Soldiers</td>
+					</tr>
+					<tr>
+						<td colspan="2">Training</td>
+					</tr>
+					<tr>
+						<td colspan="2"><fmt:formatNumber value="${nation.army.training}"/>%</td>
+					</tr>
+					<tr>
+						<td>Equipment</td>
+					</tr>
+					<tr>
+						<td><fmt:formatNumber value="${nation.totalInfantryEquipment}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> requested</td>
+					</tr>
+					<tr>
+						<td colspan="2">Fortification</td>
+					</tr>
+					<tr>
+						<td>${nation.army.fortification / 100}%</td>
+					</tr>
+				</table>
+				<br>
+				<table class="nation">
+					<thead class="red">
+					<tr>
+						<td colspan="2">Airforce</td>
+					</tr>
+					</thead>
+					<tr>
+						<td colspan="2">Fighters</td>
+					</tr>
+					<tr>
+						<td><fmt:formatNumber value="${nation.fighterCount}"/> Planes</td>
+					</tr>
+					<tr>
+						<td colspan="2">Bombers</td>
+					</tr>
+					<tr>
+						<td><fmt:formatNumber value="${nation.bomberCount}"/> Planes</td>
+					</tr>
+					<tr>
+						<td colspan="2">Recon Planes</td>
+					</tr>
+					<tr>
+						<td><fmt:formatNumber value="${nation.reconCount}"/> Planes</td>
+					</tr>
+				</table>
+				<br>
+			</div>
+			<div class="tile">
+				<div class="title">Wars</div>
+				<c:if test="${nation.defensive == null && nation.offensive == null}">
+					<div class="subtile">
+						No wars
 					</div>
-					<br>
-					<button onclick="send('peace', null, ${nation.id});">Offer Peace</button>
 				</c:if>
-			</c:if>
-		</c:otherwise>
-	</c:choose>
-<%@ include file="includes/defaultBottom.jsp" %>
+				<c:if test="${nation.offensive != null}">
+					<div class="subtile">
+						<div class="title">Offensive War Against: ${nation.offensive.defender.nationUrl}</div>
+					</div>
+				</c:if>
+				<c:if test="${nation.defensive != null}">
+					<div class="subtile">
+						<div class="title">Defensive War Against: ${nation.defensive.attacker.nationUrl}</div>
+					</div>
+				</c:if>
+			</div>
+		</div>
+		<c:if test="${not empty home}">
+			<div class="column">
+				<div class="tile">
+					<div class="title">Diplomacy</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Money</div>
+							<input type="number" id="send_budget"/>
+							<button onclick="nation(${nation.id}, 'sendmoney', document.getElementById('send_budget').value)" class="blue">Send</button>
+						</label>
+					</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Coal</div>
+							<input type="number" id="send_coal"/>
+							<button onclick="nation(${nation.id}, 'sendcoal', document.getElementById('send_coal').value)" class="blue">Send</button>
+						</label>
+					</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Iron</div>
+							<input type="number" id="send_iron"/>
+							<button onclick="nation(${nation.id}, 'sendiron', document.getElementById('send_iron').value)" class="blue">Send</button>
+						</label>
+					</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Oil</div>
+							<input type="number" id="send_oil"/>
+							<button onclick="nation(${nation.id}, 'sendoil', document.getElementById('send_oil').value)" class="blue">Send</button>
+						</label>
+					</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Steel</div>
+							<input type="number" id="send_steel"/>
+							<button onclick="nation(${nation.id}, 'sendsteel', document.getElementById('send_steel').value)" class="blue">Send</button>
+						</label>
+					</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Nitrogen</div>
+							<input type="number" id="send_nitrogen"/>
+							<button onclick="nation(${nation.id}, 'sendnitrogen', document.getElementById('send_nitrogen').value)" class="blue">Send</button>
+						</label>
+					</div>
+				</div>
+				<div class="tile">
+					<div class="title">War</div>
+					<c:if test="${home.isAtWarWith(nation)}">
+						<div class="subtile">
+							<div class="title">Land</div>
+							<div class="description">
+								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
+								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
+							</div>
+							<button onclick="nation(${nation.id}, 'land_land', 0);">Field Battle</button>
+							<button onclick="nation(${nation.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="nation(${nation.id}, 'land_fortify', 0);">Fortify</button>
+						</div>
+						<div class="subtile">
+							<div class="title">Air</div>
+							<div class="description">
+								Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
+							</div>
+							<button onclick="nation(${nation.id}, 'air_air', 0);">Bomb Airforce</button>
+							<button onclick="nation(${nation.id}, 'air_land', 0);">Bomb Troops</button>
+							<button onclick="nation(${nation.id}, 'air_city', 0);">Bomb City</button>
+						</div>
+						<div class="subtile">
+							<div class="title">Sea (Non-functional)</div>
+							<div class="description">
+								Your navy can be used similar to your airforce, but only on targets on or near the water
+							</div>
+							<button>Engage Fleet</button>
+							<button>Bombard Troops</button>
+							<button>Bombard Cities</button>
+						</div>
+						<div class="subtile">
+							<button onclick="nation(${nation.id}, 'peace', 0);" class="blue">Send Peace</button>
+						</div>
+					</c:if>
+					<c:if test="${!home.isAtWarWith(nation)}">
+						<c:if test="${home.canDeclareWar(nation)}">
+							<button onclick="nation(${nation.id}, 'war', 0);" class="red">Declare War</button>
+						</c:if>
+						<c:if test="${!home.canDeclareWar(nation)}">
+							You can not declare war on this nation
+						</c:if>
+					</c:if>
+				</div>
+			</div>
+		</c:if>
+	</div>
+<%@ include file="includes/bottom.jsp" %>

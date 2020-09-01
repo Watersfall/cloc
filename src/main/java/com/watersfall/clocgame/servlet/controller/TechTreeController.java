@@ -1,7 +1,9 @@
 package com.watersfall.clocgame.servlet.controller;
 
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.technologies.Category;
+import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
 import javax.servlet.ServletException;
@@ -20,20 +22,28 @@ public class TechTreeController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
-		if(req.getSession().getAttribute("user") != null)
+		if(UserUtils.checkLogin(req))
 		{
-			req.setAttribute("techs", Technologies.values());
-			req.setAttribute("categories", Category.values());
-			if(url.get("category") != null)
+			HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
+			if(req.getSession().getAttribute("user") != null)
 			{
-				req.setAttribute("category", url.get("category"));
+				req.setAttribute("techs", Technologies.values());
+				req.setAttribute("categories", Category.values());
+				if(url.get("category") != null)
+				{
+					req.setAttribute("category", url.get("category"));
+				}
+				else
+				{
+					req.setAttribute("category", "WEAPONS");
+				}
 			}
-			else
-			{
-				req.setAttribute("category", "WEAPONS");
-			}
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/api/techtree.jsp").forward(req, resp);
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/includes/techtree.jsp").forward(req, resp);
+		else
+		{
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
+		}
 	}
 }

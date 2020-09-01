@@ -50,7 +50,7 @@ public class ProductionDao extends Dao
 		statement.execute();
 	}
 
-	public void createDefaultProduction(int id) throws SQLException
+	public int createDefaultProduction(int id) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(DEFAULT_PRODUCTION_SQL_STATEMENT, Statement.RETURN_GENERATED_KEYS);
@@ -62,6 +62,7 @@ public class ProductionDao extends Dao
 		factory.setInt(1, key.getInt(1));
 		factory.setInt(2, id);
 		factory.execute();
+		return key.getInt(1);
 	}
 
 	public void addFactories(int id, int amount) throws SQLException

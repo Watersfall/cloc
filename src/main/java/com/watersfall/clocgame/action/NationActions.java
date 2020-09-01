@@ -7,7 +7,6 @@ import com.watersfall.clocgame.model.nation.News;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 
 public class NationActions
@@ -150,7 +149,7 @@ public class NationActions
 		}
 	}
 
-	public static String declareWar(Nation sender, Nation receiver, HttpServletRequest req) throws SQLException
+	public static String declareWar(Nation sender, Nation receiver, String name) throws SQLException
 	{
 		String message = sender.canDeclareWar(receiver);
 		if(message != null)
@@ -161,7 +160,7 @@ public class NationActions
 		{
 			NewsDao dao = new NewsDao(sender.getConn(), true);
 			dao.createNews(sender.getId(), receiver.getId(), News.createMessage(News.ID_DECLARE_WAR, sender.getNationUrl()));
-			sender.declareWar(receiver);
+			sender.declareWar(receiver, name);
 			return Responses.war();
 		}
 	}

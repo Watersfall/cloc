@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Util;
 
@@ -68,12 +69,12 @@ public class MapController extends HttpServlet
 				}
 				req.setAttribute("regions", map);
 			}
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/map.jsp").forward(req, resp);
 		}
-		catch(SQLException e)
+		catch(SQLException | NullPointerException | IllegalArgumentException e)
 		{
-			//Ignore
-			e.printStackTrace();
+			req.setAttribute("error", Errors.REGION_DOES_NOT_EXIST);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 		}
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/map.jsp").forward(req, resp);
 	}
 }

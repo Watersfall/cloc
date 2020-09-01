@@ -58,8 +58,8 @@ public class WarDao extends Dao
 					"WHERE (attacker=cloc_login.id OR defender=cloc_login.id) AND end>0 ORDER BY cloc_war.id DESC LIMIT 20 OFFSET ?\n";
 
 	private static final String CREATE_WAR_SQL_STATEMENT =
-					"INSERT INTO cloc_war (attacker, defender, start)\n" +
-					"VALUES (?,?,?)\n";
+					"INSERT INTO cloc_war (attacker, defender, start, name)\n" +
+					"VALUES (?,?,?,?)\n";
 
 	private static final String OFFER_PEACE_SQL_STATEMENT =
 					"UPDATE cloc_war\n" +
@@ -199,13 +199,14 @@ public class WarDao extends Dao
 		statement.execute();
 	}
 
-	public void createWar(Nation attacker, Nation defender) throws SQLException
+	public void createWar(Nation attacker, Nation defender, String name) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CREATE_WAR_SQL_STATEMENT);
 		statement.setInt(1, attacker.getId());
 		statement.setInt(2, defender.getId());
 		statement.setLong(3, Time.month);
+		statement.setString(4, name);
 		statement.execute();
 	}
 

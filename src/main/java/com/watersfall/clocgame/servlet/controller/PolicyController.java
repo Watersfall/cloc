@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.PolicyActions;
 import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.policies.PolicyCategory;
@@ -28,8 +29,16 @@ public class PolicyController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		req.setAttribute("policies", Policy.getPoliciesByCategory());
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/policy.jsp").forward(req, resp);
+		if(UserUtils.checkLogin(req))
+		{
+			req.setAttribute("policies", Policy.getPoliciesByCategory());
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/policy.jsp").forward(req, resp);
+		}
+		else
+		{
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
+		}
 	}
 
 	@Override

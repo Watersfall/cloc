@@ -1,422 +1,520 @@
-<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <% pageContext.setAttribute("netApproval", TextKey.Approval.NET); %>
 <% pageContext.setAttribute("netStability", TextKey.Stability.NET); %>
 <% pageContext.setAttribute("netManpower", TextKey.Manpower.NET); %>
 <% pageContext.setAttribute("netGrowth", TextKey.Growth.NET); %>
-<%@ include file="includes/defaultTop.jsp" %>
-	<c:if test="${sessionScope.user == null}">
-		<p>You must be logged in to view this page!</p>
+<% pageContext.setAttribute("netFortification", TextKey.Fortification.NET); %>
+<%@ include file="includes/top.jsp" %>
+	<c:if test="${home == null}">
+		<p>You have visited this page incorrectly</p>
 	</c:if>
-	<c:if test="${sessionScope.user != null}">
-		<c:if test="${home.atWar}">
-			<div class="element" style="width: 75%; margin-top: 1em;">
-				<h2 class="negative">You are at war!</h2>
-			</div>
-		</c:if>
-		<h1><c:out value="${home.cosmetic.nationTitle}"/><br>of<br>${home.cosmetic.nationName}</h1>
-		<img class="veryLarge" src="/user/flag/${home.cosmetic.flag}" alt="flag"/>
-		<p><br><c:out value="${home.cosmetic.description}"/></p><br>
-		<img class="veryLong" src="/user/portrait/${home.cosmetic.portrait}" alt="portrait"/>
-		<h1><c:out value="${home.cosmetic.leaderTitle}"/><c:out value=" "/><c:out value=" ${home.cosmetic.username}"/></h1>
-		<h2>Modifiers</h2>
-		<table class="standardTable nationTable">
-			<c:forEach items="${home.modifiers}" var="modifier">
-				<tr>
-					<td>${modifier.type.name()}</td>
-					<td>${modifier.type.effects}</td>
-				</tr>
-			</c:forEach>
-		</table>
-		<h2>Domestic</h2>
-		<table class="standardTable nationTable">
-			<tr>
-				<td><p>Government</p></td>
-				<td><p><cloc:government value="${home.domestic.government}"/></p></td>
-			</tr>
-			<tr>
-				<td><p>Approval</p></td>
-				<td onclick="toggleTab('Approval');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><cloc:approval value="${home.domestic.approval}"/></p>
-					<div class="toggleable detailsDown" id="Approval">
-						<p>${home.domestic.approval}% Approval</p>
-						<c:choose>
-							<c:when test="${home.approvalChange.get(netApproval) > 0}">
-								<p class="positive">+${home.approvalChange.get(netApproval)}${netApproval.text}</p>
-							</c:when>
-							<c:when test="${home.approvalChange.get(netApproval) < 0}">
-								<p class="negative">${home.approvalChange.get(netApproval)}${netApproval.text}</p>
-							</c:when>
-							<c:otherwise>
-								<p class="neutral">0${netApproval.text}</p>
-							</c:otherwise>
-						</c:choose>
-						<ul class="bulletList">
-							<c:forEach items="${home.approvalChange.entrySet()}" var="i">
-								<c:if test="${i.key != 'NET'}">
-									<c:choose>
-										<c:when test="${i.value > 0}">
-											<li><p class="positive">+${i.value}${i.key.text}</p></li>
-										</c:when>
-										<c:when test="${i.value < 0}">
-											<li><p class="negative">${i.value}${i.key.text}</p></li>
-										</c:when>
-									</c:choose>
+	<c:if test="${home != null}">
+		<div id="nation" class="tiling">
+			<div id="column_1" class="column">
+				<div id="stats" class="tile">
+					<div class="title">Stats</div>
+					<table class="nation">
+						<thead class="blue">
+						<tr>
+							<td colspan="2">Domestic</td>
+						</tr>
+						</thead>
+						<tr>
+							<td colspan="2">Government</td>
+						</tr>
+						<tr>
+							<td colspan="2"><cloc:government value="${home.domestic.government}"/></td>
+						</tr>
+						<tr>
+							<td colspan="2">Approval</td>
+						</tr>
+						<tr>
+							<td>${home.domestic.approval}%</td>
+							<td>
+								<c:if test="${home.approvalChange.get(netApproval) > 0}">
+									+<fmt:formatNumber value="${home.approvalChange.get(netApproval)}"/> per month
 								</c:if>
-							</c:forEach>
-						</ul>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td><p>Stability</p></td>
-				<td onclick="toggleTab('Stability');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><cloc:stability value="${home.domestic.stability}"/></p>
-					<div class="toggleable detailsDown" id="Stability">
-						<p>${home.domestic.stability}% Stability</p>
-						<c:choose>
-							<c:when test="${home.stabilityChange.get(netStability) > 0}">
-								<p class="positive">+${home.stabilityChange.get(netStability)}${netStability.text}</p>
-							</c:when>
-							<c:when test="${home.stabilityChange.get(netStability) < 0}">
-								<p class="negative">${home.stabilityChange.get(netStability)}${netStability.text}</p>
-							</c:when>
-							<c:otherwise>
-								<p class="neutral">0${netStability.text}</p>
-							</c:otherwise>
-						</c:choose>
-						<ul class="bulletList">
-							<c:forEach items="${home.stabilityChange.entrySet()}" var="i">
-								<c:if test="${i.key != 'NET'}">
-									<c:choose>
-										<c:when test="${i.value > 0}">
-											<li><p class="positive">+${i.value}${i.key.text}</p></li>
-										</c:when>
-										<c:when test="${i.value < 0}">
-											<li><p class="negative">${i.value}${i.key.text}</p></li>
-										</c:when>
-									</c:choose>
+								<c:if test="${home.approvalChange.get(netApproval) < 0}">
+									<fmt:formatNumber value="${home.approvalChange.get(netApproval)}"/> per month
 								</c:if>
-							</c:forEach>
-						</ul>
+								<c:if test="${home.approvalChange.get(netApproval) == 0}">
+									No change
+								</c:if>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">Stability</td>
+						</tr>
+						<tr>
+							<td>${home.domestic.stability}%</td>
+							<td>
+								<c:if test="${home.stabilityChange.get(netStability) > 0}">
+									+<fmt:formatNumber value="${home.stabilityChange.get(netStability)}"/> per month
+								</c:if>
+								<c:if test="${home.stabilityChange.get(netStability) < 0}">
+									<fmt:formatNumber value="${home.stabilityChange.get(netStability)}"/> per month
+								</c:if>
+								<c:if test="${home.stabilityChange.get(netStability) == 0}">
+									No change
+								</c:if>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">Land</td>
 
+						</tr>
+						<tr>
+							<td><fmt:formatNumber value="${home.freeLand}"/>km<sup>2</sup> Free</td>
+							<td><fmt:formatNumber value="${home.domestic.land}"/>km<sup>2</sup> Total</td>
+						</tr>
+						<tr>
+							<td colspan="2">Population</td>
+						</tr>
+						<tr>
+							<td colspan="2"><fmt:formatNumber value="${home.totalPopulation}"/> People</td>
+						</tr>
+					</table>
+					<br>
+					<table class="nation">
+						<thead class="gold">
+						<tr>
+							<td colspan="2">Economy</td>
+						</tr>
+						</thead>
+						<tr>
+							<td colspan="2">Gross Domestic Product</td>
+						</tr>
+						<tr>
+							<td colspan="2">$<fmt:formatNumber value="${home.economy.gdp}"/> Million</td>
+						</tr>
+						<tr>
+							<td colspan="2">Growth</td>
+						</tr>
+						<tr>
+							<td><fmt:formatNumber value="${home.economy.growth}"/> Million per month</td>
+							<td>
+								<c:choose>
+									<c:when test="${home.growthChange.get(netGrowth) > 0}">
+										+<fmt:formatNumber value="${home.growthChange.get(netGrowth)}"/> per month
+									</c:when>
+									<c:when test="${home.growthChange.get(netGrowth) < 0}">
+										<fmt:formatNumber value="${home.growthChange.get(netGrowth)}"/> per month
+									</c:when>
+									<c:otherwise>
+										No change
+									</c:otherwise>
+								</c:choose>
+							</td>
+						</tr>
+					</table>
+					<br>
+					<table class="nation">
+						<thead class="green">
+						<tr>
+							<td colspan="2">Foreign</td>
+						</tr>
+						</thead>
+						<tr>
+							<td colspan="2">Region</td>
+						</tr>
+						<tr>
+							<td colspan="2">${home.foreign.region.name}</td>
+						</tr>
+						<tr>
+							<td colspan="2">Official Alignment</td>
+						</tr>
+						<tr>
+							<td colspan="2"><cloc:alignment value="${home.foreign.alignment}"/></td>
+						</tr>
+						<tr>
+							<td colspan="2">Treaty Membership</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<c:if test="${home.treaty == null}">
+									None
+								</c:if>
+								<c:if test="${home.treaty != null}">
+									${home.treaty.treatyUrl}
+								</c:if>
+							</td>
+						</tr>
+					</table>
+					<br>
+					<table class="nation">
+						<thead class="red">
+						<tr>
+							<td colspan="2">Army</td>
+						</tr>
+						</thead>
+						<tr>
+							<td colspan="2">Active Personnel</td>
+						</tr>
+						<tr>
+							<td colspan="2"><fmt:formatNumber value="${home.army.size}"/>k Soldiers</td>
+						</tr>
+						<tr>
+							<td colspan="2">Training</td>
+						</tr>
+						<tr>
+							<td colspan="2"><fmt:formatNumber value="${home.army.training}"/>%</td>
+						</tr>
+						<tr>
+							<td>Equipment</td>
+						</tr>
+						<tr>
+							<td><fmt:formatNumber value="${home.totalInfantryEquipment}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> requested</td>
+							<td>+0 per month</td>
+						</tr>
+						<tr>
+							<td colspan="2">Fortification</td>
+						</tr>
+						<tr>
+							<td>${home.army.fortification / 100}%</td>
+							<td><c:choose>
+								<c:when test="${home.fortificationChange.get(netFortification) > 0}">
+									+<fmt:formatNumber maxFractionDigits="2" value="${home.fortificationChange.get(netFortification) / 100}"/>% per month
+								</c:when>
+								<c:when test="${home.fortificationChange.get(netFortification) < 0}">
+									<fmt:formatNumber maxFractionDigits="2" value="${home.fortificationChange.get(netFortification) / 100}"/>% per month
+								</c:when>
+								<c:otherwise>
+									No change
+								</c:otherwise>
+							</c:choose></td>
+						</tr>
+					</table>
+					<br>
+					<table class="nation">
+						<thead class="red">
+						<tr>
+							<td colspan="2">Airforce</td>
+						</tr>
+						</thead>
+						<tr>
+							<td colspan="2">Fighters</td>
+						</tr>
+						<tr>
+							<td><fmt:formatNumber value="${home.fighterCount}"/> Planes</td>
+							<td>+0 per month</td>
+						</tr>
+						<tr>
+							<td colspan="2">Bombers</td>
+						</tr>
+						<tr>
+							<td><fmt:formatNumber value="${home.bomberCount}"/> Planes</td>
+							<td>+0 per month</td>
+						</tr>
+						<tr>
+							<td colspan="2">Recon Planes</td>
+						</tr>
+						<tr>
+							<td><fmt:formatNumber value="${home.reconCount}"/> Planes</td>
+							<td>+0 per month</td>
+						</tr>
+					</table>
+					<br>
+				</div>
+				<div class="tile">
+					<div class="title">
+						Modifiers
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<td><p>Land</p></td>
-				<td onclick="toggleTab('Land');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.freeLand}"/> km<sup>2</sup> / <fmt:formatNumber value="${home.domestic.land}"/> km<sup>2</sup></p>
-					<div class="toggleable detailsDown" id="Land">
-						<p><fmt:formatNumber value="${home.totalLandUsage}"/>km<sup>2</sup> Total Land Used</p>
-						<ul class="bulletList">
-							<c:forEach items="${home.landUsage.entrySet()}" var="i">
-								<li><p>${i.key}</p></li>
-								<ul class="bulletList">
-									<c:forEach items="${i.value.entrySet()}" var="entry">
-										<c:if test="${entry.value > 0}">
-											<li><p class="negative"><fmt:formatNumber value="${entry.value}"/>km<sup>2</sup>${entry.key.text}</p></li>
-										</c:if>
+					<div class="description">
+						<c:forEach items="${home.modifiers}" var="modifier">
+							<div class="subtitle">${modifier.type.name}</div>
+							<div>
+								<ul class="event_effects">
+									<c:forEach var="current" items="${modifier.type.effects.entrySet()}">
+										<li>
+											<c:choose>
+												<c:when test="${current.value > 0}">
+													<c:choose>
+														<c:when test="${current.key.global || modifier.city <= 0}">
+															+<fmt:formatNumber value="${current.value}"/>${current.key.text}
+														</c:when>
+														<c:otherwise>
+															+<fmt:formatNumber value="${current.value}"/>${current.key.getText(home.cities.get(modifier.city))}
+														</c:otherwise>
+													</c:choose>
+												</c:when>
+												<c:otherwise>
+													<c:choose>
+														<c:when test="${current.key.global || modifier.city <= 0}">
+															<fmt:formatNumber value="${current.value}"/>${current.key.text}
+														</c:when>
+														<c:otherwise>
+															<fmt:formatNumber value="${current.value}"/>${current.key.getText(home.cities.get(modifier.city))}
+														</c:otherwise>
+													</c:choose>
+												</c:otherwise>
+											</c:choose>
+										</li>
 									</c:forEach>
 								</ul>
-							</c:forEach>
-						</ul>
+							</div>
+						</c:forEach>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<td><p>Population</p></td>
-				<td><p><fmt:formatNumber value="${home.totalPopulation}"/> People</p></td>
-			</tr>
-			<tr>
-				<td><p>Manpower</p></td>
-				<td onclick="toggleTab('Manpower');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.freeManpower}"/> Bodies</p>
-					<div class="toggleable detailsDown" id="Manpower">
-						<p><fmt:formatNumber value="${home.totalManpower}"/> Total Manpower</p>
-						<ul class="bulletList">
-							<c:forEach items="${home.usedManpower.entrySet()}" var="i">
-								<c:if test="${i.value < 0}">
-									<li><p class="negative"><fmt:formatNumber value="${i.value * -1}"/>${i.key.text}</p></li>
-								</c:if>
-							</c:forEach>
-						</ul>
+				</div>
+			</div>
+			<div id="column_2" class="column">
+				<c:if test="${home.eventCount <= 0 && home.anyUnreadNews}">
+					<div class="tile">
+						<div class="title">Unread News</div>
+						<%--@elvariable id="news" type="java.util.List"--%>
+						<%--@elvariable id="event" type="com.watersfall.clocgame.model.nation.News"--%>
+						<c:forEach var="event" items="${news}">
+							<div>
+								${event.content}
+							</div>
+						</c:forEach>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<td><p>Rebel Threat</p></td>
-				<td><p><cloc:rebels value="${home.domestic.rebels}"/></p></td>
-			</tr>
-		</table>
-		<h2>Economy</h2>
-		<table class="standardTable nationTable">
-			<tr>
-				<td><p>Economic System</p></td>
-				<td><p><cloc:economic value="${home.economy.economic}"/></p></td>
-			</tr>
-			<tr>
-				<td><p>Gross Domestic Product</p></td>
-				<td><p><fmt:formatNumber value="${home.economy.gdp}"/> Million</p></td>
-			</tr>
-			<tr>
-				<td><p>Growth</p></td>
-				<td onclick="toggleTab('Growth')">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.economy.growth}"/> Million per month</p>
-					<div class="toggleable detailsDown" id="Growth">
-						<c:choose>
-							<c:when test="${home.growthChange.get(netGrowth) > 0}">
-								<p class="positive">+${home.growthChange.get(netGrowth)}${netGrowth.text}</p>
-							</c:when>
-							<c:when test="${home.growthChange.get(netGrowth) < 0}">
-								<p class="negative">${home.growthChange.get(netGrowth)}${netGrowth.text}</p>
-							</c:when>
-							<c:otherwise>
-								<p class="neutral">0${netGrowth.text}</p>
-							</c:otherwise>
-						</c:choose>
-						<ul>
-							<c:forEach items="${home.growthChange.entrySet()}" var="i">
-								<c:if test="${i.key != 'NET'}">
-									<c:choose>
-										<c:when test="${i.value > 0}">
-											<li><p class="positive">+${i.value}${i.key.text}</p></li>
-										</c:when>
-										<c:when test="${i.value < 0}">
-											<li><p class="negative">${i.value}${i.key.text}</p></li>
-										</c:when>
-									</c:choose>
-								</c:if>
-							</c:forEach>
-						</ul>
+				</c:if>
+				<c:if test="${home.eventCount > 0}">
+					<div class="tile">
+						<div class="title">Events</div>
+						<%--@elvariable id="news" type="java.util.List"--%>
+						<%--@elvariable id="event" type="com.watersfall.clocgame.model.event.Event"--%>
+						<c:forEach var="event" items="${home.events}">
+							<div class="subtile">
+								<div class="${event.event.color} title">${event.event.title}</div>
+								<div class="description">
+									${event.event.getDescription(home, event)}
+								</div>
+								<%--@elvariable id="action" type="com.watersfall.clocgame.model.event.EventActions"--%>
+								<c:forEach var="action" items="${event.event.getPossibleResponses(home)}">
+									<div>
+										<div class="subtitle">${action.text}</div>
+										<div>
+											${action.description}
+											<ul class="event_effects">
+												<c:forEach var="effect" items="${action.effects}">
+													<li>
+														<c:choose>
+															<c:when test="${effect.getClass().simpleName == 'Modifiers'}">
+																Creates modifier "${effect.name}" for <b>${effect.length} months</b> with effects:
+																<ul>
+																	<c:forEach var="modifier" items="${effect.effects.entrySet()}">
+																		<li>
+																			<c:choose>
+																				<c:when test="${modifier.value > 0}">
+																					<c:choose>
+																						<c:when test="${modifier.key.global || event.cityId <= 0}">
+																							+<fmt:formatNumber value="${modifier.value}"/>${modifier.key.text}
+																						</c:when>
+																						<c:otherwise>
+																							+<fmt:formatNumber value="${modifier.value}"/>${modifier.key.getText(home.cities.get(event.cityId))}
+																						</c:otherwise>
+																					</c:choose>
+																				</c:when>
+																				<c:otherwise>
+																					<c:choose>
+																						<c:when test="${modifier.key.global || event.cityId <= 0}">
+																							<fmt:formatNumber value="${modifier.value}"/>${modifier.key.text}
+																						</c:when>
+																						<c:otherwise>
+																							<fmt:formatNumber value="${modifier.value}"/>${modifier.key.getText(home.cities.get(event.cityId))}
+																						</c:otherwise>
+																					</c:choose>
+																				</c:otherwise>
+																			</c:choose>
+																		</li>
+																	</c:forEach>
+																</ul>
+															</c:when>
+															<c:otherwise>
+																${effect.display}
+															</c:otherwise>
+														</c:choose>
+													</li>
+												</c:forEach>
+											</ul>
+										</div>
+										<button onclick="doEvent(${event.id}, '${action.name()}')">Select</button>
+										<hr>
+									</div>
+								</c:forEach>
+								<span class="caption">Expires in ${turn - event.month + 4} months</span>
+							</div>
+						</c:forEach>
 					</div>
-				</td>
-			</tr>
-		</table>
-		<h2>Foreign</h2>
-		<table class="standardTable nationTable">
-			<tr>
-				<td><p>Region</p></td>
-				<td><a href="${pageContext.request.contextPath}/map/region/${home.foreign.region.name()}"><p>${home.foreign.region.name}</p></a></td>
-			</tr>
-			<tr>
-				<td><p>Official Alignment</p></td>
-				<td><p><cloc:alignment value="${home.foreign.alignment}"/></p></td>
-			</tr>
-			<tr>
-				<td><p>Treaty Membership</p></td>
-				<td>
-					<c:if test="${home.treaty == null}">
-						<p>None</p>
-					</c:if>
-					<c:if test="${home.treaty != null}">
-						<p>${home.treaty.treatyUrl}</p>
-					</c:if>
-				</td>
-			</tr>
-		</table>
-		<h2>Military</h2>
-		<table class="standardTable nationTable">
-			<caption><p>Army</p></caption>
-			<tr>
-				<td><p>Active Personnel</p></td>
-				<td><p><fmt:formatNumber value="${home.army.size}"/>k Personnel</p></td>
-			</tr>
-			<tr>
-				<td><p>Training</p></td>
-				<td><p><fmt:formatNumber value="${home.army.training}"/>%</p></td>
-			</tr>
-			<tr>
-				<td><p>Equipment</p></td>
-				<td onclick="toggleTab('Equipment');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.totalInfantryEquipment}"/>/<fmt:formatNumber value="${home.army.size * 1000}"/> Required</p>
-					<div class="toggleable detailsDown" id="Equipment">
-						<p><fmt:formatNumber value="${home.totalInfantryEquipment}"/> Total Infantry Equipment</p>
-						<ul>
-							<c:forEach items="${home.equipment.entrySet()}" var="i">
-								<c:if test="${i.value > 0}">
-									<li><p><fmt:formatNumber value="${i.value}"/>${' '}${i.key}</p></li>
-								</c:if>
-							</c:forEach>
-						</ul>
+				</c:if>
+				<c:if test="${!home.anyUnreadNews && home.eventCount <= 0}">
+					<div class="tile">
+						<div class="title">No Unread News or Events</div>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<td><p>Artillery</p></td>
-				<td><p><fmt:formatNumber value="${home.army.artillery}"/> Pieces / <fmt:formatNumber value="${home.army.size * 5}"/> max </p></td>
-			</tr>
-			<tr>
-				<td><p>Fortification</p></td>
-				<td onclick="toggleTab('Fortification');">
-					<div style="background: red; position: relative;">
-						<div style="background: green; width: ${home.army.fortification / 100}%">
-							<div style="background: black; width: 0.1em; left: ${home.maximumFortificationLevel / 100}%; height: 100%; position: absolute; top: 0;"></div>
-							<p class="neutral">Fortification:&nbsp;${home.army.fortification / 100}%</p>
+				</c:if>
+				<div class="tile">
+					<c:choose>
+						<c:when test="${home.unreadMessages == null || home.unreadMessages.size() <= 0}">
+							<div class="title">No Unread Messages</div>
+						</c:when>
+						<c:otherwise>
+							<div class="title">Unread Messages</div>
+							<c:forEach items="${home.unreadMessages}" var="message">
+								<div class="subtile">
+									<div class="title">Message From: ${message.senderNation.nationUrl}</div>
+									<div class="description">${message.content}</div>
+								</div>
+							</c:forEach>
+							<button onclick="mark('messages');">Mark as Read</button>
+						</c:otherwise>
+					</c:choose>
+				</div>
+				<c:if test="${home.offensive != null}">
+					<c:set var="defender" value="${home.offensive.defender}"/>
+					<div class="tile">
+						<div class="title">Offensive War</div>
+						<table class="nation">
+							<thead class="red">
+							<tr>
+								<td colspan="2">${defender.nationUrl}</td>
+							</tr>
+							</thead>
+							<tr>
+								<td colspan="2">Estimated Army Size</td>
+							</tr>
+							<tr>
+								<td colspan="2">${defender.army.size}k Personnel</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Training</td>
+							</tr>
+							<tr>
+								<td colspan="2">${defender.army.training}%</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Equipment Status</td>
+							</tr>
+							<tr>
+								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${defender.totalInfantryEquipment / (defender.army.size * 10)}"/>%</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Airforce Size</td>
+							</tr>
+							<tr>
+								<td colspan="2"><fmt:formatNumber value="${defender.fighterCount + defender.bomberCount + defender.reconCount}"/></td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Capital Ships</td>
+							</tr>
+							<tr>
+								<td colspan="2">0</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Escort Ships</td>
+							</tr>
+							<tr>
+								<td colspan="2">0</td>
+							</tr>
+						</table>
+						<div class="subtile">
+							<div class="title">Land</div>
+							<div class="description">
+								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
+								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
+							</div>
+							<button onclick="nation(${defender.id}, 'land_land', 0);">Field Battle</button>
+							<button onclick="nation(${defender.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="nation(${defender.id}, 'land_fortify', 0);">Fortify</button>
+						</div>
+						<div class="subtile">
+							<div class="title">Air</div>
+							<div class="description">
+								Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
+							</div>
+							<button onclick="nation(${defender.id}, 'air_air', 0);">Bomb Airforce</button>
+							<button onclick="nation(${defender.id}, 'air_land', 0);">Bomb Troops</button>
+							<button onclick="nation(${defender.id}, 'air_city', 0);">Bomb City</button>
+						</div>
+						<div class="subtile">
+							<div class="title">Sea (Non-functional)</div>
+							<div class="description">
+								Your navy can be used similar to your airforce, but only on targets on or near the water
+							</div>
+							<button>Engage Fleet</button>
+							<button>Bombard Troops</button>
+							<button>Bombard Cities</button>
 						</div>
 					</div>
-					<div class="toggleable detailsDown" id="Fortification">
-						<c:set var="net" value="fortification.net"/>
-						<c:if test="${home.fortificationChange.get(net) > 0}">
-							<p class="positive"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>${home.getDisplayString(net)}</p>
-						</c:if>
-						<c:if test="${home.fortificationChange.get(net) < 0}">
-							<p class="negative"><fmt:formatNumber value="${home.fortificationChange.get(net) / 100}" maxFractionDigits="2"/>${home.getDisplayString(net)}</p>
-						</c:if>
-						<c:if test="${home.fortificationChange.get(net) == 0}">
-							<p>No net change...</p>
-						</c:if>
-						<ul>
-							<c:forEach var="entry" items="${home.fortificationChange}">
-								<c:if test="${not fn:contains(entry.key, 'net')}">
-									<li>
-										<c:if test="${entry.value > 0}">
-											<p class="positive"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>${home.getDisplayString(entry.key)}</p>
-										</c:if>
-										<c:if test="${entry.value < 0}">
-											<p class="negative"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>${home.getDisplayString(entry.key)}</p>
-										</c:if>
-									</li>
-								</c:if>
-							</c:forEach>
-						</ul>
-						<br>
-						<p>Max Fortification: <fmt:formatNumber value="${home.maximumFortificationLevel / 100}" maxFractionDigits="2"/>%</p>
-						<ul>
-							<c:forEach var="entry" items="${home.maximumFortificationLevelMap}">
-								<li>
-									<c:if test="${not fn:contains(entry.key, 'net')}">
-										<c:if test="${entry.value > 0}">
-											<p class="positive">+${entry.value / 100}${home.getDisplayString(entry.key)}</p>
-										</c:if>
-										<c:if test="${entry.value < 0}">
-											<p class="negative">${entry.value / 100}${home.getDisplayString(entry.key)}</p>
-										</c:if>
-									</c:if>
-								</li>
-							</c:forEach>
-						</ul>
+				</c:if>
+				<c:if test="${home.defensive != null}">
+					<c:set var="attacker" value="${home.defensive.attacker}"/>
+					<div class="tile">
+						<div class="title">Defensive War</div>
+						<table class="nation">
+							<thead class="red">
+							<tr>
+								<td colspan="2">${attacker.nationUrl}</td>
+							</tr>
+							</thead>
+							<tr>
+								<td colspan="2">Estimated Army Size</td>
+							</tr>
+							<tr>
+								<td colspan="2">${attacker.army.size}k Personnel</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Training</td>
+							</tr>
+							<tr>
+								<td colspan="2">${attacker.army.training}%</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Equipment Status</td>
+							</tr>
+							<tr>
+								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${attacker.totalInfantryEquipment / (attacker.army.size * 10)}"/>%</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Airforce Size</td>
+							</tr>
+							<tr>
+								<td colspan="2"><fmt:formatNumber value="${attacker.fighterCount + attacker.bomberCount + attacker.reconCount}"/></td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Capital Ships</td>
+							</tr>
+							<tr>
+								<td colspan="2">0</td>
+							</tr>
+							<tr>
+								<td colspan="2">Estimated Escort Ships</td>
+							</tr>
+							<tr>
+								<td colspan="2">0</td>
+							</tr>
+						</table>
+						<div class="subtile">
+							<div class="title">Land</div>
+							<div class="description">
+								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
+								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
+							</div>
+							<button onclick="nation(${attacker.id}, 'land_land', 0);">Field Battle</button>
+							<button onclick="nation(${attacker.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="nation(${attacker.id}, 'land_fortify', 0);">Fortify</button>
+						</div>
+						<div class="subtile">
+							<div class="title">Air</div>
+							<div class="description">
+								Use your airforce to diminish your enemies ability to wage war in the air, on the ground, and at home
+							</div>
+							<button onclick="nation(${attacker.id}, 'air_air', 0);">Bomb Airforce</button>
+							<button onclick="nation(${attacker.id}, 'air_land', 0);">Bomb Troops</button>
+							<button onclick="nation(${attacker.id}, 'air_city', 0);">Bomb City</button>
+						</div>
+						<div class="subtile">
+							<div class="title">Sea (Non-functional)</div>
+							<div class="description">
+								Your navy can be used similar to your airforce, but only on targets on or near the water
+							</div>
+							<button>Engage Fleet</button>
+							<button>Bombard Troops</button>
+							<button>Bombard Cities</button>
+						</div>
 					</div>
-				</td>
-			</tr>
-		</table>
-		<br><br>
-		<table class="standardTable nationTable">
-			<caption><p>Airforce</p></caption>
-			<tr>
-				<td><p>Fighters</p></td>
-				<td onclick="toggleTab('Fighters');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.fighterCount}"/> Planes</p>
-					<div class="toggleable detailsDown" id="Fighters">
-						<p><fmt:formatNumber value="${home.fighterCount}"/> Total Fighters</p>
-						<ul>
-							<c:forEach items="${fighters}" var="fighter">
-								<c:if test="${home.getFighter(fighter) > 0}">
-									<li>
-										<c:if test="${home.getFighter(fighter) > 1}">
-											<p>${home.getFighter(fighter)} ${' '.concat(fighter.name)}s</p>
-										</c:if>
-										<c:if test="${home.getFighter(fighter) == 1}">
-											<p>${home.getFighter(fighter)} ${' '.concat(fighter.name)}</p>
-										</c:if>
-									</li>
-								</c:if>
-							</c:forEach>
-						</ul>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td><p>Bombers</p></td>
-				<td onclick="toggleTab('Bombers');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.bomberCount}"/> Planes</p>
-					<div class="toggleable detailsDown" id="Bombers">
-						<p><fmt:formatNumber value="${home.bomberCount}"/> Total Bombers</p>
-						<ul>
-							<c:forEach items="${bombers}" var="bomber">
-								<c:if test="${home.getBomber(bomber) > 0}">
-									<li>
-										<c:if test="${home.getBomber(bomber) > 1}">
-											<p>${home.getBomber(bomber)} ${' '.concat(bomber.name)}s</p>
-										</c:if>
-										<c:if test="${home.getBomber(bomber) == 1}">
-											<p>${home.getBomber(bomber)} ${' '.concat(bomber.name)}</p>
-										</c:if>
-									</li>
-								</c:if>
-							</c:forEach>
-						</ul>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td><p>Recon Aircraft</p></td>
-				<td onclick="toggleTab('Recon');">
-					<img class="floatLeft tiny" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="arrow">
-					<p class="clickable"><fmt:formatNumber value="${home.reconCount}"/> Planes</p>
-					<div class="toggleable detailsDown" id="Recon">
-						<p><fmt:formatNumber value="${home.reconCount}"/> Total Recon Aircraft</p>
-						<ul>
-							<c:forEach items="${reconPlanes}" var="recon">
-								<c:if test="${home.getReconPlane(recon) > 0}">
-									<li>
-										<c:if test="${home.getReconPlane(recon) > 1}">
-											<p>${home.getReconPlane(recon)} ${' '.concat(recon.name)}s</p>
-										</c:if>
-										<c:if test="${home.getReconPlane(recon) == 1}">
-											<p>${home.getReconPlane(recon)} ${' '.concat(recon.name)}</p>
-										</c:if>
-									</li>
-								</c:if>
-							</c:forEach>
-						</ul>
-					</div>
-				</td>
-			</tr>
-		</table>
-		<br><br>
-		<table class="standardTable nationTable">
-			<caption><p>Navy</p></caption>
-			<tr>
-				<td><p>Destroyers</p></td>
-				<td><p><fmt:formatNumber value="${home.military.destroyers}"/></p></td>
-			</tr>
-			<tr>
-				<td><p>Cruisers</p></td>
-				<td><p><fmt:formatNumber value="${home.military.cruisers}"/></p></td>
-			</tr>
-			<tr>
-				<td><p>Battleships</p></td>
-				<td><p><fmt:formatNumber value="${home.military.battleships}"/></p></td>
-			</tr>
-			<tr>
-				<td><p>Submarines</p></td>
-				<td><p><fmt:formatNumber value="${home.military.submarines}"/></p></td>
-			</tr>
-			<tr>
-				<td><p>Troop Transports</p></td>
-				<td><p><fmt:formatNumber value="${home.military.transports}"/></p></td>
-			</tr>
-		</table>
-		<h2>Wars</h2>
-		<c:if test="${home.atWar}">
-			<c:if test="${home.offensive != null}">
-				Offensive war against ${home.offensive.defender.nationUrl}<br>
-			</c:if>
-			<c:if test="${home.defensive != null}">
-				Defensive war against ${home.defensive.attacker.nationUrl}
-			</c:if>
-		</c:if>
-		<c:if test="${!home.atWar}">
-			<i>None</i>
-		</c:if>
-		<br><br>
+				</c:if>
+			</div>
+		</div>
 	</c:if>
-<%@ include file="includes/defaultBottom.jsp" %>
+
+<%@ include file="includes/bottom.jsp" %>

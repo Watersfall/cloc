@@ -1,28 +1,33 @@
-<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
-<%--@elvariable id="declarations" type="java.util.List"--%>
-<%@ include file="includes/defaultTop.jsp" %>
-	<h1>Global Declarations</h1>
-	<c:forEach var="declaration" items="${declarations}">
-		<div class="specialTable">
-			<div>
-				<a class="full declaration" href="${pageContext.request.contextPath}/nation/${declaration.sender.id}">
-					<img class="verySmall floatLeft halfPad" style="padding-right: 0.25em;" src="/user/flag/${declaration.sender.cosmetic.flag}" alt="flag">
-					<p class="textLeft halfPad"><b>${declaration.sender.cosmetic.nationName}</b> declares:</p>
-				</a>
+<%@ include file="includes/top.jsp" %>
+	<div class="title">
+		Declarations
+	</div>
+	<div class="tiling">
+		<div class="column">
+			<div class="tile">
+				<%--@elvariable id="declarations" type="java.util.List"--%>
+				<%--@elvariable id="declaration" type="com.watersfall.clocgame.model.message.Declaration"--%>
+				<c:forEach items="${declarations}" var="declaration">
+					<div class="subtitle">
+						<img src="/user/flag/${declaration.sender.cosmetic.flag}" alt="flag" class="small_flag"/>
+						${declaration.sender.nationUrl} Declared:
+					</div>
+					<div class="description left_text"><c:out escapeXml="false" value="${declaration.content}"/></div>
+				</c:forEach>
 			</div>
-			<div>
-				<a class="full declaration">
-					<p class="textLeft halfPad">${declaration.content}</p>
-				</a>
+			<div class="tile">
+				<div class="title">
+					Post Declaration
+				</div>
+				<div class="description">
+					<form onsubmit="postDeclaration(document.getElementById('content').value); return false;">
+						<label>Message<br>
+							<textarea id="content"></textarea>
+						</label><br>
+						<button class="blue" type="submit">Post</button>
+					</form>
+				</div>
 			</div>
-			<br>
 		</div>
-	</c:forEach>
-	<%@include file="includes/pagination.jsp"%>
-	<br>
-	<c:if test="${home != null}">
-		<label for="post">Post Declaration<br></label>
-		<textarea style="max-width: 25em; min-width: 75%; height: 5em;" id="post"></textarea><br>
-		<button onclick="postDeclaration()">Post - $${home.declarationCost}k</button>
-	</c:if>
-<%@ include file="includes/defaultBottom.jsp" %>
+	</div>
+<%@ include file="includes/bottom.jsp" %>

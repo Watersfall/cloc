@@ -3,6 +3,7 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.CityActions;
 import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.model.decisions.CityDecisions;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
@@ -39,66 +40,67 @@ public class CityDecisionController extends HttpServlet
 			Nation nation = dao.getNationById(UserUtils.getUser(req));
 			int cityId = Integer.parseInt(url.get("id"));
 			String response;
-			switch(url.get("decision"))
+			CityDecisions decision = CityDecisions.valueOf(url.get("decision"));
+			switch(decision)
 			{
-				case "coalmine":
+				case BUILD_COAL_MINE:
 					response =  CityActions.coalMine(nation, cityId);
 					break;
-				case "ironmine":
+				case BUILD_IRON_MINE:
 					response =  CityActions.ironMine(nation, cityId);
 					break;
-				case "drill":
+				case BUILD_OIL_WELL:
 					response =  CityActions.drill(nation, cityId);
 					break;
-				case "industrialize":
+				case BUILD_CIVILIAN_INDUSTRY:
 					response =  CityActions.industrialize(nation, cityId);
 					break;
-				case "militarize":
+				case BUILD_MILITARY_INDUSTRY:
 					response =  CityActions.militarize(nation, cityId);
 					break;
-				case "nitrogen":
+				case BUILD_NITROGEN_INDUSTRY:
 					response =  CityActions.nitrogen(nation, cityId);
 					break;
-				case "university":
+				case BUILD_UNIVERSITY:
 					response =  CityActions.university(nation, cityId);
 					break;
-				case "port":
+				case BUILD_PORT:
 					response =  CityActions.port(nation, cityId);
 					break;
-				case "barrack":
+				case BUILD_BARRACK:
 					response =  CityActions.barrack(nation, cityId);
 					break;
-				case "railroad":
+				case BUILD_RAILROAD:
 					response =  CityActions.railroad(nation, cityId);
 					break;
-				case "uncoalmine":
+				case REMOVE_COAL_MINE:
 					response =  CityActions.closeCoalMine(nation, cityId);
 					break;
-				case "unironmine":
+				case REMOVE_IRON_MINE:
 					response =  CityActions.closeIronMine(nation, cityId);
 					break;
-				case "undrill":
+				case REMOVE_OIL_WELL:
 					response =  CityActions.closeDrill(nation, cityId);
 					break;
-				case "unindustrialize":
+				case REMOVE_CIVILIAN_INDUSTRY:
 					response =  CityActions.closeIndustrialize(nation, cityId);
 					break;
-				case "unmilitarize":
+				case REMOVE_MILITARY_INDUSTRY:
 					response =  CityActions.closeMilitarize(nation, cityId);
 					break;
-				case "unnitrogen":
+				case REMOVE_NITROGEN_INDUSTRY:
 					response =  CityActions.closeNitrogen(nation, cityId);
 					break;
-				case "ununiversity":
+				case REMOVE_UNIVERSITY:
 					response =  CityActions.closeUniversity(nation, cityId);
 					break;
-				case "unport":
+				case REMOVE_PORT:
 					response =  CityActions.closePort(nation, cityId);
 					break;
-				case "unbarrack":
+				case REMOVE_BARRACK:
 					response =  CityActions.closeBarrack(nation, cityId);
 					break;
-				case "unrailroad":
+				case REMOVE_RAILROAD:
 					response =  CityActions.closeRailroad(nation, cityId);
 					break;
 				default:

@@ -1,6 +1,9 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.*;
+import com.watersfall.clocgame.model.CitySize;
+import com.watersfall.clocgame.model.CityType;
+import com.watersfall.clocgame.model.TextKey;
+import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 import lombok.Setter;
@@ -416,7 +419,7 @@ public class City extends Updatable
 	public double getStrikeModifier()
 	{
 		if(this.hasStrike())
-			return getStrikeType().getEffects().get(Key.Modifiers.RESOURCE_PRODUCTION);
+			return getStrikeType().getEffects().get(TextKey.Modifiers.RESOURCE_PRODUCTION) / 100.0;
 		else
 			return 0;
 	}
@@ -599,5 +602,10 @@ public class City extends Updatable
 		map.put(TextKey.Land.FACTORIES, City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
 		map.put(TextKey.Land.UNIVERSITIES, City.LAND_UNIVERSITY * (this.universities));
 		return map;
+	}
+
+	public String getUrl()
+	{
+		return "<a href=\"/cities/" + id + "\"><b>" + this.name + "</b></a>";
 	}
 }

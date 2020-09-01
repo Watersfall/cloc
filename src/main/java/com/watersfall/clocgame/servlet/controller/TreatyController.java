@@ -6,10 +6,12 @@ import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.dao.TreatyDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -48,13 +50,14 @@ public class TreatyController extends HttpServlet
 			{
 				req.setAttribute("manage", true);
 			}
+			req.setAttribute("stats", Stats.getInstance());
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
 		}
 		catch(Exception e)
 		{
-			//Ignore
+			req.setAttribute("error", Errors.TREATY_DOES_NOT_EXIST);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 		}
-		req.setAttribute("stats", Stats.getInstance());
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/treaty.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class TreatyController extends HttpServlet
 		}
 		String attribute = temp;
 		Executor executor = (conn) -> {
-			String value = req.getParameter("value");
+			String value = Security.sanitize(req.getParameter("value"));
 			int user = UserUtils.getUser(req);
 			NationDao dao = new NationDao(conn, true);
 			Nation member = dao.getNationById(user);

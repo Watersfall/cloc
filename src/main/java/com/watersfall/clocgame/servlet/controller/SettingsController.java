@@ -3,9 +3,11 @@ package com.watersfall.clocgame.servlet.controller;
 import com.watersfall.clocgame.action.Action;
 import com.watersfall.clocgame.action.SettingsActions;
 import com.watersfall.clocgame.dao.NationDao;
+import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 
 import javax.servlet.ServletException;
@@ -24,7 +26,15 @@ public class SettingsController extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		req.getServletContext().getRequestDispatcher("/WEB-INF/view/settings.jsp").forward(req, resp);
+		if(UserUtils.checkLogin(req))
+		{
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/settings.jsp").forward(req, resp);
+		}
+		else
+		{
+			req.setAttribute("error", Errors.NOT_LOGGED_IN);
+			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
+		}
 	}
 
 	@Override
@@ -57,19 +67,13 @@ public class SettingsController extends HttpServlet
 					response = SettingsActions.updatePortrait(nation, req.getPart("portrait"));
 					break;
 				case "nationTitle":
-					response = SettingsActions.updateNationTitle(nation, req.getParameter("nationTitle"));
+					response = SettingsActions.updateNationTitle(nation, Security.sanitize(req.getParameter("value")));
 					break;
 				case "leaderTitle":
-					response = SettingsActions.updateLeaderTitle(nation, req.getParameter("leaderTitle"));
+					response = SettingsActions.updateLeaderTitle(nation, Security.sanitize(req.getParameter("value")));
 					break;
 				case "description":
-					response = SettingsActions.updateDescription(nation, req.getParameter("description"));
-					break;
-				case "all":
-					response = SettingsActions.updateAll(nation,
-							req.getParameter("nationTitle"),
-							req.getParameter("leaderTitle"),
-							req.getParameter("description"));
+					response = SettingsActions.updateDescription(nation, Security.sanitize(req.getParameter("value")));
 					break;
 				default:
 					response = Responses.genericError();

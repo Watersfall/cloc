@@ -28,6 +28,15 @@ public class NewsDao extends Dao
 	private static final String DELETE_NEWS_SQL_STATEMENT =
 					"DELETE FROM cloc_news\n" +
 					"WHERE id=?\n";
+	private static final String UNREAD_NEWS_SQL_STATEMENT =
+					"SELECT * \n" +
+					"FROM cloc_news\n" +
+					"WHERE receiver=? AND is_read=FALSE\n" +
+					"LIMIT ?\n";
+	private static final String GET_NEWS_BY_ID =
+					"SELECT * \n" +
+					"FROM cloc_news \n" +
+					"WHERE id=? \n";
 
 	public NewsDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -65,6 +74,20 @@ public class NewsDao extends Dao
 		return getNewsPage(page, nation.getId());
 	}
 
+	public ArrayList<News> getUnreadNews(int nation) throws SQLException
+	{
+		PreparedStatement getNews = connection.prepareStatement(UNREAD_NEWS_SQL_STATEMENT);
+		getNews.setInt(1, nation);
+		getNews.setInt(2, 10);
+		ResultSet results = getNews.executeQuery();
+		ArrayList<News> list = new ArrayList<>();
+		while(results.next())
+		{
+			list.add(new News(results));
+		}
+		return list;
+	}
+
 	public void markNewsAsRead(int nation) throws SQLException
 	{
 		requireWriteAccess();
@@ -98,5 +121,14 @@ public class NewsDao extends Dao
 		PreparedStatement delete = connection.prepareStatement(DELETE_NEWS_SQL_STATEMENT);
 		delete.setInt(1, id);
 		delete.execute();
+	}
+
+	public News getNewsById(int id) throws SQLException
+	{
+		PreparedStatement statement = connection.prepareStatement(GET_NEWS_BY_ID);
+		statement.setInt(1, id);
+		ResultSet results = statement.executeQuery();
+		results.first();
+		return new News(results);
 	}
 }

@@ -50,6 +50,7 @@ Todo List:
     - Improve functionality of the research screen
     - Detailed resource gain UI
 - Ability to adjust the size of your airforce and navy
+- Ability to trade equipment
     
 Idea List:
 -
@@ -60,3 +61,7 @@ Idea List:
 - Events
 - Improved Political and Economic System
 - Admin stuff
+
+Balance Stuff
+-
+- Population growth is way too high, specifically for higher populations

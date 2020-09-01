@@ -6,6 +6,8 @@ import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.TextKey;
+import com.watersfall.clocgame.model.event.Event;
+import com.watersfall.clocgame.model.event.Events;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.schedulers.DayScheduler;
@@ -123,7 +125,7 @@ public class TurnMonth implements Runnable
 							ArrayList<City> cities = new ArrayList<>(nation.getCities().values());
 							cities.removeIf((City::hasStrike));
 							cities.removeIf((city -> {
-								for(Events event : nation.getEvents())
+								for(Event event : nation.getEvents())
 								{
 									if(event.getCityId() == city.getId())
 										return true;
@@ -134,7 +136,7 @@ public class TurnMonth implements Runnable
 							{
 								City city = (City)cities.toArray()[(int)(Math.random() * cities.size())];
 								EventDao eventDao = new EventDao(connection, true);
-								eventDao.createEvent(nation.getId(), Event.STRIKE, Event.generateEventText(Event.STRIKE), city.getId());
+								eventDao.createEvent(nation.getId(), Events.STRIKE, city.getId());
 							}
 						}
 					}
@@ -143,7 +145,7 @@ public class TurnMonth implements Runnable
 					/*
 					** Event Timeouts
 					 */
-					for(Events event : nation.getEvents())
+					for(Event event : nation.getEvents())
 					{
 						if(Time.month - event.getMonth() > 3)
 						{
