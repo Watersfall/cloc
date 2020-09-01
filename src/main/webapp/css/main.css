@@ -866,6 +866,18 @@ button.gold:hover {
 	padding: 0;
 }
 
+footer {
+	text-align: center;
+	margin: 0.5rem auto;
+	color: black;
+	border-top: 1px solid var(--text-color);
+	border-bottom: 1px solid var(--text-color);
+}
+
+footer h3, h4 {
+	margin: 0.25rem;
+}
+
 @media screen and (max-width: 60rem) {
 	.tiling .column {
 		width: 100%;

@@ -2,6 +2,14 @@
 <%--suppress ELMethodSignatureInspection (it gets casted ok >:() --%>
 <% pageContext.setAttribute("netKey", TextKey.Resource.NET); %>
 			</main>
+			<footer>
+				<jsp:useBean id="now" class="java.util.Date" />
+				<fmt:formatDate var="serverTime" value="${now}" pattern="hh:mm" />
+				<div id="footer">
+					<h3>Today's Date: ${time.date}</h3>
+					<h4>Server Time: ${serverTime}</h4>
+				</div>
+			</footer>
 			<c:if test="${home != null}">
 				<div id="resources">
 					<ul>
