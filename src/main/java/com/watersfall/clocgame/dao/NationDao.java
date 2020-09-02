@@ -5,6 +5,7 @@ import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.nation.*;
+import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.model.treaty.Treaty;
 import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.Time;
@@ -517,11 +518,11 @@ public class NationDao extends Dao
 				});
 				double productionIc = production.getIc(nation.getPolicy().getEconomy());
 				double ic = productionIc + (production.getProgress() / 100.0);
-				int amount = (int) (ic / production.getProductionAsTechnology().getTechnology().getProductionICCost());
-				int leftover = (int) ((ic - (amount * production.getProductionAsTechnology().getTechnology().getProductionICCost())) * 100);
+				int amount = (int) (ic / production.getProductionAsTechnology().getTechnology().getProducibleItem().getProductionICCost());
+				int leftover = (int) ((ic - (amount * production.getProductionAsTechnology().getTechnology().getProducibleItem().getProductionICCost())) * 100);
 				production.setProgress(leftover);
-				statement += production.getProductionAsTechnology().getTechnology().getProductionName() + "="
-						+ production.getProductionAsTechnology().getTechnology().getProductionName() + "+" + amount + ", ";
+				statement += Producibles.valueOf(production.getProductionAsTechnology().getTechnology().getProducibleItem()).name().toLowerCase() + "="
+						+ Producibles.valueOf(production.getProductionAsTechnology().getTechnology().getProducibleItem()).name().toLowerCase() + "+" + amount + ", ";
 			}
 		}
 		if(!statement.isEmpty())

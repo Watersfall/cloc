@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.model.war;
 
+import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.Region;
-import com.watersfall.clocgame.model.military.LogType;
 import lombok.Getter;
 
 public class Log

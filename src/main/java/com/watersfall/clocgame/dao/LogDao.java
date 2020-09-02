@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.dao;
 
+import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.Region;
-import com.watersfall.clocgame.model.military.LogType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

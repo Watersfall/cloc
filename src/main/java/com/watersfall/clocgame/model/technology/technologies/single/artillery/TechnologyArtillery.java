@@ -1,13 +1,14 @@
 package com.watersfall.clocgame.model.technology.technologies.single.artillery;
 
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.producible.Producible;
+import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.model.technology.SingleTechnology;
 import com.watersfall.clocgame.model.technology.Technologies;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class TechnologyArtillery extends SingleTechnology
 {
@@ -46,19 +47,9 @@ public class TechnologyArtillery extends SingleTechnology
 		return true;
 	}
 
-	@Override
-	public double getProductionICCost()
+	@Override public Producible getProducibleItem()
 	{
-		return 4;
-	}
-
-	@Override
-	public LinkedHashMap<String, Integer> getProductionResourceCost()
-	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		map.put("steel", 1);
-		map.put("nitrogen", 1);
-		return map;
+		return Producibles.ARTILLERY.getProducible();
 	}
 
 	@Override

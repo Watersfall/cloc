@@ -5,9 +5,6 @@ import com.watersfall.clocgame.dao.MessageDao;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.error.Errors;
-import com.watersfall.clocgame.model.military.Bomber;
-import com.watersfall.clocgame.model.military.Fighter;
-import com.watersfall.clocgame.model.military.ReconPlane;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -29,9 +26,6 @@ public class MainController extends HttpServlet
 	{
 		if(UserUtils.checkLogin(req))
 		{
-			req.setAttribute("fighters", Fighter.values());
-			req.setAttribute("bombers", Bomber.values());
-			req.setAttribute("reconPlanes", ReconPlane.values());
 			if(req.getSession().getAttribute("user") != null)
 			{
 				try(Connection connection = Database.getDataSource().getConnection())

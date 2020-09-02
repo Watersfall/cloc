@@ -205,4 +205,25 @@ public class Util
 		req.setAttribute("page", page);
 		req.setAttribute("maxPage", maxPage);
 	}
+
+	public static String convertUnderscoreToCamel(String underscore)
+	{
+		StringBuilder camel = new StringBuilder(underscore.length());
+		underscore = underscore.toLowerCase();
+		char[] array = underscore.toCharArray();
+		camel.append(Character.toUpperCase(array[0]));
+		for(int i = 1; i < array.length; i++)
+		{
+			if(array[i] != '_')
+			{
+				camel.append(array[i]);
+			}
+			else
+			{
+				i++;
+				camel.append(Character.toUpperCase(array[i]));
+			}
+		}
+		return camel.toString();
+	}
 }

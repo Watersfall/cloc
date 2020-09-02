@@ -3,6 +3,7 @@
 <% pageContext.setAttribute("netManpower", TextKey.Manpower.NET); %>
 <% pageContext.setAttribute("netGrowth", TextKey.Growth.NET); %>
 <% pageContext.setAttribute("netFortification", TextKey.Fortification.NET); %>
+<%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
 <%@ include file="includes/top.jsp" %>
 	<c:if test="${home == null}">
 		<p>You have visited this page incorrectly</p>
@@ -162,8 +163,8 @@
 							<td>Equipment</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.totalInfantryEquipment}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> requested</td>
-							<td>+0 per month</td>
+							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> requested</td>
+							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> per month</td>
 						</tr>
 						<tr>
 							<td colspan="2">Fortification</td>
@@ -194,22 +195,22 @@
 							<td colspan="2">Fighters</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.fighterCount}"/> Planes</td>
-							<td>+0 per month</td>
+							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> Planes</td>
+							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> per month</td>
 						</tr>
 						<tr>
 							<td colspan="2">Bombers</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.bomberCount}"/> Planes</td>
-							<td>+0 per month</td>
+							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE)}"/> Planes</td>
+							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE)}"/> per month</td>
 						</tr>
 						<tr>
 							<td colspan="2">Recon Planes</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.reconCount}"/> Planes</td>
-							<td>+0 per month</td>
+							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE)}"/> Planes</td>
+							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE)}"/> per month</td>
 						</tr>
 					</table>
 					<br>
@@ -385,13 +386,13 @@
 								<td colspan="2">Estimated Equipment Status</td>
 							</tr>
 							<tr>
-								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${defender.totalInfantryEquipment / (defender.army.size * 10)}"/>%</td>
+								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${defender.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (defender.army.size * 10)}"/>%</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Airforce Size</td>
 							</tr>
 							<tr>
-								<td colspan="2"><fmt:formatNumber value="${defender.fighterCount + defender.bomberCount + defender.reconCount}"/></td>
+								<td colspan="2"><fmt:formatNumber value="${defender.getTotalProduciblesByCategories(ProducibleCategory.FIGHTER_PLANE, ProducibleCategory.BOMBER_PLANE, ProducibleCategory.RECON_PLANE)}"/></td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Capital Ships</td>
@@ -462,13 +463,13 @@
 								<td colspan="2">Estimated Equipment Status</td>
 							</tr>
 							<tr>
-								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${attacker.totalInfantryEquipment / (attacker.army.size * 10)}"/>%</td>
+								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${attacker.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (attacker.army.size * 10)}"/>%</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Airforce Size</td>
 							</tr>
 							<tr>
-								<td colspan="2"><fmt:formatNumber value="${attacker.fighterCount + attacker.bomberCount + attacker.reconCount}"/></td>
+								<td colspan="2"><fmt:formatNumber value="${attacker.getTotalProduciblesByCategories(ProducibleCategory.FIGHTER_PLANE, ProducibleCategory.BOMBER_PLANE, ProducibleCategory.RECON_PLANE)}"/></td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Capital Ships</td>

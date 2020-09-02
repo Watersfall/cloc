@@ -1,4 +1,5 @@
 <%@ include file="includes/top.jsp" %>
+<%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 	<div class="tiling">
 		<div class="column">
@@ -129,7 +130,7 @@
 						<td>Equipment</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${nation.totalInfantryEquipment}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> requested</td>
+						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> requested</td>
 					</tr>
 					<tr>
 						<td colspan="2">Fortification</td>
@@ -149,19 +150,19 @@
 						<td colspan="2">Fighters</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${nation.fighterCount}"/> Planes</td>
+						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> Planes</td>
 					</tr>
 					<tr>
 						<td colspan="2">Bombers</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${nation.bomberCount}"/> Planes</td>
+						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE)}"/> Planes</td>
 					</tr>
 					<tr>
 						<td colspan="2">Recon Planes</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${nation.reconCount}"/> Planes</td>
+						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE)}"/> Planes</td>
 					</tr>
 				</table>
 				<br>

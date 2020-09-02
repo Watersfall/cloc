@@ -12,7 +12,7 @@
 		<select id="select_${production.id}" class="toggleable-default-off">
 			<c:forEach items="${home.tech.researchedTechs}" var="tech">
 				<c:if test="${tech.technology.producible}">
-					<option value="${tech.name()}">${tech.technology.productionName}</option>
+					<option value="${tech.name()}">${tech.technology.name}</option>
 				</c:if>
 			</c:forEach>
 		</select>
@@ -52,7 +52,7 @@
 	<div class="progress_bar">
 		<span>Progress:</span>
 		<div>
-			<div style="width: ${production.progress / production.productionAsTechnology.technology.productionICCost}%;">
+			<div style="width: ${production.progress / production.productionAsTechnology.technology.producibleItem.productionICCost}%;">
 				<span>${production.getProductionString(home.policy.economy)}</span>
 			</div>
 		</div>

@@ -2,20 +2,19 @@ package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.dao.LogDao;
 import com.watersfall.clocgame.dao.NewsDao;
-import com.watersfall.clocgame.model.military.Bomber;
-import com.watersfall.clocgame.model.military.Fighter;
-import com.watersfall.clocgame.model.military.LogType;
-import com.watersfall.clocgame.model.military.Plane;
+import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.model.producible.IFighterPower;
+import com.watersfall.clocgame.model.producible.ProducibleCategory;
+import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Time;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class WarActions
@@ -124,24 +123,23 @@ public class WarActions
 	
 	private static int runFighterCalc(Nation nation, double power)
 	{
-		ArrayList<Plane> planes = Plane.getAllPlanes();
+		ArrayList<Producibles> planes = Producibles.getProduciblesByCategories(ProducibleCategory.BOMBER_PLANE, ProducibleCategory.FIGHTER_PLANE);
 		//Adding fighters again to double their chance of being picked
-		planes.addAll(Arrays.asList(Fighter.values()));
-		planes.removeIf(plane -> plane instanceof Fighter && nation.getFighter((Fighter)plane) <= 0 ||
-				plane instanceof Bomber && nation.getBomber((Bomber)plane) <= 0);
+		planes.addAll(Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE));
+		planes.removeIf(plane -> nation.getProducibleValue(plane) <= 0);
 		int totalLosses = 0;
 		while(power > 0)
 		{
-			Plane plane = planes.get((int)(Math.random() * planes.size()));
-			if(plane instanceof Fighter)
+			Producibles plane = planes.get((int)(Math.random() * planes.size()));
+			if(plane.getProducible().getCategory() == ProducibleCategory.FIGHTER_PLANE)
 			{
-				Fighter fighter = (Fighter)plane;
-				if(nation.getFighter(fighter) > 0)
+				IFighterPower fighter = (IFighterPower) plane.getProducible();
+				if(nation.getProducibleValue(plane) > 0)
 				{
-					int random = (int)(Math.random() * fighter.getPower() * 2);
-					if(random > fighter.getPower())
+					int random = (int)(Math.random() * fighter.getFighterPower() * 2);
+					if(random > fighter.getFighterPower())
 					{
-						nation.setFighter(fighter, nation.getFighter(fighter) - 1);
+						nation.setProducibleValue(plane, nation.getProducibleValue(plane) - 1);
 						power -= random;
 						totalLosses++;
 					}
@@ -156,13 +154,13 @@ public class WarActions
 			}
 			else
 			{
-				Bomber bomber = (Bomber)plane;
-				if(nation.getBomber(bomber) > 0)
+				IFighterPower defense = (IFighterPower) plane.getProducible();
+				if(nation.getProducibleValue(plane) > 0)
 				{
-					int random = (int)(Math.random() * bomber.getDefense() * 2);
-					if(random > bomber.getDefense())
+					int random = (int)(Math.random() * defense.getFighterPower() * 2);
+					if(random > defense.getFighterPower())
 					{
-						nation.setBomber(bomber, nation.getBomber(bomber) - 1);
+						nation.setProducibleValue(plane, nation.getProducibleValue(plane) - 1);
 						power -= random;
 						totalLosses++;
 					}

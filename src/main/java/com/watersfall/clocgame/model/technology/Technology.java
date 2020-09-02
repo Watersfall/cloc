@@ -1,10 +1,10 @@
 package com.watersfall.clocgame.model.technology;
 
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.producible.Producible;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public interface Technology
@@ -23,16 +23,13 @@ public interface Technology
 	boolean isProducible();
 
 	/**
-	 * Gets the production cost of this technology if it is producible, or -1.0 if it is not
-	 * @return The production cost
+	 * Returns the Producible class associated with this technology
+	 * @return The Producible class, or null if this technology is not producible
 	 */
-	default double getProductionICCost() {return -1.0;}
-
-	/**
-	 * Gets the resources required for production
-	 * @return The production resource costs
-	 */
-	default LinkedHashMap<String, Integer> getProductionResourceCost() {return null;}
+	default Producible getProducibleItem()
+	{
+		return null;
+	}
 
 	/**
 	 * @param nation The nation to get the success chance for
@@ -64,11 +61,6 @@ public interface Technology
 	 * @return The SQL column name for this technology
 	 */
 	String getTableName();
-
-	/**
-	 * @return The SQL column name of this technologies production, or null if it isn't producible
-	 */
-	default String getProductionName() { return null; }
 
 	/**
 	 * @return A collection containing all required technologies for researching this technology

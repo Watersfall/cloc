@@ -4,14 +4,12 @@ import com.watersfall.clocgame.dao.*;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.database.Tables;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.message.Message;
-import com.watersfall.clocgame.model.military.Bomber;
-import com.watersfall.clocgame.model.military.Equipment;
-import com.watersfall.clocgame.model.military.Fighter;
-import com.watersfall.clocgame.model.military.ReconPlane;
 import com.watersfall.clocgame.model.policies.Policy;
+import com.watersfall.clocgame.model.producible.*;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.Technology;
 import com.watersfall.clocgame.model.technology.technologies.single.doctrine.*;
@@ -23,6 +21,7 @@ import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -940,185 +939,82 @@ public class Nation extends Updatable
 		return map;
 	}
 
-	/**
-	 * Gets the total equipment of the army
-	 * @return The total equipment
-	 */
-	public long getTotalInfantryEquipment()
+	public int getProducibleValue(Producibles producibles)
+	{
+		try
+		{
+			String methodName = "get" + Util.convertUnderscoreToCamel(producibles.name());
+			if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_ARMY)
+			{
+				Method method = this.getArmy().getClass().getMethod(methodName);
+				return (int)method.invoke(this.getArmy());
+			}
+			else if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_MILITARY)
+			{
+				Method method = this.getMilitary().getClass().getMethod(methodName);
+				return (int)method.invoke(this.getMilitary());
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public void setProducibleValue(Producibles producibles, int value)
+	{
+		try
+		{
+			String methodName = "set" + Util.convertUnderscoreToCamel(producibles.name());
+			if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_ARMY)
+			{
+				Method method = this.getArmy().getClass().getMethod(methodName, int.class);
+				method.invoke(this.getArmy(), value);
+			}
+			else if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_MILITARY)
+			{
+				Method method = this.getMilitary().getClass().getMethod(methodName, int.class);
+				method.invoke(this.getMilitary(), value);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public long getTotalProduciblesByCategory(ProducibleCategory category)
 	{
 		long total = 0;
-		for(Equipment equipment : Equipment.getInfantryEquipment())
+		for(Producibles producibles : Producibles.getProduciblesForCategory(category))
 		{
-			total += this.getEquipment(equipment);
+			total += this.getProducibleValue(producibles);
 		}
 		return total;
 	}
 
-	public long getTotalArmor()
+	public long getTotalProduciblesByCategories(ProducibleCategory... category)
 	{
 		long total = 0;
-		for(Equipment equipment : Equipment.getArmor())
+		for(Producibles producibles : Producibles.getProduciblesByCategories(category))
 		{
-			total += this.getEquipment(equipment);
+			total += this.getProducibleValue(producibles);
 		}
 		return total;
 	}
 
-	public long getTotalArtillery()
+	public long getProduciblesProductionByCategory(ProducibleCategory category)
 	{
-		long total = 0;
-		for(Equipment equipment : Equipment.getArtillery())
+		double total = 0;
+		for(Production production : this.production.values())
 		{
-			total += this.getEquipment(equipment);
+			if(production.getProductionAsTechnology().getTechnology().getProducibleItem().getCategory() == category)
+			{
+				total += production.getMonthlyProduction(this);
+			}
 		}
-		return total;
-	}
-
-	public LinkedHashMap<String, Integer> getEquipment()
-	{
-		LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-		map.put("Muskets", this.army.getMusket());
-		map.put("Rifled Muskets", this.army.getRifledMusket());
-		map.put("Single Shot Rifles", this.army.getSingleShot());
-		map.put("Needle Nose Rifles", this.army.getNeedleNose());
-		map.put("Manually Loaded Bolt Action Rifles", this.army.getBoltActionManual());
-		map.put("Clip Loaded Bolt Action Rifles", this.army.getBoltActionClip());
-		map.put("Straight Pull Rifles", this.army.getStraightPull());
-		map.put("Semi-Automatic Rifles", this.army.getSemiAuto());
-		map.put("Machine Guns", this.army.getMachineGun());
-		return map;
-	}
-
-	public int getFighterCount()
-	{
-		int total = 0;
-		for(Fighter fighter : Fighter.values())
-		{
-			total += this.getFighter(fighter);
-		}
-		return total;
-	}
-
-	public int getBomberCount()
-	{
-		int total = 0;
-		for(Bomber bomber : Bomber.values())
-		{
-			total += this.getBomber(bomber);
-		}
-		return total;
-	}
-
-	public int getReconCount()
-	{
-		int total = 0;
-		for(ReconPlane plane : ReconPlane.values())
-		{
-			total += this.getReconPlane(plane);
-		}
-		return total;
-	}
-
-	public int getEquipment(Equipment equipment)
-	{
-		switch(equipment)
-		{
-			case MUSKET:
-				return this.getArmy().getMusket();
-			case RIFLED_MUSKET:
-				return this.getArmy().getRifledMusket();
-			case SINGLE_SHOT_RIFLE:
-				return this.getArmy().getSingleShot();
-			case NEEDLE_NOSE:
-				return this.getArmy().getNeedleNose();
-			case BOLT_ACTION_MANUAL:
-				return this.getArmy().getBoltActionManual();
-			case BOLT_ACTION_CLIP:
-				return this.getArmy().getBoltActionClip();
-			case STRAIGHT_PULL_RIFLE:
-				return this.getArmy().getStraightPull();
-			case SEMI_AUTOMATIC:
-				return this.getArmy().getSemiAuto();
-			case MACHINE_GUN:
-				return this.getArmy().getMachineGun();
-			case ARTILLERY:
-				return this.getArmy().getArtillery();
-			case TANK:
-				return this.getArmy().getTank();
-			default:
-				return 0;
-
-		}
-	}
-
-	public int getFighter(Fighter fighter)
-	{
-		switch(fighter)
-		{
-			case BIPLANE_FIGHTER:
-				return this.getMilitary().getBiplaneFighters();
-			case TRIPLANE_FIGHTER:
-				return this.getMilitary().getTriplaneFighters();
-			case MONOPLANE_FIGHTER:
-				return this.getMilitary().getMonoplaneFighters();
-			default:
-				return 0;
-		}
-	}
-
-	public void setFighter(Fighter fighter, int value)
-	{
-		switch(fighter)
-		{
-			case BIPLANE_FIGHTER:
-				this.getMilitary().setBiplaneFighters(value);
-				break;
-			case TRIPLANE_FIGHTER:
-				this.getMilitary().setTriplaneFighters(value);
-				break;
-			case MONOPLANE_FIGHTER:
-				this.getMilitary().setMonoplaneFighters(value);
-				break;
-		}
-	}
-
-	public int getBomber(Bomber bomber)
-	{
-		switch(bomber)
-		{
-			case ZEPPELIN_BOMBER:
-				return this.getMilitary().getZeppelins();
-			case BOMBER:
-				return this.getMilitary().getBombers();
-			default:
-				return 0;
-		}
-	}
-
-	public void setBomber(Bomber bomber, int value)
-	{
-		switch(bomber)
-		{
-			case ZEPPELIN_BOMBER:
-				this.getMilitary().setZeppelins(value);
-				break;
-			case BOMBER:
-				this.getMilitary().setBombers(value);
-				break;
-		}
-	}
-
-	public int getReconPlane(ReconPlane plane)
-	{
-		switch(plane)
-		{
-			case RECON_BALLOON:
-				return this.getMilitary().getReconBalloons();
-			case RECON_PLANE:
-				return this.getMilitary().getReconPlanes();
-			default:
-				return 0;
-		}
+		return (long)total;
 	}
 
 	/**
@@ -1129,21 +1025,21 @@ public class Nation extends Updatable
 	{
 		double power = 0e0;
 		long requiredEquipment = (long)army.getSize() * 1000L;
-		for(Equipment equipment : Equipment.getInfantryEquipment())
+		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT))
 		{
 			if(requiredEquipment > 0)
 			{
-				if(this.getEquipment(equipment) > 0)
+				if(this.getProducibleValue(producibles) > 0)
 				{
-					if(this.getEquipment(equipment) > requiredEquipment)
+					if(this.getProducibleValue(producibles) > requiredEquipment)
 					{
-						power += requiredEquipment * equipment.getPower();
+						power += requiredEquipment * ((IArmyPower)producibles.getProducible()).getArmyPower();
 						requiredEquipment = 0;
 					}
 					else
 					{
-						power += this.getEquipment(equipment) * equipment.getPower();
-						requiredEquipment -= this.getEquipment(equipment);
+						power += this.getProducibleValue(producibles) * ((IArmyPower)producibles.getProducible()).getArmyPower();
+						requiredEquipment -= this.getProducibleValue(producibles);
 					}
 				}
 			}
@@ -1164,13 +1060,13 @@ public class Nation extends Updatable
 	public double getBreakthrough()
 	{
 		int max = this.getArmy().getSize() * 5;
-		long currentTanks = this.getTotalArmor();
+		long currentTanks = this.getTotalProduciblesByCategory(ProducibleCategory.TANK);
 		if(currentTanks > max)
 		{
 			currentTanks = max;
 		}
 		double ratio = (double)currentTanks / (double)max;
-		long currentArtillery = this.getTotalArtillery();
+		long currentArtillery = this.getTotalProduciblesByCategory(ProducibleCategory.ARTILLERY);
 		if(currentArtillery > max)
 		{
 			currentArtillery = max;
@@ -1179,24 +1075,24 @@ public class Nation extends Updatable
 		artillery /= 2;
 		double recon = 1;
 		int maxRecon = max / 5;
-		int currentRecon = this.getReconCount();
+		long currentRecon = this.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE);
 		if(currentRecon > maxRecon)
 		{
 			currentRecon = maxRecon;
 		}
-		List<ReconPlane> list = Arrays.asList(ReconPlane.values());
+		List<Producibles> list = Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE);
 		Collections.reverse(list);
-		for(ReconPlane plane : list)
+		for(Producibles plane : list)
 		{
-			if(this.getReconPlane(plane) > currentRecon)
+			if(this.getProducibleValue(plane) > currentRecon)
 			{
-				recon += (currentRecon * plane.getPower());
+				recon += (currentRecon * ((IReconPower)plane.getProducible()).getReconPower());
 				currentRecon = 0;
 			}
 			else
 			{
-				recon += (this.getReconPlane(plane) * plane.getPower());
-				currentRecon -= this.getReconPlane(plane);
+				recon += (this.getProducibleValue(plane) * ((IReconPower)plane.getProducible()).getReconPower());
+				currentRecon -= this.getProducibleValue(plane);
 			}
 		}
 		recon = 1 + recon / maxRecon;
@@ -1273,20 +1169,20 @@ public class Nation extends Updatable
 	public double getFighterPower(boolean attackingOtherAirforce)
 	{
 		double power = 0;
-		for(Fighter fighter : Fighter.values())
+		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
 		{
-			power += (this.getFighter(fighter) * fighter.getPower());
+			power += (this.getProducibleValue(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
 		}
 		if(attackingOtherAirforce)
 		{
-			for(Bomber bomber : Bomber.values())
+			for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
 			{
-				power += (this.getBomber(bomber) * bomber.getBombingPower() / 2);
+				power += (this.getProducibleValue(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower() / 2);
 			}
 		}
-		for(Bomber bomber : Bomber.values())
+		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
 		{
-			power += (this.getBomber(bomber) * bomber.getDefense());
+			power += (this.getProducibleValue(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
 		}
 		return power / 10;
 	}
@@ -1298,9 +1194,9 @@ public class Nation extends Updatable
 	public double getBomberPower()
 	{
 		double power = 0;
-		for(Bomber bomber : Bomber.values())
+		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
 		{
-			power += (this.getBomber(bomber) * bomber.getBombingPower());
+			power += (this.getProducibleValue(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower());
 		}
 		return power / 10;
 	}
