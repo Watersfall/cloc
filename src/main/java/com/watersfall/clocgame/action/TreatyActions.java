@@ -93,7 +93,7 @@ public class TreatyActions
 		else
 		{
 			uploadFlag(req, image, member.getTreaty().getId());
-			member.getTreaty().setFlag(member.getTreaty().getId() + ".png");
+			member.getTreaty().setFlag(member.getTreaty().getId() + ".png?v=" + System.currentTimeMillis());
 			return Responses.updated("Flag");
 		}
 	}

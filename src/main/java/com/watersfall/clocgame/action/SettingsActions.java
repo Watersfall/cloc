@@ -132,7 +132,7 @@ public class SettingsActions
 		else
 		{
 			uploadFlag(image, cosmetic.getId());
-			cosmetic.setFlag(cosmetic.getId() + ".png");
+			cosmetic.setFlag(cosmetic.getId() + ".png?v=" + System.currentTimeMillis());
 			return Responses.updated("Flag");
 		}
 	}
@@ -153,7 +153,7 @@ public class SettingsActions
 		else
 		{
 			uploadPortrait(image, cosmetic.getId());
-			cosmetic.setPortrait(cosmetic.getId() + ".png");
+			cosmetic.setPortrait(cosmetic.getId() + ".png?v=" + System.currentTimeMillis());
 			return Responses.updated("Portrait");
 		}
 	}

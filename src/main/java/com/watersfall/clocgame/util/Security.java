@@ -17,6 +17,8 @@ public class Security
 
 	public static String sanitize(String string)
 	{
+		if(string == null)
+			return null;
 		return EscapeXML.escape(string);
 	}
 }
