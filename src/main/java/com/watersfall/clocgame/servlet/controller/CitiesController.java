@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
+import com.watersfall.clocgame.action.CityActions;
 import com.watersfall.clocgame.dao.CityDao;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
@@ -10,6 +11,7 @@ import com.watersfall.clocgame.model.nation.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -73,11 +75,7 @@ public class CitiesController extends HttpServlet
 	{
 		HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 		PrintWriter writer = resp.getWriter();
-		if(!url.get("id").equalsIgnoreCase("new"))
-		{
-			writer.append(Responses.genericError());
-		}
-		else
+		if(url.get("id").equalsIgnoreCase("new"))
 		{
 			Executor exec = (conn -> {
 				Nation nation = new NationDao(conn, true).getNationById(UserUtils.getUser(req));
@@ -92,6 +90,27 @@ public class CitiesController extends HttpServlet
 				}
 			});
 			writer.append(Action.doAction(exec));
+		}
+		else
+		{
+			Executor executor = (conn) -> {
+				int user = UserUtils.getUser(req);
+				int cityId = Integer.parseInt(url.get("id"));
+				CityDao dao = new CityDao(conn, true);
+				City city = dao.getCityById(cityId);
+				if(city.getId() != user)
+				{
+					return Responses.notYourCity();
+				}
+				else
+				{
+					String name = Security.sanitize(req.getParameter("name"));
+					String response = CityActions.rename(city, name);
+					city.update(conn);
+					return response;
+				}
+			};
+			writer.append(Action.doAction(executor));
 		}
 	}
 }

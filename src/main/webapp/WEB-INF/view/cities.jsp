@@ -8,7 +8,18 @@
 		<div class="column">
 			<div class="tile">
 				<c:forEach var="city" items="${home.cities.values()}">
-					<div class="subtitle"><c:out escapeXml="false" value="${city.url} "/> <img title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit"/> (${city.freeSlots} free slots)</div>
+					<div class="subtitle">
+						<div id="city_name_${city.id}">
+							<c:out escapeXml="false" value="${city.url} "/>
+							<img title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit" onclick="editCityName(${city.id})"/>
+							(${city.freeSlots} free slots)
+						</div>
+						<div class="toggleable-default-off" id="city_name_change_${city.id}">
+							<input id="new_name_${city.id}" style="font-size: inherit" type="text" value="${city.name}"/>
+							<img onclick="confirmCityName(${city.id});" title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/checkmark.svg" alt="edit"/>
+							<img onclick="cancelCityName(${city.id});" title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/cancel.svg" alt="edit"/>
+						</div>
+					</div>
 					<table class="nation nation_left">
 						<tr>
 							<td colspan="3">Coal Mines</td>
@@ -58,7 +69,9 @@
 </c:if>
 <c:if test="${city != null}">
 	<c:if test="${!home.cities.containsValue(city)}">
-		<div class="title">${city.name}</div>
+		<div class="title">
+			<c:out value="${city.name}"/>
+		</div>
 		<div class="tiling">
 			<div class="column">
 				<div class="tile">
@@ -122,12 +135,22 @@
 		</div>
 	</c:if>
 	<c:if test="${home.cities.containsValue(city)}">
-		<div class="title">${city.name}</div>
+		<div class="title">
+			<div id="city_name_${city.id}">
+				<c:out escapeXml="false" value="${city.name} "/>
+				<img title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit" onclick="editCityName(${city.id})"/>
+			</div>
+			<div class="toggleable-default-off" id="city_name_change_${city.id}">
+				<input id="new_name_${city.id}" style="font-size: inherit" type="text" value="${city.name}"/>
+				<img onclick="confirmCityName(${city.id});" title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/checkmark.svg" alt="edit"/>
+				<img onclick="cancelCityName(${city.id});" title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/cancel.svg" alt="edit"/>
+			</div>
+		</div>
 		<div class="tiling">
 			<div class="column">
 				<div class="tile">
 					<div class="subtitle">
-						<c:out escapeXml="false" value="${city.size.name} "/><img title="Edit City Name" class="match_text black" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit"/>
+						<c:out escapeXml="false" value="${city.size.name} "/>
 					</div>
 					<div class="description left_text">
 							${city.freeSlots} Free Build Slots (out of ${city.buildSlots} total)<br>

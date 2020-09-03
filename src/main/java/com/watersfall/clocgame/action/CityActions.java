@@ -9,7 +9,6 @@ import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationEconomy;
 import com.watersfall.clocgame.text.Responses;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -515,7 +514,7 @@ public class CityActions
 
 
 
-	public static String rename(City city, String name, Connection conn) throws SQLException, NullPointerException
+	public static String rename(City city, String name) throws SQLException, NullPointerException
 	{
 		if(name.length() > 64)
 		{

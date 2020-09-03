@@ -448,3 +448,32 @@ function doEvent(id, response)
 	let params = "event=" + id + "&event_action=" + response;
 	ajax(url, params);
 }
+
+function editCityName(id)
+{
+	document.getElementById("city_name_" + id).style.display = "none";
+	toggle("city_name_change_" + id);
+}
+
+function confirmCityName(id)
+{
+	displayResults();
+	let name = document.getElementById("new_name_" + id).value;
+	document.getElementById("city_name_" + id).firstElementChild.innerHTML = "<b>" + name + "</b>";
+	let url = "/cities/" + id;
+	let param = "name=" + name;
+	let callback = function() {
+		if(this.readyState === 4 && this.status === 200)
+		{
+			cancelCityName(id);
+			document.getElementById("results_content").innerHTML = this.responseText;
+		}
+	};
+	ajax(url, param, callback);
+}
+
+function cancelCityName(id)
+{
+	toggle("city_name_change_" + id);
+	toggle("city_name_" + id);
+}
