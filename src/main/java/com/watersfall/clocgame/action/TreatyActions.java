@@ -26,6 +26,10 @@ public class TreatyActions
 		{
 			return false;
 		}
+		else if(nation2.getTreatyPermissions().isFounder())
+		{
+			return false;
+		}
 		else if(nation1.getTreatyPermissions().isFounder() || nation2.getTreatyPermissions().getRoles().isEmpty())
 		{
 			return true;
