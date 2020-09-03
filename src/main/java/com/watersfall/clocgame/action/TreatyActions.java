@@ -20,6 +20,22 @@ import java.sql.SQLException;
 
 public class TreatyActions
 {
+	private static boolean canInteractWith(Nation nation1, Nation nation2)
+	{
+		if(nation1.equals(nation2))
+		{
+			return false;
+		}
+		else if(nation1.getTreatyPermissions().isFounder() || nation2.getTreatyPermissions().getRoles().isEmpty())
+		{
+			return true;
+		}
+		else
+		{
+			return (nation1.getTreatyPermissions().isManage() && !nation2.getTreatyPermissions().isManage());
+		}
+	}
+
 	private static void uploadFlag(HttpServletRequest req, BufferedImage part, int user) throws IOException
 	{
 		String directory = Util.DIRECTORY + File.separator + "treaty" + File.separator + user + ".png";
@@ -178,6 +194,10 @@ public class TreatyActions
 		}
 		else if(!(member.getTreatyPermissions().isKick() || member.getTreatyPermissions().isManage()
 				|| member.getTreatyPermissions().isFounder()))
+		{
+			return Responses.noPermission();
+		}
+		else if(!canInteractWith(member, personToKick))
 		{
 			return Responses.noPermission();
 		}
