@@ -12,7 +12,7 @@
 		<select id="select_${production.id}" class="toggleable-default-off">
 			<c:forEach items="${home.tech.researchedTechs}" var="tech">
 				<c:if test="${tech.technology.producible}">
-					<option value="${tech.name()}">${tech.technology.name}</option>
+					<option ${tech.name() == production.production ? 'selected' : ''} value="${tech.name()}">${tech.technology.name}</option>
 				</c:if>
 			</c:forEach>
 		</select>
