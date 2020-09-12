@@ -3,6 +3,7 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationEconomy;
@@ -143,7 +144,7 @@ public class DecisionActions
 	//</editor-fold>
 
 	//<editor-fold desc="Foreign Policies">
-	private static String align(Nation nation, int align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
+	private static String align(Nation nation, Alignments align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.ALIGN_NEUTRAL);
 		if(nation.getEconomy().getBudget() < cost)
@@ -164,17 +165,17 @@ public class DecisionActions
 
 	public static String alignEntente(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		return align(nation, 1);
+		return align(nation, Alignments.ENTENTE);
 	}
 
 	public static String alignNeutral(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		return align(nation, 0);
+		return align(nation, Alignments.NEUTRAL);
 	}
 
 	public static String alignCentralPowers(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		return align(nation, -1);
+		return align(nation, Alignments.CENTRAL_POWERS);
 	}
 	//</editor-fold>
 

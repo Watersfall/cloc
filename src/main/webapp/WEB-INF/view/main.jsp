@@ -124,7 +124,7 @@
 							<td colspan="2">Official Alignment</td>
 						</tr>
 						<tr>
-							<td colspan="2"><cloc:alignment value="${home.foreign.alignment}"/></td>
+							<td colspan="2">${home.foreign.alignment}</td>
 						</tr>
 						<tr>
 							<td colspan="2">Treaty Membership</td>

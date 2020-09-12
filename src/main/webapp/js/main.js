@@ -477,3 +477,11 @@ function cancelCityName(id)
 	toggle("city_name_change_" + id);
 	toggle("city_name_" + id);
 }
+
+function alignmentTransaction(alignment, producible, action)
+{
+	let url = "/alignment/" + alignment;
+	let params = "producible=" + producible + "&action=" + action;
+	console.log(url);
+	ajax(url, params);
+}

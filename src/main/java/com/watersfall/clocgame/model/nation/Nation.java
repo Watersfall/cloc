@@ -4,6 +4,8 @@ import com.watersfall.clocgame.dao.*;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.alignment.AlignmentTransaction;
+import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.database.Tables;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.event.Event;
@@ -52,6 +54,7 @@ public class Nation extends Updatable
 	private @Getter @Setter long freeFactories;
 	private @Getter @Setter long lastSeen;
 	private @Getter @Setter ArrayList<Modifier> modifiers;
+	private @Getter @Setter EnumMap<Alignments, ArrayList<AlignmentTransaction>> alignmentTransactions;
 	private LinkedHashMap<TextKey, Double> coalProduction = null;
 	private LinkedHashMap<TextKey, Double> ironProduction = null;
 	private LinkedHashMap<TextKey, Double> oilProduction = null;
@@ -154,24 +157,24 @@ public class Nation extends Updatable
 		}
 		else if(nation.getMilitary().getWarProtection() > 0)
 		{
-			if(nation.getForeign().getAlignment() == 0)
+			if(nation.getForeign().getAlignment() == Alignments.NEUTRAL)
 			{
 				return Responses.cannotWar("neutralProtection");
 			}
 			else
 			{
-				return (nation.getForeign().getAlignment() == -1) ? Responses.cannotWar("germanProtection") : Responses.cannotWar("frenchProtection");
+				return (nation.getForeign().getAlignment() == Alignments.CENTRAL_POWERS) ? Responses.cannotWar("germanProtection") : Responses.cannotWar("frenchProtection");
 			}
 		}
 		else if(this.military.getWarProtection() > 0)
 		{
-			if(this.getForeign().getAlignment() == 0)
+			if(this.getForeign().getAlignment() == Alignments.NEUTRAL)
 			{
 				return Responses.cannotWar("youNeutralProtection");
 			}
 			else
 			{
-				return (this.getForeign().getAlignment() == -1) ? Responses.cannotWar("youGermanProtection") : Responses.cannotWar("youFrenchProtection");
+				return (this.getForeign().getAlignment() == Alignments.CENTRAL_POWERS) ? Responses.cannotWar("youGermanProtection") : Responses.cannotWar("youFrenchProtection");
 			}
 		}
 		else
@@ -1626,6 +1629,95 @@ public class Nation extends Updatable
 	public String getDisplayString(TextKey key)
 	{
 		return key.getText();
+	}
+
+	public int getMaxReputation(Alignments alignment)
+	{
+		if(alignment == Alignments.NEUTRAL)
+		{
+			return 0;
+		}
+		else
+		{
+			HashMap<TextKey, Integer> map;
+			if(alignment == Alignments.CENTRAL_POWERS)
+			{
+				map = getCentralPowersReputation();
+			}
+			else
+			{
+				map = getEntenteReputation();
+			}
+			int sum = 0;
+			for(Integer num : map.values())
+			{
+				sum += num;
+			}
+			return sum;
+		}
+
+	}
+
+	public HashMap<TextKey, Integer> getEntenteReputation()
+	{
+		HashMap<TextKey, Integer> map = new HashMap<>();
+		int positiveTrade = 0, negativeTrade = 0;
+		if(this.alignmentTransactions.containsKey(Alignments.ENTENTE))
+		{
+			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.ENTENTE))
+			{
+				positiveTrade += 25;
+			}
+		}
+		if(this.alignmentTransactions.containsKey(Alignments.CENTRAL_POWERS))
+		{
+			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.CENTRAL_POWERS))
+			{
+				negativeTrade -= 50;
+			}
+		}
+		map.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
+		map.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
+		if(this.foreign.getAlignment() == Alignments.ENTENTE)
+		{
+			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, 500);
+		}
+		else if(this.foreign.getAlignment() == Alignments.CENTRAL_POWERS)
+		{
+			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
+		}
+		return map;
+	}
+
+	public HashMap<TextKey, Integer> getCentralPowersReputation()
+	{
+		HashMap<TextKey, Integer> map = new HashMap<>();
+		int positiveTrade = 0, negativeTrade = 0;
+		if(this.alignmentTransactions.containsKey(Alignments.CENTRAL_POWERS))
+		{
+			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.CENTRAL_POWERS))
+			{
+				positiveTrade += 25;
+			}
+		}
+		if(this.alignmentTransactions.containsKey(Alignments.ENTENTE))
+		{
+			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.ENTENTE))
+			{
+				negativeTrade -= 50;
+			}
+		}
+		map.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
+		map.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
+		if(this.foreign.getAlignment() == Alignments.ENTENTE)
+		{
+			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
+		}
+		else if(this.foreign.getAlignment() == Alignments.CENTRAL_POWERS)
+		{
+			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, 500);
+		}
+		return map;
 	}
 
 	@Override

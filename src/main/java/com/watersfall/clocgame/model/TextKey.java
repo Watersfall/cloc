@@ -188,4 +188,17 @@ public interface TextKey
 			return this.text + " in " + city.getUrl();
 		}
 	}
+
+	enum Alignment implements TextKey
+	{
+		OFFICIAL_ALIGNMENT(" due to official alignment"),
+		EQUIPMENT_SALES(" due to equipment sales to this alignment"),
+		EQUIPMENT_SALES_NEGATIVE(" due to equipment sales to the opposite alignment");
+
+		private @Getter String text;
+		Alignment(String text)
+		{
+			this.text = text;
+		}
+	}
 }

@@ -3,6 +3,8 @@ package com.watersfall.clocgame.dao;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Region;
+import com.watersfall.clocgame.model.alignment.AlignmentTransaction;
+import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.producible.Producibles;
@@ -12,6 +14,7 @@ import com.watersfall.clocgame.util.Time;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -123,6 +126,8 @@ public class NationDao extends Dao
 					"RIGHT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
 					"WHERE treaty.id=?\n" +
 					"ORDER BY cloc_login.id\n";
+	private static final String ALIGNMENT_TRANSACTIONS =
+			"SELECT * FROM alignments_transactions WHERE nation=? ";
 
 	public NationDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -133,9 +138,10 @@ public class NationDao extends Dao
 	public Nation getNationById(int id) throws SQLException
 	{
 		Nation nation = new Nation(id);
-		PreparedStatement getStats, getCities, getInvites, getNews, getEvents, getWars, getModifiers, getProduction;
+		PreparedStatement getStats, getCities, getInvites, getNews, getEvents, getWars, getModifiers, getProduction, transactionsStatement;
 		if(allowWriteAccess)
 		{
+			transactionsStatement = connection.prepareStatement(ALIGNMENT_TRANSACTIONS + WRITE_ACCESS_SQL_STATEMENT);
 			getStats = connection.prepareStatement(STATS_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
 			getCities = connection.prepareStatement(CityDao.CITIES_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
 			getInvites = connection.prepareStatement(INVITES_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
@@ -147,6 +153,7 @@ public class NationDao extends Dao
 		}
 		else
 		{
+			transactionsStatement = connection.prepareStatement(ALIGNMENT_TRANSACTIONS);
 			getStats = connection.prepareStatement(STATS_SQL_STATEMENT);
 			getCities = connection.prepareStatement(CityDao.CITIES_SQL_STATEMENT);
 			getInvites = connection.prepareStatement(INVITES_SQL_STATEMENT);
@@ -272,6 +279,26 @@ public class NationDao extends Dao
 		nation.setConn(connection);
 		MessageDao messageDao = new MessageDao(connection, allowWriteAccess);
 		nation.setUnreadMessages(messageDao.getUnreadMessages(nation.getId(), nation.getLastReadMessage()));
+		transactionsStatement.setInt(1, nation.getId());
+		ResultSet transactions = transactionsStatement.executeQuery();
+		EnumMap<Alignments, ArrayList<AlignmentTransaction>> transactionsMap = new EnumMap<>(Alignments.class);
+		while(transactions.next())
+		{
+			Alignments alignment = Alignments.valueOf(transactions.getString("alignment"));
+			Producibles producible = Producibles.valueOf(transactions.getString("equipment"));
+			AlignmentTransaction transaction = new AlignmentTransaction(alignment, nation, producible, transactions.getLong("amount"), transactions.getLong("month"));
+			if(!transactionsMap.containsKey(alignment))
+			{
+				ArrayList<AlignmentTransaction> list = new ArrayList<>();
+				list.add(transaction);
+				transactionsMap.put(alignment, list);
+			}
+			else
+			{
+				transactionsMap.get(alignment).add(transaction);
+			}
+		}
+		nation.setAlignmentTransactions(transactionsMap);
 		return nation;
 	}
 

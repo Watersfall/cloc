@@ -21,6 +21,11 @@ public class Time
 		return months[i] + " " + temp + ", " + (1900 + year);
 	}
 
+	public static int getCurrentYear()
+	{
+		return (int)(day / 365);
+	}
+
 	public String getDate()
 	{
 		return getCurrentDate();

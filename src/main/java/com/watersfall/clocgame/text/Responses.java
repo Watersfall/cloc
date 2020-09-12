@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.text;
 
+import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.nation.City;
 
 public class Responses
@@ -458,15 +459,15 @@ public class Responses
 		return "<p>You peacefully annexed " + amount + "km<sup>2</sup> of land from the natives!</p>";
 	}
 
-	public static String align(int align)
+	public static String align(Alignments align)
 	{
 		switch(align)
 		{
-			case 1:
+			case ENTENTE:
 				return "<p>You align yourself with the Entente!</p>";
-			case 0:
+			case NEUTRAL:
 				return "<p>Your people cheer as you declare your neutrality!</p>";
-			case -1:
+			case CENTRAL_POWERS:
 				return "<p>You align yourself with the Central Powers!</p>";
 			default:
 				return "<p>What did you do?</p>";

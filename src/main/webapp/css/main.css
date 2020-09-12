@@ -462,7 +462,7 @@ main {
 
 .centered {
 	margin: 0 auto;
-	text-align: center;
+	text-align: center !important;
 }
 
 .event_effects {

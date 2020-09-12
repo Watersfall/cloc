@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.util;
 
 import com.watersfall.clocgame.exception.NotLoggedInException;
+import com.watersfall.clocgame.model.nation.Nation;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,5 +33,10 @@ public class UserUtils
 			return true;
 		}
 		return false;
+	}
+
+	public static Nation getUserNation(HttpServletRequest request)
+	{
+		return (Nation)request.getAttribute("home");
 	}
 }
