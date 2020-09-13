@@ -2,6 +2,7 @@
 <%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ page import="com.watersfall.clocgame.model.alignment.Alignments" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -66,6 +67,11 @@
 							<li>
 								<a href="${pageContext.request.contextPath}/technology/tree">Technology</a>
 							</li>
+							<c:if test="${home.foreign.alignment == Alignments.CENTRAL_POWERS || home.foreign.alignment == Alignments.ENTENTE}">
+								<li>
+									<a href="${pageContext.request.contextPath}/alignment/">Alignment</a>
+								</li>
+							</c:if>
 						</ul>
 					</li>
 					<li>
