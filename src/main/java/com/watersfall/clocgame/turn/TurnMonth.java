@@ -6,6 +6,7 @@ import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.TextKey;
+import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.event.Events;
 import com.watersfall.clocgame.model.nation.*;
@@ -156,6 +157,31 @@ public class TurnMonth implements Runnable
 							}
 						}
 					}
+
+					/*
+					** Reputation
+					 */
+					int eGain = (int)(nation.getMaxReputation(Alignments.ENTENTE) / 20.0);
+					int currentE = nation.getForeign().getEntenteReputation();
+					if(currentE + eGain > nation.getMaxReputation(Alignments.ENTENTE))
+					{
+						nation.getForeign().setReputation(Alignments.ENTENTE, nation.getMaxReputation(Alignments.ENTENTE));
+					}
+					else
+					{
+						nation.getForeign().setReputation(Alignments.ENTENTE, eGain + currentE);
+					}
+					int cGain = (int)(nation.getMaxReputation(Alignments.CENTRAL_POWERS) / 20.0);
+					int currentC = nation.getForeign().getCentralPowersReputation();
+					if(currentC + cGain > nation.getMaxReputation(Alignments.CENTRAL_POWERS))
+					{
+						nation.getForeign().setReputation(Alignments.CENTRAL_POWERS, nation.getMaxReputation(Alignments.CENTRAL_POWERS));
+					}
+					else
+					{
+						nation.getForeign().setReputation(Alignments.CENTRAL_POWERS, cGain + currentC);
+					}
+
 
 					PreparedStatement statement = connection.prepareStatement("INSERT INTO nation_history " +
 							"(nation_id, month, gdp, growth, population, airforce, navy, army, casualties) " +
