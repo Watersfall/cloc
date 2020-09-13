@@ -4,6 +4,8 @@
 <% pageContext.setAttribute("netGrowth", TextKey.Growth.NET); %>
 <% pageContext.setAttribute("netFortification", TextKey.Fortification.NET); %>
 <%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
+<%@ page import="com.watersfall.clocgame.model.producible.Producibles" %>
+<%@ page import="com.watersfall.clocgame.util.Util" %>
 <%@ include file="includes/top.jsp" %>
 	<c:if test="${home == null}">
 		<p>You have visited this page incorrectly</p>
@@ -30,16 +32,22 @@
 						</tr>
 						<tr>
 							<td>${home.domestic.approval}%</td>
-							<td>
-								<c:if test="${home.approvalChange.get(netApproval) > 0}">
-									+<fmt:formatNumber value="${home.approvalChange.get(netApproval)}"/> per month
-								</c:if>
-								<c:if test="${home.approvalChange.get(netApproval) < 0}">
-									<fmt:formatNumber value="${home.approvalChange.get(netApproval)}"/> per month
-								</c:if>
-								<c:if test="${home.approvalChange.get(netApproval) == 0}">
-									No change
-								</c:if>
+							<td class="dropdown_parent" onclick="toggleUITab('approval_change')">
+								<a href="#">
+									<c:if test="${home.approvalChange.get(netApproval) > 0}">
+										+<fmt:formatNumber value="${home.approvalChange.get(netApproval)}"/> per month
+									</c:if>
+									<c:if test="${home.approvalChange.get(netApproval) < 0}">
+										<fmt:formatNumber value="${home.approvalChange.get(netApproval)}"/> per month
+									</c:if>
+									<c:if test="${home.approvalChange.get(netApproval) == 0}">
+										No change
+									</c:if>
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div id="approval_change" class="dropdown_2_right toggleable-default-off">
+									<cloc:dropdown value="${Util.removeNetAndTotal(home.approvalChange)}"/>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -47,16 +55,22 @@
 						</tr>
 						<tr>
 							<td>${home.domestic.stability}%</td>
-							<td>
-								<c:if test="${home.stabilityChange.get(netStability) > 0}">
-									+<fmt:formatNumber value="${home.stabilityChange.get(netStability)}"/> per month
-								</c:if>
-								<c:if test="${home.stabilityChange.get(netStability) < 0}">
-									<fmt:formatNumber value="${home.stabilityChange.get(netStability)}"/> per month
-								</c:if>
-								<c:if test="${home.stabilityChange.get(netStability) == 0}">
-									No change
-								</c:if>
+							<td class="dropdown_parent" onclick="toggleUITab('stability_change')">
+								<a href="#" >
+									<c:if test="${home.stabilityChange.get(netStability) > 0}">
+										+<fmt:formatNumber value="${home.stabilityChange.get(netStability)}"/> per month
+									</c:if>
+									<c:if test="${home.stabilityChange.get(netStability) < 0}">
+										<fmt:formatNumber value="${home.stabilityChange.get(netStability)}"/> per month
+									</c:if>
+										<c:if test="${home.stabilityChange.get(netStability) == 0}">
+										No change
+									</c:if>
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div id="stability_change" class="dropdown_2_right toggleable-default-off">
+									<cloc:dropdown value="${Util.removeNetAndTotal(home.stabilityChange)}"/>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -92,18 +106,24 @@
 						</tr>
 						<tr>
 							<td><fmt:formatNumber value="${home.economy.growth}"/> Million per month</td>
-							<td>
-								<c:choose>
-									<c:when test="${home.growthChange.get(netGrowth) > 0}">
-										+<fmt:formatNumber value="${home.growthChange.get(netGrowth)}"/> per month
-									</c:when>
-									<c:when test="${home.growthChange.get(netGrowth) < 0}">
-										<fmt:formatNumber value="${home.growthChange.get(netGrowth)}"/> per month
-									</c:when>
-									<c:otherwise>
-										No change
-									</c:otherwise>
-								</c:choose>
+							<td class="dropdown_parent" onclick="toggleUITab('growth_change')">
+								<a href="#">
+									<c:choose>
+										<c:when test="${home.growthChange.get(netGrowth) > 0}">
+											+<fmt:formatNumber value="${home.growthChange.get(netGrowth)}"/> per month
+										</c:when>
+										<c:when test="${home.growthChange.get(netGrowth) < 0}">
+											<fmt:formatNumber value="${home.growthChange.get(netGrowth)}"/> per month
+										</c:when>
+										<c:otherwise>
+											No change
+										</c:otherwise>
+									</c:choose>
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div id="growth_change" class="dropdown_2_right toggleable-default-off">
+									<cloc:dropdown value="${Util.removeNetAndTotal(home.growthChange)}"/>
+								</div>
 							</td>
 						</tr>
 					</table>
@@ -163,25 +183,82 @@
 							<td>Equipment</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> requested</td>
-							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> per month</td>
+							<td class="dropdown_parent" onclick="toggleUITab('equipment')">
+								<a href="#">
+									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> requested
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_left toggleable-default-off" id="equipment">
+									<ul>
+										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}" var="producible">
+											<c:if test="${home.getProducibleValue(producible) > 0}">
+												<li>
+													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
+							<td class="dropdown_parent" onclick="toggleUITab('equipment_production')">
+								<a href="#">
+									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> per month
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_right toggleable-default-off" id="equipment_production">
+									<ul>
+										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}">
+											<c:if test="${home.getProduciblesProduction(producible) > 0}">
+												<li>
+													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2">Fortification</td>
 						</tr>
 						<tr>
 							<td>${home.army.fortification / 100}%</td>
-							<td><c:choose>
-								<c:when test="${home.fortificationChange.get(netFortification) > 0}">
-									+<fmt:formatNumber maxFractionDigits="2" value="${home.fortificationChange.get(netFortification) / 100}"/>% per month
-								</c:when>
-								<c:when test="${home.fortificationChange.get(netFortification) < 0}">
-									<fmt:formatNumber maxFractionDigits="2" value="${home.fortificationChange.get(netFortification) / 100}"/>% per month
-								</c:when>
-								<c:otherwise>
-									No change
-								</c:otherwise>
-							</c:choose></td>
+							<td class="dropdown_parent" onclick="toggleUITab('fortification_change')">
+								<a href="#">
+									<c:choose>
+										<c:when test="${home.fortificationChange.get(netFortification) > 0}">
+											+<fmt:formatNumber maxFractionDigits="2" value="${home.fortificationChange.get(netFortification) / 100}"/>% per month
+										</c:when>
+										<c:when test="${home.fortificationChange.get(netFortification) < 0}">
+											<fmt:formatNumber maxFractionDigits="2" value="${home.fortificationChange.get(netFortification) / 100}"/>% per month
+										</c:when>
+										<c:otherwise>
+											No change
+										</c:otherwise>
+									</c:choose>
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_right toggleable-default-off" id="fortification_change">
+									<c:set var="fortMap" value="${Util.removeNetAndTotal(home.fortificationChange)}"/>
+									<c:if test="${fortMap.size() <= 0}">
+										<p>No change</p>
+									</c:if>
+									<c:if test="${fortMap.size() > 0}">
+										<ul>
+											<c:forEach var="entry" items="${fortMap.entrySet()}">
+												<c:choose>
+													<c:when test="${entry.value > 0}">
+														<li><span class="positive">+<fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>${entry.key.text}</span></li>
+													</c:when>
+													<c:when test="${entry.value < 0}">
+														<li><span class="negative"><fmt:formatNumber value="${entry.value / 100}" maxFractionDigits="2"/>${entry.key.text}</span></li>
+													</c:when>
+												</c:choose>
+											</c:forEach>
+										</ul>
+									</c:if>
+								</div>
+							</td>
 						</tr>
 					</table>
 					<br>
@@ -195,22 +272,118 @@
 							<td colspan="2">Fighters</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> Planes</td>
-							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> per month</td>
+							<td onclick="toggleUITab('fighters')" class="dropdown_parent">
+								<a href="#">
+									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> Planes
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_left toggleable-default-off" id="fighters">
+									<ul>
+										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE)}" var="producible">
+											<c:if test="${home.getProducibleValue(producible) > 0}">
+												<li>
+													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
+							<td onclick="toggleUITab('fighter_production')" class="dropdown_parent">
+								<a href="#">
+									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> per month
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_right toggleable-default-off" id="fighter_production">
+									<ul>
+										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE)}">
+											<c:if test="${home.getProduciblesProduction(producible) > 0}">
+												<li>
+													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2">Bombers</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE)}"/> Planes</td>
-							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE)}"/> per month</td>
+							<td onclick="toggleUITab('bombers')" class="dropdown_parent">
+								<a href="#">
+									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE)}"/> Planes
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_left toggleable-default-off" id="bombers">
+									<ul>
+										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE)}" var="producible">
+											<c:if test="${home.getProducibleValue(producible) > 0}">
+												<li>
+													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
+							<td onclick="toggleUITab('bomber_production')" class="dropdown_parent">
+								<a href="#">
+									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE)}"/> per month
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_right toggleable-default-off" id="bomber_production">
+									<ul>
+										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE)}">
+											<c:if test="${home.getProduciblesProduction(producible) > 0}">
+												<li>
+													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2">Recon Planes</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE)}"/> Planes</td>
-							<td>+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE)}"/> per month</td>
+							<td onclick="toggleUITab('recons')" class="dropdown_parent">
+								<a href="#">
+									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE)}"/> Planes
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_left toggleable-default-off" id="recons">
+									<ul>
+										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE)}" var="producible">
+											<c:if test="${home.getProducibleValue(producible) > 0}">
+												<li>
+													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
+							<td onclick="toggleUITab('recon_production')" class="dropdown_parent">
+								<a href="#">
+									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE)}"/> per month
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+								<div class="dropdown_2_right toggleable-default-off" id="recon_production">
+									<ul>
+										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE)}">
+											<c:if test="${home.getProduciblesProduction(producible) > 0}">
+												<li>
+													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+												</li>
+											</c:if>
+										</c:forEach>
+									</ul>
+								</div>
+							</td>
 						</tr>
 					</table>
 					<br>

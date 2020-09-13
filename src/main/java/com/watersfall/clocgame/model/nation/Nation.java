@@ -1020,6 +1020,19 @@ public class Nation extends Updatable
 		return (long)total;
 	}
 
+	public long getProduciblesProduction(Producibles producible)
+	{
+		double total = 0;
+		for(Production production : this.production.values())
+		{
+			if(production.getProductionAsTechnology().getTechnology().getProducibleItem() == producible.getProducible())
+			{
+				total += production.getMonthlyProduction(this);
+			}
+		}
+		return (long)total;
+	}
+
 	/**
 	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
 	 * @return The army's power

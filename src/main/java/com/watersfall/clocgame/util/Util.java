@@ -2,6 +2,7 @@ package com.watersfall.clocgame.util;
 
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.SpamAction;
+import com.watersfall.clocgame.model.TextKey;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -225,5 +226,21 @@ public class Util
 			}
 		}
 		return camel.toString();
+	}
+
+	public static <K extends TextKey, V> HashMap<? extends TextKey, V> removeNetAndTotal(HashMap<? extends TextKey, V> map)
+	{
+		HashMap<TextKey, V> newMap = new HashMap<TextKey, V>(map);
+		newMap.remove(TextKey.Fortification.NET);
+		newMap.remove(TextKey.Stability.NET);
+		newMap.remove(TextKey.Approval.NET);
+		newMap.remove(TextKey.Resource.NET);
+		newMap.remove(TextKey.Population.NET);
+		newMap.remove(TextKey.Manpower.NET);
+		newMap.remove(TextKey.Growth.NET);
+		newMap.remove(TextKey.Farming.NET);
+		newMap.remove(TextKey.Resource.TOTAL_GAIN);
+		newMap.remove(TextKey.Resource.TOTAL_LOSS);
+		return newMap;
 	}
 }

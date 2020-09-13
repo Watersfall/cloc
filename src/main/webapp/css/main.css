@@ -293,6 +293,41 @@ main {
 	margin-right: 0;
 }
 
+.dropdown_2_right {
+	position: absolute;
+	top: 100%;
+	left: -100%;
+	width: 200%;
+	background-color: var(--dark-color);
+	color: white;
+	z-index: 1;
+}
+
+.dropdown_2_left {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 200%;
+	background-color: var(--dark-color);
+	color: white;
+	z-index: 1;
+}
+
+.dropdown_2_right ul {
+	padding: 0.5rem;
+	margin: 0 0 0 1rem;
+}
+
+.dropdown_2_left ul {
+	padding: 0.5rem;
+	margin: 0 0 0 1rem;
+}
+
+.dropdown_parent {
+	position: relative;
+	width: 100%;
+}
+
 .positive {
 	color: green;
 }
