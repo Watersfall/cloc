@@ -1,6 +1,5 @@
 <%--@elvariable id="alignment" type="com.watersfall.clocgame.model.alignment.Alignment"--%>
 <%@ page import="com.watersfall.clocgame.model.alignment.Alignment" %>
-<%@ page import="com.watersfall.clocgame.model.alignment.Alignments" %>
 <%@ page import="com.watersfall.clocgame.model.map.year1900.Country1900" %>
 <%@ include file="includes/top.jsp" %>
 	<div class="title">${alignment.alignment}</div>
@@ -60,7 +59,7 @@
 					</ul>
 				</div>
 				<div class="title">Stockpiles</div>
-				<sub class="subtile">
+				<div class="subtile">
 					<%--@elvariable id="item" type="com.watersfall.clocgame.model.producible.Producibles"--%>
 					<c:forEach var="item" items="${Alignment.ALLOWED_PRODUCIBLES}">
 						<div class="title">
@@ -74,6 +73,7 @@
 							</c:if>
 						</div>
 						<div class="description">
+							We Have: <fmt:formatNumber value="${home.getProducibleValue(item)}"/><br>
 							Buy ${alignment.getTransactionAmount(item)} -
 								<button onclick="alignmentTransaction('${alignment.alignment.name()}', '${item.name()}', 'buy')" class="blue">
 									(<fmt:formatNumber value="${alignment.getProducibleBuyCost(item, home)}"/> reputation)
@@ -84,7 +84,7 @@
 							</button>
 						</div>
 					</c:forEach>
-				</sub>
+				</div>
 			</div>
 		</div>
 	</div>
