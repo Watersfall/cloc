@@ -1693,7 +1693,7 @@ public class Nation extends Updatable
 		map.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
 		if(this.foreign.getAlignment() == Alignments.ENTENTE)
 		{
-			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, 500);
+			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
 		}
 		else if(this.foreign.getAlignment() == Alignments.CENTRAL_POWERS)
 		{
@@ -1728,7 +1728,7 @@ public class Nation extends Updatable
 		}
 		else if(this.foreign.getAlignment() == Alignments.CENTRAL_POWERS)
 		{
-			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, 500);
+			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
 		}
 		return map;
 	}
