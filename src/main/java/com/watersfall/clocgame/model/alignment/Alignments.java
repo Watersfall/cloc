@@ -15,4 +15,17 @@ public enum Alignments
 		else
 			return false;
 	}
+
+	public Alignments opposite()
+	{
+		switch(this)
+		{
+			case ENTENTE:
+				return CENTRAL_POWERS;
+			case CENTRAL_POWERS:
+				return ENTENTE;
+			default:
+				return NEUTRAL;
+		}
+	}
 }

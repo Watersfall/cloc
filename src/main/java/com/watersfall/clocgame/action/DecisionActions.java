@@ -155,8 +155,25 @@ public class DecisionActions
 		{
 			return Responses.alreadyYourAlignment();
 		}
+		else if(Alignments.opposites(nation.getForeign().getAlignment(), align))
+		{
+			return Responses.alreadyYourAlignment();
+		}
 		else
 		{
+			if(nation.getForeign().getAlignment() == Alignments.NEUTRAL || Alignments.opposites(align, nation.getForeign().getAlignment()))
+			{
+				Alignments opposite;
+				if(nation.getForeign().getAlignment() == Alignments.NEUTRAL)
+				{
+					opposite = align.opposite();
+				}
+				else
+				{
+					opposite = nation.getForeign().getAlignment().opposite();
+				}
+				nation.getForeign().setReputation(opposite, Math.min(0, nation.getForeign().getReputation(opposite)));
+			}
 			nation.getForeign().setAlignment(align);
 			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
 			return Responses.align(align);
