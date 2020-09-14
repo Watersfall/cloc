@@ -155,6 +155,10 @@ public class DecisionActions
 		{
 			return Responses.alreadyYourAlignment();
 		}
+		else if(align != Alignments.NEUTRAL && nation.getForeign().getReputation(align) < 1000)
+		{
+			return Responses.notEnough();
+		}
 		else if(Alignments.opposites(nation.getForeign().getAlignment(), align))
 		{
 			return Responses.alreadyYourAlignment();

@@ -67,11 +67,9 @@
 							<li>
 								<a href="${pageContext.request.contextPath}/technology/tree">Technology</a>
 							</li>
-							<c:if test="${home.foreign.alignment == Alignments.CENTRAL_POWERS || home.foreign.alignment == Alignments.ENTENTE}">
-								<li>
-									<a href="${pageContext.request.contextPath}/alignment/">Alignment</a>
-								</li>
-							</c:if>
+							<li>
+								<a href="${pageContext.request.contextPath}/alignment/">Alignment</a>
+							</li>
 						</ul>
 					</li>
 					<li>

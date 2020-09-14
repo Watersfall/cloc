@@ -34,10 +34,18 @@ public class AlignmentController extends HttpServlet
 	{
 		if(UserUtils.checkLogin(req))
 		{
+			HashMap<String, String> url = Util.urlConvert(URL, req.getPathInfo());
 			Nation nation = UserUtils.getUserNation(req);
 			try(Connection connection = Database.getDataSource().getConnection())
 			{
-				req.setAttribute("alignment", new AlignmentDao(connection, false).getAlignmentById(nation.getForeign().getAlignment()));
+				if(url.get("alignment") == null)
+				{
+					req.setAttribute("alignment", new AlignmentDao(connection, false).getAlignmentById(nation.getForeign().getAlignment()));
+				}
+				else
+				{
+					req.setAttribute("alignment", new AlignmentDao(connection, false).getAlignmentById(Alignments.valueOf(url.get("alignment"))));
+				}
 			}
 			catch(SQLException ignored) {}
 			req.getServletContext().getRequestDispatcher("/WEB-INF/view/alignment.jsp").forward(req, resp);
