@@ -1,16 +1,19 @@
 package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.action.EventActions;
+import com.watersfall.clocgame.dao.AlignmentDao;
 import com.watersfall.clocgame.dao.EventDao;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.TextKey;
+import com.watersfall.clocgame.model.alignment.Alignment;
 import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.event.Events;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.policies.Policy;
+import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.schedulers.DayScheduler;
 import com.watersfall.clocgame.util.Time;
 
@@ -32,6 +35,7 @@ public class TurnMonth implements Runnable
 		Time.currentMonth = (int)(Time.month % 12);
 		try
 		{
+			int nationCount = 0;
 			DayScheduler.resetIncrement();
 			connection = Database.getDataSource().getConnection();
 			NationDao dao = new NationDao(connection, true);
@@ -40,6 +44,7 @@ public class TurnMonth implements Runnable
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
+				nationCount++;
 				int id = results.getInt(1);
 				Nation nation = dao.getNationById(id);
 				try
@@ -224,6 +229,27 @@ public class TurnMonth implements Runnable
 			 ** Logs
 			 */
 			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
+
+			/*
+			 ** Alignment calculations
+			 */
+			AlignmentDao alignmentDao = new AlignmentDao(connection, true);
+			for(Alignments alignment : Alignments.values())
+			{
+				if(alignment != Alignments.NEUTRAL)
+				{
+					Alignment updateAlignment = alignmentDao.getAlignmentById(alignment);
+					long ic = (long)((Math.random() * 75) + 50) * nationCount;
+					long icPerLine = (long)((double)ic / (double) Alignment.ALLOWED_PRODUCIBLES.size());
+					for(Producibles producible : Alignment.ALLOWED_PRODUCIBLES)
+					{
+						double randIc = icPerLine * ((Math.random() * 75.0 + 50.0) / 100.0);
+						long produced = (long)Math.ceil(randIc / producible.getProducible().getProductionICCost());
+						alignmentDao.updateProducible(producible, updateAlignment, produced);
+					}
+				}
+			}
+
 			connection.commit();
 			Stats.getInstance().updateStats();
 			Stats.getInstance().writeLog();
