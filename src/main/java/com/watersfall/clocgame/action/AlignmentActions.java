@@ -25,6 +25,10 @@ public class AlignmentActions
 		{
 			return Responses.genericError();
 		}
+		else if(!alignment.isAvailableToBuy(purchase, nation))
+		{
+			return Responses.genericError();
+		}
 		long cost = alignment.getProducibleBuyCost(purchase, nation);
 		if(nation.getForeign().getReputation(alignment.getAlignment()) < cost)
 		{
@@ -57,6 +61,10 @@ public class AlignmentActions
 		else if(nation.getProducibleValue(purchase) < alignment.getTransactionAmount(purchase))
 		{
 			return Responses.notEnough();
+		}
+		else if(!alignment.isAvailableToSell(purchase, nation))
+		{
+			return Responses.genericError();
 		}
 		else
 		{

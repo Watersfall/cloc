@@ -151,6 +151,16 @@ public class Alignment extends Updatable
 		}
 	}
 
+	public boolean isAvailableToBuy(Producibles producible, Nation nation)
+	{
+		return this.getProducible(producible) != null && this.getProducible(producible) >= 100 * getTransactionAmount(producible) && this.getProducibleBuyCost(producible, nation) <= 100000;
+	}
+
+	public boolean isAvailableToSell(Producibles producibles, Nation nation)
+	{
+		return nation.getProducibleValue(producibles) >= this.getTransactionAmount(producibles);
+	}
+
 	@Override
 	public void update(Connection conn) throws SQLException
 	{

@@ -81,14 +81,18 @@
 							</div>
 							<div class="description">
 								We Have: <fmt:formatNumber value="${home.getProducibleValue(item)}"/><br>
-								Buy ${alignment.getTransactionAmount(item)} -
-								<button onclick="alignmentTransaction('${alignment.alignment.name()}', '${item.name()}', 'buy')" class="blue">
-									(<fmt:formatNumber value="${alignment.getProducibleBuyCost(item, home)}"/> reputation)
-								</button>
-								Sell ${alignment.getTransactionAmount(item)} -
-								<button onclick="alignmentTransaction('${alignment.alignment.name()}', '${item.name()}', 'sell')" class="red">
-									(<fmt:formatNumber value="${alignment.getProducibleSellCost(item, home)}"/> reputation)
-								</button>
+								<c:if test="${alignment.isAvailableToBuy(item, home)}">
+									Buy ${alignment.getTransactionAmount(item)} -
+									<button onclick="alignmentTransaction('${alignment.alignment.name()}', '${item.name()}', 'buy')" class="blue">
+										(<fmt:formatNumber value="${alignment.getProducibleBuyCost(item, home)}"/> reputation)
+									</button>
+								</c:if><br>
+								<c:if test="${alignment.isAvailableToSell(item, home)}">
+									Sell ${alignment.getTransactionAmount(item)} -
+									<button onclick="alignmentTransaction('${alignment.alignment.name()}', '${item.name()}', 'sell')" class="red">
+										(<fmt:formatNumber value="${alignment.getProducibleSellCost(item, home)}"/> reputation)
+									</button>
+								</c:if>
 							</div>
 						</c:forEach>
 					</div>
