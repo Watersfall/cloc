@@ -56,8 +56,9 @@ function toggle(id)
 function toggleUITab(tab)
 {
 	let tabs = ["budget_production", "food_production", "coal_production", "iron_production", "oil_production",
-		"steel_production", "nitrogen_production", "research_production", "Approval", "Stability", "Land", "Population", "Growth",
-		"Manpower", "Equipment", "Bombers", "Fighters", "Recon"];
+		"steel_production", "nitrogen_production", "research_production", "approval_change", "stability_change",
+		"growth_change", "equipment", "bombers", "fighters", "recons", "fortification_change", "equipment_production",
+		"bomber_production", "fighter_production", "recon_production"];
 	for(let i = 0; i < tabs.length; i++)
 	{
 		if(tabs[i] !== tab)
