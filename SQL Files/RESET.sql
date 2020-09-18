@@ -13,7 +13,7 @@ UPDATE cloc_domestic SET land=DEFAULT, approval=DEFAULT, stability=DEFAULT, rebe
 UPDATE cloc_economy SET economic=DEFAULT, gdp=DEFAULT, growth=DEFAULT, budget=DEFAULT, iron=DEFAULT, coal=DEFAULT,
                         oil=DEFAULT, food=DEFAULT, steel=DEFAULT, nitrogen=DEFAULT, research=DEFAULT,
                         recent_conscription=DEFAULT, recent_deconscription=DEFAULT;
-UPDATE cloc_foreign SET alignment=DEFAULT;
+UPDATE cloc_foreign SET alignment=DEFAULT, entente_reputation=DEFAULT, central_powers_reputation=DEFAULT;
 UPDATE cloc_login SET last_login=0;
 UPDATE cloc_main SET month=0, day=0;
 UPDATE cloc_military SET zeppelins=DEFAULT, bombers=DEFAULT, submarines=DEFAULT, destroyers=DEFAULT, cruisers=DEFAULT,
@@ -49,3 +49,5 @@ DELETE FROM production;
 DELETE FROM modifiers;
 DELETE FROM nation_history;
 DELETE FROM anti_spam;
+DELETE FROM alignments_equipment;
+DELETE FROM alignments_transactions;
