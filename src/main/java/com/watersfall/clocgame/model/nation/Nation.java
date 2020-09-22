@@ -3,13 +3,14 @@ package com.watersfall.clocgame.model.nation;
 import com.watersfall.clocgame.dao.*;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.TextKey;
-import com.watersfall.clocgame.model.Updatable;
 import com.watersfall.clocgame.model.alignment.AlignmentTransaction;
 import com.watersfall.clocgame.model.alignment.Alignments;
-import com.watersfall.clocgame.model.database.Tables;
+import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.message.Message;
+import com.watersfall.clocgame.model.modifier.Modifier;
+import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.producible.*;
 import com.watersfall.clocgame.model.technology.Technologies;
@@ -23,27 +24,22 @@ import com.watersfall.clocgame.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
-public class Nation extends Updatable
+public class Nation
 {
 	private @Getter int id;
 	private @Getter @Setter NationCosmetic cosmetic;
-	private @Getter @Setter NationDomestic domestic;
-	private @Getter @Setter NationEconomy economy;
-	private @Getter @Setter NationForeign foreign;
-	private @Getter @Setter NationMilitary military;
+	private @Getter @Setter NationStats stats;
+	private @Getter @Setter NationProducibles producibles;
 	private @Getter @Setter TreatyPermissions treatyPermissions;
 	private @Getter @Setter HashMap<Integer, City> cities;
-	private @Getter @Setter NationArmy army;
 	private @Getter @Setter NationPolicy policy;
 	private @Getter @Setter NationTech tech;
 	private @Getter @Setter ArrayList<Integer> invites;
 	private @Getter @Setter int newsCount;
-	private @Getter @Setter boolean anyUnreadNews;
 	private @Getter @Setter int eventCount;
 	private @Getter @Setter ArrayList<Event> events;
 	private @Getter @Setter War defensive;
@@ -55,22 +51,22 @@ public class Nation extends Updatable
 	private @Getter @Setter long lastSeen;
 	private @Getter @Setter ArrayList<Modifier> modifiers;
 	private @Getter @Setter EnumMap<Alignments, ArrayList<AlignmentTransaction>> alignmentTransactions;
+	private @Getter @Setter LinkedHashMap<Integer, Production> production;
+	private @Getter @Setter ArrayList<Message> unreadMessages = null;
+	private @Setter long lastMessage;
+
+	private long landUsage = -1;
+	private LinkedHashMap<String, LinkedHashMap<TextKey, Double>> allProductions = null;
+	private HashMap<String, Double> totalProductionCosts = null;
 	private LinkedHashMap<TextKey, Double> coalProduction = null;
 	private LinkedHashMap<TextKey, Double> ironProduction = null;
 	private LinkedHashMap<TextKey, Double> oilProduction = null;
 	private LinkedHashMap<TextKey, Double> steelProduction = null;
 	private LinkedHashMap<TextKey, Double> nitrogenProduction = null;
 	private LinkedHashMap<TextKey, Double> researchProduction = null;
-	private @Getter @Setter LinkedHashMap<Integer, Production> production;
-	private LinkedHashMap<String, LinkedHashMap<TextKey, Double>> allProductions = null;
-	private long landUsage = -1;
-	private HashMap<String, Double> totalProductionCosts = null;
-	private @Getter @Setter ArrayList<Message> unreadMessages = null;
-	private @Getter @Setter int lastReadMessage;
 
 	public Nation(int id)
 	{
-		super("cloc_login", id);
 		this.id = id;
 	}
 
@@ -94,7 +90,7 @@ public class Nation extends Updatable
 	 * @param founder Whether this Nation should be roled as founder of the treaty or not
 	 * @throws SQLException If a database error occurs
 	 */
-	public String joinTreaty(Integer id, boolean founder) throws SQLException
+	public String joinTreaty(int id, boolean founder) throws SQLException
 	{
 		if(this.treaty != null)
 		{
@@ -151,30 +147,30 @@ public class Nation extends Updatable
 		{
 			return Responses.cannotWar("alreadyAtWar3");
 		}
-		else if(!Region.borders(nation.getForeign().getRegion(), this.getForeign().getRegion()))
+		else if(!Region.borders(nation.getStats().getRegion(), this.getStats().getRegion()))
 		{
 			return Responses.cannotWar("noBorder");
 		}
-		else if(nation.getMilitary().getWarProtection() > 0)
+		else if(nation.getStats().getWarProtection() > 0)
 		{
-			if(nation.getForeign().getAlignment() == Alignments.NEUTRAL)
+			if(nation.getStats().getAlignment() == Alignments.NEUTRAL)
 			{
 				return Responses.cannotWar("neutralProtection");
 			}
 			else
 			{
-				return (nation.getForeign().getAlignment() == Alignments.CENTRAL_POWERS) ? Responses.cannotWar("germanProtection") : Responses.cannotWar("frenchProtection");
+				return (nation.getStats().getAlignment() == Alignments.CENTRAL_POWERS) ? Responses.cannotWar("germanProtection") : Responses.cannotWar("frenchProtection");
 			}
 		}
-		else if(this.military.getWarProtection() > 0)
+		else if(this.stats.getWarProtection() > 0)
 		{
-			if(this.getForeign().getAlignment() == Alignments.NEUTRAL)
+			if(this.getStats().getAlignment() == Alignments.NEUTRAL)
 			{
 				return Responses.cannotWar("youNeutralProtection");
 			}
 			else
 			{
-				return (this.getForeign().getAlignment() == Alignments.CENTRAL_POWERS) ? Responses.cannotWar("youGermanProtection") : Responses.cannotWar("youFrenchProtection");
+				return (this.getStats().getAlignment() == Alignments.CENTRAL_POWERS) ? Responses.cannotWar("youGermanProtection") : Responses.cannotWar("youFrenchProtection");
 			}
 		}
 		else
@@ -287,7 +283,7 @@ public class Nation extends Updatable
 	 */
 	public long getFreeLand()
 	{
-		return this.domestic.getLand() - this.getTotalLandUsage();
+		return this.stats.getLand() - this.getTotalLandUsage();
 	}
 
 	/**
@@ -384,7 +380,7 @@ public class Nation extends Updatable
 	 */
 	public long getTotalManpower()
 	{
-		long lostManpower = domestic.getManpowerLost();
+		long lostManpower = stats.getLostManpower();
 		long manpower = this.getTotalPopulation();
 		switch(policy.getManpower())
 		{
@@ -420,27 +416,17 @@ public class Nation extends Updatable
 	public LinkedHashMap<TextKey, Long> getUsedManpower()
 	{
 		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
-		long navy = this.military.getBattleships() +
-				this.military.getCruisers() +
-				this.military.getPreBattleships() +
-				this.military.getCruisers() +
-				this.military.getDestroyers() +
-				this.military.getSubmarines();
-		navy *= 500;
-		long airforce = this.military.getBiplaneFighters() +
-				this.military.getReconPlanes() +
-				this.military.getReconBalloons() +
-				this.military.getTriplaneFighters() +
-				this.military.getMonoplaneFighters() +
-				this.military.getBombers() +
-				this.military.getZeppelins();
+		long airforce = 0;
+		for(Producibles producible : Producibles.getProduciblesByCategories(ProducibleCategory.FIGHTER_PLANE, ProducibleCategory.BOMBER_PLANE, ProducibleCategory.RECON_PLANE))
+		{
+			airforce += this.producibles.getProducible(producible);
+		}
 		airforce *= 50;
-		long army = this.army.getSize();
+		long army = this.stats.getArmySize();
 		army *= 1000;
-		map.put(TextKey.Manpower.NAVY, -navy);
 		map.put(TextKey.Manpower.AIRFORCE, -airforce);
 		map.put(TextKey.Manpower.ARMY, -army);
-		map.put(TextKey.Manpower.NET, navy + airforce + army);
+		map.put(TextKey.Manpower.NET, -airforce + -army);
 		return map;
 	}
 
@@ -457,14 +443,14 @@ public class Nation extends Updatable
 	public LinkedHashMap<String, Double> getAllResources()
 	{
 		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		map.put("Budget", this.economy.getBudget());
-		map.put("Food", this.economy.getFood());
-		map.put("Coal", this.economy.getCoal());
-		map.put("Iron", this.economy.getIron());
-		map.put("Oil", this.economy.getOil());
-		map.put("Steel", this.economy.getSteel());
-		map.put("Nitrogen", this.economy.getNitrogen());
-		map.put("Research", this.economy.getResearch());
+		map.put("Budget", this.stats.getBudget());
+		map.put("Food", this.stats.getFood());
+		map.put("Coal", this.stats.getCoal());
+		map.put("Iron", this.stats.getIron());
+		map.put("Oil", this.stats.getOil());
+		map.put("Steel", this.stats.getSteel());
+		map.put("Nitrogen", this.stats.getNitrogen());
+		map.put("Research", this.stats.getResearch());
 		return map;
 	}
 
@@ -510,7 +496,7 @@ public class Nation extends Updatable
 
 	public void doStabilityResourceEffect(LinkedHashMap<TextKey, Double> map)
 	{
-		double stabilityEffect = this.getDomestic().getStability() - 50;
+		double stabilityEffect = this.getStats().getStability() - 50;
 		if(stabilityEffect < 0)
 		{
 			stabilityEffect = stabilityEffect / (3.0 + 1.0/3.0);
@@ -686,7 +672,7 @@ public class Nation extends Updatable
 			}
 			if(this.hasTech(Technologies.FARMING_MACHINES) || this.hasTech(Technologies.ADVANCED_FARMING_MACHINES))
 			{
-				double amount = -this.domestic.getLand() / TechnologyFarmingMachines.LAND_PER_STEEL;
+				double amount = -this.stats.getLand() / TechnologyFarmingMachines.LAND_PER_STEEL;
 				if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
 				{
 					amount *= 0.25;
@@ -744,7 +730,7 @@ public class Nation extends Updatable
 			}
 			if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) || this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER))
 			{
-				double amount = -this.domestic.getLand() / TechnologyArtificialFertilizer.LAND_PER_NITROGEN;
+				double amount = -this.stats.getLand() / TechnologyArtificialFertilizer.LAND_PER_NITROGEN;
 				if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
 				{
 					amount *= 0.25;
@@ -816,11 +802,11 @@ public class Nation extends Updatable
 		if(farming < 0)
 			farming = 0;
 		double tech = 0;
-		if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getEconomy().getNitrogen() >= 0)
+		if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getStats().getNitrogen() >= 0)
 		{
 			tech = farming * TechnologyAdvancedArtificialFertilizer.FOOD_GAIN;
 		}
-		else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getEconomy().getNitrogen() >= 0)
+		else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getStats().getNitrogen() >= 0)
 		{
 			tech = farming * TechnologyArtificialFertilizer.FOOD_GAIN;
 		}
@@ -828,11 +814,11 @@ public class Nation extends Updatable
 		{
 			tech = farming * TechnologyBasicArtificialFertilizer.FOOD_GAIN;
 		}
-		if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getEconomy().getSteel() > 0)
+		if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getStats().getSteel() > 0)
 		{
 			tech += farming * TechnologyAdvancedFarmingMachines.FOOD_GAIN;
 		}
-		else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getEconomy().getSteel() > 0)
+		else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getStats().getSteel() > 0)
 		{
 			tech += farming * TechnologyFarmingMachines.FOOD_GAIN;
 		}
@@ -942,57 +928,12 @@ public class Nation extends Updatable
 		return map;
 	}
 
-	public int getProducibleValue(Producibles producibles)
-	{
-		try
-		{
-			String methodName = "get" + Util.convertUnderscoreToCamel(producibles.name());
-			if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_ARMY)
-			{
-				Method method = this.getArmy().getClass().getMethod(methodName);
-				return (int)method.invoke(this.getArmy());
-			}
-			else if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_MILITARY)
-			{
-				Method method = this.getMilitary().getClass().getMethod(methodName);
-				return (int)method.invoke(this.getMilitary());
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	public void setProducibleValue(Producibles producibles, int value)
-	{
-		try
-		{
-			String methodName = "set" + Util.convertUnderscoreToCamel(producibles.name());
-			if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_ARMY)
-			{
-				Method method = this.getArmy().getClass().getMethod(methodName, int.class);
-				method.invoke(this.getArmy(), value);
-			}
-			else if(producibles.getProducible().getCategory().getTable() == Tables.CLOC_MILITARY)
-			{
-				Method method = this.getMilitary().getClass().getMethod(methodName, int.class);
-				method.invoke(this.getMilitary(), value);
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	public long getTotalProduciblesByCategory(ProducibleCategory category)
 	{
 		long total = 0;
 		for(Producibles producibles : Producibles.getProduciblesForCategory(category))
 		{
-			total += this.getProducibleValue(producibles);
+			total += this.producibles.getProducible(producibles);
 		}
 		return total;
 	}
@@ -1002,7 +943,7 @@ public class Nation extends Updatable
 		long total = 0;
 		for(Producibles producibles : Producibles.getProduciblesByCategories(category))
 		{
-			total += this.getProducibleValue(producibles);
+			total += this.producibles.getProducible(producibles);
 		}
 		return total;
 	}
@@ -1034,35 +975,35 @@ public class Nation extends Updatable
 	}
 
 	/**
-	 * Calculates the power of an army based on it's army.getSize(), technology level, army.getTraining(), and artillery
+	 * Calculates the power of an army based on it's stats.getArmySize(), technology level, stats.getArmyTraining(), and artillery
 	 * @return The army's power
 	 */
 	public double getPower()
 	{
 		double power = 0e0;
-		long requiredEquipment = (long)army.getSize() * 1000L;
+		long requiredEquipment = (long)stats.getArmySize() * 1000L;
 		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT))
 		{
 			if(requiredEquipment > 0)
 			{
-				if(this.getProducibleValue(producibles) > 0)
+				if(this.producibles.getProducible(producibles) > 0)
 				{
-					if(this.getProducibleValue(producibles) > requiredEquipment)
+					if(this.producibles.getProducible(producibles) > requiredEquipment)
 					{
 						power += requiredEquipment * ((IArmyPower)producibles.getProducible()).getArmyPower();
 						requiredEquipment = 0;
 					}
 					else
 					{
-						power += this.getProducibleValue(producibles) * ((IArmyPower)producibles.getProducible()).getArmyPower();
-						requiredEquipment -= this.getProducibleValue(producibles);
+						power += this.producibles.getProducible(producibles) * ((IArmyPower)producibles.getProducible()).getArmyPower();
+						requiredEquipment -= this.producibles.getProducible(producibles);
 					}
 				}
 			}
 		}
 		//Sticks and stones are better than nothing
 		power += requiredEquipment * 0.5;
-		power *= java.lang.Math.sqrt(army.getTraining() + 1);
+		power *= java.lang.Math.sqrt(stats.getArmyTraining() + 1);
 		return Math.sqrt(power);
 	}
 
@@ -1075,7 +1016,7 @@ public class Nation extends Updatable
 	 */
 	public double getBreakthrough()
 	{
-		int max = this.getArmy().getSize() * 5;
+		int max = this.stats.getArmySize() * 5;
 		long currentTanks = this.getTotalProduciblesByCategory(ProducibleCategory.TANK);
 		if(currentTanks > max)
 		{
@@ -1100,15 +1041,15 @@ public class Nation extends Updatable
 		Collections.reverse(list);
 		for(Producibles plane : list)
 		{
-			if(this.getProducibleValue(plane) > currentRecon)
+			if(this.producibles.getProducible(plane) > currentRecon)
 			{
 				recon += (currentRecon * ((IReconPower)plane.getProducible()).getReconPower());
 				currentRecon = 0;
 			}
 			else
 			{
-				recon += (this.getProducibleValue(plane) * ((IReconPower)plane.getProducible()).getReconPower());
-				currentRecon -= this.getProducibleValue(plane);
+				recon += (this.producibles.getProducible(plane) * ((IReconPower)plane.getProducible()).getReconPower());
+				currentRecon -= this.producibles.getProducible(plane);
 			}
 		}
 		recon = 1 + recon / maxRecon;
@@ -1126,7 +1067,7 @@ public class Nation extends Updatable
 	 */
 	public double getDefense()
 	{
-		double ratio = this.getArmy().getFortification() / 10000.0;
+		double ratio = this.stats.getFortification() / 10000.0;
 		return 1 + ratio;
 	}
 
@@ -1187,18 +1128,18 @@ public class Nation extends Updatable
 		double power = 0;
 		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
 		{
-			power += (this.getProducibleValue(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
+			power += (this.producibles.getProducible(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
 		}
 		if(attackingOtherAirforce)
 		{
 			for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
 			{
-				power += (this.getProducibleValue(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower() / 2);
+				power += (this.producibles.getProducible(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower() / 2);
 			}
 		}
 		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
 		{
-			power += (this.getProducibleValue(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
+			power += (this.producibles.getProducible(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
 		}
 		return power / 10;
 	}
@@ -1212,20 +1153,14 @@ public class Nation extends Updatable
 		double power = 0;
 		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
 		{
-			power += (this.getProducibleValue(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower());
+			power += (this.producibles.getProducible(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower());
 		}
 		return power / 10;
 	}
 
 	public long getTotalShipCount()
 	{
-		long power = 0;
-		power += this.military.getSubmarines();
-		power += this.military.getDestroyers();
-		power += this.military.getCruisers();
-		power += this.military.getPreBattleships();
-		power += this.military.getBattleships();
-		return power;
+		return 0;
 	}
 
 	/**
@@ -1248,9 +1183,9 @@ public class Nation extends Updatable
 	public int getCasualties(double ourPower, double theirPower)
 	{
 		double powerDiff = theirPower / ourPower;
-		double armyHp = this.army.getSize() * 100.0;
+		double armyHp = this.stats.getArmySize() * 100.0;
 		armyHp -= (powerDiff * theirPower);
-		return (int)(this.army.getSize() - (armyHp / 100.0));
+		return (int)(this.stats.getArmySize() - (armyHp / 100.0));
 	}
 
 	/**
@@ -1265,11 +1200,11 @@ public class Nation extends Updatable
 		switch(decision)
 		{
 			case PROPAGANDA:
-				return (long)(this.economy.getGdp() / 2L * (this.domestic.getApproval() / 100.0));
+				return (long)(this.stats.getGdp() / 2L * (this.stats.getApproval() / 100.0));
 			case WAR_PROPAGANDA:
 				return getDecisionCost(Decision.PROPAGANDA) / 2L;
 			case LAND_CLEARANCE:
-				return (long)(this.economy.getGdp() * 2L);
+				return (long)(this.stats.getGdp() * 2L);
 			case ALIGN_CENTRAL_POWERS:
 			case ALIGN_ENTENTE:
 			case ALIGN_NEUTRAL:
@@ -1277,11 +1212,11 @@ public class Nation extends Updatable
 			case INCREASE_ARREST_QUOTAS:
 				return 100;
 			case TRAIN:
-				return (long)this.army.getSize() * (long)this.army.getSize() * (long)this.army.getTraining() / 200L;
+				return (long)this.stats.getArmySize() * (long)this.stats.getArmySize() * (long)this.stats.getArmyTraining() / 200L;
 			case FORM_TREATY:
 				return 500;
 			case FORTIFY:
-				return (long)(this.getMaximumFortificationLevel() / 100.0 * ((double)this.getArmy().getFortification() / (double)this.getMaximumFortificationLevel()));
+				return (long)(this.getMaximumFortificationLevel() / 100.0 * ((double)this.stats.getFortification() / (double)this.getMaximumFortificationLevel()));
 			default:
 				return 0;
 		}
@@ -1351,7 +1286,7 @@ public class Nation extends Updatable
 	 */
 	public double getBudgetChange()
 	{
-		return this.economy.getGdp() / 7;
+		return this.stats.getGdp() / 7;
 	}
 
 	/**
@@ -1382,10 +1317,10 @@ public class Nation extends Updatable
 	{
 		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
 		double base = Math.min(
-				this.army.getFortification() + (0.1 * ((double)this.getMaximumFortificationLevel() / (this.army.getFortification() / 100.0))),
+				this.stats.getFortification() + (0.1 * ((double)this.getMaximumFortificationLevel() / (this.stats.getFortification() / 100.0))),
 				this.getMaximumFortificationLevel()
 		);
-		base -= this.getArmy().getFortification();
+		base -= this.stats.getFortification();
 		if(base > 50)
 		{
 			base = 50;
@@ -1456,26 +1391,26 @@ public class Nation extends Updatable
 	public LinkedHashMap<TextKey, Integer> getStabilityChange()
 	{
 		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
-		int approval = this.domestic.getApproval() / 20 - 2;
+		int approval = this.stats.getApproval() / 20 - 2;
 		int famine = (int)this.getFamineLevel();
 		int growth = 0;
-		if(this.getEconomy().getGrowth() < 0)
+		if(this.getStats().getGrowth() < 0)
 		{
 			growth = -1;
 		}
-		if(this.getEconomy().getGrowth() < -5)
+		if(this.getStats().getGrowth() < -5)
 		{
 			growth = -2;
 		}
-		if(this.getEconomy().getGrowth() < -10)
+		if(this.getStats().getGrowth() < -10)
 		{
 			growth = -4;
 		}
-		if(this.getEconomy().getGrowth() < -20)
+		if(this.getStats().getGrowth() < -20)
 		{
 			growth = -6;
 		}
-		if(this.getEconomy().getGrowth() < -50)
+		if(this.getStats().getGrowth() < -50)
 		{
 			growth = -10;
 		}
@@ -1502,14 +1437,14 @@ public class Nation extends Updatable
 
 	public double getFamineLevel()
 	{
-		double food = this.economy.getFood() + this.getFoodProduction().get(TextKey.Resource.NET);
+		double food = this.stats.getFood() + this.getFoodProduction().get(TextKey.Resource.NET);
 		if(food > 0)
 		{
 			return 0;
 		}
 		else
 		{
-			return -Math.sqrt(Math.abs(food)) * (Math.min(1, (this.getDomestic().getMonthsInFamine() + 1.0) / 10.0));
+			return -Math.sqrt(Math.abs(food)) * (Math.min(1, (this.getStats().getMonthsInFamine() + 1.0) / 10.0));
 		}
 	}
 
@@ -1523,8 +1458,8 @@ public class Nation extends Updatable
 		{
 			overMaxManpower = this.getFreeManpower() / 1000;
 		}
-		long conscription = economy.getRecentDeconscription() - economy.getRecentConscription();
-		long fortification = -this.getArmy().getFortification() / 500;
+		long conscription = stats.getRecentDeconscription() - stats.getRecentConscription();
+		long fortification = -this.stats.getFortification() / 500;
 		if(conscription > 0)
 		{
 			conscription = (long)((conscription + 1) * 0.75);
@@ -1617,7 +1552,7 @@ public class Nation extends Updatable
 	public City getLargestCity()
 	{
 		long max = 0;
-		int cityId = 0;
+		long cityId = 0;
 		for(City city : cities.values())
 		{
 			if(city.getPopulation() > max)
@@ -1691,11 +1626,11 @@ public class Nation extends Updatable
 		}
 		map.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
 		map.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
-		if(this.foreign.getAlignment() == Alignments.ENTENTE)
+		if(this.stats.getAlignment() == Alignments.ENTENTE)
 		{
 			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
 		}
-		else if(this.foreign.getAlignment() == Alignments.CENTRAL_POWERS)
+		else if(this.stats.getAlignment() == Alignments.CENTRAL_POWERS)
 		{
 			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
 		}
@@ -1722,21 +1657,24 @@ public class Nation extends Updatable
 		}
 		map.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
 		map.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
-		if(this.foreign.getAlignment() == Alignments.ENTENTE)
+		if(this.stats.getAlignment() == Alignments.ENTENTE)
 		{
 			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
 		}
-		else if(this.foreign.getAlignment() == Alignments.CENTRAL_POWERS)
+		else if(this.stats.getAlignment() == Alignments.CENTRAL_POWERS)
 		{
 			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
 		}
 		return map;
 	}
 
-	@Override
+	public boolean hasUnreadNews()
+	{
+		return this.lastMessage > stats.getLastNews();
+	}
+
 	public void update(Connection conn) throws SQLException
 	{
-		super.update(conn);
 		if(this.cities != null)
 		{
 			for(City city : this.cities.values())
@@ -1751,18 +1689,30 @@ public class Nation extends Updatable
 				production.update(conn);
 			}
 		}
-		economy.update(conn);
-		domestic.update(conn);
-		foreign.update(conn);
-		army.update(conn);
-		military.update(conn);
-		cosmetic.update(conn);
+		if(stats != null)
+		{
+			stats.update(conn);
+		}
+		if(producibles != null)
+		{
+			producibles.update(conn);
+		}
+		if(cosmetic != null)
+		{
+			cosmetic.update(conn);
+		}
 		if(treatyPermissions != null)
 		{
 			treatyPermissions.update(conn);
 		}
-		tech.update(conn);
-		policy.update(conn);
+		if(tech != null)
+		{
+			tech.update(conn);
+		}
+		if(policy != null)
+		{
+			policy.update(conn);
+		}
 	}
 
 	@Override

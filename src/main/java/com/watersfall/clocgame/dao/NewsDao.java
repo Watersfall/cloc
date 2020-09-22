@@ -1,41 +1,42 @@
 package com.watersfall.clocgame.dao;
 
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.model.news.News;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class NewsDao extends Dao
 {
 	private static final String CREATE_NEWS_SQL_STATEMENT =
-					"INSERT INTO cloc_news (sender, receiver, content, image, time)\n" +
-					"VALUES (?,?,?,?,?)";
+					"INSERT INTO news (sender, receiver, content, time)\n" +
+					"VALUES (?,?,?,?)";
 	private static final String NEWS_PAGE_SQL_STATEMENT =
 					"SELECT *\n" +
-					"FROM cloc_news\n" +
+					"FROM news\n" +
 					"WHERE receiver=?\n" +
 					"ORDER BY time DESC\n" +
 					"LIMIT 100\n" +
 					"OFFSET ?\n";
 	private static final String MARK_READ_SQL_STATEMENT =
-					"UPDATE cloc_news\n" +
-					"SET is_read=?\n" +
-					"WHERE receiver=?\n";
+					"UPDATE nation_stats JOIN (SELECT MAX(id) as max FROM news WHERE receiver=?) n SET last_news=n.max WHERE nation_stats.id=?";
 	private static final String DELETE_ALL_NEWS_SQL_STATEMENT =
-					"DELETE FROM cloc_news\n" +
+					"DELETE FROM news\n" +
 					"WHERE receiver=?\n";
 	private static final String DELETE_NEWS_SQL_STATEMENT =
-					"DELETE FROM cloc_news\n" +
+					"DELETE FROM news\n" +
 					"WHERE id=?\n";
 	private static final String UNREAD_NEWS_SQL_STATEMENT =
 					"SELECT * \n" +
-					"FROM cloc_news\n" +
-					"WHERE receiver=? AND is_read=FALSE\n" +
+					"FROM news\n" +
+					"WHERE receiver=? AND id>?\n" +
 					"LIMIT ?\n";
 	private static final String GET_NEWS_BY_ID =
 					"SELECT * \n" +
-					"FROM cloc_news \n" +
+					"FROM news \n" +
 					"WHERE id=? \n";
 
 	public NewsDao(Connection connection, boolean allowWriteAccess)
@@ -50,8 +51,7 @@ public class NewsDao extends Dao
 		statement.setInt(1, sender);
 		statement.setInt(2, receiver);
 		statement.setString(3, content);
-		statement.setNull(4, Types.VARCHAR);
-		statement.setLong(5, System.currentTimeMillis());
+		statement.setLong(4, System.currentTimeMillis());
 		statement.execute();
 	}
 
@@ -74,11 +74,12 @@ public class NewsDao extends Dao
 		return getNewsPage(page, nation.getId());
 	}
 
-	public ArrayList<News> getUnreadNews(int nation) throws SQLException
+	public ArrayList<News> getUnreadNews(Nation nation) throws SQLException
 	{
 		PreparedStatement getNews = connection.prepareStatement(UNREAD_NEWS_SQL_STATEMENT);
-		getNews.setInt(1, nation);
-		getNews.setInt(2, 10);
+		getNews.setInt(1, nation.getId());
+		getNews.setLong(2, nation.getStats().getLastNews());
+		getNews.setInt(3, 10);
 		ResultSet results = getNews.executeQuery();
 		ArrayList<News> list = new ArrayList<>();
 		while(results.next())
@@ -92,14 +93,9 @@ public class NewsDao extends Dao
 	{
 		requireWriteAccess();
 		PreparedStatement markAsRead = connection.prepareStatement(MARK_READ_SQL_STATEMENT);
-		markAsRead.setBoolean(1, true);
+		markAsRead.setInt(1, nation);
 		markAsRead.setInt(2, nation);
 		markAsRead.execute();
-	}
-
-	public void markNewsAsRead(Nation nation) throws SQLException
-	{
-		markNewsAsRead(nation.getId());
 	}
 
 	public void deleteAllNews(Nation nation) throws SQLException

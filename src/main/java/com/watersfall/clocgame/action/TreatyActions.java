@@ -6,7 +6,7 @@ import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 

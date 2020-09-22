@@ -25,19 +25,19 @@
 						<td colspan="2">Government</td>
 					</tr>
 					<tr>
-						<td colspan="2"><cloc:government value="${nation.domestic.government}"/></td>
+						<td colspan="2"><cloc:government value="${nation.stats.government}"/></td>
 					</tr>
 					<tr>
 						<td colspan="2">Approval</td>
 					</tr>
 					<tr>
-						<td>${nation.domestic.approval}%</td>
+						<td>${nation.stats.approval}%</td>
 					</tr>
 					<tr>
 						<td colspan="2">Stability</td>
 					</tr>
 					<tr>
-						<td>${nation.domestic.stability}%</td>
+						<td>${nation.stats.stability}%</td>
 					</tr>
 					<tr>
 						<td colspan="2">Land</td>
@@ -45,7 +45,7 @@
 					</tr>
 					<tr>
 						<td><fmt:formatNumber value="${nation.freeLand}"/>km<sup>2</sup> Free</td>
-						<td><fmt:formatNumber value="${nation.domestic.land}"/>km<sup>2</sup> Total</td>
+						<td><fmt:formatNumber value="${nation.stats.land}"/>km<sup>2</sup> Total</td>
 					</tr>
 					<tr>
 						<td colspan="2">Population</td>
@@ -65,13 +65,13 @@
 						<td colspan="2">Gross Domestic Product</td>
 					</tr>
 					<tr>
-						<td colspan="2">$<fmt:formatNumber value="${nation.economy.gdp}"/> Million</td>
+						<td colspan="2">$<fmt:formatNumber value="${nation.stats.gdp}"/> Million</td>
 					</tr>
 					<tr>
 						<td colspan="2">Growth</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${nation.economy.growth}"/> Million per month</td>
+						<td><fmt:formatNumber value="${nation.stats.growth}"/> Million per month</td>
 					</tr>
 				</table>
 				<br>
@@ -85,13 +85,13 @@
 						<td colspan="2">Region</td>
 					</tr>
 					<tr>
-						<td colspan="2">${nation.foreign.region.name}</td>
+						<td colspan="2">${nation.stats.region.name}</td>
 					</tr>
 					<tr>
 						<td colspan="2">Official Alignment</td>
 					</tr>
 					<tr>
-						<td colspan="2">${nation.foreign.alignment}</td>
+						<td colspan="2">${nation.stats.alignment}</td>
 					</tr>
 					<tr>
 						<td colspan="2">Treaty Membership</td>
@@ -118,25 +118,25 @@
 						<td colspan="2">Active Personnel</td>
 					</tr>
 					<tr>
-						<td colspan="2"><fmt:formatNumber value="${nation.army.size}"/>k Soldiers</td>
+						<td colspan="2"><fmt:formatNumber value="${nation.stats.armySize}"/>k Soldiers</td>
 					</tr>
 					<tr>
 						<td colspan="2">Training</td>
 					</tr>
 					<tr>
-						<td colspan="2"><fmt:formatNumber value="${nation.army.training}"/>%</td>
+						<td colspan="2"><fmt:formatNumber value="${nation.stats.armyTraining}"/>%</td>
 					</tr>
 					<tr>
 						<td>Equipment</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${nation.army.size * 1000}"/> requested</td>
+						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${nation.stats.armySize * 1000}"/> requested</td>
 					</tr>
 					<tr>
 						<td colspan="2">Fortification</td>
 					</tr>
 					<tr>
-						<td>${nation.army.fortification / 100}%</td>
+						<td>${nation.stats.fortification / 100}%</td>
 					</tr>
 				</table>
 				<br>
@@ -269,11 +269,12 @@
 						</div>
 					</c:if>
 					<c:if test="${!home.isAtWarWith(nation)}">
-						<c:if test="${home.canDeclareWar(nation)}">
+						<c:if test="${home.canDeclareWar(nation) == null}">
 							<button onclick="nation(${nation.id}, 'war', 0);" class="red">Declare War</button>
 						</c:if>
-						<c:if test="${!home.canDeclareWar(nation)}">
-							You can not declare war on this nation
+						<c:if test="${home.canDeclareWar(nation) != null}">
+							You can not declare war on this nation<br>
+							${home.canDeclareWar(nation)}
 						</c:if>
 					</c:if>
 				</div>

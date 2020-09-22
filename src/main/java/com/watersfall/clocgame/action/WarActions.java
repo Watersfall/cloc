@@ -3,9 +3,9 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.dao.LogDao;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.model.LogType;
-import com.watersfall.clocgame.model.nation.City;
+import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.model.producible.IFighterPower;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import com.watersfall.clocgame.model.producible.Producibles;
@@ -21,7 +21,7 @@ public class WarActions
 {
 	private static String winWar(Nation attacker, Nation defender) throws SQLException
 	{
-		PreparedStatement updateWar = attacker.getConn().prepareStatement("UPDATE cloc_war SET end=?, winner=? WHERE attacker=? AND defender=? AND end=-1");
+		PreparedStatement updateWar = attacker.getConn().prepareStatement("UPDATE wars SET end=?, winner=? WHERE attacker=? AND defender=? AND end=-1");
 		updateWar.setLong(1, Time.month);
 		updateWar.setInt(2, attacker.getId());
 		if(attacker.getOffensive() != null && attacker.getOffensive().getId() == defender.getId())
@@ -35,30 +35,30 @@ public class WarActions
 			updateWar.setInt(4, attacker.getId());
 		}
 		updateWar.execute();
-		defender.getMilitary().setWarProtection(4);
-		defender.getArmy().setSize(10);
-		defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() - 10000);
-		int landChange = defender.getDomestic().getLand() / 10;
-		double ironChange = defender.getEconomy().getIron() / 3;
-		double coalChange = defender.getEconomy().getCoal() / 3;
-		double oilChange = defender.getEconomy().getOil() / 3;
-		double nitrogenChange = defender.getEconomy().getNitrogen() / 3;
-		double steelChange = defender.getEconomy().getSteel() / 3;
-		double budgetChange = defender.getEconomy().getBudget() / 3;
-		defender.getDomestic().setLand(defender.getDomestic().getLand() - landChange);
-		defender.getEconomy().setIron(defender.getEconomy().getIron() - ironChange);
-		defender.getEconomy().setCoal(defender.getEconomy().getCoal() - coalChange);
-		defender.getEconomy().setOil(defender.getEconomy().getOil() - oilChange);
-		defender.getEconomy().setNitrogen(defender.getEconomy().getNitrogen() - nitrogenChange);
-		defender.getEconomy().setSteel(defender.getEconomy().getSteel() - steelChange);
-		defender.getEconomy().setBudget(defender.getEconomy().getBudget() - budgetChange);
-		attacker.getDomestic().setLand(attacker.getDomestic().getLand() + landChange);
-		attacker.getEconomy().setIron(attacker.getEconomy().getIron() + ironChange);
-		attacker.getEconomy().setCoal(attacker.getEconomy().getCoal() + coalChange);
-		attacker.getEconomy().setOil(attacker.getEconomy().getOil() + oilChange);
-		attacker.getEconomy().setNitrogen(attacker.getEconomy().getNitrogen() + nitrogenChange);
-		attacker.getEconomy().setSteel(attacker.getEconomy().getSteel() + steelChange);
-		attacker.getEconomy().setBudget(attacker.getEconomy().getBudget() + budgetChange);
+		defender.getStats().setWarProtection(4);
+		defender.getStats().setArmySize(10);
+		defender.getStats().setLostManpower(defender.getStats().getLostManpower() - 10000);
+		int landChange = defender.getStats().getLand() / 10;
+		double ironChange = defender.getStats().getIron() / 3;
+		double coalChange = defender.getStats().getCoal() / 3;
+		double oilChange = defender.getStats().getOil() / 3;
+		double nitrogenChange = defender.getStats().getNitrogen() / 3;
+		double steelChange = defender.getStats().getSteel() / 3;
+		double budgetChange = defender.getStats().getBudget() / 3;
+		defender.getStats().setLand(defender.getStats().getLand() - landChange);
+		defender.getStats().setIron(defender.getStats().getIron() - ironChange);
+		defender.getStats().setCoal(defender.getStats().getCoal() - coalChange);
+		defender.getStats().setOil(defender.getStats().getOil() - oilChange);
+		defender.getStats().setNitrogen(defender.getStats().getNitrogen() - nitrogenChange);
+		defender.getStats().setSteel(defender.getStats().getSteel() - steelChange);
+		defender.getStats().setBudget(defender.getStats().getBudget() - budgetChange);
+		attacker.getStats().setLand(attacker.getStats().getLand() + landChange);
+		attacker.getStats().setIron(attacker.getStats().getIron() + ironChange);
+		attacker.getStats().setCoal(attacker.getStats().getCoal() + coalChange);
+		attacker.getStats().setOil(attacker.getStats().getOil() + oilChange);
+		attacker.getStats().setNitrogen(attacker.getStats().getNitrogen() + nitrogenChange);
+		attacker.getStats().setSteel(attacker.getStats().getSteel() + steelChange);
+		attacker.getStats().setBudget(attacker.getStats().getBudget() + budgetChange);
 		for(City city : defender.getCities().values())
 		{
 			city.setDevastation(city.getDevastation() + 25);
@@ -72,18 +72,18 @@ public class WarActions
 	private static void doLog(Nation attacker, Nation defender, LogType type) throws SQLException
 	{
 		LogDao dao = new LogDao(attacker.getConn(), true);
-		dao.createLog(attacker.getId(), defender.getForeign().getRegion(), type, 0);
+		dao.createLog(attacker.getId(), type);
 	}
 
 	private static void doCasualties(Nation attacker, Nation defender, int attackerCasualties, int defenderCasualties) throws SQLException
 	{
-		attacker.getArmy().setSize(attacker.getArmy().getSize() - attackerCasualties);
-		attacker.getArmy().setCasualties(attacker.getArmy().getCasualties() + attackerCasualties);
-		attacker.getDomestic().setManpowerLost(attacker.getDomestic().getManpowerLost() + attackerCasualties * 1000);
+		attacker.getStats().setArmySize(attacker.getStats().getArmySize() - attackerCasualties);
+		attacker.getStats().setCasualties(attacker.getStats().getCasualties() + attackerCasualties);
+		attacker.getStats().setLostManpower(attacker.getStats().getLostManpower() + attackerCasualties * 1000);
 		attacker.damagePopulation(attackerCasualties * 1000);
-		defender.getArmy().setSize(defender.getArmy().getSize() - defenderCasualties);
-		defender.getArmy().setCasualties(defender.getArmy().getCasualties() + defenderCasualties);
-		defender.getDomestic().setManpowerLost(defender.getDomestic().getManpowerLost() + defenderCasualties * 1000);
+		defender.getStats().setArmySize(defender.getStats().getArmySize() - defenderCasualties);
+		defender.getStats().setCasualties(defender.getStats().getCasualties() + defenderCasualties);
+		defender.getStats().setLostManpower(defender.getStats().getLostManpower() + defenderCasualties * 1000);
 		defender.damagePopulation(defenderCasualties * 1000);
 	}
 
@@ -126,7 +126,7 @@ public class WarActions
 		ArrayList<Producibles> planes = Producibles.getProduciblesByCategories(ProducibleCategory.BOMBER_PLANE, ProducibleCategory.FIGHTER_PLANE);
 		//Adding fighters again to double their chance of being picked
 		planes.addAll(Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE));
-		planes.removeIf(plane -> nation.getProducibleValue(plane) <= 0);
+		planes.removeIf(plane -> nation.getProducibles().getProducible(plane) <= 0);
 		int totalLosses = 0;
 		while(power > 0)
 		{
@@ -134,12 +134,12 @@ public class WarActions
 			if(plane.getProducible().getCategory() == ProducibleCategory.FIGHTER_PLANE)
 			{
 				IFighterPower fighter = (IFighterPower) plane.getProducible();
-				if(nation.getProducibleValue(plane) > 0)
+				if(nation.getProducibles().getProducible(plane) > 0)
 				{
 					int random = (int)(Math.random() * fighter.getFighterPower() * 2);
 					if(random > fighter.getFighterPower())
 					{
-						nation.setProducibleValue(plane, nation.getProducibleValue(plane) - 1);
+						nation.getProducibles().setProducible(plane, nation.getProducibles().getProducible(plane) - 1);
 						power -= random;
 						totalLosses++;
 					}
@@ -155,12 +155,12 @@ public class WarActions
 			else
 			{
 				IFighterPower defense = (IFighterPower) plane.getProducible();
-				if(nation.getProducibleValue(plane) > 0)
+				if(nation.getProducibles().getProducible(plane) > 0)
 				{
 					int random = (int)(Math.random() * defense.getFighterPower() * 2);
 					if(random > defense.getFighterPower())
 					{
-						nation.setProducibleValue(plane, nation.getProducibleValue(plane) - 1);
+						nation.getProducibles().setProducible(plane, nation.getProducibles().getProducible(plane) - 1);
 						power -= random;
 						totalLosses++;
 					}
@@ -194,15 +194,15 @@ public class WarActions
 		{
 			return Responses.noWar();
 		}
-		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
+		else if(dao.checkLog(attacker.getId(), LogType.LAND))
 		{
 			return Responses.alreadyAttacked();
 		}
-		else if(attacker.getArmy().getSize() < 5)
+		else if(attacker.getStats().getArmySize() < 5)
 		{
 			return Responses.noTroopsForAttack();
 		}
-		else if(defender.getArmy().getSize() <= 5)
+		else if(defender.getStats().getArmySize() <= 5)
 		{
 			return winWar(attacker, defender);
 		}
@@ -214,15 +214,15 @@ public class WarActions
 			defenderPower = defenderPower + (defenderPower * defenseMod);
 			int attackerCasualties = attacker.getCasualties(attackerPower, defenderPower);
 			int defenderCasualties = defender.getCasualties(defenderPower, attackerPower);
-			if(attackerCasualties > 0.75 * attacker.getArmy().getSize())
+			if(attackerCasualties > 0.75 * attacker.getStats().getArmySize())
 			{
-				defenderCasualties = (int)(defenderCasualties * ((attacker.getArmy().getSize() * 0.75) / attackerCasualties));
-				attackerCasualties = (int)(attacker.getArmy().getSize() * 0.75);
+				defenderCasualties = (int)(defenderCasualties * ((attacker.getStats().getArmySize() * 0.75) / attackerCasualties));
+				attackerCasualties = (int)(attacker.getStats().getArmySize() * 0.75);
 			}
-			if(defenderCasualties > 0.75 * defender.getArmy().getSize())
+			if(defenderCasualties > 0.75 * defender.getStats().getArmySize())
 			{
-				attackerCasualties = (int)(attackerCasualties * ((defender.getArmy().getSize() * 0.75) / defenderCasualties));
-				defenderCasualties = (int)(defender.getArmy().getSize() * 0.75);
+				attackerCasualties = (int)(attackerCasualties * ((defender.getStats().getArmySize() * 0.75) / defenderCasualties));
+				defenderCasualties = (int)(defender.getStats().getArmySize() * 0.75);
 			}
 			doLog(attacker, defender, LogType.LAND);
 			doCasualties(attacker, defender, attackerCasualties, defenderCasualties);
@@ -245,15 +245,15 @@ public class WarActions
 		{
 			return Responses.noWar();
 		}
-		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
+		else if(dao.checkLog(attacker.getId(), LogType.LAND))
 		{
 			return Responses.alreadyAttacked();
 		}
-		else if(attacker.getArmy().getSize() < 5)
+		else if(attacker.getStats().getArmySize() < 5)
 		{
 			return Responses.noTroopsForAttack();
 		}
-		else if(defender.getArmy().getSize() <= 5)
+		else if(defender.getStats().getArmySize() <= 5)
 		{
 			return winWar(attacker, defender);
 		}
@@ -276,15 +276,15 @@ public class WarActions
 				attackerPower *= 0.85;
 				int attackerCasualties = attacker.getCasualties(attackerPower, defenderPower);
 				int defenderCasualties = defender.getCasualties(defenderPower, attackerPower);
-				if(attackerCasualties > 0.75 * attacker.getArmy().getSize())
+				if(attackerCasualties > 0.75 * attacker.getStats().getArmySize())
 				{
-					defenderCasualties = (int)(defenderCasualties * ((attacker.getArmy().getSize() * 0.75) / attackerCasualties));
-					attackerCasualties = (int)(attacker.getArmy().getSize() * 0.75);
+					defenderCasualties = (int)(defenderCasualties * ((attacker.getStats().getArmySize() * 0.75) / attackerCasualties));
+					attackerCasualties = (int)(attacker.getStats().getArmySize() * 0.75);
 				}
-				if(defenderCasualties > 0.75 * defender.getArmy().getSize())
+				if(defenderCasualties > 0.75 * defender.getStats().getArmySize())
 				{
-					attackerCasualties = (int)(attackerCasualties * ((defender.getArmy().getSize() * 0.75) / defenderCasualties));
-					defenderCasualties = (int)(defender.getArmy().getSize() * 0.75);
+					attackerCasualties = (int)(attackerCasualties * ((defender.getStats().getArmySize() * 0.75) / defenderCasualties));
+					defenderCasualties = (int)(defender.getStats().getArmySize() * 0.75);
 				}
 				doLog(attacker, defender, LogType.LAND);
 				doCasualties(attacker, defender, attackerCasualties, defenderCasualties);
@@ -308,7 +308,7 @@ public class WarActions
 		{
 			return Responses.noWar();
 		}
-		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
+		else if(dao.checkLog(attacker.getId(), LogType.AIR))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -348,7 +348,7 @@ public class WarActions
 		{
 			return Responses.noWar();
 		}
-		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
+		else if(dao.checkLog(attacker.getId(), LogType.AIR))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -363,7 +363,7 @@ public class WarActions
 				return airBattle(attacker, defender, true);
 			}
 			int damage = Math.max(1, (int)Math.sqrt(attacker.getBomberPower()));
-			damage = Math.min(damage, defender.getArmy().getSize() / 10);
+			damage = Math.min(damage, defender.getStats().getArmySize() / 10);
 			String message = News.createMessage(News.ID_AIR_BOMB_TROOPS, attacker.getNationUrl(), damage);
 			newsDao.createNews(attacker.getId(), defender.getId(), message);
 			doCasualties(attacker, defender, 0, damage);
@@ -379,7 +379,7 @@ public class WarActions
 		{
 			return Responses.noWar();
 		}
-		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.AIR))
+		else if(dao.checkLog(attacker.getId(), LogType.AIR))
 		{
 			return Responses.alreadyAttacked();
 		}
@@ -419,18 +419,18 @@ public class WarActions
 		{
 			return Responses.noWar();
 		}
-		else if(dao.checkLog(attacker.getId(), defender.getForeign().getRegion(), LogType.LAND))
+		else if(dao.checkLog(attacker.getId(), LogType.LAND))
 		{
 			return Responses.alreadyAttacked();
 		}
-		else if(attacker.getArmy().getFortification() >= attacker.getMaximumFortificationLevel())
+		else if(attacker.getStats().getFortification() >= attacker.getMaximumFortificationLevel())
 		{
 			return Responses.alreadyFortified();
 		}
 		else
 		{
 			int increase = Math.max(250, attacker.getMaximumFortificationLevel() / 10);
-			attacker.getArmy().setFortification(attacker.getArmy().getFortification() + increase);
+			attacker.getStats().setFortification(attacker.getStats().getFortification() + increase);
 			doLog(attacker, defender, LogType.LAND);
 			String message = News.createMessage(News.ID_FORTIFICATION, attacker.getNationUrl());
 			newsDao.createNews(attacker.getId(), defender.getId(), message);

@@ -57,8 +57,8 @@ public class MapController extends HttpServlet
 				HashMap<String, HashMap<String, Double>> map = new HashMap<>();
 				for(Region region : Region.values())
 				{
-					PreparedStatement armies = connection.prepareStatement("SELECT SUM(gdp), SUM(size) FROM cloc_economy, cloc_army, cloc_foreign \n" +
-							"WHERE cloc_foreign.region=? AND cloc_economy.id = cloc_foreign.id AND cloc_foreign.id = cloc_army.id");
+					PreparedStatement armies = connection.prepareStatement("SELECT SUM(gdp), SUM(army_size) FROM nation_stats \n" +
+							"WHERE nation_stats.region=?");
 					armies.setString(1, region.name());
 					ResultSet results = armies.executeQuery();
 					results.first();

@@ -1,15 +1,15 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableIntId;
 import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NationPolicy extends Updatable
+public class NationPolicy extends UpdatableIntId
 {
-	public static final String TABLE_NAME = "cloc_policy";
+	public static final String TABLE_NAME = "nation_policy";
 
 	private @Getter Policy manpower;
 	private @Getter int changeManpower;

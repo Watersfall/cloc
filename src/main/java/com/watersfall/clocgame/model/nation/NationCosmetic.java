@@ -1,14 +1,14 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableIntId;
 import lombok.Getter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NationCosmetic extends Updatable
+public class NationCosmetic extends UpdatableIntId
 {
-	public static final String TABLE_NAME = "cloc_cosmetic";
+	public static final String TABLE_NAME = "nation_cosmetic";
 	private @Getter String nationName;
 	private @Getter String username;
 	private @Getter String nationTitle;

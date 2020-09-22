@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.dao;
 
-import com.watersfall.clocgame.model.nation.Modifiers;
+import com.watersfall.clocgame.model.modifier.Modifiers;
 import com.watersfall.clocgame.util.Time;
 
 import java.sql.Connection;

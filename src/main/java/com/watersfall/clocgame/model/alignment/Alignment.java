@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.model.alignment;
 
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableLongId;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import com.watersfall.clocgame.model.producible.Producibles;
@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
-public class Alignment extends Updatable
+public class Alignment extends UpdatableLongId
 {
 	/**
 	 * The Producibles that can be purchased from and sold to the alignments
@@ -158,7 +158,7 @@ public class Alignment extends Updatable
 
 	public boolean isAvailableToSell(Producibles producibles, Nation nation)
 	{
-		return nation.getProducibleValue(producibles) >= this.getTransactionAmount(producibles);
+		return nation.getProducibles().getProducible(producibles) >= this.getTransactionAmount(producibles);
 	}
 
 	@Override

@@ -31,7 +31,7 @@
 				<c:if test="${alignment.alignment != Alignments.NEUTRAL}">
 					<div class="title">Reputation</div>
 					<div class="subtile">
-						<div class="title">Current Reputation: ${home.foreign.getReputation(alignment.alignment)}</div>
+						<div class="title">Current Reputation: ${home.stats.getReputation(alignment.alignment)}</div>
 						Reputation increases every turn by <fmt:formatNumber value="${home.getMaxReputation(alignment.alignment) * 0.05}" maxFractionDigits="0"/> until reaching a maximum of: ${home.getMaxReputation(alignment.alignment)}<br>
 						Max Reputation affected by:
 						<ul>
@@ -80,7 +80,7 @@
 								</c:if>
 							</div>
 							<div class="description">
-								We Have: <fmt:formatNumber value="${home.getProducibleValue(item)}"/><br>
+								We Have: <fmt:formatNumber value="${home.producibles.getProducible(item)}"/><br>
 								<c:if test="${alignment.isAvailableToBuy(item, home)}">
 									Buy ${alignment.getTransactionAmount(item)} -
 									<button onclick="alignmentTransaction('${alignment.alignment.name()}', '${item.name()}', 'buy')" class="blue">

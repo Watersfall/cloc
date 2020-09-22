@@ -1,11 +1,14 @@
 package com.watersfall.clocgame.dao;
 
 import com.watersfall.clocgame.exception.NationNotFoundException;
-import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.alignment.AlignmentTransaction;
 import com.watersfall.clocgame.model.alignment.Alignments;
+import com.watersfall.clocgame.model.city.City;
+import com.watersfall.clocgame.model.city.CityType;
 import com.watersfall.clocgame.model.event.Event;
+import com.watersfall.clocgame.model.factory.Factory;
+import com.watersfall.clocgame.model.modifier.Modifier;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.model.treaty.Treaty;
@@ -21,29 +24,26 @@ import java.util.LinkedHashMap;
 public class NationDao extends Dao
 {
 	private static final String STATS_SQL_STATEMENT =
-					"SELECT * FROM cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-					"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
-					"WHERE cloc_login.id=?\n";
+					"SELECT * FROM login\n" +
+					"JOIN nation_producibles ON login.id = nation_producibles.id\n" +
+					"JOIN nation_tech ON login.id = nation_tech.id\n" +
+					"JOIN nation_policy ON login.id = nation_policy.id\n" +
+					"JOIN nation_cosmetic ON login.id = nation_cosmetic.id\n" +
+					"JOIN nation_stats ON login.id = nation_stats.id\n" +
+					"LEFT JOIN treaty_members treaty_member ON login.id = treaty_member.nation_id\n" +
+					"LEFT JOIN treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+					"WHERE login.id=?\n";
 	private static final String NAME_SQL_STATEMENT =
 					"SELECT id\n" +
-					"FROM cloc_cosmetic\n" +
+					"FROM nation_cosmetic\n" +
 					"WHERE nation_name=?\n";
 	private static final String INVITES_SQL_STATEMENT =
 					"SELECT alliance_id, id\n" +
-					"FROM cloc_treaty_invites\n" +
+					"FROM treaty_invites\n" +
 					"WHERE nation_id=?\n";
 	private static final String NEWS_SQL_STATEMENT =
-					"SELECT COUNT(id) AS count, SUM(is_read=0) AS unread\n" +
-					"FROM cloc_news\n" +
+					"SELECT COUNT(id) AS count, MAX(id) AS unread\n" +
+					"FROM news\n" +
 					"WHERE receiver=?\n";
 	private static final String EVENT_SQL_STATEMENT =
 					"SELECT *" +
@@ -51,7 +51,7 @@ public class NationDao extends Dao
 					"WHERE owner=?\n";
 	private static final String WAR_SQL_STATEMENT =
 					"SELECT id, attacker, defender\n" +
-					"FROM cloc_war\n" +
+					"FROM wars\n" +
 					"WHERE (attacker=? OR defender=?) AND end=-1\n";
 	private static final String MODIFIERS_SQL_STATEMENT =
 					"SELECT * \n" +
@@ -62,72 +62,51 @@ public class NationDao extends Dao
 					"LEFT JOIN factories ON production.id=factories.production_id\n" +
 					"WHERE production.owner=?\n";
 	private static final String DELETE_NATION_SQL_STATEMENT =
-					"DELETE FROM cloc_login\n" +
+					"DELETE FROM login\n" +
 					"WHERE id=?\n";
 	private static final String CREATE_NATION_STATS =
-					"INSERT INTO cloc_login (username, email, password, register_ip, last_ip, last_login) VALUES (?,?,?,?,?,?);" +
-					"INSERT INTO cloc_army () VALUES ();" +
-					"INSERT INTO cloc_cosmetic (nation_name, username, description) VALUES (?,?,?);" +
-					"INSERT INTO cloc_domestic (government) VALUES (?);" +
-					"INSERT INTO cloc_economy (economic) VALUES (?);" +
-					"INSERT INTO cloc_foreign (region) VALUES (?);" +
-					"INSERT INTO cloc_military () VALUES ();" +
-					"INSERT INTO cloc_policy () VALUES ();" +
-					"INSERT INTO cloc_tech () VALUES ();";
+					"INSERT INTO login (username, email, password, register_ip, last_ip) VALUES (?,?,?,?,?);" +
+					"INSERT INTO nation_cosmetic (nation_name, username, description) VALUES (?,?,?);" +
+					"INSERT INTO nation_stats (government, economic, region) VALUES (?,?,?);" +
+					"INSERT INTO nation_producibles () VALUES ();" +
+					"INSERT INTO nation_policy () VALUES ();" +
+					"INSERT INTO nation_tech () VALUES ();";
 	private static final String CREATE_NATION_CITY =
-					"INSERT INTO cloc_cities (owner, capital, coastal, name, type)\n" +
+					"INSERT INTO cities (owner, capital, coastal, name, type)\n" +
 					"VALUES (?,?,?,?,?)\n";
 	private static final String CREATE_NATION_INDUSTRY =
 					"INSERT INTO factories (owner, city_id, production_id)\n" +
 					"VALUES (?,?,?)\n";
 	private static final String RANKINGS_SQL_STATEMENT =
-					"SELECT * FROM cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-					"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
-					"ORDER BY cloc_economy.gdp DESC, cloc_login.id ASC\n" +
+					"SELECT * FROM login\n" +
+					"JOIN nation_stats ON login.id = nation_stats.id\n" +
+					"JOIN nation_cosmetic ON login.id = nation_cosmetic.id\n" +
+					"LEFT JOIN treaty_members treaty_member ON login.id = treaty_member.nation_id\n" +
+					"LEFT JOIN treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+					"ORDER BY nation_stats.gdp DESC, login.id ASC\n" +
 					"LIMIT 20\n" +
 					"OFFSET ?\n";
 
 	private static final String REGION_RANKINGS_SQL_STATEMENT =
-					"SELECT * FROM cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-					"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
-					"WHERE cloc_foreign.region=?\n" +
-					"ORDER BY cloc_economy.gdp DESC, cloc_login.id ASC\n" +
+					"SELECT * FROM login\n" +
+					"JOIN nation_stats ON login.id = nation_stats.id\n" +
+					"JOIN nation_cosmetic ON login.id = nation_cosmetic.id\n" +
+					"LEFT JOIN treaty_members treaty_member ON login.id = treaty_member.nation_id\n" +
+					"LEFT JOIN treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+					"WHERE nation_stats.region=?\n" +
+					"ORDER BY nation_stats.gdp DESC, login.id ASC\n" +
 					"LIMIT 20\n" +
 					"OFFSET ?\n";
 	private static final String TREATY_MEMBERS_SQL_STATEMENT =
-					"SELECT * FROM cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"RIGHT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-					"RIGHT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+					"SELECT * FROM login\n" +
+					"JOIN nation_stats ON login.id = nation_stats.id\n" +
+					"JOIN nation_cosmetic ON login.id = nation_cosmetic.id\n" +
+					"LEFT JOIN treaty_members treaty_member ON login.id = treaty_member.nation_id\n" +
+					"LEFT JOIN treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
 					"WHERE treaty.id=?\n" +
-					"ORDER BY cloc_login.id\n";
+					"ORDER BY login.id\n";
 	private static final String ALIGNMENT_TRANSACTIONS =
-			"SELECT * FROM alignments_transactions WHERE nation=? ";
+					"SELECT * FROM alignments_transactions WHERE nation=? ";
 
 	public NationDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -184,22 +163,18 @@ public class NationDao extends Dao
 		{
 			throw new NationNotFoundException();
 		}
-		nation.setLastSeen(statsResults.getLong("last_login"));
-		nation.setEconomy(new NationEconomy(id, statsResults));
-		nation.setDomestic(new NationDomestic(id, statsResults));
-		nation.setArmy(new NationArmy(id, statsResults));
-		nation.setMilitary(new NationMilitary(id, statsResults));
+		//nation.setLastSeen(statsResults.getLong("last_login"));
+		try{nation.setStats(new NationStats(statsResults));}catch(Exception ignored){}
 		nation.setPolicy(new NationPolicy(id, statsResults));
 		nation.setTech(new NationTech(id, statsResults));
 		nation.setCosmetic(new NationCosmetic(id, statsResults));
-		nation.setForeign(new NationForeign(id, statsResults));
-		nation.setLastReadMessage(statsResults.getInt("last_message"));
+		nation.setProducibles(new NationProducibles(statsResults));
 		HashMap<Integer, City> cities = new HashMap<>();
 		while(citiesResults.next())
 		{
 			City city = new City(citiesResults);
 			city.setNation(nation);
-			cities.put(citiesResults.getInt("cloc_cities.id"), city);
+			cities.put(citiesResults.getInt("cities.id"), city);
 		}
 		nation.setCities(cities);
 		ArrayList<Integer> invites = new ArrayList<>();
@@ -207,10 +182,15 @@ public class NationDao extends Dao
 		{
 			invites.add(invitesResults.getInt("alliance_id"));
 		}
+		if(statsResults.getInt("treaty.id") != 0)
+		{
+			nation.setTreatyPermissions(new TreatyPermissions(statsResults));
+			nation.setTreaty(new Treaty(statsResults));
+		}
 		nation.setInvites(invites);
 		newsResults.first();
 		nation.setNewsCount(newsResults.getInt("count"));
-		nation.setAnyUnreadNews(newsResults.getInt("unread") > 0);
+		nation.setLastMessage(newsResults.getInt("unread"));
 		ArrayList<Event> events = new ArrayList<>();
 		while(eventResults.next())
 		{
@@ -223,11 +203,11 @@ public class NationDao extends Dao
 		{
 			if(warResults.getInt("attacker") == id)
 			{
-				nation.setOffensive(dao.getWarById(warResults.getInt("cloc_war.id")));
+				nation.setOffensive(dao.getWarById(warResults.getInt("wars.id")));
 			}
 			else
 			{
-				nation.setDefensive(dao.getWarById(warResults.getInt("cloc_war.id")));
+				nation.setDefensive(dao.getWarById(warResults.getInt("wars.id")));
 			}
 		}
 		ArrayList<Modifier> modifiers = new ArrayList<>();
@@ -236,19 +216,14 @@ public class NationDao extends Dao
 			modifiers.add(new Modifier(modifierResults));
 		}
 		nation.setModifiers(modifiers);
-		if(statsResults.getInt("treaty.id") != 0)
-		{
-			nation.setTreatyPermissions(new TreatyPermissions(statsResults));
-			nation.setTreaty(new Treaty(statsResults));
-		}
 		int usedFactories = 0;
 		LinkedHashMap<Integer, Production> production = new LinkedHashMap<>();
 		if(productionResults.first())
 		{
 			HashMap<String, Double> resources = new HashMap<>();
-			resources.put("steel", nation.getEconomy().getSteel());
-			resources.put("nitrogen", nation.getEconomy().getNitrogen());
-			resources.put("oil", nation.getEconomy().getOil());
+			resources.put("steel", nation.getStats().getSteel());
+			resources.put("nitrogen", nation.getStats().getNitrogen());
+			resources.put("oil", nation.getStats().getOil());
 			HashMap<Integer, Factory> factories = new HashMap<>();
 			boolean next = true;
 			while(next)
@@ -279,7 +254,7 @@ public class NationDao extends Dao
 		nation.setFreeFactories(nation.getTotalMilitaryFactories() - usedFactories);
 		nation.setConn(connection);
 		MessageDao messageDao = new MessageDao(connection, allowWriteAccess);
-		nation.setUnreadMessages(messageDao.getUnreadMessages(nation.getId(), nation.getLastReadMessage()));
+		nation.setUnreadMessages(messageDao.getUnreadMessages(nation.getId(), nation.getStats().getLastMessage()));
 		transactionsStatement.setInt(1, nation.getId());
 		ResultSet transactions = transactionsStatement.executeQuery();
 		EnumMap<Alignments, ArrayList<AlignmentTransaction>> transactionsMap = new EnumMap<>(Alignments.class);
@@ -344,14 +319,10 @@ public class NationDao extends Dao
 		{
 			throw new NationNotFoundException();
 		}
-		nation.setEconomy(new NationEconomy(id, statsResults));
-		nation.setDomestic(new NationDomestic(id, statsResults));
-		nation.setArmy(new NationArmy(id, statsResults));
-		nation.setMilitary(new NationMilitary(id, statsResults));
 		nation.setPolicy(new NationPolicy(id, statsResults));
 		nation.setTech(new NationTech(id, statsResults));
 		nation.setCosmetic(new NationCosmetic(id, statsResults));
-		nation.setForeign(new NationForeign(id, statsResults));
+		nation.setStats(new NationStats(statsResults));
 		if(statsResults.getInt("treaty.id") != 0)
 		{
 			nation.setTreatyPermissions(new TreatyPermissions(statsResults));
@@ -364,14 +335,11 @@ public class NationDao extends Dao
 	public Nation getCosmeticNationById(int id, ResultSet results) throws SQLException
 	{
 		Nation nation = new Nation(id);
-		nation.setEconomy(new NationEconomy(id, results));
-		nation.setDomestic(new NationDomestic(id, results));
-		nation.setArmy(new NationArmy(id, results));
-		nation.setMilitary(new NationMilitary(id, results));
+		nation.setStats(new NationStats(results));
 		nation.setPolicy(new NationPolicy(id, results));
 		nation.setTech(new NationTech(id, results));
 		nation.setCosmetic(new NationCosmetic(id, results));
-		nation.setForeign(new NationForeign(id, results));
+		nation.setProducibles(new NationProducibles(results));
 		if(results.getInt("treaty.id") != 0)
 		{
 			nation.setTreatyPermissions(new TreatyPermissions(results));
@@ -398,13 +366,12 @@ public class NationDao extends Dao
 		create.setString(3, Security.hash(password));
 		create.setString(4, ip);
 		create.setString(5, ip);
-		create.setLong(6, System.currentTimeMillis());
-		create.setString(7, nation);
-		create.setString(8, username);
-		create.setString(9, "Welcome to CLOC! Please change me in the settings.");
-		create.setInt(10, gov);
-		create.setInt(11, econ);
-		create.setString(12, region.name());
+		create.setString(6, nation);
+		create.setString(7, username);
+		create.setString(8, "Welcome to CLOC! Please change me in the settings.");
+		create.setInt(9, gov);
+		create.setInt(10, econ);
+		create.setString(11, region.name());
 		create.execute();
 		ResultSet key = create.getGeneratedKeys();
 		key.first();
@@ -449,14 +416,8 @@ public class NationDao extends Dao
 		{
 			int id = results.getInt("id");
 			Nation nation = new Nation(results.getInt("id"));
-			nation.setEconomy(new NationEconomy(id, results));
-			nation.setDomestic(new NationDomestic(id, results));
-			nation.setArmy(new NationArmy(id, results));
-			nation.setMilitary(new NationMilitary(id, results));
-			nation.setPolicy(new NationPolicy(id, results));
-			nation.setTech(new NationTech(id, results));
+			nation.setStats(new NationStats(results));
 			nation.setCosmetic(new NationCosmetic(id, results));
-			nation.setForeign(new NationForeign(id, results));
 			if(results.getInt("treaty.id") != 0)
 			{
 				nation.setTreaty(new Treaty(results));
@@ -478,14 +439,8 @@ public class NationDao extends Dao
 		{
 			int id = results.getInt("id");
 			Nation nation = new Nation(results.getInt("id"));
-			nation.setEconomy(new NationEconomy(id, results));
-			nation.setDomestic(new NationDomestic(id, results));
-			nation.setArmy(new NationArmy(id, results));
-			nation.setMilitary(new NationMilitary(id, results));
-			nation.setPolicy(new NationPolicy(id, results));
-			nation.setTech(new NationTech(id, results));
+			nation.setStats(new NationStats(results));
 			nation.setCosmetic(new NationCosmetic(id, results));
-			nation.setForeign(new NationForeign(id, results));
 			if(results.getInt("treaty.id") != 0)
 			{
 				nation.setTreaty(new Treaty(results));
@@ -506,14 +461,8 @@ public class NationDao extends Dao
 		{
 			int nationId = results.getInt("id");
 			Nation nation = new Nation(results.getInt("id"));
-			nation.setEconomy(new NationEconomy(nationId, results));
-			nation.setDomestic(new NationDomestic(nationId, results));
-			nation.setArmy(new NationArmy(nationId, results));
-			nation.setMilitary(new NationMilitary(nationId, results));
-			nation.setPolicy(new NationPolicy(nationId, results));
-			nation.setTech(new NationTech(nationId, results));
+			nation.setStats(new NationStats(results));
 			nation.setCosmetic(new NationCosmetic(nationId, results));
-			nation.setForeign(new NationForeign(nationId, results));
 			Treaty treaty = new Treaty(results);
 			nation.setTreaty(treaty);
 			nation.setTreatyPermissions(new TreatyPermissions(results));
@@ -534,13 +483,13 @@ public class NationDao extends Dao
 					switch(k)
 					{
 						case "steel":
-							nation.getEconomy().setSteel(nation.getEconomy().getSteel() - amount);
+							nation.getStats().setSteel(nation.getStats().getSteel() - amount);
 							break;
 						case "oil":
-							nation.getEconomy().setSteel(nation.getEconomy().getOil() - amount);
+							nation.getStats().setSteel(nation.getStats().getOil() - amount);
 							break;
 						case "nitrogen":
-							nation.getEconomy().setNitrogen(nation.getEconomy().getNitrogen() - amount);
+							nation.getStats().setNitrogen(nation.getStats().getNitrogen() - amount);
 							break;
 					}
 				});
@@ -555,12 +504,9 @@ public class NationDao extends Dao
 		}
 		if(!statement.isEmpty())
 		{
-			statement = "UPDATE cloc_army, cloc_military SET ".concat(statement)
-					.concat("WHERE cloc_army.id=? AND cloc_military.id=? AND cloc_army.id=cloc_military.id");
-			statement = statement.replace(", WHERE", " WHERE");
+			statement = "UPDATE nation_producibles SET ".concat(statement).concat("WHERE nation_producibles.id=? ").replace(", WHERE", " WHERE");
 			PreparedStatement update = connection.prepareStatement(statement);
 			update.setInt(1, nation.getId());
-			update.setInt(2, nation.getId());
 			update.execute();
 		}
 	}

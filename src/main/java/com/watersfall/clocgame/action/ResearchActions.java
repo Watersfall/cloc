@@ -24,8 +24,8 @@ public class ResearchActions
 			for(HashMap.Entry<String, Integer> entry : tech.getCosts().entrySet())
 			{
 				String methodName = "get" + entry.getKey().substring(0, 1).toUpperCase().concat(entry.getKey().substring(1));
-				Method method = nation.getEconomy().getClass().getMethod(methodName);
-				double amount = (double)method.invoke(nation.getEconomy());
+				Method method = nation.getStats().getClass().getMethod(methodName);
+				double amount = (double)method.invoke(nation.getStats());
 				if(amount < entry.getValue())
 				{
 					return Responses.no(entry.getKey());
@@ -55,10 +55,10 @@ public class ResearchActions
 			{
 				String getName = "get" + entry.getKey().substring(0, 1).toUpperCase().concat(entry.getKey().substring(1));
 				String setName = "set" + entry.getKey().substring(0, 1).toUpperCase().concat(entry.getKey().substring(1));
-				Method getMethod = nation.getEconomy().getClass().getMethod(getName);
-				Method setMethod = nation.getEconomy().getClass().getMethod(setName, double.class);
-				double current = (double)getMethod.invoke(nation.getEconomy());
-				setMethod.invoke(nation.getEconomy(), current - entry.getValue());
+				Method getMethod = nation.getStats().getClass().getMethod(getName);
+				Method setMethod = nation.getStats().getClass().getMethod(setName, double.class);
+				double current = (double)getMethod.invoke(nation.getStats());
+				setMethod.invoke(nation.getStats(), current - entry.getValue());
 			}
 		}
 		catch(Exception e)

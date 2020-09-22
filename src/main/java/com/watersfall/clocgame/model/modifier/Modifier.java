@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.model.nation;
+package com.watersfall.clocgame.model.modifier;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

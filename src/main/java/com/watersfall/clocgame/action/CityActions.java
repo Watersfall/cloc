@@ -4,9 +4,9 @@ import com.watersfall.clocgame.dao.CityDao;
 import com.watersfall.clocgame.exception.CityNotFoundException;
 import com.watersfall.clocgame.exception.NationNotFoundException;
 import com.watersfall.clocgame.exception.NotLoggedInException;
-import com.watersfall.clocgame.model.nation.City;
+import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.model.nation.NationStats;
 import com.watersfall.clocgame.text.Responses;
 
 import java.sql.SQLException;
@@ -26,7 +26,7 @@ public class CityActions
 			return Responses.noBuildSlots();
 		}
 		int cost = city.getMineCost();
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
@@ -37,7 +37,7 @@ public class CityActions
 		else
 		{
 			city.setCoalMines(city.getCoalMines() + 1);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.coalMine();
 		}
 	}
@@ -54,7 +54,7 @@ public class CityActions
 			return Responses.noBuildSlots();
 		}
 		int cost = city.getMineCost();
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
@@ -65,7 +65,7 @@ public class CityActions
 		else
 		{
 			city.setIronMines(city.getIronMines() + 1);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.ironMine();
 		}
 	}
@@ -82,7 +82,7 @@ public class CityActions
 			return Responses.noBuildSlots();
 		}
 		int cost = city.getWellCost();
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
@@ -93,7 +93,7 @@ public class CityActions
 		else
 		{
 			city.setOilWells(city.getOilWells() + 1);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.drill();
 		}
 	}
@@ -114,23 +114,23 @@ public class CityActions
 			return Responses.noBuildSlots();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
-		if(nation.getEconomy().getCoal() < cost.get("coal"))
+		if(nation.getStats().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(nation.getEconomy().getIron() < cost.get("iron"))
+		else if(nation.getStats().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(nation.getEconomy().getSteel() < cost.get("steel"))
+		else if(nation.getStats().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
-			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
-			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
+			nation.getStats().setCoal(nation.getStats().getCoal() - cost.get("coal"));
+			nation.getStats().setIron(nation.getStats().getIron() - cost.get("iron"));
+			nation.getStats().setSteel(nation.getStats().getSteel() - cost.get("steel"));
 			city.setIndustryCivilian(city.getIndustryCivilian() + 1);
 			return Responses.industrialize();
 		}
@@ -152,23 +152,23 @@ public class CityActions
 			return Responses.noBuildSlots();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
-		if(nation.getEconomy().getCoal() < cost.get("coal"))
+		if(nation.getStats().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(nation.getEconomy().getIron() < cost.get("iron"))
+		else if(nation.getStats().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(nation.getEconomy().getSteel() < cost.get("steel"))
+		else if(nation.getStats().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
-			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
-			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
+			nation.getStats().setCoal(nation.getStats().getCoal() - cost.get("coal"));
+			nation.getStats().setIron(nation.getStats().getIron() - cost.get("iron"));
+			nation.getStats().setSteel(nation.getStats().getSteel() - cost.get("steel"));
 			CityDao dao = new CityDao(nation.getConn(), true);
 			dao.buildMilitaryIndustry(city);
 			return Responses.militarize();
@@ -191,23 +191,23 @@ public class CityActions
 			return Responses.noBuildSlots();
 		}
 		HashMap<String, Integer> cost = city.getFactoryCost();
-		if(nation.getEconomy().getCoal() < cost.get("coal"))
+		if(nation.getStats().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(nation.getEconomy().getIron() < cost.get("iron"))
+		else if(nation.getStats().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(nation.getEconomy().getSteel() < cost.get("steel"))
+		else if(nation.getStats().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
-			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
-			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
+			nation.getStats().setCoal(nation.getStats().getCoal() - cost.get("coal"));
+			nation.getStats().setIron(nation.getStats().getIron() - cost.get("iron"));
+			nation.getStats().setSteel(nation.getStats().getSteel() - cost.get("steel"));
 			city.setIndustryNitrogen(city.getIndustryNitrogen() + 1);
 			return Responses.militarize();
 		}
@@ -229,23 +229,23 @@ public class CityActions
 			return Responses.noBuildSlots();
 		}
 		HashMap<String, Integer> cost = city.getUniversityCost();
-		if(nation.getEconomy().getCoal() < cost.get("coal"))
+		if(nation.getStats().getCoal() < cost.get("coal"))
 		{
 			return Responses.noCoal();
 		}
-		else if(nation.getEconomy().getIron() < cost.get("iron"))
+		else if(nation.getStats().getIron() < cost.get("iron"))
 		{
 			return Responses.noIron();
 		}
-		else if(nation.getEconomy().getSteel() < cost.get("steel"))
+		else if(nation.getStats().getSteel() < cost.get("steel"))
 		{
 			return Responses.noSteel();
 		}
 		else
 		{
-			nation.getEconomy().setCoal(nation.getEconomy().getCoal() - cost.get("coal"));
-			nation.getEconomy().setIron(nation.getEconomy().getIron() - cost.get("iron"));
-			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost.get("steel"));
+			nation.getStats().setCoal(nation.getStats().getCoal() - cost.get("coal"));
+			nation.getStats().setIron(nation.getStats().getIron() - cost.get("iron"));
+			nation.getStats().setSteel(nation.getStats().getSteel() - cost.get("steel"));
 			city.setUniversities(city.getUniversities() + 1);
 			return Responses.nitrogenPlant();
 		}
@@ -253,7 +253,7 @@ public class CityActions
 
 	public static String port(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = nation.getEconomy();
+		NationStats economy = nation.getStats();
 		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
@@ -282,7 +282,7 @@ public class CityActions
 
 	public static String barrack(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = nation.getEconomy();
+		NationStats economy = nation.getStats();
 		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{
@@ -307,7 +307,7 @@ public class CityActions
 
 	public static String railroad(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = nation.getEconomy();
+		NationStats economy = nation.getStats();
 		City city = nation.getCities().get(cityId);
 		if(city == null)
 		{

@@ -1,7 +1,7 @@
 package com.watersfall.clocgame.text;
 
 import com.watersfall.clocgame.model.alignment.Alignments;
-import com.watersfall.clocgame.model.nation.City;
+import com.watersfall.clocgame.model.city.City;
 
 public class Responses
 {

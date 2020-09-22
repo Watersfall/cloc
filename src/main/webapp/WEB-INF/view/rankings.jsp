@@ -20,8 +20,8 @@
 							</tr>
 							<tr>
 								<td><c:out escapeXml="false" value="${nation.cosmetic.username}"/></td>
-								<td>$<fmt:formatNumber value="${nation.economy.gdp}"/></td>
-								<td>${nation.foreign.region.name}</td>
+								<td>$<fmt:formatNumber value="${nation.stats.gdp}"/></td>
+								<td>${nation.stats.region.name}</td>
 								<td>
 									<c:if test="${nation.treaty == null}">
 										None

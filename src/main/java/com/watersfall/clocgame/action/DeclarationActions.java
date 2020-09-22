@@ -17,7 +17,7 @@ public class DeclarationActions
 		{
 			return Responses.noSpam();
 		}
-		else if(nation.getEconomy().getBudget() < cost)
+		else if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
@@ -32,7 +32,7 @@ public class DeclarationActions
 		else
 		{
 			new DeclarationDao(nation.getConn(), true).createDeclaration(nation, message);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.declaration();
 		}
 	}

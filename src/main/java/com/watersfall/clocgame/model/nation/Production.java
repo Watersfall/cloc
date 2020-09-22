@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableLongId;
+import com.watersfall.clocgame.model.factory.Factory;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.util.Time;
@@ -9,7 +10,7 @@ import lombok.Setter;
 
 import java.util.HashMap;
 
-public class Production extends Updatable
+public class Production extends UpdatableLongId
 {
 	private static final String TABLE_NAME = "production";
 	private @Getter int owner;

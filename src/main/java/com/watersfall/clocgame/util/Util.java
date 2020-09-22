@@ -80,7 +80,7 @@ public class Util
 
 	public static int getTotalNations(Connection conn) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_login WHERE id>0");
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM login WHERE id>0");
 		ResultSet results = statement.executeQuery();
 		results.first();
 		return results.getInt(1);
@@ -88,7 +88,7 @@ public class Util
 
 	public static int getTotalNationsInRegion(Connection conn, Region region) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT count(cloc_login.id) FROM cloc_login, cloc_foreign WHERE cloc_login.id=cloc_foreign.id AND cloc_foreign.region=?");
+		PreparedStatement statement = conn.prepareStatement("SELECT count(login.id) FROM login, nation_stats WHERE login.id=nation_stats.id AND nation_stats.region=?");
 		statement.setString(1, region.name());
 		ResultSet results = statement.executeQuery();
 		results.first();
@@ -97,7 +97,7 @@ public class Util
 
 	public static int getTotalTreaties(Connection conn) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_treaties WHERE id>0");
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM treaties WHERE id>0");
 		ResultSet results = statement.executeQuery();
 		results.first();
 		return results.getInt(1);
@@ -105,7 +105,7 @@ public class Util
 
 	public static int getTotalDeclarations(Connection conn) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_declarations WHERE id>0");
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM declarations WHERE id>0");
 		ResultSet results = statement.executeQuery();
 		results.first();
 		return results.getInt(1);
@@ -113,7 +113,7 @@ public class Util
 
 	public static int getTotalOngoingWars(Connection conn) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_war WHERE end=-1");
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM wars WHERE end=-1");
 		ResultSet results = statement.executeQuery();
 		results.first();
 		return results.getInt(1);
@@ -121,7 +121,7 @@ public class Util
 
 	public static int getTotalEndedWars(Connection conn) throws SQLException
 	{
-		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM cloc_war WHERE end>0");
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM wars WHERE end>0");
 		ResultSet results = statement.executeQuery();
 		results.first();
 		return results.getInt(1);
@@ -226,6 +226,24 @@ public class Util
 			}
 		}
 		return camel.toString();
+	}
+
+	public static String convertCamelToUnderscore(String camel)
+	{
+		StringBuilder underscore = new StringBuilder(camel.length() + 3);
+		char[] array = camel.toCharArray();
+		for(char c : array)
+		{
+			if(Character.isUpperCase(c))
+			{
+				underscore.append("_").append(Character.toLowerCase(c));
+			}
+			else
+			{
+				underscore.append(c);
+			}
+		}
+		return underscore.toString();
 	}
 
 	public static <K extends TextKey, V> HashMap<? extends TextKey, V> removeNetAndTotal(HashMap<? extends TextKey, V> map)

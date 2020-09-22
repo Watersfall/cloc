@@ -3,7 +3,7 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
@@ -42,14 +42,14 @@ public class NationActions
 		{
 			return check;
 		}
-		else if(amount > sender.getEconomy().getIron())
+		else if(amount > sender.getStats().getIron())
 		{
 			return Responses.notEnough();
 		}
 		else
 		{
-			sender.getEconomy().setIron(sender.getEconomy().getIron() - amount);
-			receiver.getEconomy().setIron(receiver.getEconomy().getIron() + amount);
+			sender.getStats().setIron(sender.getStats().getIron() - amount);
+			receiver.getStats().setIron(receiver.getStats().getIron() + amount);
 			return Responses.sent();
 		}
 	}
@@ -61,14 +61,14 @@ public class NationActions
 		{
 			return check;
 		}
-		else if(amount > sender.getEconomy().getCoal())
+		else if(amount > sender.getStats().getCoal())
 		{
 			return Responses.notEnough();
 		}
 		else
 		{
-			sender.getEconomy().setCoal(sender.getEconomy().getCoal() - amount);
-			receiver.getEconomy().setCoal(receiver.getEconomy().getCoal() + amount);
+			sender.getStats().setCoal(sender.getStats().getCoal() - amount);
+			receiver.getStats().setCoal(receiver.getStats().getCoal() + amount);
 			return Responses.sent();
 		}
 	}
@@ -80,14 +80,14 @@ public class NationActions
 		{
 			return check;
 		}
-		else if(amount > sender.getEconomy().getSteel())
+		else if(amount > sender.getStats().getSteel())
 		{
 			return Responses.notEnough();
 		}
 		else
 		{
-			sender.getEconomy().setSteel(sender.getEconomy().getSteel() - amount);
-			receiver.getEconomy().setSteel(receiver.getEconomy().getSteel() + amount);
+			sender.getStats().setSteel(sender.getStats().getSteel() - amount);
+			receiver.getStats().setSteel(receiver.getStats().getSteel() + amount);
 			return Responses.sent();
 		}
 	}
@@ -99,14 +99,14 @@ public class NationActions
 		{
 			return check;
 		}
-		else if(amount > sender.getEconomy().getOil())
+		else if(amount > sender.getStats().getOil())
 		{
 			return Responses.notEnough();
 		}
 		else
 		{
-			sender.getEconomy().setOil(sender.getEconomy().getOil() - amount);
-			receiver.getEconomy().setOil(receiver.getEconomy().getOil() + amount);
+			sender.getStats().setOil(sender.getStats().getOil() - amount);
+			receiver.getStats().setOil(receiver.getStats().getOil() + amount);
 			return Responses.sent();
 		}
 	}
@@ -118,14 +118,14 @@ public class NationActions
 		{
 			return check;
 		}
-		else if(amount > sender.getEconomy().getNitrogen())
+		else if(amount > sender.getStats().getNitrogen())
 		{
 			return Responses.notEnough();
 		}
 		else
 		{
-			sender.getEconomy().setNitrogen(sender.getEconomy().getNitrogen() - amount);
-			receiver.getEconomy().setNitrogen(receiver.getEconomy().getNitrogen() + amount);
+			sender.getStats().setNitrogen(sender.getStats().getNitrogen() - amount);
+			receiver.getStats().setNitrogen(receiver.getStats().getNitrogen() + amount);
 			return Responses.sent();
 		}
 	}
@@ -137,14 +137,14 @@ public class NationActions
 		{
 			return check;
 		}
-		else if(amount > sender.getEconomy().getBudget())
+		else if(amount > sender.getStats().getBudget())
 		{
 			return Responses.notEnough();
 		}
 		else
 		{
-			sender.getEconomy().setBudget(sender.getEconomy().getBudget() - amount);
-			receiver.getEconomy().setBudget(receiver.getEconomy().getBudget() + amount);
+			sender.getStats().setBudget(sender.getStats().getBudget() - amount);
+			receiver.getStats().setBudget(receiver.getStats().getBudget() + amount);
 			return Responses.sent();
 		}
 	}

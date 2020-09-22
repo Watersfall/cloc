@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.model;
 
-import com.watersfall.clocgame.model.nation.City;
+import com.watersfall.clocgame.model.city.City;
 import lombok.Getter;
 
 public interface TextKey

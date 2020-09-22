@@ -66,7 +66,7 @@ public class RegisterController extends HttpServlet
 			}
 			Region region = Region.valueOf(regionString);
 			//TODO clean this up
-			PreparedStatement check = conn.prepareStatement("SELECT id FROM cloc_cosmetic WHERE nation_name=? || username=?");
+			PreparedStatement check = conn.prepareStatement("SELECT id FROM nation_cosmetic WHERE nation_name=? || username=?");
 			check.setString(1, nation);
 			check.setString(2, username);
 			ResultSet checkResults = check.executeQuery();

@@ -6,7 +6,7 @@ import com.watersfall.clocgame.exception.NotLoggedInException;
 import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.NationEconomy;
+import com.watersfall.clocgame.model.nation.NationStats;
 import com.watersfall.clocgame.text.Responses;
 
 import java.sql.SQLException;
@@ -19,24 +19,24 @@ public class DecisionActions
 	public static String arrest(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.INCREASE_ARREST_QUOTAS);
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(nation.getDomestic().getGovernment() < 5)
+		else if(nation.getStats().getGovernment() < 5)
 		{
 			return Responses.noCriminals();
 		}
-		else if(nation.getDomestic().getApproval() < 5)
+		else if(nation.getStats().getApproval() < 5)
 		{
 			return Responses.hated();
 		}
 		else
 		{
-			nation.getDomestic().setStability(nation.getDomestic().getStability() + 5);
-			nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 5);
-			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() - 5);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setStability(nation.getStats().getStability() + 5);
+			nation.getStats().setApproval(nation.getStats().getApproval() - 5);
+			nation.getStats().setGovernment(nation.getStats().getGovernment() - 5);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.arrest();
 		}
 	}
@@ -44,24 +44,24 @@ public class DecisionActions
 	public static String free(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.PARDON_CRIMINALS);
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(nation.getDomestic().getGovernment() > 95)
+		else if(nation.getStats().getGovernment() > 95)
 		{
 			return Responses.noPrisoners();
 		}
-		else if(nation.getDomestic().getStability() < 5)
+		else if(nation.getStats().getStability() < 5)
 		{
 			return Responses.unstable();
 		}
 		else
 		{
-			nation.getDomestic().setStability(nation.getDomestic().getStability() - 5);
-			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 5);
-			nation.getDomestic().setGovernment(nation.getDomestic().getGovernment() + 5);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setStability(nation.getStats().getStability() - 5);
+			nation.getStats().setApproval(nation.getStats().getApproval() + 5);
+			nation.getStats().setGovernment(nation.getStats().getGovernment() + 5);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.free();
 		}
 	}
@@ -69,15 +69,15 @@ public class DecisionActions
 	public static String landClearance(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.LAND_CLEARANCE);
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
 		else
 		{
 			int gain = (int)(Math.random() * 2500) + 500;
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
-			nation.getDomestic().setLand(nation.getDomestic().getLand() + gain);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
+			nation.getStats().setLand(nation.getStats().getLand() + gain);
 			return Responses.landClearance(gain);
 		}
 	}
@@ -85,18 +85,18 @@ public class DecisionActions
 	public static String propaganda(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.PROPAGANDA);
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(nation.getDomestic().getApproval() > 99)
+		else if(nation.getStats().getApproval() > 99)
 		{
 			return Responses.propagandaMaxApproval();
 		}
 		else
 		{
-			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 10);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setApproval(nation.getStats().getApproval() + 10);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.propaganda();
 		}
 	}
@@ -108,18 +108,18 @@ public class DecisionActions
 		{
 			return Responses.propagandaNoWar();
 		}
-		else if(nation.getEconomy().getBudget() < cost)
+		else if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(nation.getDomestic().getApproval() > 99)
+		else if(nation.getStats().getApproval() > 99)
 		{
 			return Responses.propagandaMaxApproval();
 		}
 		else
 		{
-			nation.getDomestic().setApproval(nation.getDomestic().getApproval() + 10);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setApproval(nation.getStats().getApproval() + 10);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.propaganda();
 		}
 	}
@@ -128,7 +128,7 @@ public class DecisionActions
 	//<editor-fold desc="Economic Policies">
 	public static String freeMoneyCapitalist(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = nation.getEconomy();
+		NationStats economy = nation.getStats();
 		economy.setBudget(economy.getBudget() + 1000);
 		economy.setEconomic(economy.getEconomic() + 5);
 		return Responses.freeMoneyCapitalist();
@@ -136,7 +136,7 @@ public class DecisionActions
 
 	public static String freeMoneyCommunist(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
-		NationEconomy economy = nation.getEconomy();
+		NationStats economy = nation.getStats();
 		economy.setBudget(economy.getBudget() + 1000);
 		economy.setEconomic(economy.getEconomic() - 5);
 		return Responses.freeMoneyCommunist();
@@ -147,39 +147,39 @@ public class DecisionActions
 	private static String align(Nation nation, Alignments align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.ALIGN_NEUTRAL);
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(nation.getForeign().getAlignment() == align)
+		else if(nation.getStats().getAlignment() == align)
 		{
 			return Responses.alreadyYourAlignment();
 		}
-		else if(align != Alignments.NEUTRAL && nation.getForeign().getReputation(align) < 1000)
+		else if(align != Alignments.NEUTRAL && nation.getStats().getReputation(align) < 1000)
 		{
 			return Responses.notEnough();
 		}
-		else if(Alignments.opposites(nation.getForeign().getAlignment(), align))
+		else if(Alignments.opposites(nation.getStats().getAlignment(), align))
 		{
 			return Responses.alreadyYourAlignment();
 		}
 		else
 		{
-			if(nation.getForeign().getAlignment() == Alignments.NEUTRAL || Alignments.opposites(align, nation.getForeign().getAlignment()))
+			if(nation.getStats().getAlignment() == Alignments.NEUTRAL || Alignments.opposites(align, nation.getStats().getAlignment()))
 			{
 				Alignments opposite;
-				if(nation.getForeign().getAlignment() == Alignments.NEUTRAL)
+				if(nation.getStats().getAlignment() == Alignments.NEUTRAL)
 				{
 					opposite = align.opposite();
 				}
 				else
 				{
-					opposite = nation.getForeign().getAlignment().opposite();
+					opposite = nation.getStats().getAlignment().opposite();
 				}
-				nation.getForeign().setReputation(opposite, Math.min(0, nation.getForeign().getReputation(opposite)));
+				nation.getStats().setReputation(opposite, Math.min(0, nation.getStats().getReputation(opposite)));
 			}
-			nation.getForeign().setAlignment(align);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setAlignment(align);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.align(align);
 		}
 	}
@@ -209,22 +209,22 @@ public class DecisionActions
 		}
 		else
 		{
-			nation.getArmy().setSize(nation.getArmy().getSize() + 2);
-			nation.getEconomy().setRecentConscription(nation.getEconomy().getRecentConscription() + 1);
+			nation.getStats().setArmySize(nation.getStats().getArmySize() + 2);
+			nation.getStats().setRecentConscription(nation.getStats().getRecentConscription() + 1);
 			return Responses.conscript();
 		}
 	}
 
 	public static String deconscript(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
-		if(nation.getArmy().getSize() <= 5)
+		if(nation.getStats().getArmySize() <= 5)
 		{
 			return Responses.noTroops();
 		}
 		else
 		{
-			nation.getArmy().setSize(nation.getArmy().getSize() - 2);
-			nation.getEconomy().setRecentDeconscription(nation.getEconomy().getRecentDeconscription() + 1);
+			nation.getStats().setArmySize(nation.getStats().getArmySize() - 2);
+			nation.getStats().setRecentDeconscription(nation.getStats().getRecentDeconscription() + 1);
 			return Responses.deconscript();
 		}
 	}
@@ -232,18 +232,18 @@ public class DecisionActions
 	public static String train(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
 		long cost = nation.getDecisionCost(Decision.TRAIN);
-		if(nation.getEconomy().getBudget() < cost)
+		if(nation.getStats().getBudget() < cost)
 		{
 			return Responses.noMoney();
 		}
-		else if(nation.getArmy().getTraining() >= 100)
+		else if(nation.getStats().getArmyTraining() >= 100)
 		{
 			return Responses.fullTrained();
 		}
 		else
 		{
-			nation.getArmy().setTraining(nation.getArmy().getTraining() + 5);
-			nation.getEconomy().setBudget(nation.getEconomy().getBudget() - cost);
+			nation.getStats().setArmyTraining(nation.getStats().getArmyTraining() + 5);
+			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.train();
 		}
 	}
@@ -251,19 +251,19 @@ public class DecisionActions
 	public static String fortify(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
 	{
 		long cost = nation.getDecisionCost(Decision.FORTIFY);
-		if(nation.getEconomy().getSteel() < cost)
+		if(nation.getStats().getSteel() < cost)
 		{
 			return Responses.noSteel();
 		}
-		else if(nation.getArmy().getFortification() > 10000)
+		else if(nation.getStats().getFortification() > 10000)
 		{
 			return Responses.alreadyFortified();
 		}
 		else
 		{
 			int increase = nation.getMaximumFortificationLevel() / 10;
-			nation.getArmy().setFortification(nation.getArmy().getFortification() + increase);
-			nation.getEconomy().setSteel(nation.getEconomy().getSteel() - cost);
+			nation.getStats().setFortification(nation.getStats().getFortification() + increase);
+			nation.getStats().setSteel(nation.getStats().getSteel() - cost);
 			return Responses.fortified();
 		}
 	}

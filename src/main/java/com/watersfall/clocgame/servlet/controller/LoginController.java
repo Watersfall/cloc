@@ -1,9 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
-import com.watersfall.clocgame.dao.CityDao;
 import com.watersfall.clocgame.dao.NationDao;
-import com.watersfall.clocgame.dao.ProductionDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
@@ -50,7 +48,7 @@ public class LoginController extends HttpServlet
 			//TODO clean this up
 			try(Connection conn = Database.getDataSource().getConnection())
 			{
-				PreparedStatement statement = conn.prepareStatement("SELECT password, id, last_login FROM cloc_login WHERE username=?");
+				PreparedStatement statement = conn.prepareStatement("SELECT password, id FROM login WHERE username=?");
 				statement.setString(1, username);
 				ResultSet results = statement.executeQuery();
 				if(!results.first())
@@ -63,17 +61,6 @@ public class LoginController extends HttpServlet
 						req.getSession().setAttribute("user", results.getInt("id"));
 						NationDao dao = new NationDao(connection, true);
 						Nation nation = dao.getNationById(results.getInt("id"));
-						if(results.getLong("last_login") == 0)
-						{
-							CityDao cityDao = new CityDao(connection, true);
-							ProductionDao productionDao = new ProductionDao(connection, true);
-							cityDao.buildMilitaryIndustry(nation.getLargestCity());
-							productionDao.createDefaultProduction(nation.getId());
-						}
-						PreparedStatement update = connection.prepareStatement("UPDATE cloc_login SET last_login=? WHERE id=?");
-						update.setLong(1, System.currentTimeMillis());
-						update.setInt(2, Integer.parseInt(req.getSession().getAttribute("user").toString()));
-						update.execute();
 						return null;
 					};
 					Action.doAction(executor);

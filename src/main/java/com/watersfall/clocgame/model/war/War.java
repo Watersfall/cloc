@@ -20,10 +20,10 @@ public class War
 
 	public War(int id, ResultSet results) throws SQLException
 	{
-		this.start = results.getInt("cloc_war.start");
-		this.end = results.getInt("cloc_war.end");
+		this.start = results.getInt("wars.start");
+		this.end = results.getInt("wars.end");
 		this.id = id;
-		this.peace = results.getInt("cloc_war.peace");
-		this.name = results.getString("cloc_war.name");
+		this.peace = results.getInt("wars.peace");
+		this.name = results.getString("wars.name");
 	}
 }

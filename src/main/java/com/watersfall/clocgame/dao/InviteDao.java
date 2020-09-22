@@ -7,10 +7,10 @@ import java.sql.SQLException;
 public class InviteDao extends Dao
 {
 	private static final String CREATE_INVITE_SQL_STATEMENT =
-					"INSERT INTO cloc_treaty_invites (alliance_id, nation_id)\n" +
+					"INSERT INTO treaty_invites (alliance_id, nation_id)\n" +
 					"VALUES (?,?)\n";
 	private static final String DELETE_INVITE_SQL_STATEMENT =
-					"DELETE FROM cloc_treaty_invites\n" +
+					"DELETE FROM treaty_invites\n" +
 					"WHERE nation_id=? AND alliance_id=?\n";
 
 	public InviteDao(Connection connection, boolean allowWriteAccess)

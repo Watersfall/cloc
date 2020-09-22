@@ -2,7 +2,7 @@ package com.watersfall.clocgame.model.treaty;
 
 import com.watersfall.clocgame.dao.TreatyDao;
 import com.watersfall.clocgame.exception.TreatyPermissionException;
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableIntId;
 import com.watersfall.clocgame.model.nation.Nation;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,9 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Treaty extends Updatable
+public class Treaty extends UpdatableIntId
 {
-	public static final String TABLE_NAME = "cloc_treaties";
+	public static final String TABLE_NAME = "treaties";
 	private @Getter @Setter Connection conn;
 	private @Getter String name;
 	private @Getter String flag;

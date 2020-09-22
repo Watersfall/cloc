@@ -37,7 +37,7 @@ public class ActionFilter implements Filter
 				{
 					Executor executor = (connection -> {
 						int user = UserUtils.getUser(req);
-						PreparedStatement statement = connection.prepareStatement("UPDATE cloc_login SET last_login=? WHERE id=?");
+						PreparedStatement statement = connection.prepareStatement("UPDATE nation_stats SET last_login=? WHERE id=?");
 						statement.setLong(1, System.currentTimeMillis());
 						statement.setInt(2, user);
 						statement.execute();

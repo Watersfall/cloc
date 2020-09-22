@@ -37,26 +37,25 @@ public class EventDao extends Dao
 		statement.execute();
 	}
 
-	public void createEvent(int receiver, Events type, String message) throws SQLException
-	{
-		requireWriteAccess();
-		PreparedStatement statement = connection.prepareStatement(CREATE_EVENT_SQL_STATEMENT);
-		statement.setInt(1, receiver);
-		statement.setString(2, type.name());
-		statement.setString(3, message);
-		statement.setLong(4, Time.month);
-		statement.setNull(5, Types.INTEGER);
-		statement.execute();
-	}
-
-	public void createEvent(int receiver, Events type, int city) throws SQLException
+	public void createEvent(int receiver, Events type) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CREATE_EVENT_SQL_STATEMENT);
 		statement.setInt(1, receiver);
 		statement.setString(2, type.name());
 		statement.setLong(3, Time.month);
-		statement.setInt(4, city);
+		statement.setNull(4, Types.INTEGER);
+		statement.execute();
+	}
+
+	public void createEvent(int receiver, Events type, long city) throws SQLException
+	{
+		requireWriteAccess();
+		PreparedStatement statement = connection.prepareStatement(CREATE_EVENT_SQL_STATEMENT);
+		statement.setInt(1, receiver);
+		statement.setString(2, type.name());
+		statement.setLong(3, Time.month);
+		statement.setLong(4, city);
 		statement.execute();
 	}
 

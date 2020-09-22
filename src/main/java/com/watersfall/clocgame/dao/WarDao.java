@@ -14,60 +14,51 @@ public class WarDao extends Dao
 {
 	private static final String WAR_SQL_STATEMENT =
 					"SELECT *\n" +
-					"FROM cloc_war, cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-					"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
-					"WHERE cloc_war.id=? AND end=-1\n" +
-					"AND (cloc_login.id=cloc_war.attacker OR cloc_login.id=cloc_war.defender)\n";
+					"FROM wars, login\n" +
+					"JOIN nation_producibles ON login.id = nation_producibles.id\n" +
+					"JOIN nation_tech ON login.id = nation_tech.id\n" +
+					"JOIN nation_policy ON login.id = nation_policy.id\n" +
+					"JOIN nation_cosmetic ON login.id = nation_cosmetic.id\n" +
+					"JOIN nation_stats ON login.id = nation_stats.id\n" +
+					"LEFT JOIN treaty_members treaty_member ON login.id = treaty_member.nation_id\n" +
+					"LEFT JOIN treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+					"WHERE wars.id=? AND end=-1\n" +
+					"AND (login.id=wars.attacker OR login.id=wars.defender)\n";
 
 	private static final String ONGOING_WAR_PAGE_SQL_STATEMENT =
-					"SELECT *\n" +
-					"FROM cloc_war, cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-					"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
-					"WHERE (attacker=cloc_login.id OR defender=cloc_login.id) AND end=-1 ORDER BY cloc_war.id DESC LIMIT 20 OFFSET ?\n";
+					"SELECT *" +
+					"FROM wars, login\n" +
+					"JOIN nation_producibles ON login.id = nation_producibles.id\n" +
+					"JOIN nation_tech ON login.id = nation_tech.id\n" +
+					"JOIN nation_policy ON login.id = nation_policy.id\n" +
+					"JOIN nation_cosmetic ON login.id = nation_cosmetic.id\n" +
+					"JOIN nation_stats ON login.id = nation_stats.id\n" +
+					"LEFT JOIN treaty_members treaty_member ON login.id = treaty_member.nation_id\n" +
+					"LEFT JOIN treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+					"WHERE (attacker=login.id OR defender=login.id) AND end=-1 ORDER BY wars.id DESC LIMIT 20 OFFSET ?\n";
 	private static final String ENDED_WAR_PAGE_SQL_STATEMENT =
 					"SELECT *\n" +
-					"FROM cloc_war, cloc_login\n" +
-					"JOIN cloc_economy ON cloc_login.id = cloc_economy.id\n" +
-					"JOIN cloc_domestic ON cloc_login.id = cloc_domestic.id\n" +
-					"JOIN cloc_cosmetic ON cloc_login.id = cloc_cosmetic.id\n" +
-					"JOIN cloc_foreign ON cloc_login.id = cloc_foreign.id\n" +
-					"JOIN cloc_military ON cloc_login.id = cloc_military.id\n" +
-					"JOIN cloc_tech ON cloc_login.id = cloc_tech.id\n" +
-					"JOIN cloc_policy ON cloc_login.id = cloc_policy.id\n" +
-					"JOIN cloc_army ON cloc_login.id = cloc_army.id\n" +
-					"LEFT JOIN cloc_treaties_members treaty_member ON cloc_login.id = treaty_member.nation_id\n" +
-					"LEFT JOIN cloc_treaties treaty ON treaty_member.alliance_id = treaty.id \n" +
-					"WHERE (attacker=cloc_login.id OR defender=cloc_login.id) AND end>0 ORDER BY cloc_war.id DESC LIMIT 20 OFFSET ?\n";
+					"FROM wars, login\n" +
+					"JOIN nation_producibles ON login.id = nation_producibles.id\n" +
+					"JOIN nation_tech ON login.id = nation_tech.id\n" +
+					"JOIN nation_policy ON login.id = nation_policy.id\n" +
+					"JOIN nation_cosmetic ON login.id = nation_cosmetic.id\n" +
+					"JOIN nation_stats ON login.id = nation_stats.id\n" +
+					"LEFT JOIN treaty_members treaty_member ON login.id = treaty_member.nation_id\n" +
+					"LEFT JOIN treaties treaty ON treaty_member.alliance_id = treaty.id\n" +
+					"WHERE (attacker=login.id OR defender=login.id) AND end>0 ORDER BY wars.id DESC LIMIT 20 OFFSET ?\n";
 
 	private static final String CREATE_WAR_SQL_STATEMENT =
-					"INSERT INTO cloc_war (attacker, defender, start, name)\n" +
+					"INSERT INTO wars (attacker, defender, start, name)\n" +
 					"VALUES (?,?,?,?)\n";
 
 	private static final String OFFER_PEACE_SQL_STATEMENT =
-					"UPDATE cloc_war\n" +
+					"UPDATE wars\n" +
 					"SET peace=?\n" +
 					"WHERE attacker=? AND defender=? AND end=-1\n";
 
 	private static final String END_WAR_SQL_STATEMENT =
-					"UPDATE cloc_war\n" +
+					"UPDATE wars\n" +
 					"SET end=?, winner=?\n" +
 					"WHERE attacker=? AND defender=? AND end=-1\n";
 
@@ -103,18 +94,18 @@ public class WarDao extends Dao
 		NationDao dao = new NationDao(connection, allowWriteAccess);
 		while(results.next())
 		{
-			War war = new War(results.getInt("cloc_war.id"), results);
-			if(results.getInt("cloc_login.id") == results.getInt("attacker"))
+			War war = new War(results.getInt("wars.id"), results);
+			if(results.getInt("login.id") == results.getInt("attacker"))
 			{
-				war.setAttacker(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+				war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id"), results));
 				results.next();
-				war.setDefender(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+				war.setDefender(dao.getCosmeticNationById(results.getInt("login.id"), results));
 			}
 			else
 			{
-				war.setDefender(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+				war.setDefender(dao.getCosmeticNationById(results.getInt("login.id"), results));
 				results.next();
-				war.setAttacker(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+				war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id"), results));
 			}
 			if(results.getInt("winner") == war.getAttacker().getId())
 			{
@@ -148,18 +139,18 @@ public class WarDao extends Dao
 		ResultSet results = statement.executeQuery();
 		results.first();
 		NationDao dao = new NationDao(connection, allowWriteAccess);
-		War war = new War(results.getInt("cloc_war.id"), results);
-		if(results.getInt("cloc_login.id") == results.getInt("attacker"))
+		War war = new War(results.getInt("wars.id"), results);
+		if(results.getInt("login.id") == results.getInt("attacker"))
 		{
-			war.setAttacker(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+			war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id"), results));
 			results.next();
-			war.setDefender(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+			war.setDefender(dao.getCosmeticNationById(results.getInt("login.id"), results));
 		}
 		else
 		{
-			war.setDefender(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+			war.setDefender(dao.getCosmeticNationById(results.getInt("login.id"), results));
 			results.next();
-			war.setAttacker(dao.getCosmeticNationById(results.getInt("cloc_login.id"), results));
+			war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id"), results));
 		}
 		if(results.getInt("winner") == war.getAttacker().getId())
 		{

@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableIntId;
 import com.watersfall.clocgame.model.technology.Technologies;
 import lombok.Getter;
 
@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class NationTech extends Updatable
+public class NationTech extends UpdatableIntId
 {
-	public static final String TABLE_NAME = "cloc_tech";
+	public static final String TABLE_NAME = "nation_tech";
 	private HashMap<String, Integer> technologies;
 	private @Getter HashSet<Technologies> researchedTechs;
 

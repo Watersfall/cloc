@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.dao;
 
-import com.watersfall.clocgame.model.nation.City;
+import com.watersfall.clocgame.model.city.City;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -8,21 +8,21 @@ import java.util.HashMap;
 public class CityDao extends Dao
 {
 	private static final String CITY_SQL_STATEMENT =
-					"SELECT cloc_cities.*, COALESCE(military_industry, 0) AS military_industry\n" +
-					"FROM cloc_cities\n" +
+					"SELECT cities.*, COALESCE(military_industry, 0) AS military_industry\n" +
+					"FROM cities\n" +
 					"LEFT JOIN (\n" +
 					"SELECT city_id, COUNT(id)\n" +
 					"AS military_industry FROM factories GROUP BY city_id ) military_industry\n" +
-					"ON military_industry.city_id=cloc_cities.id\n" +
-					"WHERE cloc_cities.id=?\n";
+					"ON military_industry.city_id=cities.id\n" +
+					"WHERE cities.id=?\n";
 	protected static final String CITIES_SQL_STATEMENT =
-					"SELECT cloc_cities.*, COALESCE(military_industry, 0) AS military_industry\n" +
-					"FROM cloc_cities\n" +
+					"SELECT cities.*, COALESCE(military_industry, 0) AS military_industry\n" +
+					"FROM cities\n" +
 					"LEFT JOIN (\n" +
 					"SELECT city_id, COUNT(id)\n" +
 					"AS military_industry FROM factories GROUP BY city_id ) military_industry\n" +
-					"ON military_industry.city_id=cloc_cities.id\n" +
-					"WHERE cloc_cities.owner=?\n";
+					"ON military_industry.city_id=cities.id\n" +
+					"WHERE cities.owner=?\n";
 	private static final String BUILD_MILITARY_INDUSTRY_SQL_STATEMENT =
 					"INSERT INTO factories (owner, city_id, production_id)\n" +
 					"VALUES (?,?,?)\n";
@@ -32,7 +32,7 @@ public class CityDao extends Dao
 					"ORDER BY efficiency\n" +
 					"LIMIT 1\n";
 	private static final String CREATE_CITY_SQL_STATEMENT =
-					"INSERT INTO cloc_cities\n" +
+					"INSERT INTO cities\n" +
 					"(owner, capital, coastal, railroads, ports, barracks, iron_mines, coal_mines, oil_wells,\n" +
 					"civilian_industry, nitrogen_industry, universities, name, type, devastation, population)\n" +
 					"VALUES (?,?,?,0,0,0,0,0,0,0,0,0,'New City','FARMING',0,5000)\n";
@@ -75,7 +75,7 @@ public class CityDao extends Dao
 		HashMap<Integer, City> cities = new HashMap<>();
 		while(citiesResults.next())
 		{
-			cities.put(citiesResults.getInt("cloc_cities.id"), new City(citiesResults));
+			cities.put(citiesResults.getInt("cities.id"), new City(citiesResults));
 		}
 		return cities;
 	}
@@ -90,21 +90,21 @@ public class CityDao extends Dao
 		removeMilitaryIndustry(city.getId());
 	}
 
-	public void buildMilitaryIndustry(int nationId, int cityId) throws SQLException
+	public void buildMilitaryIndustry(int nationId, long cityId) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement build = connection.prepareStatement(BUILD_MILITARY_INDUSTRY_SQL_STATEMENT);
 		build.setInt(1, nationId);
-		build.setInt(2, cityId);
+		build.setLong(2, cityId);
 		build.setNull(3, Types.INTEGER);
 		build.execute();
 	}
 
-	public void removeMilitaryIndustry(int id) throws SQLException
+	public void removeMilitaryIndustry(long id) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement remove = connection.prepareStatement(REMOVE_MILITARY_INDUSTRY_SQL_STATEMENT);
-		remove.setInt(1, id);
+		remove.setLong(1, id);
 		remove.execute();
 	}
 

@@ -40,7 +40,7 @@ public class AlignmentController extends HttpServlet
 			{
 				if(url.get("alignment") == null)
 				{
-					req.setAttribute("alignment", new AlignmentDao(connection, false).getAlignmentById(nation.getForeign().getAlignment()));
+					req.setAttribute("alignment", new AlignmentDao(connection, false).getAlignmentById(nation.getStats().getAlignment()));
 				}
 				else
 				{

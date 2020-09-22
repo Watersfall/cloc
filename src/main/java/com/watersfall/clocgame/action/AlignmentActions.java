@@ -21,7 +21,7 @@ public class AlignmentActions
 		{
 			return Responses.genericError();
 		}
-		else if(alignment.getAlignment() != nation.getForeign().getAlignment())
+		else if(alignment.getAlignment() != nation.getStats().getAlignment())
 		{
 			return Responses.genericError();
 		}
@@ -30,7 +30,7 @@ public class AlignmentActions
 			return Responses.genericError();
 		}
 		long cost = alignment.getProducibleBuyCost(purchase, nation);
-		if(nation.getForeign().getReputation(alignment.getAlignment()) < cost)
+		if(nation.getStats().getReputation(alignment.getAlignment()) < cost)
 		{
 			return Responses.genericError();
 		}
@@ -42,8 +42,8 @@ public class AlignmentActions
 		{
 			dao.createTransaction("buy", purchase, alignment, nation);
 			dao.updateProducible(purchase, alignment, -alignment.getTransactionAmount(purchase));
-			nation.getForeign().setReputation(alignment.getAlignment(), nation.getForeign().getReputation(alignment.getAlignment()) - (int)cost);
-			nation.setProducibleValue(purchase, nation.getProducibleValue(purchase) + alignment.getTransactionAmount(purchase));
+			nation.getStats().setReputation(alignment.getAlignment(), nation.getStats().getReputation(alignment.getAlignment()) - (int)cost);
+			nation.getProducibles().setProducible(purchase, nation.getProducibles().getProducible(purchase) + alignment.getTransactionAmount(purchase));
 			return Responses.sent();
 		}
 	}
@@ -54,11 +54,11 @@ public class AlignmentActions
 		{
 			return Responses.genericError();
 		}
-		else if(Alignments.opposites(alignment.getAlignment(), nation.getForeign().getAlignment()))
+		else if(Alignments.opposites(alignment.getAlignment(), nation.getStats().getAlignment()))
 		{
 			return Responses.genericError();
 		}
-		else if(nation.getProducibleValue(purchase) < alignment.getTransactionAmount(purchase))
+		else if(nation.getProducibles().getProducible(purchase) < alignment.getTransactionAmount(purchase))
 		{
 			return Responses.notEnough();
 		}
@@ -71,8 +71,8 @@ public class AlignmentActions
 			long cost = alignment.getProducibleSellCost(purchase, nation);
 			dao.createTransaction("sell", purchase, alignment, nation);
 			dao.updateProducible(purchase, alignment, alignment.getTransactionAmount(purchase));
-			nation.getForeign().setReputation(alignment.getAlignment(), nation.getForeign().getReputation(alignment.getAlignment()) + (int)cost);
-			nation.setProducibleValue(purchase, nation.getProducibleValue(purchase) - alignment.getTransactionAmount(purchase));
+			nation.getStats().setReputation(alignment.getAlignment(), nation.getStats().getReputation(alignment.getAlignment()) + (int)cost);
+			nation.getProducibles().setProducible(purchase, nation.getProducibles().getProducible(purchase) - alignment.getTransactionAmount(purchase));
 			return Responses.sent();
 		}
 	}

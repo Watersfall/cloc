@@ -13,13 +13,13 @@ import java.util.ArrayList;
 public class DeclarationDao extends Dao
 {
 	private static final String POST_DECLARATION_SQL_STATEMENT =
-					"INSERT INTO cloc_declarations (sender, content, sent)\n" +
+					"INSERT INTO declarations (sender, content, sent)\n" +
 					"VALUES (?,?,?)";
 
 	private static final String DECLARATION_PAGE_SQL_STATEMENT =
-					"SELECT cloc_declarations.id, sender, sent, content, cloc_cosmetic.* " +
-					"FROM cloc_declarations, cloc_cosmetic WHERE cloc_cosmetic.id=sender " +
-					"ORDER BY cloc_declarations.id DESC LIMIT 20 OFFSET ?";
+					"SELECT declarations.id, sender, sent, content, nation_cosmetic.* " +
+					"FROM declarations, nation_cosmetic WHERE nation_cosmetic.id=sender " +
+					"ORDER BY declarations.id DESC LIMIT 20 OFFSET ?";
 
 	public DeclarationDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -34,9 +34,9 @@ public class DeclarationDao extends Dao
 		ResultSet results = statement.executeQuery();
 		while(results.next())
 		{
-			Nation nation = new Nation(results.getInt("cloc_cosmetic.id"));
-			nation.setCosmetic(new NationCosmetic(results.getInt("cloc_cosmetic.id"), results));
-			Declaration declaration = new Declaration(results.getInt("cloc_declarations.id"), nation,
+			Nation nation = new Nation(results.getInt("nation_cosmetic.id"));
+			nation.setCosmetic(new NationCosmetic(results.getInt("nation_cosmetic.id"), results));
+			Declaration declaration = new Declaration(results.getInt("declarations.id"), nation,
 					results.getLong("sent"), results.getString("content"));
 			list.add(declaration);
 		}

@@ -1,6 +1,6 @@
 package com.watersfall.clocgame.model.nation;
 
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableIntId;
 import lombok.Getter;
 
 import java.sql.Connection;
@@ -8,9 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TreatyPermissions extends Updatable
+public class TreatyPermissions extends UpdatableIntId
 {
-	private static final String TABLE_NAME = "cloc_treaties_members";
+	private static final String TABLE_NAME = "treaty_members";
 	private @Getter boolean founder;
 	private @Getter boolean manage;
 	private @Getter boolean kick;
@@ -99,7 +99,7 @@ public class TreatyPermissions extends Updatable
 	{
 		if(!this.fields.isEmpty())
 		{
-			PreparedStatement statement = conn.prepareStatement("UPDATE cloc_treaties_members " +
+			PreparedStatement statement = conn.prepareStatement("UPDATE treaty_members " +
 					"SET founder=?, manage=?, kick=?, invite=?, edit=? " +
 					"WHERE nation_id=?");
 			statement.setBoolean(1, this.founder);
@@ -107,7 +107,7 @@ public class TreatyPermissions extends Updatable
 			statement.setBoolean(3, this.kick);
 			statement.setBoolean(4, this.invite);
 			statement.setBoolean(5, this.edit);
-			statement.setInt(6, this.id);
+			statement.setLong(6, this.id);
 			statement.execute();
 		}
 	}

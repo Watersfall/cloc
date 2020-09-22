@@ -1,6 +1,6 @@
 <%@ page import="com.watersfall.clocgame.model.decisions.CityDecisions" %>
 <%@ include file="includes/top.jsp" %>
-<%--@elvariable id="city" type="com.watersfall.clocgame.model.nation.City"--%>
+<%--@elvariable id="city" type="com.watersfall.clocgame.model.city.City"--%>
 <% pageContext.setAttribute("key", TextKey.Resource.TOTAL_GAIN); %>
 <c:if test="${city == null}">
 	<div class="title">Cities</div>

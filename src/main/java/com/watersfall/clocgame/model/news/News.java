@@ -1,4 +1,4 @@
-package com.watersfall.clocgame.model.nation;
+package com.watersfall.clocgame.model.news;
 
 import lombok.Getter;
 
@@ -11,9 +11,7 @@ public class News
 	private @Getter int sender;
 	private @Getter int receiver;
 	private @Getter long time;
-	private @Getter boolean read;
 	private @Getter String content;
-	private @Getter String image;
 
 	public static final int ID_SEND_RESOURCE = 0;
 	public static final int ID_SEND_MONEY = 6;
@@ -88,9 +86,7 @@ public class News
 		this.sender = results.getInt("sender");
 		this.receiver = results.getInt("receiver");
 		this.content = results.getString("content");
-		this.image = results.getString("image");
 		this.time = results.getLong("time");
-		this.read = results.getBoolean("is_read");
 		this.id = results.getInt("id");
 	}
 }

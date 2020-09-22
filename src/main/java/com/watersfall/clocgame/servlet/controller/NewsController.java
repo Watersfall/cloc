@@ -9,7 +9,7 @@ import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.event.EventActions;
 import com.watersfall.clocgame.model.nation.Nation;
-import com.watersfall.clocgame.model.nation.News;
+import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.UserUtils;
@@ -52,7 +52,7 @@ public class NewsController extends HttpServlet
 				try(Connection connection = Database.getDataSource().getConnection())
 				{
 					Executor executor = (conn) -> {
-						new NewsDao(conn, true).markNewsAsRead(nation);
+						new NewsDao(conn, true).markNewsAsRead(nation.getId());
 						return null;
 					};
 					req.setAttribute("news", new NewsDao(connection, false).getNewsPage(page, nation));

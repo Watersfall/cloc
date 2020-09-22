@@ -65,20 +65,20 @@ public class ProductionDao extends Dao
 		return key.getInt(1);
 	}
 
-	public void addFactories(int id, int amount) throws SQLException
+	public void addFactories(long id, int amount) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(ADD_FACTORIES_SQL_STATEMENT);
-		statement.setInt(1, id);
+		statement.setLong(1, id);
 		statement.setInt(2, amount);
 		statement.execute();
 	}
 
-	public void removeFactories(int id, int amount) throws SQLException
+	public void removeFactories(long id, int amount) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(REMOVE_FACTORIES_SQL_STATEMENT);
-		statement.setInt(1, id);
+		statement.setLong(1, id);
 		statement.setInt(2, amount);
 		statement.execute();
 	}

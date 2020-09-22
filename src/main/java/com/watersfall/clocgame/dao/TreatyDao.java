@@ -11,35 +11,35 @@ public class TreatyDao extends Dao
 {
 	private static final String GET_TREATY_SQL_STATEMENT =
 					"SELECT *\n" +
-					"FROM cloc_treaties AS treaty\n" +
+					"FROM treaties AS treaty\n" +
 					"WHERE id=?\n";
 	private static final String DELETE_MEMBERS_SQL_STATEMENT =
-					"DELETE FROM cloc_treaties_members\n" +
+					"DELETE FROM treaty_members\n" +
 					"WHERE alliance_id=?";
 	private static final String DELETE_ALLIANCE_SQL_STATEMENT =
-					"DELETE FROM cloc_treaties\n" +
+					"DELETE FROM treaties\n" +
 					"WHERE id=?\n";
 	private static final String DELETE_INVITES_SQL_STATEMENT =
-					"DELETE FROM cloc_treaty_invites\n" +
+					"DELETE FROM treaty_invites\n" +
 					"WHERE alliance_id=?";
 	private static final String LEAVE_TREATY_SQL_STATEMENT =
-					"DELETE FROM cloc_treaties_members\n" +
+					"DELETE FROM treaty_members\n" +
 					"WHERE nation_id=?";
 	private static final String GET_TREATY_PAGE_SQL_STATEMENT =
 					"SELECT treaty.*, COUNT(nation_id) AS members " +
-					"FROM cloc_treaties AS treaty, cloc_treaties_members " +
-					"WHERE cloc_treaties_members.alliance_id=treaty.id " +
+					"FROM treaties AS treaty, treaty_members " +
+					"WHERE treaty_members.alliance_id=treaty.id " +
 					"GROUP BY treaty.id " +
 					"ORDER BY members DESC, id LIMIT 20 OFFSET ?";
 	private static final String JOIN_TREATY_SQL_STATEMENT =
-					"INSERT INTO cloc_treaties_members (alliance_id, nation_id, founder)\n" +
+					"INSERT INTO treaty_members (alliance_id, nation_id, founder)\n" +
 					"VALUES (?,?,?)\n";
 	private static final String CREATE_TREATY_SQL_STATEMENT =
-					"INSERT INTO cloc_treaties (name, description)\n" +
+					"INSERT INTO treaties (name, description)\n" +
 					"VALUES (?,?)";
 	private static final String CHECK_MEMBER_COUNT_SQL_STATEMENT =
 					"SELECT count(nation_id)\n" +
-					"FROM cloc_treaties_members\n" +
+					"FROM treaty_members\n" +
 					"WHERE alliance_id=?\n";
 
 
@@ -86,14 +86,14 @@ public class TreatyDao extends Dao
 		}
 	}
 
-	public void leaveTreaty(int nation, int treaty) throws SQLException
+	public void leaveTreaty(int nation, long treaty) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(LEAVE_TREATY_SQL_STATEMENT);
 		statement.setInt(1, nation);
 		statement.execute();
 		PreparedStatement check = connection.prepareStatement(CHECK_MEMBER_COUNT_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
-		check.setInt(1, treaty);
+		check.setLong(1, treaty);
 		ResultSet results = check.executeQuery();
 		results.first();
 		if(results.getInt(1) <= 0)
@@ -128,15 +128,15 @@ public class TreatyDao extends Dao
 		treaty.update(connection);
 	}
 
-	public void deleteTreaty(int treaty) throws SQLException
+	public void deleteTreaty(long treaty) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement deleteMembers = connection.prepareStatement(DELETE_MEMBERS_SQL_STATEMENT);
 		PreparedStatement deleteAlliance = connection.prepareStatement(DELETE_ALLIANCE_SQL_STATEMENT);
 		PreparedStatement deleteInvites = connection.prepareStatement(DELETE_INVITES_SQL_STATEMENT);
-		deleteInvites.setInt(1, treaty);
-		deleteMembers.setInt(1, treaty);
-		deleteAlliance.setInt(1, treaty);
+		deleteInvites.setLong(1, treaty);
+		deleteMembers.setLong(1, treaty);
+		deleteAlliance.setLong(1, treaty);
 		deleteMembers.execute();
 		deleteInvites.execute();
 		deleteAlliance.execute();

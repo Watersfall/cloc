@@ -3,7 +3,7 @@ package com.watersfall.clocgame.turn;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.TextKey;
-import com.watersfall.clocgame.model.nation.City;
+import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.util.Time;
 
@@ -23,8 +23,8 @@ public class TurnDay implements Runnable
 		{
 			connection = Database.getDataSource().getConnection();
 			NationDao dao = new NationDao(connection, true);
-			connection.prepareStatement("UPDATE cloc_main SET day=day+1").execute();
-			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
+			connection.prepareStatement("UPDATE main SET day=day+1").execute();
+			PreparedStatement ids = connection.prepareStatement("SELECT id FROM login");
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
@@ -32,7 +32,7 @@ public class TurnDay implements Runnable
 				Nation nation = dao.getNationById(id);
 				try
 				{
-					nation.getEconomy().setBudget(nation.getEconomy().getBudget() + nation.getBudgetChange());
+					nation.getStats().setBudget(nation.getStats().getBudget() + nation.getBudgetChange());
 					for(Integer cityId : nation.getCities().keySet())
 					{
 						City city = nation.getCities().get(cityId);
@@ -45,7 +45,7 @@ public class TurnDay implements Runnable
 				catch(SQLException e)
 				{
 					e.printStackTrace();
-					PreparedStatement statement = connection.prepareStatement("INSERT INTO cloc_news (sender, receiver, content, image) VALUES (1, ?, ?, '')");
+					PreparedStatement statement = connection.prepareStatement("INSERT INTO news (sender, receiver, content) VALUES (1, ?, ?)");
 					statement.setInt(1, nation.getId());
 					statement.setString(2, e.getLocalizedMessage());
 					statement.execute();

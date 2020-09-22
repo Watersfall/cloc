@@ -2,31 +2,16 @@ CREATE DATABASE IF NOT EXISTS cloc;
 
 USE cloc;
 
-CREATE TABLE cloc_login(
-   id INT PRIMARY KEY AUTO_INCREMENT,
-   username VARCHAR(32),
-   email TEXT,
-   password CHAR(60),
-   register_ip VARCHAR(15),
-   last_ip VARCHAR(15),
-   last_login BIGINT,
-   last_message BIGINT
-);
-
-CREATE TABLE cloc_main(
-	month BIGINT UNSIGNED DEFAULT 1,
-	day BIGINT UNSIGNED DEFAULT 1
-);
-
-CREATE TABLE production(
+CREATE TABLE login(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	owner INT,
-	production TEXT,
-	progress INT DEFAULT 0,
-	FOREIGN KEY fk_production (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
+	username VARCHAR(32),
+	email TEXT,
+	password CHAR(60),
+	register_ip VARCHAR(15),
+	last_ip VARCHAR(15)
 );
 
-CREATE TABLE cloc_cosmetic(
+CREATE TABLE nation_cosmetic(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	nation_name VARCHAR(32),
 	username VARCHAR(32),
@@ -35,11 +20,19 @@ CREATE TABLE cloc_cosmetic(
 	portrait VARCHAR(128) DEFAULT '0.png',
 	flag VARCHAR(128) DEFAULT '0.png',
 	description TEXT,
-	FOREIGN KEY fk_cosmetic (id) REFERENCES cloc_login(id) ON DELETE CASCADE
+	FOREIGN KEY fk_cosmetic (id) REFERENCES login(id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_economy (
+CREATE TABLE main(
+	month BIGINT UNSIGNED DEFAULT 1,
+	day BIGINT UNSIGNED DEFAULT 1
+);
+
+CREATE TABLE nation_stats(
 	id INT PRIMARY KEY AUTO_INCREMENT,
+	last_message BIGINT,
+	last_news BIGINT,
+	last_login BIGINT,
 	economic TINYINT DEFAULT 50,
 	gdp DECIMAL(14, 2) UNSIGNED DEFAULT 300,
 	growth DECIMAL(14, 2) DEFAULT 5,
@@ -53,97 +46,41 @@ CREATE TABLE cloc_economy (
 	research DECIMAL(14, 2) UNSIGNED DEFAULT 0,
 	recent_conscription INT DEFAULT 0,
 	recent_deconscription INT DEFAULT 0,
-	FOREIGN KEY fk_economy (id) REFERENCES cloc_login(id) ON DELETE CASCADE
-);
-
-CREATE TABLE cloc_domestic(
-	id INT PRIMARY KEY AUTO_INCREMENT,
 	land INT UNSIGNED DEFAULT 25000,
 	government TINYINT UNSIGNED,
 	approval TINYINT UNSIGNED DEFAULT 50,
 	stability TINYINT UNSIGNED DEFAULT 50,
 	rebels INT UNSIGNED DEFAULT 0,
 	lost_manpower BIGINT DEFAULT 0,
-	farm_subsidies INT DEFAULT 0,
-	farm_regulations INT DEFAULT 0,
-	farm_technology INT DEFAULT 0,
-	farm_collectivization INT DEFAULT 0,
 	months_in_famine INT DEFAULT 0,
-	FOREIGN KEY fk_domestic (id) REFERENCES cloc_login(id) ON DELETE CASCADE
-);
-
-CREATE TABLE cloc_cities(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	owner INT,
-	capital BIT,
-	coastal BIT,
-	railroads INT DEFAULT 1,
-	ports INT DEFAULT 0,
-	barracks INT DEFAULT 0,
-	iron_mines INT UNSIGNED DEFAULT 1,
-	coal_mines INT UNSIGNED DEFAULT 1,
-	oil_wells INT UNSIGNED DEFAULT 1,
-	civilian_industry INT UNSIGNED DEFAULT 1,
-	nitrogen_industry INT UNSIGNED DEFAULT 0,
-	universities INT UNSIGNED DEFAULT 0,
-	name VARCHAR(64),
-	type ENUM('MINING', 'DRILLING', 'INDUSTRY', 'FARMING') DEFAULT 'FARMING',
-	devastation TINYINT DEFAULT 0,
-	population BIGINT DEFAULT 100000,
-	months_on_strike INT DEFAULT 0,
-	strike_level INT DEFAULT 0,
-	FOREIGN KEY fk_cities (owner) REFERENCES cloc_login(id) ON DELETE CASCADE
-);
-
-CREATE TABLE cloc_military(
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	recon_balloons INT UNSIGNED DEFAULT 0,
-	recon_planes INT UNSIGNED DEFAULT 0,
-	biplane_fighters INT UNSIGNED DEFAULT 0,
-	triplane_fighters INT UNSIGNED DEFAULT 0,
-	monoplane_fighters INT UNSIGNED DEFAULT 0,
-	zeppelins INT UNSIGNED DEFAULT 0,
-	bombers INT UNSIGNED DEFAULT 0,
-	submarines INT UNSIGNED DEFAULT 0,
-	destroyers INT UNSIGNED DEFAULT 0,
-	cruisers INT UNSIGNED DEFAULT 0,
-	pre_battleships INT UNSIGNED DEFAULT 0,
-	battleships INT UNSIGNED DEFAULT 0,
-	transports INT UNSIGNED DEFAULT 0,
 	war_protection TINYINT DEFAULT 4,
-	FOREIGN KEY fk_military (id) REFERENCES cloc_login(id) ON DELETE CASCADE
-);
-
-CREATE TABLE cloc_army(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    size INT DEFAULT 20,
-    training INT DEFAULT 50,
-    musket INT DEFAULT 20000,
-	rifled_musket INT DEFAULT 0,
-	single_shot INT DEFAULT 0,
-	needle_nose INT DEFAULT 0,
-	bolt_action_manual INT DEFAULT 0,
-	bolt_action_clip INT DEFAULT 0,
-	straight_pull INT DEFAULT 0,
-	semi_auto INT DEFAULT 0,
-	machine_gun INT DEFAULT 0,
-	artillery INT DEFAULT 0,
+	army_size INT DEFAULT 20,
+	army_training INT DEFAULT 50,
 	fortification INT DEFAULT 0,
-	tank INT,
-	casualties BIGINT,
-	FOREIGN KEY fk_army (id) REFERENCES cloc_login(id) ON DELETE CASCADE
-);
-
-CREATE TABLE cloc_foreign(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+	casualties BIGINT DEFAULT 0,
 	region ENUM('NORTH_AMERICA', 'SOUTH_AMERICA', 'AFRICA', 'MIDDLE_EAST', 'EUROPE', 'ASIA', 'OCEANIA', 'SIBERIA'),
 	alignment ENUM('NEUTRAL', 'ENTENTE', 'CENTRAL_POWERS') DEFAULT 'NEUTRAL',
 	entente_reputation INT DEFAULT 0,
 	central_powers_reputation INT DEFAULT 0,
-	FOREIGN KEY fk_foreign (id) REFERENCES cloc_login(id) ON DELETE CASCADE
+	FOREIGN KEY fk_stats (id) REFERENCES login (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_tech(
+CREATE TABLE nation_policy (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+	manpower_policy ENUM('DISARMED_MANPOWER', 'VOLUNTEER_MANPOWER', 'RECRUITMENT_MANPOWER', 'MANDATORY_MANPOWER', 'SCRAPING_THE_BARREL_MANPOWER') DEFAULT 'VOLUNTEER_MANPOWER',
+	food_policy ENUM('RATIONING_FOOD', 'NORMAL_FOOD', 'FREE_FOOD') DEFAULT 'NORMAL_FOOD',
+	economy_policy ENUM('CIVILIAN_ECONOMY', 'EXTRACTION_ECONOMY', 'INDUSTRY_ECONOMY', 'AGRARIAN_ECONOMY', 'WAR_ECONOMY') DEFAULT 'CIVILIAN_ECONOMY',
+	fortification_policy ENUM('UNOCCUPIED_FORTIFICATION', 'MINIMAL_FUNDING_FORTIFICATION', 'PARTIAL_FUNDING_FORTIFICATION', 'FULL_FUNDING_FORTIFICATION', 'MAX_FORTIFICATION') DEFAULT 'PARTIAL_FUNDING_FORTIFICATION',
+	farming_subsidies ENUM ('NO_SUBSIDIES_FARMING', 'REDUCED_SUBSIDIES_FARMING', 'STANDARD_SUBSIDIES_FARMING', 'SUBSTANTIAL_SUBSIDIES_FARMING') DEFAULT 'NO_SUBSIDIES_FARMING',
+	manpower_change BIGINT DEFAULT 0,
+	food_change BIGINT DEFAULT 0,
+	economy_change BIGINT DEFAULT 0,
+	fortification_change BIGINT DEFAULT 0,
+	farming_subsidies_change BIGINT DEFAULT 0,
+	FOREIGN KEY fk_policy (id) REFERENCES login (id) ON DELETE CASCADE
+);
+
+CREATE TABLE nation_tech (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	chem_tech TINYINT UNSIGNED DEFAULT 0,
 	advanced_chem_tech TINYINT UNSIGNED DEFAULT 0,
@@ -185,65 +122,98 @@ CREATE TABLE cloc_tech(
 	advanced_artificial_fertilizer TINYINT UNSIGNED DEFAULT 0,
 	farming_machines TINYINT UNSIGNED DEFAULT 0,
 	advanced_farming_machines TINYINT UNSIGNED DEFAULT 0,
-	FOREIGN KEY fk_tech (id) REFERENCES cloc_login(id) ON DELETE CASCADE
+	FOREIGN KEY fk_producibles (id) REFERENCES login (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_policy(
+CREATE TABLE nation_producibles (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	manpower_policy ENUM('DISARMED_MANPOWER', 'VOLUNTEER_MANPOWER', 'RECRUITMENT_MANPOWER', 'MANDATORY_MANPOWER', 'SCRAPING_THE_BARREL_MANPOWER') DEFAULT 'VOLUNTEER_MANPOWER',
-	food_policy ENUM('RATIONING_FOOD', 'NORMAL_FOOD', 'FREE_FOOD') DEFAULT 'NORMAL_FOOD',
-	economy_policy ENUM('CIVILIAN_ECONOMY', 'EXTRACTION_ECONOMY', 'INDUSTRY_ECONOMY', 'AGRARIAN_ECONOMY', 'WAR_ECONOMY') DEFAULT 'CIVILIAN_ECONOMY',
-	fortification_policy ENUM('UNOCCUPIED_FORTIFICATION', 'MINIMAL_FUNDING_FORTIFICATION', 'PARTIAL_FUNDING_FORTIFICATION', 'FULL_FUNDING_FORTIFICATION', 'MAX_FORTIFICATION') DEFAULT 'PARTIAL_FUNDING_FORTIFICATION',
-	farming_subsidies ENUM ('NO_SUBSIDIES_FARMING', 'REDUCED_SUBSIDIES_FARMING', 'STANDARD_SUBSIDIES_FARMING', 'SUBSTANTIAL_SUBSIDIES_FARMING') DEFAULT 'NO_SUBSIDIES_FARMING',
-	manpower_change BIGINT DEFAULT 0,
-	food_change BIGINT DEFAULT 0,
-	economy_change BIGINT DEFAULT 0,
-	fortification_change BIGINT DEFAULT 0,
-	farming_subsidies_change BIGINT DEFAULT 0,
-	FOREIGN KEY fk_policy (id) REFERENCES cloc_login(id) ON DELETE CASCADE
+	recon_balloons INT UNSIGNED DEFAULT 0,
+	recon_planes INT UNSIGNED DEFAULT 0,
+	biplane_fighters INT UNSIGNED DEFAULT 0,
+	triplane_fighters INT UNSIGNED DEFAULT 0,
+	monoplane_fighters INT UNSIGNED DEFAULT 0,
+	zeppelins INT UNSIGNED DEFAULT 0,
+	bombers INT UNSIGNED DEFAULT 0,
+	musket INT DEFAULT 20000,
+	rifled_musket INT DEFAULT 0,
+	single_shot INT DEFAULT 0,
+	needle_nose INT DEFAULT 0,
+	bolt_action_manual INT DEFAULT 0,
+	bolt_action_clip INT DEFAULT 0,
+	straight_pull INT DEFAULT 0,
+	semi_auto INT DEFAULT 0,
+	machine_gun INT DEFAULT 0,
+	artillery INT DEFAULT 0,
+	tank INT DEFAULT 0,
+	FOREIGN KEY fk_producibles (id) REFERENCES login (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_war(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE cities(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+	owner INT,
+	capital BIT,
+	coastal BIT,
+	railroads INT DEFAULT 1,
+	ports INT DEFAULT 0,
+	barracks INT DEFAULT 0,
+	iron_mines INT UNSIGNED DEFAULT 1,
+	coal_mines INT UNSIGNED DEFAULT 1,
+	oil_wells INT UNSIGNED DEFAULT 1,
+	civilian_industry INT UNSIGNED DEFAULT 1,
+	nitrogen_industry INT UNSIGNED DEFAULT 0,
+	universities INT UNSIGNED DEFAULT 0,
+	name VARCHAR(64),
+	type ENUM('MINING', 'DRILLING', 'INDUSTRY', 'FARMING') DEFAULT 'FARMING',
+	devastation TINYINT DEFAULT 0,
+	population BIGINT DEFAULT 100000,
+	FOREIGN KEY fk_cities (owner) REFERENCES login(id) ON DELETE CASCADE
+);
+
+CREATE TABLE wars (
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	attacker INT,
 	defender INT,
 	start BIGINT,
-	winner INT,
 	end BIGINT DEFAULT -1,
+	winner INT,
 	peace INT default -1,
 	name TEXT,
-	FOREIGN KEY fk_attacker (attacker) REFERENCES cloc_login(id) ON DELETE CASCADE,
-	FOREIGN KEY fk_defender (defender) REFERENCES cloc_login(id) ON DELETE CASCADE
+	FOREIGN KEY fk_attacker (attacker) REFERENCES login(id) ON DELETE CASCADE,
+	FOREIGN KEY fk_defender (defender) REFERENCES login(id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_war_logs(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE war_logs(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	attacker INT,
-	region ENUM('NORTH_AMERICA', 'SOUTH_AMERICA', 'AFRICA', 'MIDDLE_EAST', 'EUROPE', 'ASIA', 'OCEANIA', 'SIBERIA') DEFAULT 'SIBERIA',
-	type ENUM('land', 'navy', 'air', 'chemical', 'transport'),
-	amount INT, -- for transports
-	FOREIGN KEY fk_logs (attacker) REFERENCES cloc_login (id) ON DELETE CASCADE
+	type ENUM('LAND', 'NAVY', 'AIR'),
+	FOREIGN KEY fk_logs (attacker) REFERENCES login (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_news(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE production(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+	owner INT,
+	production TEXT,
+	progress INT DEFAULT 0,
+	FOREIGN KEY fk_production (owner) REFERENCES login(id) ON DELETE CASCADE
+);
+
+CREATE TABLE news(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	sender INT,
 	receiver INT,
 	content TEXT,
-	image TEXT DEFAULT NULL,
 	time BIGINT DEFAULT 0,
-	is_read BIT DEFAULT b'0',
-	FOREIGN KEY fk_news (receiver) REFERENCES cloc_login (id) ON DELETE CASCADE
+	FOREIGN KEY fk_news (receiver) REFERENCES login (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_treaties(
+CREATE TABLE treaties(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(32),
 	flag VARCHAR(32) DEFAULT '',
 	description TEXT
 );
 
-CREATE TABLE cloc_treaties_members(
+CREATE TABLE treaty_members(
 	alliance_id INT,
 	nation_id INT,
 	founder BIT DEFAULT 0,
@@ -251,51 +221,51 @@ CREATE TABLE cloc_treaties_members(
 	kick BIT DEFAULT 0,
 	invite BIT DEFAULT 0,
 	edit BIT DEFAULT 0,
-	FOREIGN KEY fk_alliance (alliance_id) REFERENCES cloc_treaties (id),
-	FOREIGN KEY fk_member (nation_id) REFERENCES cloc_login (id) ON DELETE CASCADE
+	FOREIGN KEY fk_alliance (alliance_id) REFERENCES treaties (id),
+	FOREIGN KEY fk_member (nation_id) REFERENCES login (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_treaty_invites(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE treaty_invites(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	alliance_id INT,
 	nation_id INT,
-	FOREIGN KEY fk_alliance (alliance_id) REFERENCES cloc_treaties (id),
-	FOREIGN KEY fk_member (nation_id) REFERENCES cloc_login (id) ON DELETE CASCADE
+	FOREIGN KEY fk_alliance (alliance_id) REFERENCES treaties (id),
+	FOREIGN KEY fk_member (nation_id) REFERENCES login (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cloc_declarations(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE declarations(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	sender INT,
 	sent BIGINT,
 	content VARCHAR(2048),
-	FOREIGN KEY fk_declarations (sender) REFERENCES cloc_login (id) ON DELETE CASCADE
-);
-
-CREATE TABLE global_stats_history(
-	 month BIGINT,
-	 total_nations BIGINT,
-	 total_neutral_nations BIGINT,
-	 total_entente_nations BIGINT,
-	 total_central_powers_nations BIGINT,
-	 total_population BIGINT,
-	 total_soldiers BIGINT,
-	 total_civilian_factories BIGINT,
-	 total_military_factories BIGINT,
-	 total_universities BIGINT,
-	 total_iron_mines BIGINT,
-	 total_coal_mines BIGINT,
-	 total_oil_wells BIGINT
+	FOREIGN KEY fk_declarations (sender) REFERENCES login (id) ON DELETE CASCADE
 );
 
 CREATE TABLE factories(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	owner INT,
-	city_id INT,
-	production_id INT,
+	city_id BIGINT,
+	production_id BIGINT,
 	efficiency INT DEFAULT 1500,
 	FOREIGN KEY fk_production (production_id) REFERENCES production (id) ON DELETE SET NULL,
-	FOREIGN KEY fk_owner (owner) REFERENCES cloc_login(id) ON DELETE CASCADE,
-	FOREIGN KEY fk_city (city_id) REFERENCES cloc_cities(id) ON DELETE CASCADE
+	FOREIGN KEY fk_owner (owner) REFERENCES login(id) ON DELETE CASCADE,
+	FOREIGN KEY fk_city (city_id) REFERENCES cities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE global_stats_history(
+	month BIGINT,
+	total_nations BIGINT,
+	total_neutral_nations BIGINT,
+	total_entente_nations BIGINT,
+	total_central_powers_nations BIGINT,
+	total_population BIGINT,
+	total_soldiers BIGINT,
+	total_civilian_factories BIGINT,
+	total_military_factories BIGINT,
+	total_universities BIGINT,
+	total_iron_mines BIGINT,
+	total_coal_mines BIGINT,
+	total_oil_wells BIGINT
 );
 
 CREATE TABLE nation_history (
@@ -308,16 +278,12 @@ CREATE TABLE nation_history (
 	navy BIGINT,
 	army INT,
 	casualties BIGINT,
-	FOREIGN KEY fk_nation (nation_id) REFERENCES cloc_login (id)
+	FOREIGN KEY fk_nation (nation_id) REFERENCES login (id)
 );
 
 CREATE TABLE alignments (
 	id ENUM('ENTENTE', 'CENTRAL_POWERS', 'NEUTRAL') PRIMARY KEY
 );
-
-INSERT INTO alignments(id) VALUES ('ENTENTE');
-INSERT INTO alignments(id) VALUES ('CENTRAL_POWERS');
-INSERT INTO alignments(id) VALUES ('NEUTRAL');
 
 CREATE TABLE alignments_equipment (
 	alignment ENUM('ENTENTE', 'CENTRAL_POWERS', 'NEUTRAL'),
@@ -333,7 +299,7 @@ CREATE TABLE alignments_transactions (
 	amount BIGINT,
 	month BIGINT,
 	FOREIGN KEY (alignment) REFERENCES alignments (id),
-	FOREIGN KEY (nation) REFERENCES cloc_login (id) ON DELETE CASCADE
+	FOREIGN KEY (nation) REFERENCES login (id) ON DELETE CASCADE
 );
 
 CREATE TABLE anti_spam (
@@ -341,16 +307,17 @@ CREATE TABLE anti_spam (
 	user INT,
 	action ENUM('SEND_RESOURCE', 'SEND_DECLARATION', 'SEND_INVITE', 'UPDATE_FLAG', 'UPDATE_PORTRAIT', 'UPDATE_ALLIANCE_FLAG'),
 	time BIGINT,
-	FOREIGN KEY (user) REFERENCES cloc_login (id) ON DELETE CASCADE
+	FOREIGN KEY (user) REFERENCES login (id) ON DELETE CASCADE
 );
 
 CREATE TABLE events (
-	id INT PRIMARY KEY AUTO_INCREMENT,
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	owner INT,
 	event_id ENUM('STRIKE'),
 	month BIGINT,
-	city_id INT DEFAULT 0,
-	FOREIGN KEY (owner) REFERENCES cloc_login (id) ON DELETE CASCADE
+	city_id BIGINT DEFAULT NULL,
+	FOREIGN KEY (owner) REFERENCES login (id) ON DELETE CASCADE,
+	FOREIGN KEY (city_id) REFERENCES cities (id) ON DELETE CASCADE
 );
 
 CREATE TABLE messages (
@@ -360,17 +327,23 @@ CREATE TABLE messages (
 	alliance_message BOOLEAN,
 	admin_message BOOLEAN,
 	system_message BOOLEAN,
-	content TEXT
+	content TEXT,
+	FOREIGN KEY fk_receiver (receiver) REFERENCES login (id) ON DELETE NO ACTION,
+	FOREIGN KEY fk_sender (sender) REFERENCES login (id) ON DELETE NO ACTION
 );
 
 CREATE TABLE modifiers (
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
 	user INT,
-	city INT,
+	city BIGINT,
 	type TEXT,
 	start BIGINT,
-	FOREIGN KEY (user) REFERENCES cloc_login (id) ON DELETE CASCADE,
-	FOREIGN KEY (city) REFERENCES cloc_cities (id) ON DELETE CASCADE
+	FOREIGN KEY (user) REFERENCES login (id) ON DELETE CASCADE,
+	FOREIGN KEY (city) REFERENCES cities (id) ON DELETE CASCADE
 );
 
-INSERT INTO cloc_main (month, day) VALUES (1, 1);
+INSERT INTO alignments(id) VALUES ('ENTENTE');
+INSERT INTO alignments(id) VALUES ('CENTRAL_POWERS');
+INSERT INTO alignments(id) VALUES ('NEUTRAL');
+
+INSERT INTO main (month, day) VALUES (1, 1);

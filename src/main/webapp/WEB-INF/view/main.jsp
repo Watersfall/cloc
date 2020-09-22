@@ -25,13 +25,13 @@
 							<td colspan="2">Government</td>
 						</tr>
 						<tr>
-							<td colspan="2"><cloc:government value="${home.domestic.government}"/></td>
+							<td colspan="2"><cloc:government value="${home.stats.government}"/></td>
 						</tr>
 						<tr>
 							<td colspan="2">Approval</td>
 						</tr>
 						<tr>
-							<td>${home.domestic.approval}%</td>
+							<td>${home.stats.approval}%</td>
 							<td class="dropdown_parent" onclick="toggleUITab('approval_change')">
 								<a href="#">
 									<c:if test="${home.approvalChange.get(netApproval) > 0}">
@@ -54,7 +54,7 @@
 							<td colspan="2">Stability</td>
 						</tr>
 						<tr>
-							<td>${home.domestic.stability}%</td>
+							<td>${home.stats.stability}%</td>
 							<td class="dropdown_parent" onclick="toggleUITab('stability_change')">
 								<a href="#" >
 									<c:if test="${home.stabilityChange.get(netStability) > 0}">
@@ -79,7 +79,7 @@
 						</tr>
 						<tr>
 							<td><fmt:formatNumber value="${home.freeLand}"/>km<sup>2</sup> Free</td>
-							<td><fmt:formatNumber value="${home.domestic.land}"/>km<sup>2</sup> Total</td>
+							<td><fmt:formatNumber value="${home.stats.land}"/>km<sup>2</sup> Total</td>
 						</tr>
 						<tr>
 							<td colspan="2">Population</td>
@@ -99,13 +99,13 @@
 							<td colspan="2">Gross Domestic Product</td>
 						</tr>
 						<tr>
-							<td colspan="2">$<fmt:formatNumber value="${home.economy.gdp}"/> Million</td>
+							<td colspan="2">$<fmt:formatNumber value="${home.stats.gdp}"/> Million</td>
 						</tr>
 						<tr>
 							<td colspan="2">Growth</td>
 						</tr>
 						<tr>
-							<td><fmt:formatNumber value="${home.economy.growth}"/> Million per month</td>
+							<td><fmt:formatNumber value="${home.stats.growth}"/> Million per month</td>
 							<td class="dropdown_parent" onclick="toggleUITab('growth_change')">
 								<a href="#">
 									<c:choose>
@@ -138,13 +138,13 @@
 							<td colspan="2">Region</td>
 						</tr>
 						<tr>
-							<td colspan="2">${home.foreign.region.name}</td>
+							<td colspan="2">${home.stats.region.name}</td>
 						</tr>
 						<tr>
 							<td colspan="2">Official Alignment</td>
 						</tr>
 						<tr>
-							<td colspan="2">${home.foreign.alignment}</td>
+							<td colspan="2">${home.stats.alignment}</td>
 						</tr>
 						<tr>
 							<td colspan="2">Treaty Membership</td>
@@ -171,13 +171,13 @@
 							<td colspan="2">Active Personnel</td>
 						</tr>
 						<tr>
-							<td colspan="2"><fmt:formatNumber value="${home.army.size}"/>k Soldiers</td>
+							<td colspan="2"><fmt:formatNumber value="${home.stats.armySize}"/>k Soldiers</td>
 						</tr>
 						<tr>
 							<td colspan="2">Training</td>
 						</tr>
 						<tr>
-							<td colspan="2"><fmt:formatNumber value="${home.army.training}"/>%</td>
+							<td colspan="2"><fmt:formatNumber value="${home.stats.armyTraining}"/>%</td>
 						</tr>
 						<tr>
 							<td>Equipment</td>
@@ -185,15 +185,15 @@
 						<tr>
 							<td class="dropdown_parent" onclick="toggleUITab('equipment')">
 								<a href="#">
-									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.army.size * 1000}"/> requested
+									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.stats.armySize * 1000}"/> requested
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
 								<div class="dropdown_2_left toggleable-default-off" id="equipment">
 									<ul>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}" var="producible">
-											<c:if test="${home.getProducibleValue(producible) > 0}">
+											<c:if test="${home.producibles.getProducible(producible) > 0}">
 												<li>
-													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+													<fmt:formatNumber value="${home.producibles.getProducible(producible)}"/>${' '.concat(producible.name())}
 												</li>
 											</c:if>
 										</c:forEach>
@@ -222,7 +222,7 @@
 							<td colspan="2">Fortification</td>
 						</tr>
 						<tr>
-							<td>${home.army.fortification / 100}%</td>
+							<td>${home.stats.fortification / 100}%</td>
 							<td class="dropdown_parent" onclick="toggleUITab('fortification_change')">
 								<a href="#">
 									<c:choose>
@@ -280,9 +280,9 @@
 								<div class="dropdown_2_left toggleable-default-off" id="fighters">
 									<ul>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE)}" var="producible">
-											<c:if test="${home.getProducibleValue(producible) > 0}">
+											<c:if test="${home.producibles.getProducible(producible) > 0}">
 												<li>
-													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+													<fmt:formatNumber value="${home.producibles.getProducible(producible)}"/>${' '.concat(producible.name())}
 												</li>
 											</c:if>
 										</c:forEach>
@@ -319,9 +319,9 @@
 								<div class="dropdown_2_left toggleable-default-off" id="bombers">
 									<ul>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE)}" var="producible">
-											<c:if test="${home.getProducibleValue(producible) > 0}">
+											<c:if test="${home.producibles.getProducible(producible) > 0}">
 												<li>
-													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+													<fmt:formatNumber value="${home.producibles.getProducible(producible)}"/>${' '.concat(producible.name())}
 												</li>
 											</c:if>
 										</c:forEach>
@@ -358,9 +358,9 @@
 								<div class="dropdown_2_left toggleable-default-off" id="recons">
 									<ul>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE)}" var="producible">
-											<c:if test="${home.getProducibleValue(producible) > 0}">
+											<c:if test="${home.producibles.getProducible(producible) > 0}">
 												<li>
-													<fmt:formatNumber value="${home.getProducibleValue(producible)}"/>${' '.concat(producible.name())}
+													<fmt:formatNumber value="${home.producibles.getProducible(producible)}"/>${' '.concat(producible.name())}
 												</li>
 											</c:if>
 										</c:forEach>
@@ -430,13 +430,13 @@
 				</div>
 			</div>
 			<div id="column_2" class="column">
-				<c:if test="${home.eventCount <= 0 && home.anyUnreadNews}">
+				<c:if test="${home.eventCount <= 0 && home.hasUnreadNews()}">
 					<div class="tile">
 						<div class="title">Unread News</div>
 						<%--@elvariable id="news" type="java.util.List"--%>
-						<%--@elvariable id="event" type="com.watersfall.clocgame.model.nation.News"--%>
+							<%--@elvariable id="event" type="com.watersfall.clocgame.model.news.News"--%>
 						<c:forEach var="event" items="${news}">
-							<div>
+							<div class="subtile">
 								${event.content}
 							</div>
 						</c:forEach>
@@ -511,7 +511,7 @@
 						</c:forEach>
 					</div>
 				</c:if>
-				<c:if test="${!home.anyUnreadNews && home.eventCount <= 0}">
+				<c:if test="${home.eventCount <= 0 && !home.hasUnreadNews()}">
 					<div class="tile">
 						<div class="title">No Unread News or Events</div>
 					</div>
@@ -547,19 +547,19 @@
 								<td colspan="2">Estimated Army Size</td>
 							</tr>
 							<tr>
-								<td colspan="2">${defender.army.size}k Personnel</td>
+								<td colspan="2">${defender.stats.armySize}k Personnel</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Training</td>
 							</tr>
 							<tr>
-								<td colspan="2">${defender.army.training}%</td>
+								<td colspan="2">${defender.stats.armyTraining}%</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Equipment Status</td>
 							</tr>
 							<tr>
-								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${defender.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (defender.army.size * 10)}"/>%</td>
+								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${defender.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (defender.stats.armySize * 10)}"/>%</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Airforce Size</td>
@@ -624,19 +624,19 @@
 								<td colspan="2">Estimated Army Size</td>
 							</tr>
 							<tr>
-								<td colspan="2">${attacker.army.size}k Personnel</td>
+								<td colspan="2">${attacker.stats.armySize}k Personnel</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Training</td>
 							</tr>
 							<tr>
-								<td colspan="2">${attacker.army.training}%</td>
+								<td colspan="2">${attacker.stats.armyTraining}%</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Equipment Status</td>
 							</tr>
 							<tr>
-								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${attacker.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (attacker.army.size * 10)}"/>%</td>
+								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${attacker.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (attacker.stats.armySize * 10)}"/>%</td>
 							</tr>
 							<tr>
 								<td colspan="2">Estimated Airforce Size</td>
@@ -690,5 +690,4 @@
 			</div>
 		</div>
 	</c:if>
-
 <%@ include file="includes/bottom.jsp" %>

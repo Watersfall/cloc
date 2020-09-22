@@ -9,9 +9,12 @@ import com.watersfall.clocgame.model.Stats;
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.alignment.Alignment;
 import com.watersfall.clocgame.model.alignment.Alignments;
+import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.event.Events;
-import com.watersfall.clocgame.model.nation.*;
+import com.watersfall.clocgame.model.modifier.Modifiers;
+import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.nation.NationStats;
 import com.watersfall.clocgame.model.policies.Policy;
 import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.schedulers.DayScheduler;
@@ -39,8 +42,8 @@ public class TurnMonth implements Runnable
 			DayScheduler.resetIncrement();
 			connection = Database.getDataSource().getConnection();
 			NationDao dao = new NationDao(connection, true);
-			PreparedStatement ids = connection.prepareStatement("SELECT id FROM cloc_login");
-			connection.prepareStatement("UPDATE cloc_main SET month=month+1").execute();
+			PreparedStatement ids = connection.prepareStatement("SELECT id FROM login");
+			connection.prepareStatement("UPDATE main SET month=month+1").execute();
 			ResultSet results = ids.executeQuery();
 			while(results.next())
 			{
@@ -49,8 +52,7 @@ public class TurnMonth implements Runnable
 				Nation nation = dao.getNationById(id);
 				try
 				{
-					NationEconomy economy = nation.getEconomy();
-					NationDomestic domestic = nation.getDomestic();
+					NationStats stats = nation.getStats();
 					/*
 					 ** Economy
 					 */
@@ -63,39 +65,39 @@ public class TurnMonth implements Runnable
 					HashMap<TextKey, Double> nitrogen = nation.getTotalNitrogenProduction();
 					HashMap<TextKey, Double> research = nation.getTotalResearchProduction();
 					HashMap<TextKey, Double> food = nation.getFoodProduction();
-					economy.setCoal(economy.getCoal() + coal.get(TextKey.Resource.TOTAL_GAIN));
-					economy.setIron(economy.getIron() + iron.get(TextKey.Resource.TOTAL_GAIN));
-					economy.setOil(economy.getOil() + oil.get(TextKey.Resource.TOTAL_GAIN));
-					economy.setResearch(economy.getResearch() + research.get(TextKey.Resource.NET));
-					economy.setFood(economy.getFood() + food.get(TextKey.Resource.NET));
-					economy.setGrowth(economy.getGrowth() + nation.getGrowthChange().get(TextKey.Growth.NET));
-					economy.setGdp(economy.getGdp() + economy.getGrowth());
+					stats.setCoal(stats.getCoal() + coal.get(TextKey.Resource.TOTAL_GAIN));
+					stats.setIron(stats.getIron() + iron.get(TextKey.Resource.TOTAL_GAIN));
+					stats.setOil(stats.getOil() + oil.get(TextKey.Resource.TOTAL_GAIN));
+					stats.setResearch(stats.getResearch() + research.get(TextKey.Resource.NET));
+					stats.setFood(stats.getFood() + food.get(TextKey.Resource.NET));
+					stats.setGrowth(stats.getGrowth() + nation.getGrowthChange().get(TextKey.Growth.NET));
+					stats.setGdp(stats.getGdp() + stats.getGrowth());
 
-					if(economy.getCoal() > coal.get(TextKey.Resource.FACTORY_UPKEEP)
-							&& economy.getIron() > iron.get(TextKey.Resource.FACTORY_UPKEEP)
-							&& economy.getOil() > oil.get(TextKey.Resource.FACTORY_UPKEEP))
+					if(stats.getCoal() > coal.get(TextKey.Resource.FACTORY_UPKEEP)
+							&& stats.getIron() > iron.get(TextKey.Resource.FACTORY_UPKEEP)
+							&& stats.getOil() > oil.get(TextKey.Resource.FACTORY_UPKEEP))
 					{
-						economy.setSteel(economy.getSteel() + steel.get(TextKey.Resource.NET));
-						economy.setNitrogen(economy.getNitrogen() + nitrogen.get(TextKey.Resource.NET));
+						stats.setSteel(stats.getSteel() + steel.get(TextKey.Resource.NET));
+						stats.setNitrogen(stats.getNitrogen() + nitrogen.get(TextKey.Resource.NET));
 					}
 
-					economy.setRecentConscription(economy.getRecentConscription() / 2);
-					economy.setRecentDeconscription(economy.getRecentDeconscription() / 2);
+					stats.setRecentConscription(stats.getRecentConscription() / 2);
+					stats.setRecentDeconscription(stats.getRecentDeconscription() / 2);
 
 					/*
 					 ** Domestic
 					 */
-					domestic.setApproval(domestic.getApproval() + nation.getApprovalChange().get(TextKey.Approval.NET));
-					domestic.setStability(domestic.getStability() + nation.getStabilityChange().get(TextKey.Stability.NET));
+					stats.setApproval(stats.getApproval() + nation.getApprovalChange().get(TextKey.Approval.NET));
+					stats.setStability(stats.getStability() + nation.getStabilityChange().get(TextKey.Stability.NET));
 
 					/*
 					 ** Military
 					 */
 					if(nation.getPolicy().getEconomy() != Policy.WAR_ECONOMY)
 					{
-						nation.getArmy().setTraining(nation.getArmy().getTraining() - 1);
+						stats.setArmyTraining(nation.getStats().getArmyTraining() - 1);
 					}
-					nation.getMilitary().setWarProtection(nation.getMilitary().getWarProtection() - 1);
+					stats.setWarProtection(stats.getWarProtection() - 1);
 
 					if(nation.isAtWar())
 					{
@@ -112,19 +114,19 @@ public class TurnMonth implements Runnable
 						}
 					}
 
-					nation.getArmy().setFortification((int)(nation.getArmy().getFortification()
+					stats.setFortification((int)(stats.getFortification()
 							+ nation.getFortificationChange().get(TextKey.Fortification.NET)));
 
 					if(nation.getFamineLevel() < 0)
 					{
-						nation.getDomestic().setMonthsInFamine(nation.getDomestic().getMonthsInFamine() + 1);
+						nation.getStats().setMonthsInFamine(nation.getStats().getMonthsInFamine() + 1);
 					}
 
 					/*
 					** Events
 					 */
-					if((nation.getDomestic().getStability() < 30 && nation.getDomestic().getApproval() < 30)
-						|| (nation.getDomestic().getStability() < 15 || nation.getDomestic().getApproval() < 15))
+					if((nation.getStats().getStability() < 30 && nation.getStats().getApproval() < 30)
+						|| (nation.getStats().getStability() < 15 || nation.getStats().getApproval() < 15))
 					{
 						if(Math.random() > 0.00)
 						{
@@ -167,24 +169,24 @@ public class TurnMonth implements Runnable
 					** Reputation
 					 */
 					int eGain = (int)(nation.getMaxReputation(Alignments.ENTENTE) / 20.0);
-					int currentE = nation.getForeign().getEntenteReputation();
+					int currentE = nation.getStats().getEntenteReputation();
 					if(currentE + eGain > nation.getMaxReputation(Alignments.ENTENTE))
 					{
-						nation.getForeign().setReputation(Alignments.ENTENTE, nation.getMaxReputation(Alignments.ENTENTE));
+						nation.getStats().setReputation(Alignments.ENTENTE, nation.getMaxReputation(Alignments.ENTENTE));
 					}
 					else
 					{
-						nation.getForeign().setReputation(Alignments.ENTENTE, eGain + currentE);
+						nation.getStats().setReputation(Alignments.ENTENTE, eGain + currentE);
 					}
 					int cGain = (int)(nation.getMaxReputation(Alignments.CENTRAL_POWERS) / 20.0);
-					int currentC = nation.getForeign().getCentralPowersReputation();
+					int currentC = nation.getStats().getCentralPowersReputation();
 					if(currentC + cGain > nation.getMaxReputation(Alignments.CENTRAL_POWERS))
 					{
-						nation.getForeign().setReputation(Alignments.CENTRAL_POWERS, nation.getMaxReputation(Alignments.CENTRAL_POWERS));
+						nation.getStats().setReputation(Alignments.CENTRAL_POWERS, nation.getMaxReputation(Alignments.CENTRAL_POWERS));
 					}
 					else
 					{
-						nation.getForeign().setReputation(Alignments.CENTRAL_POWERS, cGain + currentC);
+						nation.getStats().setReputation(Alignments.CENTRAL_POWERS, cGain + currentC);
 					}
 
 
@@ -193,13 +195,13 @@ public class TurnMonth implements Runnable
 							"VALUES (?,?,?,?,?,?,?,?,?)");
 					statement.setInt(1, nation.getId());
 					statement.setLong(2, Time.month);
-					statement.setDouble(3, nation.getEconomy().getGdp());
-					statement.setDouble(4, nation.getEconomy().getGrowth());
+					statement.setDouble(3, nation.getStats().getGdp());
+					statement.setDouble(4, nation.getStats().getGrowth());
 					statement.setLong(5, nation.getTotalPopulation());
 					statement.setLong(6, 0L);
 					statement.setLong(7, 0L);
-					statement.setInt(8, nation.getArmy().getSize());
-					statement.setLong(9, nation.getArmy().getCasualties());
+					statement.setInt(8, stats.getArmySize());
+					statement.setLong(9, stats.getCasualties());
 					statement.execute();
 
 					dao.saveNation(nation);
@@ -207,7 +209,7 @@ public class TurnMonth implements Runnable
 				catch(SQLException e)
 				{
 					e.printStackTrace();
-					PreparedStatement statement = connection.prepareStatement("INSERT INTO cloc_news (sender, receiver, content, image) VALUES (1, ?, ?, '')");
+					PreparedStatement statement = connection.prepareStatement("INSERT INTO news (sender, receiver, content) VALUES (1, ?, ?)");
 					statement.setInt(1, nation.getId());
 					statement.setString(2, e.getLocalizedMessage());
 					statement.execute();
@@ -228,7 +230,7 @@ public class TurnMonth implements Runnable
 			/*
 			 ** Logs
 			 */
-			connection.prepareStatement("DELETE FROM cloc_war_logs").execute();
+			connection.prepareStatement("DELETE FROM war_logs").execute();
 
 			/*
 			 ** Alignment calculations

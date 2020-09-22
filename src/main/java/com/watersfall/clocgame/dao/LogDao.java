@@ -1,7 +1,6 @@
 package com.watersfall.clocgame.dao;
 
 import com.watersfall.clocgame.model.LogType;
-import com.watersfall.clocgame.model.Region;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,36 +10,33 @@ import java.sql.SQLException;
 public class LogDao extends Dao
 {
 	private static final String CREATE_LOG_SQL_STATEMENT =
-					"INSERT INTO cloc_war_logs (attacker, region, type, amount)\n" +
-					"VALUES (?,?,?,?)\n";
+					"INSERT INTO war_logs (attacker, type)\n" +
+					"VALUES (?,?)\n";
 	private static final String CHECK_LOG_SQL_STATEMENT =
 					"SELECT id\n" +
-					"FROM cloc_war_logs\n" +
-					"WHERE attacker=? AND region=? AND type=?\n";
+					"FROM war_logs\n" +
+					"WHERE attacker=? AND type=?\n";
 
 	public LogDao(Connection connection, boolean allowWriteAccess)
 	{
 		super(connection, allowWriteAccess);
 	}
 
-	public void createLog(int id, Region region, LogType type, int amount) throws SQLException
+	public void createLog(int id, LogType type) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CREATE_LOG_SQL_STATEMENT);
 		statement.setInt(1, id);
-		statement.setString(2, region.name());
-		statement.setString(3, type.name());
-		statement.setInt(4, amount);
+		statement.setString(2, type.name());
 		statement.execute();
 	}
 
-	public boolean checkLog(int id, Region region, LogType type) throws SQLException
+	public boolean checkLog(int id, LogType type) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CHECK_LOG_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
 		statement.setInt(1, id);
-		statement.setString(2, region.name());
-		statement.setString(3, type.name());
+		statement.setString(2, type.name());
 		ResultSet results = statement.executeQuery();
 		return results.first();
 	}

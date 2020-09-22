@@ -30,7 +30,7 @@ public class MainController extends HttpServlet
 			{
 				try(Connection connection = Database.getDataSource().getConnection())
 				{
-					req.setAttribute("news", new NewsDao(connection, false).getUnreadNews(UserUtils.getUser(req)));
+					req.setAttribute("news", new NewsDao(connection, false).getUnreadNews(UserUtils.getUserNation(req)));
 				}
 				catch(SQLException e)
 				{

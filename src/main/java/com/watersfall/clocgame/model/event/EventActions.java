@@ -2,7 +2,7 @@ package com.watersfall.clocgame.model.event;
 
 
 import com.watersfall.clocgame.model.effects.KillTroops;
-import com.watersfall.clocgame.model.nation.Modifiers;
+import com.watersfall.clocgame.model.modifier.Modifiers;
 import lombok.Getter;
 
 public enum EventActions

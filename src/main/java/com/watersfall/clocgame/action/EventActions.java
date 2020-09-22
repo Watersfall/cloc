@@ -3,7 +3,7 @@ package com.watersfall.clocgame.action;
 import com.watersfall.clocgame.dao.EventDao;
 import com.watersfall.clocgame.dao.ModifierDao;
 import com.watersfall.clocgame.model.event.Event;
-import com.watersfall.clocgame.model.nation.Modifiers;
+import com.watersfall.clocgame.model.modifier.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 
@@ -52,7 +52,7 @@ public class EventActions
 			{
 				return Responses.noEvent();
 			}
-			else if(nation.getArmy().getSize() < 5)
+			else if(nation.getStats().getArmySize() < 5)
 			{
 				return Responses.noTroopsForAttack();
 			}
@@ -62,12 +62,12 @@ public class EventActions
 				eventDao.deleteEventById(event.getId());
 				ModifierDao modifierDao = new ModifierDao(nation.getConn(), true);
 				modifierDao.createModifier(nation.getId(), event.getCityId(), Modifiers.STRIKE_SENT_ARMY);
-				nation.getDomestic().setApproval(nation.getDomestic().getApproval() - 50);
+				nation.getStats().setApproval(nation.getStats().getApproval() - 50);
 				if(Math.random() > 0.5)
 				{
 					int casualties = (int)(1 + Math.random() * 5);
-					nation.getArmy().setSize(nation.getArmy().getSize() - casualties);
-					nation.getArmy().setCasualties(nation.getArmy().getCasualties() + casualties);
+					nation.getStats().setArmySize(nation.getStats().getArmySize() - casualties);
+					nation.getStats().setCasualties(nation.getStats().getCasualties() + casualties);
 					return Responses.strikeSendArmyCasualties(casualties);
 				}
 				return Responses.strikeSendArmyNoCasualties();

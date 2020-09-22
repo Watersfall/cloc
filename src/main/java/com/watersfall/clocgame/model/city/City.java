@@ -1,9 +1,11 @@
-package com.watersfall.clocgame.model.nation;
+package com.watersfall.clocgame.model.city;
 
-import com.watersfall.clocgame.model.CitySize;
-import com.watersfall.clocgame.model.CityType;
 import com.watersfall.clocgame.model.TextKey;
-import com.watersfall.clocgame.model.Updatable;
+import com.watersfall.clocgame.model.UpdatableLongId;
+import com.watersfall.clocgame.model.factory.Factory;
+import com.watersfall.clocgame.model.modifier.Modifier;
+import com.watersfall.clocgame.model.modifier.Modifiers;
+import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.policies.Policy;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +15,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class City extends Updatable
+public class City extends UpdatableLongId
 {
 	public static final long EMPLOYMENT_MINE = 10000L;
 	public static final long EMPLOYMENT_FACTORY = 100000L;
@@ -21,7 +23,7 @@ public class City extends Updatable
 	public static final long LAND_MINE = 100L;
 	public static final long LAND_FACTORY = 500L;
 	public static final long LAND_UNIVERSITY = 750L;
-	public static final String TABLE_NAME = "cloc_cities";
+	public static final String TABLE_NAME = "cities";
 
 	private @Getter int owner;
 	private @Getter boolean capital;
@@ -45,25 +47,25 @@ public class City extends Updatable
 
 	public City(ResultSet results) throws SQLException
 	{
-		super(TABLE_NAME, results.getInt("cloc_cities.id"));
-		this.owner = results.getInt("cloc_cities.owner");
-		this.capital = results.getBoolean("cloc_cities.capital");
-		this.coastal = results.getBoolean("cloc_cities.coastal");
-		this.railroads = results.getInt("cloc_cities.railroads");
-		this.ports = results.getInt("cloc_cities.ports");
-		this.barracks = results.getInt("cloc_cities.barracks");
-		this.ironMines = results.getInt("cloc_cities.iron_mines");
-		this.coalMines = results.getInt("cloc_cities.coal_mines");
-		this.oilWells = results.getInt("cloc_cities.oil_wells");
-		this.industryCivilian = results.getInt("cloc_cities.civilian_industry");
+		super(TABLE_NAME, results.getInt("cities.id"));
+		this.owner = results.getInt("cities.owner");
+		this.capital = results.getBoolean("cities.capital");
+		this.coastal = results.getBoolean("cities.coastal");
+		this.railroads = results.getInt("cities.railroads");
+		this.ports = results.getInt("cities.ports");
+		this.barracks = results.getInt("cities.barracks");
+		this.ironMines = results.getInt("cities.iron_mines");
+		this.coalMines = results.getInt("cities.coal_mines");
+		this.oilWells = results.getInt("cities.oil_wells");
+		this.industryCivilian = results.getInt("cities.civilian_industry");
 		this.industryMilitary = results.getInt("military_industry");
-		this.industryNitrogen = results.getInt("cloc_cities.nitrogen_industry");
-		this.universities = results.getInt("cloc_cities.universities");
-		this.name = results.getString("cloc_cities.name");
-		this.type = CityType.valueOf(results.getString("cloc_cities.type"));
-		this.devastation = results.getInt("cloc_cities.devastation");
-		this.population = results.getLong("cloc_cities.population");
-		this.id = results.getInt("cloc_cities.id");
+		this.industryNitrogen = results.getInt("cities.nitrogen_industry");
+		this.universities = results.getInt("cities.universities");
+		this.name = results.getString("cities.name");
+		this.type = CityType.valueOf(results.getString("cities.type"));
+		this.devastation = results.getInt("cities.devastation");
+		this.population = results.getLong("cities.population");
+		this.id = results.getInt("cities.id");
 	}
 
 	public void setCapital(boolean capital)
