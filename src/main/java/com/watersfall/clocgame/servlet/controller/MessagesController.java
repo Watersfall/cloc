@@ -63,6 +63,11 @@ public class MessagesController extends HttpServlet
 						Util.setPaginationAttributes(req, page, "messages/received", (Util.getTotalReceivedMessages(connection, nation.getId()) / 50) + 1);
 						req.setAttribute("messages", dao.getReceivedMessagePage(nation.getId(), page));
 						req.setAttribute("sender", false);
+						Executor executor = (conn) -> {
+							new MessageDao(conn, true).markMessagesAtRead(nation.getId());
+							return null;
+						};
+						Action.doAction(executor);
 					}
 				}
 				catch(SQLException e)
