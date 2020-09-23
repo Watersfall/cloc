@@ -19,6 +19,7 @@ public class MessageDao extends Dao
 	private static final String DELETE_MESSAGE_BY_ID = "DELETE FROM messages WHERE id=? ";
 	private static final String MARK_AS_READ = "UPDATE nation_stats SET last_message=? WHERE id=? ";
 	private static final String GET_MAX_MESSAGE_ID = "SELECT MAX(id) FROM messages WHERE receiver=? ";
+	private static final String CREATE_MESSAGE = "INSERT INTO messages (sender, receiver, alliance_message, admin_message, system_message, content) VALUES (?,?,?,?,?,?)";
 
 	public MessageDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -132,5 +133,17 @@ public class MessageDao extends Dao
 		read.setLong(1, results.getLong(1));
 		read.setInt(2, nation);
 		read.execute();
+	}
+
+	public void createMessage(int sender, int receiver, String content) throws SQLException
+	{
+		PreparedStatement create = connection.prepareStatement(CREATE_MESSAGE);
+		create.setInt(1, sender);
+		create.setInt(2, receiver);
+		create.setBoolean(3, false);
+		create.setBoolean(4, false);
+		create.setBoolean(5, false);
+		create.setString(6, content);
+		create.execute();
 	}
 }

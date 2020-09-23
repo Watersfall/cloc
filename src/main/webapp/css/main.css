@@ -460,6 +460,14 @@ main {
 	text-align: left;
 }
 
+textarea {
+	width: calc(100% - 0.5rem - 2px);
+	height: 6rem;
+	padding: 0.25rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
 .subtile .title {
 	color: var(--text-color);
 	background-color: var(--lightest-color);

@@ -417,6 +417,13 @@ function nation(id, attribute, value)
 	ajax(url, params);
 }
 
+function nationMessage(id, attribute, value)
+{
+	let url = "/nation/" + id;
+	let params = "action=" + attribute + "&message=" + value;
+	ajax(url, params);
+}
+
 function mark(type)
 {
 	let url = "/main/";

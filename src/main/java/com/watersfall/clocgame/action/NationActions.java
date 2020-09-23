@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.action;
 
+import com.watersfall.clocgame.dao.MessageDao;
 import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
@@ -162,6 +163,32 @@ public class NationActions
 			dao.createNews(sender.getId(), receiver.getId(), News.createMessage(News.ID_DECLARE_WAR, sender.getNationUrl()));
 			sender.declareWar(receiver, name);
 			return Responses.war();
+		}
+	}
+
+	public static String sendMessage(Nation sender, Nation receiver, String message) throws SQLException
+	{
+		if(sender.getId() == receiver.getId())
+		{
+			return Responses.genericError();
+		}
+		else if(message.length() > 2048)
+		{
+			return Responses.tooLong();
+		}
+		else if(message.length() <= 0)
+		{
+			return Responses.genericError();
+		}
+		else if(Util.checkSpamAndInsertIfNot(SpamAction.MESSAGE, sender.getId(), sender.getConn()))
+		{
+			return Responses.noSpam();
+		}
+		else
+		{
+			MessageDao dao = new MessageDao(sender.getConn(), true);
+			dao.createMessage(sender.getId(), receiver.getId(), message);
+			return Responses.sent();
 		}
 	}
 }

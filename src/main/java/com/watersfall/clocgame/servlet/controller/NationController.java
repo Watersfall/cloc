@@ -9,6 +9,7 @@ import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
+import com.watersfall.clocgame.util.Security;
 import com.watersfall.clocgame.util.UserUtils;
 import com.watersfall.clocgame.util.Util;
 
@@ -80,7 +81,7 @@ public class NationController extends HttpServlet
 			}
 			NationDao dao = new NationDao(conn, true);
 			Nation sender = dao.getNationById(idSender);
-			Nation receiver =dao.getNationById(idReceiver);
+			Nation receiver = dao.getNationById(idReceiver);
 			String response;
 			switch(action)
 			{
@@ -131,6 +132,10 @@ public class NationController extends HttpServlet
 					break;
 				case "air_land":
 					response = WarActions.airBombTroops(sender, receiver);
+					break;
+				case "message":
+					String content = Security.sanitize(req.getParameter("message"));
+					response = NationActions.sendMessage(sender, receiver, content);
 					break;
 				default:
 					response = Responses.genericError();

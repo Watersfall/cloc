@@ -232,6 +232,15 @@
 							<button onclick="nation(${nation.id}, 'sendnitrogen', document.getElementById('send_nitrogen').value)" class="blue">Send</button>
 						</label>
 					</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Message</div>
+							<textarea id="message"></textarea>
+							<div class="centered">
+								<button class="blue" onclick="nationMessage(${nation.id}, 'message', document.getElementById('message').value);">Send</button>
+							</div>
+						</label>
+					</div>
 				</div>
 				<div class="tile">
 					<div class="title">War</div>

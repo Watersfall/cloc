@@ -9,8 +9,8 @@ public enum SpamAction
 	SEND_INVITE(3, 30 * 1000),
 	UPDATE_FLAG(1, 12 * 60 * 60 * 1000),
 	UPDATE_PORTRAIT(1, 12 * 60 * 60 * 1000),
-	UPDATE_ALLIANCE_FLAG(1, 6 * 60 * 60 * 1000);
-
+	UPDATE_ALLIANCE_FLAG(1, 6 * 60 * 60 * 1000),
+	MESSAGE(3, 30 * 1000);
 
 	private @Getter int amount;
 	private @Getter long time;
