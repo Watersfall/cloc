@@ -417,6 +417,13 @@ function nation(id, attribute, value)
 	ajax(url, params);
 }
 
+function nationEquipment(id, equipment, value)
+{
+	let url = "/nation/" + id;
+	let params = "action=equipment&equipment=" + equipment + "&amount=" + value;
+	ajax(url, params);
+}
+
 function nationMessage(id, attribute, value)
 {
 	let url = "/nation/" + id;

@@ -5,6 +5,7 @@ import com.watersfall.clocgame.dao.NewsDao;
 import com.watersfall.clocgame.model.SpamAction;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.news.News;
+import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Util;
 
@@ -188,6 +189,32 @@ public class NationActions
 		{
 			MessageDao dao = new MessageDao(sender.getConn(), true);
 			dao.createMessage(sender.getId(), receiver.getId(), message);
+			return Responses.sent();
+		}
+	}
+
+	public static String sendEquipment(Nation sender, Nation receiver, Producibles equipment, int amount) throws SQLException
+	{
+		if(sender.getId() == receiver.getId())
+		{
+			return Responses.genericError();
+		}
+		else if(amount <= 0)
+		{
+			return Responses.negative();
+		}
+		else if(sender.getProducibles().getProducible(equipment) < amount)
+		{
+			return Responses.notEnough();
+		}
+		else if(Util.checkSpamAndInsertIfNot(SpamAction.SEND_RESOURCE, sender.getId(), sender.getConn()))
+		{
+			return Responses.noSpam();
+		}
+		else
+		{
+			sender.getProducibles().setProducible(equipment, sender.getProducibles().getProducible(equipment) - amount);
+			receiver.getProducibles().setProducible(equipment, receiver.getProducibles().getProducible(equipment) + amount);
 			return Responses.sent();
 		}
 	}

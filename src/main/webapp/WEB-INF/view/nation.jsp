@@ -1,5 +1,6 @@
 <%@ include file="includes/top.jsp" %>
 <%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
+<%@ page import="com.watersfall.clocgame.model.producible.Producibles" %>
 <%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
 	<div class="tiling">
 		<div class="column">
@@ -230,6 +231,20 @@
 							<div class="title">Send Nitrogen</div>
 							<input type="number" id="send_nitrogen"/>
 							<button onclick="nation(${nation.id}, 'sendnitrogen', document.getElementById('send_nitrogen').value)" class="blue">Send</button>
+						</label>
+					</div>
+					<div class="subtile">
+						<label>
+							<div class="title">Send Equipment</div>
+							<input type="number" id="send_equipment"/>
+							<select id="equipment">
+								<c:forEach var="equipment" items="${Producibles.values()}">
+									<c:if test="${home.producibles.getProducible(equipment) > 0}">
+										<option value="${equipment.name()}">${equipment.name()} - (${home.producibles.getProducible(equipment)} available)</option>
+									</c:if>
+								</c:forEach>
+							</select>
+							<button onclick="nationEquipment(${nation.id}, document.getElementById('equipment').value, document.getElementById('send_equipment').value)" class="blue">Send</button>
 						</label>
 					</div>
 					<div class="subtile">

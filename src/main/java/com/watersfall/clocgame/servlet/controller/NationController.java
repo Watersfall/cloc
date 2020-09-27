@@ -7,6 +7,7 @@ import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.Security;
@@ -136,6 +137,10 @@ public class NationController extends HttpServlet
 				case "message":
 					String content = Security.sanitize(req.getParameter("message"));
 					response = NationActions.sendMessage(sender, receiver, content);
+					break;
+				case "equipment":
+					Producibles producible = Producibles.valueOf(req.getParameter("equipment"));
+					response = NationActions.sendEquipment(sender, receiver, producible, (int)amount);
 					break;
 				default:
 					response = Responses.genericError();
