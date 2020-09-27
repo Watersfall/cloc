@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <head>
 	<title>&ltCLOC - Online Nation Sim</title>
-	<c:set value="13" var="version"/>
+	<c:set value="14" var="version"/>
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css?v=${version}">
 	<script src="${pageContext.request.contextPath}/js/main.js?v=${version}"></script>
 	<meta name="description" content="${description}">
@@ -66,6 +66,9 @@
 							</li>
 							<li>
 								<a href="${pageContext.request.contextPath}/technology/tree">Technology</a>
+							</li>
+							<li>
+								<a href="${pageContext.request.contextPath}/military/">Military</a>
 							</li>
 							<li>
 								<a href="${pageContext.request.contextPath}/alignment/">Alignment</a>

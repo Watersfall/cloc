@@ -32,7 +32,8 @@ public interface TextKey
 		CONSCRIPTION(" from recent conscription"),
 		OVER_MAX_MANPOWER(" from being over manpower limit"),
 		FORTIFICATION(" from fortification construction"),
-		NET(" net growth");
+		NET(" net growth"),
+		AIR_INCREASE(" from pilot training");
 
 		private @Getter String text;
 		Growth(String text)

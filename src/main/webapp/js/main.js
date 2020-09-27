@@ -490,6 +490,12 @@ function alignmentTransaction(alignment, producible, action)
 {
 	let url = "/alignment/" + alignment;
 	let params = "producible=" + producible + "&action=" + action;
-	console.log(url);
 	ajax(url, params);
+}
+
+function setAirforceSize(type, amount)
+{
+	let url = "/military/";
+	let param = "type=" + type + "&amount=" + amount;
+	ajax(url, param);
 }

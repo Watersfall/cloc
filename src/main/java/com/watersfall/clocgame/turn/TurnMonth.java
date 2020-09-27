@@ -189,6 +189,8 @@ public class TurnMonth implements Runnable
 						nation.getStats().setReputation(Alignments.CENTRAL_POWERS, cGain + currentC);
 					}
 
+					nation.getStats().setCurrentFighters(nation.getFighterChange() + nation.getStats().getCurrentFighters());
+
 
 					PreparedStatement statement = connection.prepareStatement("INSERT INTO nation_history " +
 							"(nation_id, month, gdp, growth, population, airforce, navy, army, casualties) " +

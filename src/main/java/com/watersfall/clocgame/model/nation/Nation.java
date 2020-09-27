@@ -416,11 +416,7 @@ public class Nation
 	public LinkedHashMap<TextKey, Long> getUsedManpower()
 	{
 		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
-		long airforce = 0;
-		for(Producibles producible : Producibles.getProduciblesByCategories(ProducibleCategory.FIGHTER_PLANE, ProducibleCategory.BOMBER_PLANE, ProducibleCategory.RECON_PLANE))
-		{
-			airforce += this.producibles.getProducible(producible);
-		}
+		long airforce = stats.getCurrentBombers() + stats.getCurrentFighters() + stats.getCurrentRecon();
 		airforce *= 50;
 		long army = this.stats.getArmySize();
 		army *= 1000;
@@ -973,6 +969,55 @@ public class Nation
 		}
 		return (long)total;
 	}
+	
+	public LinkedHashMap<Producibles, Integer> getActivePlanes(ProducibleCategory category, int allowed)
+	{
+		LinkedHashMap<Producibles, Integer> map = new LinkedHashMap<>();
+		ArrayList<Producibles> list = Producibles.getProduciblesForCategory(category);
+		for(Producibles producible : list)
+		{
+			if(allowed > 0)
+			{
+				int count = this.getProducibles().getProducible(producible);
+				if(count > 0)
+				{
+					if(count > allowed)
+					{
+						map.put(producible, allowed);
+						break;
+					}
+					else
+					{
+						map.put(producible, count);
+						allowed -= count;
+					}
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		return map;
+	}
+
+	public LinkedHashMap<Producibles, Integer> getActiveFighters()
+	{
+		int allowed = stats.getCurrentFighters();
+		return getActivePlanes(ProducibleCategory.FIGHTER_PLANE, allowed);
+	}
+
+	public LinkedHashMap<Producibles, Integer> getActiveBombers()
+	{
+		int allowed = stats.getCurrentBombers();
+		return getActivePlanes(ProducibleCategory.BOMBER_PLANE, allowed);
+	}
+
+	public LinkedHashMap<Producibles, Integer> getActiveRecon()
+	{
+		int allowed = stats.getCurrentRecon();
+		return getActivePlanes(ProducibleCategory.RECON_PLANE, allowed);
+	}
 
 	/**
 	 * Calculates the power of an army based on it's stats.getArmySize(), technology level, stats.getArmyTraining(), and artillery
@@ -1484,6 +1529,11 @@ public class Nation
 			case MAX_FORTIFICATION:
 				fortification *= 2;
 		}
+		int airforce = this.getFighterChange() + this.getBomberChange() + this.getReconChange();
+		if(airforce > 0)
+		{
+			map.put(TextKey.Growth.AIR_INCREASE, (long)(airforce / 50.0));
+		}
 		map.put(TextKey.Growth.FACTORIES, factories);
 		map.put(TextKey.Growth.MILITARY, military);
 		map.put(TextKey.Growth.OVER_MAX_MANPOWER, overMaxManpower);
@@ -1666,6 +1716,75 @@ public class Nation
 			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
 		}
 		return map;
+	}
+
+	public int getFighterChange()
+	{
+		int max = this.stats.getMaxFighters();
+		int fighterCount = (int)Math.min(this.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE), this.stats.getCurrentFighters());
+		if(max <= -1)
+		{
+			max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE);
+		}
+		if(fighterCount >= max)
+		{
+			return max - fighterCount;
+		}
+		else
+		{
+			int increase = (int)(max / 10.0);
+			if(increase + fighterCount > max)
+			{
+				increase = max - fighterCount;
+			}
+			return increase;
+		}
+	}
+
+	public int getBomberChange()
+	{
+		int max = this.stats.getMaxBombers();
+		int bomberCount = (int)this.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE);
+		if(max <= -1)
+		{
+			max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE);
+		}
+		if(bomberCount >= max)
+		{
+			return max - bomberCount;
+		}
+		else
+		{
+			int increase = (int)(max / 10.0);
+			if(increase + bomberCount > max)
+			{
+				increase = max - bomberCount;
+			}
+			return increase;
+		}
+	}
+
+	public int getReconChange()
+	{
+		int max = this.stats.getMaxRecon();
+		int reconCount = (int)this.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE);
+		if(max <= -1)
+		{
+			max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE);
+		}
+		if(reconCount >= max)
+		{
+			return max - reconCount;
+		}
+		else
+		{
+			int increase = (int)(max / 10.0);
+			if(increase + reconCount > max)
+			{
+				increase = max - reconCount;
+			}
+			return increase;
+		}
 	}
 
 	public boolean hasUnreadNews()

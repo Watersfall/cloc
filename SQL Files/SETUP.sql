@@ -62,6 +62,12 @@ CREATE TABLE nation_stats(
 	alignment ENUM('NEUTRAL', 'ENTENTE', 'CENTRAL_POWERS') DEFAULT 'NEUTRAL',
 	entente_reputation INT DEFAULT 0,
 	central_powers_reputation INT DEFAULT 0,
+	max_fighters INT DEFAULT -1,
+	max_bombers INT DEFAULT -1,
+	max_recon INT DEFAULT -1,
+	current_fighters INT DEFAULT 0,
+	current_bombers INT DEFAULT 0,
+	current_recon INT DEFAULT 0,
 	FOREIGN KEY fk_stats (id) REFERENCES login (id) ON DELETE CASCADE
 );
 

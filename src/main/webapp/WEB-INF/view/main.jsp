@@ -274,18 +274,36 @@
 						<tr>
 							<td onclick="toggleUITab('fighters')" class="dropdown_parent">
 								<a href="#">
-									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> Planes
+									<fmt:formatNumber value="${home.stats.currentFighters}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE) - home.stats.currentFighters}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
 								<div class="dropdown_2_left toggleable-default-off" id="fighters">
 									<ul>
+										<c:set var="currentFighters" value="${home.activeFighters}"/>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE)}" var="producible">
 											<c:if test="${home.producibles.getProducible(producible) > 0}">
 												<li>
-													<fmt:formatNumber value="${home.producibles.getProducible(producible)}"/>${' '.concat(producible.name())}
+													${producible.name()}
+													<ul>
+														<li><fmt:formatNumber value="${currentFighters.getOrDefault(producible, 0)}"/> Active</li>
+														<li><fmt:formatNumber value="${home.producibles.getProducible(producible) - currentFighters.getOrDefault(producible, 0)}"/> Reserve</li>
+													</ul>
 												</li>
 											</c:if>
 										</c:forEach>
+										<li>
+											Active Fighters increase by
+											<fmt:formatNumber value="${home.fighterChange}"/>
+											each month until reaching
+											<c:choose>
+												<c:when test="${home.stats.maxFighters < 0}">
+													<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE)}"/>
+												</c:when>
+												<c:otherwise>
+													<fmt:formatNumber value="${home.stats.maxFighters}"/>
+												</c:otherwise>
+											</c:choose>
+										</li>
 									</ul>
 								</div>
 							</td>
@@ -313,18 +331,36 @@
 						<tr>
 							<td onclick="toggleUITab('bombers')" class="dropdown_parent">
 								<a href="#">
-									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE)}"/> Planes
+									<fmt:formatNumber value="${home.stats.currentBombers}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE) - home.stats.currentBombers}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
 								<div class="dropdown_2_left toggleable-default-off" id="bombers">
 									<ul>
+										<c:set var="currentBombers" value="${home.activeBombers}"/>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE)}" var="producible">
 											<c:if test="${home.producibles.getProducible(producible) > 0}">
 												<li>
-													<fmt:formatNumber value="${home.producibles.getProducible(producible)}"/>${' '.concat(producible.name())}
+														${producible.name()}
+													<ul>
+														<li><fmt:formatNumber value="${currentBombers.getOrDefault(producible, 0)}"/> Active</li>
+														<li><fmt:formatNumber value="${home.producibles.getProducible(producible) - currentBombers.getOrDefault(producible, 0)}"/> Reserve</li>
+													</ul>
 												</li>
 											</c:if>
 										</c:forEach>
+										<li>
+											Active Bombers increase by
+											<fmt:formatNumber value="${home.bomberChange}"/>
+											each month until reaching
+											<c:choose>
+												<c:when test="${home.stats.maxBombers < 0}">
+													<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE)}"/>
+												</c:when>
+												<c:otherwise>
+													<fmt:formatNumber value="${home.stats.maxBombers}"/>
+												</c:otherwise>
+											</c:choose>
+										</li>
 									</ul>
 								</div>
 							</td>
@@ -352,18 +388,36 @@
 						<tr>
 							<td onclick="toggleUITab('recons')" class="dropdown_parent">
 								<a href="#">
-									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE)}"/> Planes
+									<fmt:formatNumber value="${home.stats.currentRecon}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE) - home.stats.currentRecon}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
 								<div class="dropdown_2_left toggleable-default-off" id="recons">
 									<ul>
+										<c:set var="currentRecon" value="${home.activeRecon}"/>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE)}" var="producible">
 											<c:if test="${home.producibles.getProducible(producible) > 0}">
 												<li>
-													<fmt:formatNumber value="${home.producibles.getProducible(producible)}"/>${' '.concat(producible.name())}
+														${producible.name()}
+													<ul>
+														<li><fmt:formatNumber value="${currentRecon.getOrDefault(producible, 0)}"/> Active</li>
+														<li><fmt:formatNumber value="${home.producibles.getProducible(producible) - currentRecon.getOrDefault(producible, 0)}"/> Reserve</li>
+													</ul>
 												</li>
 											</c:if>
 										</c:forEach>
+										<li>
+											Active Recon Planes increase by
+											<fmt:formatNumber value="${home.reconChange}"/>
+											each month until reaching
+											<c:choose>
+												<c:when test="${home.stats.maxRecon < 0}">
+													<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE)}"/>
+												</c:when>
+												<c:otherwise>
+													<fmt:formatNumber value="${home.stats.maxRecon}"/>
+												</c:otherwise>
+											</c:choose>
+										</li>
 									</ul>
 								</div>
 							</td>

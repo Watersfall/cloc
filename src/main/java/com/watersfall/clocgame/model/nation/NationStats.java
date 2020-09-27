@@ -13,7 +13,7 @@ public class NationStats extends UpdatableIntId
 	private @Getter long lastMessage, lastNews, lastLogin, lostManpower, casualties;
 	private @Getter int recentConscription, recentDeconscription, land, monthsInFamine, armySize, armyTraining, fortification,
 						ententeReputation, centralPowersReputation, rebels, economic, government, approval, stability,
-						warProtection;
+						warProtection, maxFighters, maxBombers, maxRecon, currentFighters, currentBombers, currentRecon;
 	private @Getter double gdp, growth, budget, iron, coal, oil, food, steel, nitrogen, research;
 	private @Getter Region region;
 	private @Getter Alignments alignment;
@@ -52,6 +52,12 @@ public class NationStats extends UpdatableIntId
 		this.armyTraining = results.getInt("army_training");
 		this.casualties = results.getLong("casualties");
 		this.warProtection = results.getInt("war_protection");
+		this.maxFighters = results.getInt("max_fighters");
+		this.maxBombers = results.getInt("max_bombers");
+		this.maxRecon = results.getInt("max_recon");
+		this.currentFighters = results.getInt("current_fighters");
+		this.currentBombers = results.getInt("current_bombers");
+		this.currentRecon = results.getInt("current_recon");
 	}
 
 	public void setEconomic(int economic)
@@ -336,5 +342,65 @@ public class NationStats extends UpdatableIntId
 			warProtection = 127;
 		this.setField("war_protection", warProtection);
 		this.warProtection = warProtection;
+	}
+	
+	public void setMaxFighters(int maxFighters)
+	{
+		if(maxFighters > 2000000000)
+			maxFighters = 2000000000;
+		else if(maxFighters < -1)
+			maxFighters = -1;
+		this.maxFighters = maxFighters;
+		this.setField("max_fighters", maxFighters);
+	}
+
+	public void setMaxBombers(int maxBombers)
+	{
+		if(maxBombers > 2000000000)
+			maxBombers = 2000000000;
+		else if(maxBombers < -1)
+			maxBombers = -1;
+		this.maxBombers = maxBombers;
+		this.setField("max_bombers", maxBombers);
+	}
+
+	public void setMaxRecon(int maxRecon)
+	{
+		if(maxRecon > 2000000000)
+			maxRecon = 2000000000;
+		else if(maxRecon < -1)
+			maxRecon = -1;
+		this.maxRecon = maxRecon;
+		this.setField("max_recon", maxRecon);
+	}
+
+	public void setCurrentFighters(int currentFighters)
+	{
+		if(currentFighters > 2000000000)
+			currentFighters = 2000000000;
+		else if(currentFighters < 0)
+			currentFighters = 0;
+		this.currentFighters = currentFighters;
+		this.setField("current_fighters", currentFighters);
+	}
+
+	public void setCurrentBombers(int currentBombers)
+	{
+		if(currentBombers > 2000000000)
+			currentBombers = 2000000000;
+		else if(currentBombers < 0)
+			currentBombers = 0;
+		this.currentBombers = currentBombers;
+		this.setField("current_bombers", currentBombers);
+	}
+
+	public void setCurrentRecon(int currentRecon)
+	{
+		if(currentRecon > 2000000000)
+			currentRecon = 2000000000;
+		else if(currentRecon < 0)
+			currentRecon = 0;
+		this.currentRecon = currentRecon;
+		this.setField("current_recon", currentRecon);
 	}
 }

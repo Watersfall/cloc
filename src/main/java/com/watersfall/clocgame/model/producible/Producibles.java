@@ -54,6 +54,7 @@ public enum Producibles
 				list.add(producibles);
 			}
 		}
+		list.sort((p1, p2) -> (int) (p2.getProducible().getProductionICCost() - p1.getProducible().getProductionICCost()));
 		return list;
 	}
 

@@ -1,9 +1,7 @@
 package com.watersfall.clocgame.servlet.controller;
 
 import com.watersfall.clocgame.action.Action;
-import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
-import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Executor;
 import com.watersfall.clocgame.util.Security;
@@ -59,8 +57,6 @@ public class LoginController extends HttpServlet
 				{
 					Executor executor = (connection) -> {
 						req.getSession().setAttribute("user", results.getInt("id"));
-						NationDao dao = new NationDao(connection, true);
-						Nation nation = dao.getNationById(results.getInt("id"));
 						return null;
 					};
 					Action.doAction(executor);
