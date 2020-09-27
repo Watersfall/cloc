@@ -174,6 +174,7 @@ public class WarActions
 				}
 			}
 		}
+		nation.fixCurrentPlanes();
 		return totalLosses;
 	}
 

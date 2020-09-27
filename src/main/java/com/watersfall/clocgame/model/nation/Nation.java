@@ -1792,6 +1792,25 @@ public class Nation
 		return this.lastMessage > stats.getLastNews();
 	}
 
+	public void fixCurrentPlanes()
+	{
+		int fighters = (int)this.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE);
+		int bombers = (int)this.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE);
+		int recon = (int)this.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE);
+		if(fighters < this.getStats().getCurrentFighters())
+		{
+			this.getStats().setCurrentFighters(fighters);
+		}
+		if(bombers < this.getStats().getCurrentBombers())
+		{
+			this.getStats().setCurrentBombers(bombers);
+		}
+		if(recon < this.getStats().getCurrentRecon())
+		{
+			this.getStats().setCurrentRecon(recon);
+		}
+	}
+
 	public void update(Connection conn) throws SQLException
 	{
 		if(this.cities != null)

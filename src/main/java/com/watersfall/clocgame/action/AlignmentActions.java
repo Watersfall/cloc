@@ -73,6 +73,7 @@ public class AlignmentActions
 			dao.updateProducible(purchase, alignment, alignment.getTransactionAmount(purchase));
 			nation.getStats().setReputation(alignment.getAlignment(), nation.getStats().getReputation(alignment.getAlignment()) + (int)cost);
 			nation.getProducibles().setProducible(purchase, nation.getProducibles().getProducible(purchase) - alignment.getTransactionAmount(purchase));
+			nation.fixCurrentPlanes();
 			return Responses.sent();
 		}
 	}

@@ -215,6 +215,7 @@ public class NationActions
 		{
 			sender.getProducibles().setProducible(equipment, sender.getProducibles().getProducible(equipment) - amount);
 			receiver.getProducibles().setProducible(equipment, receiver.getProducibles().getProducible(equipment) + amount);
+			sender.fixCurrentPlanes();
 			return Responses.sent();
 		}
 	}
