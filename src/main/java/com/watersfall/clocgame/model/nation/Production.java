@@ -19,7 +19,6 @@ public class Production extends UpdatableLongId
 	private @Getter int progress;
 	private HashMap<String, Double> requiredResources;
 	private @Getter HashMap<String, Double> givenResources;
-	private Double ic = null;
 
 	public Production(int id, int owner, HashMap<Integer, Factory> factories, String production, int progress, HashMap<String, Double> givenResources)
 	{
@@ -79,6 +78,7 @@ public class Production extends UpdatableLongId
 				hasAllResources = false;
 			}
 		}
+		Double ic = null;
 		if(!hasAllResources)
 		{
 			ic = 0.0;

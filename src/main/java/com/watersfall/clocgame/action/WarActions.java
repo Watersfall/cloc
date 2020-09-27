@@ -2,13 +2,13 @@ package com.watersfall.clocgame.action;
 
 import com.watersfall.clocgame.dao.LogDao;
 import com.watersfall.clocgame.dao.NewsDao;
-import com.watersfall.clocgame.model.LogType;
 import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.model.producible.IFighterPower;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import com.watersfall.clocgame.model.producible.Producibles;
+import com.watersfall.clocgame.model.war.LogType;
 import com.watersfall.clocgame.text.Responses;
 import com.watersfall.clocgame.util.Time;
 
