@@ -119,19 +119,13 @@
 						<td colspan="2">Active Personnel</td>
 					</tr>
 					<tr>
-						<td colspan="2"><fmt:formatNumber value="${nation.stats.armySize}"/>k Soldiers</td>
-					</tr>
-					<tr>
-						<td colspan="2">Training</td>
-					</tr>
-					<tr>
-						<td colspan="2"><fmt:formatNumber value="${nation.stats.armyTraining}"/>%</td>
+						<td colspan="2"><fmt:formatNumber value="${nation.armySize}"/> Soldiers</td>
 					</tr>
 					<tr>
 						<td>Equipment</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${nation.stats.armySize * 1000}"/> requested</td>
+						<td><fmt:formatNumber value="${nation.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${nation.armySize}"/> requested</td>
 					</tr>
 					<tr>
 						<td colspan="2">Fortification</td>

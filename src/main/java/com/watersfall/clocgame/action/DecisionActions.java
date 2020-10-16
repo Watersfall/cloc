@@ -202,7 +202,7 @@ public class DecisionActions
 
 	//<editor-fold desc="Military Policies">
 	public static String conscript(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
-	{
+	{/*
 		if(nation.getFreeManpower() < 2000)
 		{
 			return Responses.noManpower();
@@ -212,11 +212,12 @@ public class DecisionActions
 			nation.getStats().setArmySize(nation.getStats().getArmySize() + 2);
 			nation.getStats().setRecentConscription(nation.getStats().getRecentConscription() + 1);
 			return Responses.conscript();
-		}
+		}*/
+		return null;
 	}
 
 	public static String deconscript(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
-	{
+	{/*
 		if(nation.getStats().getArmySize() <= 5)
 		{
 			return Responses.noTroops();
@@ -226,11 +227,12 @@ public class DecisionActions
 			nation.getStats().setArmySize(nation.getStats().getArmySize() - 2);
 			nation.getStats().setRecentDeconscription(nation.getStats().getRecentDeconscription() + 1);
 			return Responses.deconscript();
-		}
+		}*/
+		return null;
 	}
 
 	public static String train(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
-	{
+	{/*
 		long cost = nation.getDecisionCost(Decision.TRAIN);
 		if(nation.getStats().getBudget() < cost)
 		{
@@ -245,11 +247,12 @@ public class DecisionActions
 			nation.getStats().setArmyTraining(nation.getStats().getArmyTraining() + 5);
 			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			return Responses.train();
-		}
+		}*/
+		return null;
 	}
 
 	public static String fortify(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException, CityNotFoundException
-	{
+	{/*
 		long cost = nation.getDecisionCost(Decision.FORTIFY);
 		if(nation.getStats().getSteel() < cost)
 		{
@@ -265,7 +268,8 @@ public class DecisionActions
 			nation.getStats().setFortification(nation.getStats().getFortification() + increase);
 			nation.getStats().setSteel(nation.getStats().getSteel() - cost);
 			return Responses.fortified();
-		}
+		}*/
+		return null;
 	}
 	//</editor-fold>
 }

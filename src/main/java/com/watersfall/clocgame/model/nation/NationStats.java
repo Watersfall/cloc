@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class NationStats extends UpdatableIntId
 {
 	private @Getter long lastMessage, lastNews, lastLogin, lostManpower, casualties;
-	private @Getter int recentConscription, recentDeconscription, land, monthsInFamine, armySize, armyTraining, fortification,
+	private @Getter int recentConscription, recentDeconscription, land, monthsInFamine, fortification,
 						ententeReputation, centralPowersReputation, rebels, economic, government, approval, stability,
 						warProtection, maxFighters, maxBombers, maxRecon, currentFighters, currentBombers, currentRecon;
 	private @Getter double gdp, growth, budget, iron, coal, oil, food, steel, nitrogen, research;
@@ -48,8 +48,6 @@ public class NationStats extends UpdatableIntId
 		this.alignment = Alignments.valueOf(results.getString("alignment"));
 		this.ententeReputation = results.getInt("entente_reputation");
 		this.centralPowersReputation = results.getInt("central_powers_reputation");
-		this.armySize = results.getInt("army_size");
-		this.armyTraining = results.getInt("army_training");
 		this.casualties = results.getLong("casualties");
 		this.warProtection = results.getInt("war_protection");
 		this.maxFighters = results.getInt("max_fighters");
@@ -314,24 +312,6 @@ public class NationStats extends UpdatableIntId
 			casualties = 100000000000000L;
 		this.setField("casualties", casualties);
 		this.casualties = casualties;
-	}
-
-	public void setArmySize(int size)
-	{
-		if(size < 0)
-			size = 0;
-		this.setField("army_size", size);
-		this.armySize = size;
-	}
-
-	public void setArmyTraining(int training)
-	{
-		if(training < 0)
-			training = 0;
-		else if (training > 100)
-			training = 100;
-		this.setField("army_training", training);
-		this.armyTraining = training;
 	}
 
 	public void setWarProtection(int warProtection)

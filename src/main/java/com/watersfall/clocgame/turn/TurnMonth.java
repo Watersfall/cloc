@@ -2,6 +2,7 @@ package com.watersfall.clocgame.turn;
 
 import com.watersfall.clocgame.action.EventActions;
 import com.watersfall.clocgame.dao.AlignmentDao;
+import com.watersfall.clocgame.dao.ArmyDao;
 import com.watersfall.clocgame.dao.EventDao;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
@@ -12,10 +13,13 @@ import com.watersfall.clocgame.model.alignment.Alignments;
 import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.event.Events;
+import com.watersfall.clocgame.model.military.army.Army;
+import com.watersfall.clocgame.model.military.army.ArmyEquipment;
+import com.watersfall.clocgame.model.military.army.Battalion;
 import com.watersfall.clocgame.model.modifier.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationStats;
-import com.watersfall.clocgame.model.policies.Policy;
+import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.schedulers.DayScheduler;
 import com.watersfall.clocgame.util.Time;
@@ -26,6 +30,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TurnMonth implements Runnable
 {
@@ -93,10 +98,6 @@ public class TurnMonth implements Runnable
 					/*
 					 ** Military
 					 */
-					if(nation.getPolicy().getEconomy() != Policy.WAR_ECONOMY)
-					{
-						stats.setArmyTraining(nation.getStats().getArmyTraining() - 1);
-					}
 					stats.setWarProtection(stats.getWarProtection() - 1);
 
 					if(nation.isAtWar())
@@ -111,6 +112,66 @@ public class TurnMonth implements Runnable
 						for(City city : nation.getCities().values())
 						{
 							city.setDevastation(city.getDevastation() - ((int)(Math.random() * 5) + 5));
+						}
+					}
+
+					for(Army army : nation.getArmies())
+					{
+						if(nation.getArmyEquipmentChange().containsKey(army))
+						{
+							for(Map.Entry<ProducibleCategory, Integer> entry : nation.getArmyEquipmentChange().get(army).entrySet())
+							{
+								int gain = nation.getArmyEquipmentChange().get(army).get(entry.getKey());
+								if(entry.getValue() > 0)
+								{
+									for(Producibles producible : Producibles.getProduciblesForCategory(entry.getKey()))
+									{
+										if(gain <= 0)
+										{
+											break;
+										}
+										for(Battalion battalion : army.getBattalions())
+										{
+											if(nation.getProducibles().getProducible(producible) > 0)
+											{
+												int g = Math.min(gain, battalion.getRequiredEquipment().getOrDefault(producible.getProducible().getCategory(), 0));
+												ArmyEquipment equipment = null;
+												for(ArmyEquipment eq : battalion.getEquipment())
+												{
+													if(eq.getEquipment() == producible)
+													{
+														equipment = eq;
+													}
+												}
+												if(equipment != null)
+												{
+													equipment.setField("amount", equipment.getAmount() + g);
+												}
+												else
+												{
+													new ArmyDao(connection, true).createEquipment(battalion.getId(), producible, g);
+												}
+												nation.getProducibles().setProducible(producible, nation.getProducibles().getProducible(producible) - g);
+												gain -= g;
+											}
+										}
+									}
+								}
+							}
+						}
+						if(nation.getArmyManpowerChange().containsKey(army))
+						{
+							int gain = nation.getArmyManpowerChange().get(army);
+							for(Battalion battalion : army.getBattalions())
+							{
+								if(gain <= 0)
+								{
+									break;
+								}
+								int g = Math.min(gain, battalion.getNeededManpower());
+								battalion.setField("size", battalion.getSize() + g);
+								gain -= g;
+							}
 						}
 					}
 
@@ -202,7 +263,7 @@ public class TurnMonth implements Runnable
 					statement.setLong(5, nation.getTotalPopulation());
 					statement.setLong(6, 0L);
 					statement.setLong(7, 0L);
-					statement.setInt(8, stats.getArmySize());
+					statement.setInt(8, nation.getArmySize());
 					statement.setLong(9, stats.getCasualties());
 					statement.execute();
 

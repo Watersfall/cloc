@@ -33,7 +33,7 @@ public class TurnDay implements Runnable
 				try
 				{
 					nation.getStats().setBudget(nation.getStats().getBudget() + nation.getBudgetChange());
-					for(Integer cityId : nation.getCities().keySet())
+					for(Long cityId : nation.getCities().keySet())
 					{
 						City city = nation.getCities().get(cityId);
 						city.setPopulation(city.getPopulation()

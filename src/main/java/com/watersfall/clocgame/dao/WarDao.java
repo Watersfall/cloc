@@ -142,15 +142,15 @@ public class WarDao extends Dao
 		War war = new War(results.getInt("wars.id"), results);
 		if(results.getInt("login.id") == results.getInt("attacker"))
 		{
-			war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id"), results));
+			war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id")));
 			results.next();
-			war.setDefender(dao.getCosmeticNationById(results.getInt("login.id"), results));
+			war.setDefender(dao.getCosmeticNationById(results.getInt("login.id")));
 		}
 		else
 		{
-			war.setDefender(dao.getCosmeticNationById(results.getInt("login.id"), results));
+			war.setDefender(dao.getCosmeticNationById(results.getInt("login.id")));
 			results.next();
-			war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id"), results));
+			war.setAttacker(dao.getCosmeticNationById(results.getInt("login.id")));
 		}
 		if(results.getInt("winner") == war.getAttacker().getId())
 		{

@@ -6,6 +6,8 @@ import com.watersfall.clocgame.action.WarActions;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
 import com.watersfall.clocgame.model.error.Errors;
+import com.watersfall.clocgame.model.military.army.ArmyLocation;
+import com.watersfall.clocgame.model.military.army.BattlePlan;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.text.Responses;
@@ -61,6 +63,7 @@ public class NationController extends HttpServlet
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			req.setAttribute("error", Errors.NATION_DOES_NOT_EXIST);
 			req.getServletContext().getRequestDispatcher("/WEB-INF/view/error/error.jsp").forward(req, resp);
 		}
@@ -111,20 +114,22 @@ public class NationController extends HttpServlet
 					response = WarActions.sendPeace(sender, receiver);
 					break;
 				case "land_land":
-					response = WarActions.infantryBattle(sender, receiver);
+					BattlePlan attack = new BattlePlan(sender, sender.getArmies(), ArmyLocation.NATION, receiver);
+					BattlePlan defense = new BattlePlan(receiver, receiver.getArmies(), ArmyLocation.NATION, receiver);
+					response = WarActions.landBattle(attack, defense);
 					break;
 				/*case "navy":
 					response = WarActions.navyBattle(conn, sender, receiver);
-					break;*/
+					break;
 				case "air_air":
 					response = WarActions.airBattle(sender, receiver, false);
 					break;
 				case "land_city":
 					response = WarActions.cityBattle(sender, receiver);
 					break;
-				/*case "navyCity":
+				case "navyCity":
 					response = WarActions.navyBombard(conn, sender, receiver);
-					break;*/
+					break;
 				case "air_city":
 					response = WarActions.airBombCity(sender, receiver);
 					break;
@@ -133,7 +138,7 @@ public class NationController extends HttpServlet
 					break;
 				case "air_land":
 					response = WarActions.airBombTroops(sender, receiver);
-					break;
+					break;*/
 				case "message":
 					String content = Security.sanitize(req.getParameter("message"));
 					response = NationActions.sendMessage(sender, receiver, content);

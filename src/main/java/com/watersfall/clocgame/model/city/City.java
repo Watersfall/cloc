@@ -2,7 +2,6 @@ package com.watersfall.clocgame.model.city;
 
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.UpdatableLongId;
-import com.watersfall.clocgame.model.factory.Factory;
 import com.watersfall.clocgame.model.modifier.Modifier;
 import com.watersfall.clocgame.model.modifier.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
@@ -39,11 +38,11 @@ public class City extends UpdatableLongId
 	private @Getter int industryNitrogen;
 	private @Getter int universities;
 	private @Getter long population;
-	private @Getter HashMap<Integer, Factory> militaryFactories;
 	private @Getter String name;
 	private @Getter CityType type;
 	private @Getter int devastation;
 	private @Getter @Setter Nation nation;
+	private @Getter CityGarrisonLevel garrisonLevel;
 
 	public City(ResultSet results) throws SQLException
 	{
@@ -65,6 +64,7 @@ public class City extends UpdatableLongId
 		this.type = CityType.valueOf(results.getString("cities.type"));
 		this.devastation = results.getInt("cities.devastation");
 		this.population = results.getLong("cities.population");
+		this.garrisonLevel = CityGarrisonLevel.valueOf(results.getString("cities.garrison_level"));
 		this.id = results.getInt("cities.id");
 	}
 
@@ -200,6 +200,12 @@ public class City extends UpdatableLongId
 			population = 1000000000000000L;
 		this.setField("population", population);
 		this.population = population;
+	}
+
+	public void setGarrisonLevel(CityGarrisonLevel level)
+	{
+		this.garrisonLevel = level;
+		this.setField("garrison_level", level);
 	}
 
 	public CitySize getSize()
@@ -603,6 +609,36 @@ public class City extends UpdatableLongId
 		map.put(TextKey.Land.MINES, City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
 		map.put(TextKey.Land.FACTORIES, City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
 		map.put(TextKey.Land.UNIVERSITIES, City.LAND_UNIVERSITY * (this.universities));
+		return map;
+	}
+
+	public LinkedHashMap<TextKey, Integer> getGarrisonSize()
+	{
+		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
+		int base = 2000;
+		int city = this.garrisonLevel.getModifier();
+		int size = (int)(this.getSize().getMinimum() * 0.025);
+		map.put(TextKey.Garrison.BASE, base);
+		map.put(TextKey.Garrison.CITY_GARRISON_POLICY, city);
+		map.put(TextKey.Garrison.CITY_SIZE, size);
+		int initial = city + base + size;
+		switch(nation.getPolicy().getFortification())
+		{
+			case UNOCCUPIED_FORTIFICATION:
+				initial *= -0.75;
+				break;
+			case MINIMAL_FUNDING_FORTIFICATION:
+				initial *= -0.5;
+				break;
+			case PARTIAL_FUNDING_FORTIFICATION:
+				initial = 0;
+				break;
+			case FULL_FUNDING_FORTIFICATION:
+				initial *= 0.5;
+				break;
+		}
+		map.put(TextKey.Garrison.FORTIFICATION_POLICY, initial);
+		map.put(TextKey.Garrison.NET, initial + base + city + size);
 		return map;
 	}
 

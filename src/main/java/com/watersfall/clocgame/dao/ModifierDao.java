@@ -26,12 +26,12 @@ public class ModifierDao extends Dao
 		createModifier(receiver, 0, type);
 	}
 
-	public void createModifier(int receiver, int cityId, Modifiers type) throws SQLException
+	public void createModifier(int receiver, long cityId, Modifiers type) throws SQLException
 	{
 		requireWriteAccess();
 		PreparedStatement statement = connection.prepareStatement(CREATE_MODIFIER_SQL_STATEMENT);
 		statement.setInt(1, receiver);
-		statement.setInt(2, cityId);
+		statement.setLong(2, cityId);
 		statement.setString(3, type.name());
 		statement.setLong(4, Time.month);
 		statement.execute();

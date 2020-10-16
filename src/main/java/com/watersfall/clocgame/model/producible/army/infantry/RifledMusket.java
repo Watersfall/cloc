@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.producible.army.infantry;
 import com.watersfall.clocgame.model.producible.IArmyPower;
 import com.watersfall.clocgame.model.producible.Producible;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
+import com.watersfall.clocgame.model.technology.Technologies;
 import com.watersfall.clocgame.model.technology.Technology;
 
 import java.util.LinkedHashMap;
@@ -12,13 +13,13 @@ public class RifledMusket implements Producible, IArmyPower
 	@Override
 	public ProducibleCategory getCategory()
 	{
-		return null;
+		return ProducibleCategory.INFANTRY_EQUIPMENT;
 	}
 
 	@Override
 	public Technology getTechnology()
 	{
-		return null;
+		return Technologies.RIFLED_MUSKET.getTechnology();
 	}
 
 	@Override

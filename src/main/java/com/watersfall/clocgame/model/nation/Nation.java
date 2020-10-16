@@ -9,6 +9,7 @@ import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.message.Message;
+import com.watersfall.clocgame.model.military.army.Army;
 import com.watersfall.clocgame.model.modifier.Modifier;
 import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.model.policies.Policy;
@@ -35,7 +36,8 @@ public class Nation
 	private @Getter @Setter NationStats stats;
 	private @Getter @Setter NationProducibles producibles;
 	private @Getter @Setter TreatyPermissions treatyPermissions;
-	private @Getter @Setter HashMap<Integer, City> cities;
+	private @Getter @Setter HashMap<Long, City> cities;
+	private @Getter @Setter ArrayList<Army> armies;
 	private @Getter @Setter NationPolicy policy;
 	private @Getter @Setter NationTech tech;
 	private @Getter @Setter ArrayList<Integer> invites;
@@ -181,7 +183,7 @@ public class Nation
 
 	public void damagePopulation(long amount)
 	{
-		for(Integer integer : cities.keySet())
+		for(Long integer : cities.keySet())
 		{
 			City city = cities.get(integer);
 			city.setPopulation(city.getPopulation() - (long)((double)city.getPopulation() / (double)this.getTotalPopulation()) * amount);
@@ -373,6 +375,16 @@ public class Nation
 		return total;
 	}
 
+	public int getArmySize()
+	{
+		int total = 0;
+		for(Army army : this.armies)
+		{
+			total += army.getSize();
+		}
+		return total;
+	}
+
 	/**
 	 * Calculates the total manpower a nation has
 	 *
@@ -418,7 +430,7 @@ public class Nation
 		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
 		long airforce = stats.getCurrentBombers() + stats.getCurrentFighters() + stats.getCurrentRecon();
 		airforce *= 50;
-		long army = this.stats.getArmySize();
+		long army = this.getArmySize();
 		army *= 1000;
 		map.put(TextKey.Manpower.AIRFORCE, -airforce);
 		map.put(TextKey.Manpower.ARMY, -army);
@@ -1020,13 +1032,13 @@ public class Nation
 	}
 
 	/**
-	 * Calculates the power of an army based on it's stats.getArmySize(), technology level, stats.getArmyTraining(), and artillery
+	 * Calculates the power of an army based on it's getArmySize(), technology level, getArmyTraining(), and artillery
 	 * @return The army's power
 	 */
-	public double getPower()
+	/*public double getPower()
 	{
 		double power = 0e0;
-		long requiredEquipment = (long)stats.getArmySize() * 1000L;
+		long requiredEquipment = (long)getArmySize() * 1000L;
 		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT))
 		{
 			if(requiredEquipment > 0)
@@ -1048,9 +1060,9 @@ public class Nation
 		}
 		//Sticks and stones are better than nothing
 		power += requiredEquipment * 0.5;
-		power *= java.lang.Math.sqrt(stats.getArmyTraining() + 1);
+		power *= java.lang.Math.sqrt(getArmyTraining() + 1);
 		return Math.sqrt(power);
-	}
+	}*/
 
 	/**
 	 * Calculates the ability of this nations army to break through defenses
@@ -1061,7 +1073,7 @@ public class Nation
 	 */
 	public double getBreakthrough()
 	{
-		int max = this.stats.getArmySize() * 5;
+		int max = this.getArmySize() * 5;
 		long currentTanks = this.getTotalProduciblesByCategory(ProducibleCategory.TANK);
 		if(currentTanks > max)
 		{
@@ -1228,9 +1240,9 @@ public class Nation
 	public int getCasualties(double ourPower, double theirPower)
 	{
 		double powerDiff = theirPower / ourPower;
-		double armyHp = this.stats.getArmySize() * 100.0;
+		double armyHp = this.getArmySize() * 100.0;
 		armyHp -= (powerDiff * theirPower);
-		return (int)(this.stats.getArmySize() - (armyHp / 100.0));
+		return (int)(this.getArmySize() - (armyHp / 100.0));
 	}
 
 	/**
@@ -1256,8 +1268,6 @@ public class Nation
 			case PARDON_CRIMINALS:
 			case INCREASE_ARREST_QUOTAS:
 				return 100;
-			case TRAIN:
-				return (long)this.stats.getArmySize() * (long)this.stats.getArmySize() * (long)this.stats.getArmyTraining() / 200L;
 			case FORM_TREATY:
 				return 500;
 			case FORTIFY:
@@ -1534,11 +1544,18 @@ public class Nation
 		{
 			map.put(TextKey.Growth.AIR_INCREASE, (long)(airforce / 50.0));
 		}
+		long cityGarrison = 0;
+		for(City city : cities.values())
+		{
+			cityGarrison += city.getGarrisonSize().get(TextKey.Garrison.NET);
+		}
+		cityGarrison /= -20000;
 		map.put(TextKey.Growth.FACTORIES, factories);
 		map.put(TextKey.Growth.MILITARY, military);
 		map.put(TextKey.Growth.OVER_MAX_MANPOWER, overMaxManpower);
 		map.put(TextKey.Growth.FORTIFICATION, fortification);
-		map.put(TextKey.Growth.NET, factories + military + conscription + fortification + overMaxManpower);
+		map.put(TextKey.Growth.CITY_GARRISON, cityGarrison);
+		map.put(TextKey.Growth.NET, factories + military + conscription + fortification + overMaxManpower + airforce + cityGarrison);
 		return map;
 	}
 
@@ -1811,6 +1828,161 @@ public class Nation
 		}
 	}
 
+	public HashMap<Army, HashMap<ProducibleCategory, Integer>> getArmyEquipmentChange()
+	{
+		HashMap<Army, HashMap<ProducibleCategory, Integer>> map = new HashMap<>();
+		int max = getEquipmentReinforcementCapacity().get(TextKey.Reinforcement.NET);
+		for(ProducibleCategory category : ProducibleCategory.values())
+		{
+			for(int i = 0; i < armies.size() && max > 0; i++)
+			{
+				Army army = armies.get(i);
+				map.putIfAbsent(army, new HashMap<>());
+				if(army.getNeededEquipment().getOrDefault(category, 0) > 0)
+				{
+					int totalPossibleGain = Math.min(army.getNeededEquipment().get(category), (int)(this.getTotalProduciblesByCategory(category) + this.getProduciblesProductionByCategory(category)));
+					if(totalPossibleGain > 0)
+					{
+						if(totalPossibleGain > max)
+						{
+							totalPossibleGain = max;
+							max = 0;
+						}
+						max -= totalPossibleGain;
+						map.get(army).put(category, totalPossibleGain);
+					}
+				}
+			}
+		}
+		return map;
+	}
+
+	public int getTotalArmyEquipmentChange(Army army)
+	{
+		int total = 0;
+		if(getArmyEquipmentChange().get(army) == null)
+		{
+			return total;
+		}
+		for(Integer integer : getArmyEquipmentChange().get(army).values())
+		{
+			total += integer;
+		}
+		return total;
+	}
+
+	public HashMap<Army, Integer> getArmyManpowerChange()
+	{
+		HashMap<Army, Integer> map = new HashMap<>();
+		int max = getManpowerReinforcementCapacity().get(TextKey.Reinforcement.NET);
+		for(int i = 0; i < armies.size() && max > 0; i++)
+		{
+			int required = armies.get(i).getNeededManpower();
+			if(required > 0)
+			{
+				if(required > max)
+				{
+					required = max;
+				}
+				max -= required;
+				map.put(armies.get(i), required);
+			}
+		}
+		return map;
+	}
+
+	public int getMaxArmies()
+	{
+		return 3 + (this.getTotalBarracks() / 3);
+	}
+
+	public boolean canCreateNewArmy()
+	{
+		return getMaxArmies() > armies.size();
+	}
+
+	public LinkedHashMap<TextKey, Integer> getEquipmentReinforcementCapacity()
+	{
+		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
+		int base = 1000;
+		int infra = this.getTotalInfrastructure() * 250;
+		map.put(TextKey.Reinforcement.BASE, base);
+		map.put(TextKey.Reinforcement.INFRASTRUCTURE, infra);
+		map.put(TextKey.Reinforcement.NET, base + infra);
+		return map;
+	}
+
+	public LinkedHashMap<TextKey, Integer> getManpowerReinforcementCapacity()
+	{
+		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
+		int base = 2500;
+		int barracks = this.getTotalBarracks() * 250;
+		int conscription = 0;
+		switch(this.policy.getManpower())
+		{
+			case SCRAPING_THE_BARREL_MANPOWER:
+				conscription = 2500;
+				break;
+			case MANDATORY_MANPOWER:
+				conscription = 1500;
+				break;
+			case RECRUITMENT_MANPOWER:
+				conscription = 500;
+				break;
+			case DISARMED_MANPOWER:
+				conscription = -250;
+				break;
+		}
+		int net = base + barracks + conscription;
+		map.put(TextKey.Reinforcement.BASE, base);
+		map.put(TextKey.Reinforcement.BARRACKS, barracks);
+		map.put(TextKey.Reinforcement.CONSCRIPTION_LAW, conscription);
+		map.put(TextKey.Reinforcement.NET, net);
+		return map;
+	}
+
+	public int getTotalInfrastructure()
+	{
+		int total = 0;
+		for(City city : cities.values())
+		{
+			total += city.getRailroads();
+		}
+		return total;
+	}
+
+	public int getTotalBarracks()
+	{
+		int total = 0;
+		for(City city : cities.values())
+		{
+			total += city.getBarracks();
+		}
+		return total;
+	}
+
+	public int getTotalPorts()
+	{
+		int total = 0;
+		for(City city : cities.values())
+		{
+			total += city.getPorts();
+		}
+		return total;
+	}
+
+	public Army getArmy(long id)
+	{
+		for(Army army : armies)
+		{
+			if(army.getId() == id)
+			{
+				return army;
+			}
+		}
+		return null;
+	}
+
 	public void update(Connection conn) throws SQLException
 	{
 		if(this.cities != null)
@@ -1850,6 +2022,13 @@ public class Nation
 		if(policy != null)
 		{
 			policy.update(conn);
+		}
+		if(armies != null)
+		{
+			for(Army army : armies)
+			{
+				army.update(conn);
+			}
 		}
 	}
 

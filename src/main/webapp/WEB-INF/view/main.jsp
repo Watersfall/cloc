@@ -171,13 +171,7 @@
 							<td colspan="2">Active Personnel</td>
 						</tr>
 						<tr>
-							<td colspan="2"><fmt:formatNumber value="${home.stats.armySize}"/>k Soldiers</td>
-						</tr>
-						<tr>
-							<td colspan="2">Training</td>
-						</tr>
-						<tr>
-							<td colspan="2"><fmt:formatNumber value="${home.stats.armyTraining}"/>%</td>
+							<td colspan="2"><fmt:formatNumber value="${home.armySize}"/> Soldiers</td>
 						</tr>
 						<tr>
 							<td>Equipment</td>
@@ -185,7 +179,7 @@
 						<tr>
 							<td class="dropdown_parent" onclick="toggleUITab('equipment')">
 								<a href="#">
-									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.stats.armySize * 1000}"/> requested
+									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.armySize}"/> requested
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
 								<div class="dropdown_2_left toggleable-default-off" id="equipment">
@@ -601,37 +595,7 @@
 								<td colspan="2">Estimated Army Size</td>
 							</tr>
 							<tr>
-								<td colspan="2">${defender.stats.armySize}k Personnel</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Training</td>
-							</tr>
-							<tr>
-								<td colspan="2">${defender.stats.armyTraining}%</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Equipment Status</td>
-							</tr>
-							<tr>
-								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${defender.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (defender.stats.armySize * 10)}"/>%</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Airforce Size</td>
-							</tr>
-							<tr>
-								<td colspan="2"><fmt:formatNumber value="${defender.getTotalProduciblesByCategories(ProducibleCategory.FIGHTER_PLANE, ProducibleCategory.BOMBER_PLANE, ProducibleCategory.RECON_PLANE)}"/></td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Capital Ships</td>
-							</tr>
-							<tr>
-								<td colspan="2">0</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Escort Ships</td>
-							</tr>
-							<tr>
-								<td colspan="2">0</td>
+								<td colspan="2">${defender.armySize} Soldiers</td>
 							</tr>
 						</table>
 						<div class="subtile">
@@ -678,37 +642,7 @@
 								<td colspan="2">Estimated Army Size</td>
 							</tr>
 							<tr>
-								<td colspan="2">${attacker.stats.armySize}k Personnel</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Training</td>
-							</tr>
-							<tr>
-								<td colspan="2">${attacker.stats.armyTraining}%</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Equipment Status</td>
-							</tr>
-							<tr>
-								<td colspan="2"><fmt:formatNumber maxFractionDigits="0" value="${attacker.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) / (attacker.stats.armySize * 10)}"/>%</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Airforce Size</td>
-							</tr>
-							<tr>
-								<td colspan="2"><fmt:formatNumber value="${attacker.getTotalProduciblesByCategories(ProducibleCategory.FIGHTER_PLANE, ProducibleCategory.BOMBER_PLANE, ProducibleCategory.RECON_PLANE)}"/></td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Capital Ships</td>
-							</tr>
-							<tr>
-								<td colspan="2">0</td>
-							</tr>
-							<tr>
-								<td colspan="2">Estimated Escort Ships</td>
-							</tr>
-							<tr>
-								<td colspan="2">0</td>
+								<td colspan="2">${attacker.armySize} Soldiers</td>
 							</tr>
 						</table>
 						<div class="subtile">

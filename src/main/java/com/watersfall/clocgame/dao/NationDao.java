@@ -8,6 +8,10 @@ import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.city.CityType;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.factory.Factory;
+import com.watersfall.clocgame.model.military.army.Army;
+import com.watersfall.clocgame.model.military.army.ArmyEquipment;
+import com.watersfall.clocgame.model.military.army.ArmyLocation;
+import com.watersfall.clocgame.model.military.army.Battalion;
 import com.watersfall.clocgame.model.modifier.Modifier;
 import com.watersfall.clocgame.model.nation.*;
 import com.watersfall.clocgame.model.producible.Producibles;
@@ -107,6 +111,11 @@ public class NationDao extends Dao
 					"ORDER BY login.id\n";
 	private static final String ALIGNMENT_TRANSACTIONS =
 					"SELECT * FROM alignments_transactions WHERE nation=? ";
+	private static final String ARMIES =
+					"SELECT * from armies\n" +
+					"LEFT JOIN army_battalions ON armies.id = army_battalions.owner\n" +
+					"LEFT JOIN army_equipment ON army_battalions.id = army_equipment.owner\n" +
+					"WHERE armies.owner=? ";
 
 	public NationDao(Connection connection, boolean allowWriteAccess)
 	{
@@ -117,7 +126,7 @@ public class NationDao extends Dao
 	public Nation getNationById(int id) throws SQLException
 	{
 		Nation nation = new Nation(id);
-		PreparedStatement getStats, getCities, getInvites, getNews, getEvents, getWars, getModifiers, getProduction, transactionsStatement;
+		PreparedStatement getStats, getCities, getInvites, getNews, getEvents, getWars, getModifiers, getProduction, transactionsStatement, armyStatement;
 		if(allowWriteAccess)
 		{
 			transactionsStatement = connection.prepareStatement(ALIGNMENT_TRANSACTIONS + WRITE_ACCESS_SQL_STATEMENT);
@@ -129,6 +138,7 @@ public class NationDao extends Dao
 			getWars = connection.prepareStatement(WAR_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
 			getModifiers = connection.prepareStatement(MODIFIERS_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
 			getProduction = connection.prepareStatement(PRODUCTION_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
+			armyStatement = connection.prepareStatement(ARMIES + WRITE_ACCESS_SQL_STATEMENT);
 		}
 		else
 		{
@@ -141,6 +151,7 @@ public class NationDao extends Dao
 			getWars = connection.prepareStatement(WAR_SQL_STATEMENT);
 			getModifiers = connection.prepareStatement(MODIFIERS_SQL_STATEMENT);
 			getProduction = connection.prepareStatement(PRODUCTION_SQL_STATEMENT);
+			armyStatement = connection.prepareStatement(ARMIES);
 		}
 		getStats.setInt(1, id);
 		getCities.setInt(1, id);
@@ -151,6 +162,7 @@ public class NationDao extends Dao
 		getWars.setInt(2, id);
 		getModifiers.setInt(1, id);
 		getProduction.setInt(1, id);
+		armyStatement.setInt(1, id);
 		ResultSet statsResults = getStats.executeQuery();
 		ResultSet citiesResults = getCities.executeQuery();
 		ResultSet invitesResults = getInvites.executeQuery();
@@ -159,6 +171,7 @@ public class NationDao extends Dao
 		ResultSet warResults = getWars.executeQuery();
 		ResultSet modifierResults = getModifiers.executeQuery();
 		ResultSet productionResults = getProduction.executeQuery();
+		ResultSet armyResults = armyStatement.executeQuery();
 		if(!statsResults.first())
 		{
 			throw new NationNotFoundException();
@@ -169,12 +182,12 @@ public class NationDao extends Dao
 		nation.setTech(new NationTech(id, statsResults));
 		nation.setCosmetic(new NationCosmetic(id, statsResults));
 		nation.setProducibles(new NationProducibles(statsResults));
-		HashMap<Integer, City> cities = new HashMap<>();
+		HashMap<Long, City> cities = new HashMap<>();
 		while(citiesResults.next())
 		{
 			City city = new City(citiesResults);
 			city.setNation(nation);
-			cities.put(citiesResults.getInt("cities.id"), city);
+			cities.put(citiesResults.getLong("cities.id"), city);
 		}
 		nation.setCities(cities);
 		ArrayList<Integer> invites = new ArrayList<>();
@@ -275,6 +288,56 @@ public class NationDao extends Dao
 			}
 		}
 		nation.setAlignmentTransactions(transactionsMap);
+		ArrayList<Army> armies = new ArrayList<>();
+		boolean end = !armyResults.first();
+		while(!armyResults.isAfterLast() && !end)
+		{
+			Army army = new Army(armyResults);
+			long locationId = armyResults.getLong("location_id");
+			if(army.getLocation() == ArmyLocation.NATION)
+			{
+				if(locationId == nation.getId())
+				{
+					army.setNation(nation);
+				}
+				else
+				{
+					army.setNation(this.getCosmeticNationById((int)locationId));
+				}
+			}
+			else if(army.getLocation() == ArmyLocation.CITY)
+			{
+				if(nation.getCities().containsKey(locationId))
+				{
+					army.setCity(nation.getCities().get(locationId));
+				}
+				else
+				{
+					army.setCity(new CityDao(connection, allowWriteAccess).getCityById(locationId));
+				}
+			}
+			armies.add(army);
+			while(!end && armyResults.getInt("id") == army.getId())
+			{
+				Battalion battalion = new Battalion(armyResults);
+				army.getBattalions().add(battalion);
+				while(armyResults.getLong("army_battalions.id") == battalion.getId())
+				{
+					if(armyResults.getLong("army_equipment.id") > 0)
+					{
+						ArmyEquipment equipment = new ArmyEquipment(armyResults);
+						battalion.getEquipment().add(equipment);
+					}
+					if(!armyResults.next())
+					{
+						end = true;
+						break;
+					}
+				}
+			}
+		}
+		nation.setArmies(armies);
+		armies.sort((e1, e2) -> e2.getPriority().compareTo(e1.getPriority()));
 		return nation;
 	}
 
@@ -304,14 +367,16 @@ public class NationDao extends Dao
 	public Nation getCosmeticNationById(int id) throws SQLException
 	{
 		Nation nation = new Nation(id);
-		PreparedStatement getStats;
+		PreparedStatement getStats, armyStatement;
 		if(allowWriteAccess)
 		{
 			getStats = connection.prepareStatement(STATS_SQL_STATEMENT + WRITE_ACCESS_SQL_STATEMENT);
+			armyStatement = connection.prepareStatement(ARMIES + WRITE_ACCESS_SQL_STATEMENT);
 		}
 		else
 		{
 			getStats = connection.prepareStatement(STATS_SQL_STATEMENT);
+			armyStatement = connection.prepareStatement(ARMIES);
 		}
 		getStats.setInt(1, id);
 		ResultSet statsResults = getStats.executeQuery();
@@ -329,6 +394,60 @@ public class NationDao extends Dao
 			nation.setTreaty(new Treaty(statsResults));
 		}
 		nation.setConn(connection);
+
+		ArrayList<Army> armies = new ArrayList<>();
+		armyStatement.setInt(1, id);
+		ResultSet armyResults = armyStatement.executeQuery();
+		boolean end = !armyResults.first();
+		while(!armyResults.isAfterLast() && !end)
+		{
+			Army army = new Army(armyResults);
+			long locationId = armyResults.getLong("location_id");
+			if(army.getLocation() == ArmyLocation.NATION)
+			{
+				if(locationId == nation.getId())
+				{
+					army.setNation(nation);
+				}
+				else
+				{
+					army.setNation(this.getCosmeticNationById((int)locationId));
+				}
+			}
+			else if(army.getLocation() == ArmyLocation.CITY)
+			{
+				if(nation.getCities().containsKey(locationId))
+				{
+					army.setCity(nation.getCities().get(locationId));
+				}
+				else
+				{
+					army.setCity(new CityDao(connection, allowWriteAccess).getCityById(locationId));
+				}
+			}
+			armies.add(army);
+			while(!end && armyResults.getInt("id") == army.getId())
+			{
+				Battalion battalion = new Battalion(armyResults);
+				army.getBattalions().add(battalion);
+				while(armyResults.getLong("army_battalions.id") == battalion.getId())
+				{
+					if(armyResults.getLong("army_equipment.id") > 0)
+					{
+						ArmyEquipment equipment = new ArmyEquipment(armyResults);
+						battalion.getEquipment().add(equipment);
+					}
+					if(!armyResults.next())
+					{
+						end = true;
+						break;
+					}
+				}
+			}
+		}
+		nation.setArmies(armies);
+		armies.sort((e1, e2) -> e2.getPriority().compareTo(e1.getPriority()));
+
 		return nation;
 	}
 

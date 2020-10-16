@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class CityActions
 {
-	public static String coalMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String coalMine(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -42,7 +42,7 @@ public class CityActions
 		}
 	}
 
-	public static String ironMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String ironMine(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -70,7 +70,7 @@ public class CityActions
 		}
 	}
 
-	public static String drill(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String drill(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -98,7 +98,7 @@ public class CityActions
 		}
 	}
 
-	public static String industrialize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String industrialize(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -136,7 +136,7 @@ public class CityActions
 		}
 	}
 
-	public static String militarize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String militarize(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -175,7 +175,7 @@ public class CityActions
 		}
 	}
 
-	public static String nitrogen(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String nitrogen(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -213,7 +213,7 @@ public class CityActions
 		}
 	}
 
-	public static String university(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String university(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -251,7 +251,7 @@ public class CityActions
 		}
 	}
 
-	public static String port(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String port(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationStats economy = nation.getStats();
 		City city = nation.getCities().get(cityId);
@@ -280,7 +280,7 @@ public class CityActions
 		}
 	}
 
-	public static String barrack(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String barrack(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationStats economy = nation.getStats();
 		City city = nation.getCities().get(cityId);
@@ -305,7 +305,7 @@ public class CityActions
 		}
 	}
 
-	public static String railroad(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String railroad(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		NationStats economy = nation.getStats();
 		City city = nation.getCities().get(cityId);
@@ -330,7 +330,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeCoalMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeCoalMine(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -348,7 +348,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeIronMine(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeIronMine(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -366,7 +366,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeDrill(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeDrill(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -384,7 +384,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeIndustrialize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeIndustrialize(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -402,7 +402,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeMilitarize(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeMilitarize(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -421,7 +421,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeNitrogen(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeNitrogen(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -440,7 +440,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeUniversity(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeUniversity(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -458,7 +458,7 @@ public class CityActions
 		}
 	}
 
-	public static String closePort(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closePort(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -476,7 +476,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeBarrack(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeBarrack(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)
@@ -494,7 +494,7 @@ public class CityActions
 		}
 	}
 
-	public static String closeRailroad(Nation nation, int cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
+	public static String closeRailroad(Nation nation, long cityId) throws SQLException, NationNotFoundException, CityNotFoundException, NullPointerException, NotLoggedInException
 	{
 		City city = nation.getCities().get(cityId);
 		if(city == null)

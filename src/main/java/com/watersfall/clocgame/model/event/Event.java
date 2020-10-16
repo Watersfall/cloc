@@ -11,7 +11,7 @@ public class Event
 	private @Getter int owner;
 	private @Getter Events event;
 	private @Getter long month;
-	private @Getter int cityId;
+	private @Getter long cityId;
 
 	public Event(ResultSet results) throws SQLException
 	{
@@ -19,6 +19,6 @@ public class Event
 		this.owner = results.getInt("owner");
 		this.event = Events.valueOf(results.getString("event_id"));
 		this.month = results.getLong("month");
-		this.cityId = results.getInt("city_id");
+		this.cityId = results.getLong("city_id");
 	}
 }

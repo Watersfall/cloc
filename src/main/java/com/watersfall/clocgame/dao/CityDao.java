@@ -42,7 +42,7 @@ public class CityDao extends Dao
 		super(connection, allowWriteAccess);
 	}
 
-	public City getCityById(int id) throws SQLException
+	public City getCityById(long id) throws SQLException
 	{
 		PreparedStatement getCity;
 		if(allowWriteAccess)
@@ -53,7 +53,7 @@ public class CityDao extends Dao
 		{
 			getCity = connection.prepareStatement(CITY_SQL_STATEMENT);
 		}
-		getCity.setInt(1, id);
+		getCity.setLong(1, id);
 		ResultSet cityResults = getCity.executeQuery();
 		cityResults.first();
 		return new City(cityResults);

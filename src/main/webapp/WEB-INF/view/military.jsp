@@ -1,7 +1,149 @@
 <%@ include file="includes/top.jsp" %>
 <%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
+<% pageContext.setAttribute("net", TextKey.Reinforcement.NET); %>
 <div class="title">Military</div>
 	<div class="tiling">
+		<div class="column">
+			<div class="tile">
+				<div class="title">Army</div>
+				<div class="subtile left_text">
+					<div class="title">Army Stats</div>
+					<table class="nation nation_left full_width">
+						<tr>
+							<td colspan="2">Total Army Size</td>
+						</tr>
+						<tr>
+							<td><fmt:formatNumber value="${home.armySize}"/> Soldiers</td>
+							<td>
+								<a href="#">
+									+0 Per Turn
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">Manpower Reinforcement Capacity</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<a href="#">
+									<fmt:formatNumber value="${home.manpowerReinforcementCapacity.get(net)}"/> Soldiers
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">Equipment Reinforcement Capacity</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<a href="#">
+									<fmt:formatNumber value="${home.equipmentReinforcementCapacity.get(net)}"/> Whatevers
+									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="title">Armies</div>
+				<c:forEach var="army" items="${home.armies}">
+					<div class="subtile">
+						<div class="title">
+							<a href="/army/${army.id}">${army.name}</a>
+						</div>
+						<table class="nation nation_left full_width">
+							<tr>
+								<td colspan="2">Size</td>
+							</tr>
+							<tr>
+								<td><fmt:formatNumber value="${army.size}"/> / <fmt:formatNumber value="${army.maxSize}"/> Soldiers</td>
+								<td>
+									<a href="#">
+										+<fmt:formatNumber value="${home.armyManpowerChange.getOrDefault(army, 0)}"/> Per Month <img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Equipment</td>
+							</tr>
+							<tr>
+								<td>
+									<c:forEach var="equipment" items="${army.maxEquipment.entrySet()}">
+										<fmt:formatNumber value="${army.equipment.getOrDefault(equipment.key, 0)}"/> / <fmt:formatNumber value="${equipment.value}"/>${' '.concat(equipment.key.name())}<br>
+									</c:forEach>
+								</td>
+								<td>
+									<c:forEach var="equipment" items="${army.maxEquipment.entrySet()}">
+										<a href="#">
+											<c:choose>
+												<c:when test="${home.armyEquipmentChange.get(army) != null}">
+													+<fmt:formatNumber value="${home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0)}"/> per month
+												</c:when>
+												<c:otherwise>
+													+0 per month
+												</c:otherwise>
+											</c:choose>
+											<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+											<br>
+										</a>
+									</c:forEach>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Training</td>
+							</tr>
+							<tr>
+								<td><fmt:formatNumber value="${army.training / 100}" maxFractionDigits="0"/>%</td>
+								<td>
+									<a href="#">
+										+0 Per Month <img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Experience</td>
+							</tr>
+							<tr>
+								<td><fmt:formatNumber value="${army.experience / 100}" maxFractionDigits="0"/>%</td>
+								<td>
+									<a href="#">
+										+0 Per Month <img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Specialization</td>
+							</tr>
+							<tr>
+								<td>${army.specialization.name()}</td>
+								<td><fmt:formatNumber value="${army.specializationAmount / 100}" maxFractionDigits="0"/>%</td>
+							</tr>
+							<tr>
+								<td colspan="2">Location</td>
+							</tr>
+							<tr>
+								<td>
+									<c:if test="${army.nation != null}">
+										The Nation of ${army.nation.nationUrl}
+									</c:if>
+									<c:if test="${army.city != null}">
+										The City of ${army.city.url}
+									</c:if>
+								</td>
+								<td>
+									<button onclick="army(${army.id}, 'delete_army')" class="red right">Delete</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</c:forEach>
+				<c:if test="${home.canCreateNewArmy()}">
+					<div class="subtile centered">
+						<button onclick="army(0, 'create_army');" class="blue centered">Create New Army</button>
+					</div>
+				</c:if>
+			</div>
+		</div>
 		<div class="column">
 			<div class="tile">
 				<div class="title">Airforce</div>
@@ -28,6 +170,9 @@
 						<button onclick="setAirforceSize('${ProducibleCategory.RECON_PLANE.name()}', -1);" class="red">Set Unlimited</button>
 					</label>
 				</div>
+			</div>
+			<div class="tile">
+				<div class="title">Navy</div>
 			</div>
 		</div>
 	</div>

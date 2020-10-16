@@ -43,6 +43,7 @@ public class CitiesController extends HttpServlet
 				{
 					int id = Integer.parseInt(url.get("id"));
 					City city = null;
+					Nation nation = null;
 					if(req.getAttribute("home") != null)
 					{
 						city = ((Nation)(req.getAttribute("home"))).getCities().get(id);
@@ -50,9 +51,18 @@ public class CitiesController extends HttpServlet
 					if(city == null)
 					{
 						city = new CityDao(conn, false).getCityById(id);
+						nation = new NationDao(conn, false).getNationById(city.getOwner());
 					}
 					req.setAttribute("description", "The city of " + city.getName());
-					req.setAttribute("city", city);
+					if(nation == null)
+					{
+						req.setAttribute("city", city);
+					}
+					else
+					{
+						req.setAttribute("city", nation.getCities().get(city.getId()));
+					}
+					req.setAttribute("nation", nation);
 					req.setAttribute("id", id);
 				}
 				catch(NullPointerException | NumberFormatException | SQLException | CityNotFoundException e)

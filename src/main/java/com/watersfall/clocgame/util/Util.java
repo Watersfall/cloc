@@ -259,6 +259,7 @@ public class Util
 		newMap.remove(TextKey.Farming.NET);
 		newMap.remove(TextKey.Resource.TOTAL_GAIN);
 		newMap.remove(TextKey.Resource.TOTAL_LOSS);
+		newMap.remove(TextKey.Garrison.NET);
 		return newMap;
 	}
 }

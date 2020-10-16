@@ -47,7 +47,7 @@ public class EventActions
 		}
 
 		public static String sendArmy(Nation nation, Event event) throws SQLException
-		{
+		{/*
 			if(event.getOwner() != nation.getId())
 			{
 				return Responses.noEvent();
@@ -71,7 +71,8 @@ public class EventActions
 					return Responses.strikeSendArmyCasualties(casualties);
 				}
 				return Responses.strikeSendArmyNoCasualties();
-			}
+			}*/
+			return null;
 		}
 	}
 }

@@ -33,7 +33,8 @@ public interface TextKey
 		OVER_MAX_MANPOWER(" from being over manpower limit"),
 		FORTIFICATION(" from fortification construction"),
 		NET(" net growth"),
-		AIR_INCREASE(" from pilot training");
+		AIR_INCREASE(" from pilot training"),
+		CITY_GARRISON(" from city garrisons");
 
 		private @Getter String text;
 		Growth(String text)
@@ -198,6 +199,36 @@ public interface TextKey
 
 		private @Getter String text;
 		Alignment(String text)
+		{
+			this.text = text;
+		}
+	}
+
+	enum Garrison implements TextKey
+	{
+		NET(""),
+		BASE(" base value"),
+		CITY_SIZE(" from the city's size"),
+		CITY_GARRISON_POLICY(" from city garrison policy"),
+		FORTIFICATION_POLICY(" from national fortification policy");
+
+		private @Getter String text;
+		Garrison(String text)
+		{
+			this.text = text;
+		}
+	}
+
+	enum Reinforcement implements TextKey
+	{
+		NET(""),
+		BASE(" base value"),
+		CONSCRIPTION_LAW(" from conscription law"),
+		BARRACKS(" from barracks"),
+		INFRASTRUCTURE(" from infrastructure");
+
+		private @Getter String text;
+		Reinforcement(String text)
 		{
 			this.text = text;
 		}

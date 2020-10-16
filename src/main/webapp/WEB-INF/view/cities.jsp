@@ -2,6 +2,8 @@
 <%@ include file="includes/top.jsp" %>
 <%--@elvariable id="city" type="com.watersfall.clocgame.model.city.City"--%>
 <% pageContext.setAttribute("key", TextKey.Resource.TOTAL_GAIN); %>
+<% pageContext.setAttribute("garrisonKey", TextKey.Garrison.NET); %>
+<%@ page import="com.watersfall.clocgame.util.Util" %>
 <c:if test="${city == null}">
 	<div class="title">Cities</div>
 	<div class="tiling">
@@ -68,7 +70,7 @@
 	</div>
 </c:if>
 <c:if test="${city != null}">
-	<c:if test="${!home.cities.containsValue(city)}">
+	<c:if test="${!home.cities.containsKey(city.id)}">
 		<div class="title">
 			<c:out value="${city.name}"/>
 		</div>
@@ -134,7 +136,7 @@
 			</div>
 		</div>
 	</c:if>
-	<c:if test="${home.cities.containsValue(city)}">
+	<c:if test="${home.cities.containsKey(city.id)}">
 		<div class="title">
 			<div id="city_name_${city.id}">
 				<c:out escapeXml="false" value="${city.name} "/>
@@ -154,7 +156,29 @@
 					</div>
 					<div class="description left_text">
 							${city.freeSlots} Free Build Slots (out of ${city.buildSlots} total)<br>
-						Population: <fmt:formatNumber value="${city.population}"/>
+						Population: <fmt:formatNumber value="${city.population}"/><br>
+						<div class="dropdown_parent">
+							<a href="#" onclick="toggleUITab('garrison_dropdown')">
+								Garrison: <fmt:formatNumber value="${city.garrisonSize.get(garrisonKey)}"/><c:out value=" "/>
+								<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+							</a>
+							<div class="toggleable-default-off dropdown" id="garrison_dropdown">
+								<ul>
+									<c:forEach var="garrison" items="${Util.removeNetAndTotal(city.garrisonSize).entrySet()}">
+										<c:if test="${garrison.value != 0}">
+											<li>
+												<c:if test="${garrison.value > 0}">
+													<span class="positive">+<fmt:formatNumber value="${garrison.value}"/>${garrison.key.text}</span>
+												</c:if>
+												<c:if test="${garrison.value < 0}">
+													<span class="negative"><fmt:formatNumber value="${garrison.value}"/>${garrison.key.text}</span>
+												</c:if>
+											</li>
+										</c:if>
+									</c:forEach>
+								</ul>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
