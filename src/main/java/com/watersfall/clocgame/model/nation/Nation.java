@@ -431,7 +431,6 @@ public class Nation
 		long airforce = stats.getCurrentBombers() + stats.getCurrentFighters() + stats.getCurrentRecon();
 		airforce *= 50;
 		long army = this.getArmySize();
-		army *= 1000;
 		map.put(TextKey.Manpower.AIRFORCE, -airforce);
 		map.put(TextKey.Manpower.ARMY, -army);
 		map.put(TextKey.Manpower.NET, -airforce + -army);
@@ -1507,7 +1506,7 @@ public class Nation
 	{
 		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
 		long factories = this.getTotalFactories();
-		long military = -1 * this.getUsedManpower().get(TextKey.Manpower.NET) / 20000;
+		long military = this.getUsedManpower().get(TextKey.Manpower.NET) / 20000;
 		long overMaxManpower = 0;
 		if(this.getFreeManpower() < 0)
 		{
