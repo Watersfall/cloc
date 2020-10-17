@@ -57,14 +57,23 @@ public class MapController extends HttpServlet
 				HashMap<String, HashMap<String, Double>> map = new HashMap<>();
 				for(Region region : Region.values())
 				{
-					PreparedStatement armies = connection.prepareStatement("SELECT SUM(gdp), SUM(army_size) FROM nation_stats \n" +
-							"WHERE nation_stats.region=?");
+					PreparedStatement armies = connection.prepareStatement("SELECT SUM(army_battalions.size), \n" +
+							"\t(SELECT \n" +
+							"\t\tSUM(gdp)\n" +
+							"\t\tFROM nation_stats\n" +
+							"\t\tWHERE nation_stats.region=?\n" +
+							"\t) AS gdp\n" +
+							"\tFROM nation_stats\n" +
+							"\tLEFT JOIN armies ON armies.owner = nation_stats.id \n" +
+							"\tLEFT JOIN army_battalions ON armies.id = army_battalions.owner\n" +
+							"\tWHERE nation_stats.region=?;");
 					armies.setString(1, region.name());
+					armies.setString(2, region.name());
 					ResultSet results = armies.executeQuery();
 					results.first();
 					HashMap<String, Double> temp = new HashMap<>();
-					temp.put("gdp", results.getDouble(1));
-					temp.put("army", results.getDouble(2));
+					temp.put("gdp", results.getDouble(2));
+					temp.put("army", results.getDouble(1));
 					map.put(region.getName(), temp);
 				}
 				req.setAttribute("regions", map);
