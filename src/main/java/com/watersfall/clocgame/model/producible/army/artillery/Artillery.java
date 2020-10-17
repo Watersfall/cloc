@@ -40,6 +40,6 @@ public class Artillery implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 25.0;
+		return 1.0;
 	}
 }

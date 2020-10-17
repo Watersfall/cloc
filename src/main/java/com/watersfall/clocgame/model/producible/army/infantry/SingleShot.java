@@ -39,6 +39,6 @@ public class SingleShot implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 4.5;
+		return 1.2;
 	}
 }

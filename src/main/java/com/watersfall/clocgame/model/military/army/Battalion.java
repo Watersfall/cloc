@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model.military.army;
 
 import com.watersfall.clocgame.model.UpdatableLongId;
+import com.watersfall.clocgame.model.producible.IArmyPower;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import lombok.Getter;
 
@@ -34,17 +35,17 @@ public class Battalion extends UpdatableLongId
 
 	public int getAttack()
 	{
-		return type.getAttack();
+		return (int)(type.getAttack() * getStrength());
 	}
 
 	public int getDefense()
 	{
-		return type.getDefense();
+		return (int)(type.getDefense() * getStrength());
 	}
 
 	public int getBreakthrough()
 	{
-		return type.getBreakthrough();
+		return (int)(type.getBreakthrough() * getStrength());
 	}
 
 	public double getWeight()
@@ -54,7 +55,22 @@ public class Battalion extends UpdatableLongId
 
 	public double getStrength()
 	{
-		return 0D;
+		if(this.size == 0)
+		{
+			return 0;
+		}
+		double equipmentPercent = 0D;
+		HashMap<ProducibleCategory, Integer> required = getRequiredEquipment();
+		for(ArmyEquipment equipment : this.equipment)
+		{
+			if(equipment.getAmount() > 0)
+			{
+				equipmentPercent += ((double)equipment.getAmount() / (double)(type.getEquipment().get(equipment.getEquipment().getProducible().getCategory()))) * ((IArmyPower)equipment.getEquipment().getProducible()).getArmyPower();
+			}
+		}
+		equipmentPercent /= (double)required.size();
+		equipmentPercent *= ((double)this.size / (double)this.getMaxSize());
+		return equipmentPercent;
 	}
 
 	public HashMap<ProducibleCategory, Integer> getRequiredEquipment()
@@ -88,7 +104,7 @@ public class Battalion extends UpdatableLongId
 
 	public void damage(double damage)
 	{
-		this.setField("size", this.size - (int)(this.getMaxSize() * (damage / 15)));
+		this.setField("size", this.size - (int)(this.getMaxSize() * (damage / 50)));
 		this.size = (int)this.getField("size");
 		if(this.size < 0)
 		{

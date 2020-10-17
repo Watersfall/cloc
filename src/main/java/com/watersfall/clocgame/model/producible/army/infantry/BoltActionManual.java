@@ -39,6 +39,6 @@ public class BoltActionManual implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 7.5;
+		return 1.4;
 	}
 }

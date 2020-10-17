@@ -39,6 +39,6 @@ public class NeedleNose implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 6;
+		return 1.3;
 	}
 }

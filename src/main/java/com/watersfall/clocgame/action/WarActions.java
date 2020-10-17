@@ -175,6 +175,8 @@ public class WarActions
 	{
 		int attacks = attack.getAttack();
 		int defenses = defense.getDefense();
+		int attacks2 = defense.getAttack();
+		int defenses2 = attack.getBreakthrough();
 		while(attacks > 0)
 		{
 			attacks -= 1;
@@ -184,31 +186,29 @@ public class WarActions
 				defenses -= 1;
 				if(rand > 0.75)
 				{
-					defense.damage(rand);
+					defense.damage();
 				}
 			}
 			else if(rand > 0.4)
 			{
-				defense.damage(rand);
+				defense.damage();
 			}
 		}
-		attacks = defense.getAttack();
-		defenses = attack.getBreakthrough();
-		while(attacks > 0)
+		while(attacks2 > 0)
 		{
-			attacks -= 1;
+			attacks2 -= 1;
 			double rand = Math.random();
-			if(defenses > 0)
+			if(defenses2 > 0)
 			{
-				defenses -= 1;
+				defenses2 -= 1;
 				if(rand > 0.75)
 				{
-					attack.damage(rand);
+					attack.damage();
 				}
 			}
 			else if(rand > 0.4)
 			{
-				attack.damage(rand);
+				attack.damage();
 			}
 		}
 		return "";

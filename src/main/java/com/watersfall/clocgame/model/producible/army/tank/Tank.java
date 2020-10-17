@@ -40,6 +40,6 @@ public class Tank implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 50.0;
+		return 1.0;
 	}
 }

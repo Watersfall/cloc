@@ -39,6 +39,6 @@ public class SemiAuto implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 12.0;
+		return 1.7;
 	}
 }

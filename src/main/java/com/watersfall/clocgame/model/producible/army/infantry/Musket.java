@@ -39,6 +39,6 @@ public class Musket implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 1.5;
+		return 1;
 	}
 }

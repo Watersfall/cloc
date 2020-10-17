@@ -39,6 +39,6 @@ public class BoltActionClip implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 9;
+		return 1.5;
 	}
 }

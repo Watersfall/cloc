@@ -37,6 +37,6 @@ public class MachineGun implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 13.5;
+		return 2;
 	}
 }

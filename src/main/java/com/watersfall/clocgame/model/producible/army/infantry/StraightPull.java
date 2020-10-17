@@ -39,6 +39,6 @@ public class StraightPull implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 10.5;
+		return 1.6;
 	}
 }

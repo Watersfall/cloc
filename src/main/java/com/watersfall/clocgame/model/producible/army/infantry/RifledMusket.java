@@ -39,6 +39,6 @@ public class RifledMusket implements Producible, IArmyPower
 	@Override
 	public double getArmyPower()
 	{
-		return 3.0;
+		return 1.1;
 	}
 }
