@@ -10,6 +10,8 @@ import com.watersfall.clocgame.model.decisions.Decision;
 import com.watersfall.clocgame.model.event.Event;
 import com.watersfall.clocgame.model.message.Message;
 import com.watersfall.clocgame.model.military.army.Army;
+import com.watersfall.clocgame.model.military.army.ArmyEquipment;
+import com.watersfall.clocgame.model.military.army.Battalion;
 import com.watersfall.clocgame.model.modifier.Modifier;
 import com.watersfall.clocgame.model.news.News;
 import com.watersfall.clocgame.model.policies.Policy;
@@ -66,6 +68,7 @@ public class Nation
 	private LinkedHashMap<TextKey, Double> steelProduction = null;
 	private LinkedHashMap<TextKey, Double> nitrogenProduction = null;
 	private LinkedHashMap<TextKey, Double> researchProduction = null;
+	private int leftoverEquipment = 0;
 
 	public Nation(int id)
 	{
@@ -1829,8 +1832,8 @@ public class Nation
 
 	public HashMap<Army, HashMap<ProducibleCategory, Integer>> getArmyEquipmentChange()
 	{
+		int max = leftoverEquipment;
 		HashMap<Army, HashMap<ProducibleCategory, Integer>> map = new HashMap<>();
-		int max = getEquipmentReinforcementCapacity().get(TextKey.Reinforcement.NET);
 		for(ProducibleCategory category : ProducibleCategory.values())
 		{
 			for(int i = 0; i < armies.size() && max > 0; i++)
@@ -1851,6 +1854,68 @@ public class Nation
 						map.get(army).put(category, totalPossibleGain);
 					}
 				}
+			}
+		}
+		return map;
+	}
+
+	public HashMap<Army, HashMap<Producibles, Integer>> getEquipmentUpgrades()
+	{
+		int max = this.getEquipmentReinforcementCapacity().get(TextKey.Reinforcement.NET);
+		HashMap<Army, HashMap<Producibles, Integer>> map = new HashMap<>();
+		ArrayList<Producibles> producibles = Producibles.getProduciblesByCategories(ProducibleCategory.INFANTRY_EQUIPMENT, ProducibleCategory.ARTILLERY, ProducibleCategory.TANK);
+		producibles.removeIf((producible) -> this.producibles.getProducible(producible) <= 0);
+		for(Producibles producible : producibles)
+		{
+			int amount = Math.min(this.producibles.getProducible(producible), max);
+			for(Army army : this.armies)
+			{
+				for(Battalion battalion : army.getBattalions())
+				{
+					if(battalion.isValidUpgrade(producible.getProducible()))
+					{
+						Producible lowest = null;
+						while(amount > 0 && (lowest = battalion.getLowestTierEquipment(producible.getProducible().getCategory())) != producible.getProducible())
+						{
+							for(ArmyEquipment equipment : battalion.getEquipment())
+							{
+								int gain = 0;
+								if(amount > equipment.getAmount())
+								{
+									amount -= equipment.getAmount();
+									gain = equipment.getAmount();
+								}
+								else
+								{
+									gain = amount;
+									amount = 0;
+								}
+								max -= gain;
+								map.putIfAbsent(army, new HashMap<>());
+								int finalAmount = gain;
+								map.get(army).computeIfPresent(producible, (k, v) -> v = v + finalAmount);
+								map.get(army).putIfAbsent(producible, finalAmount);
+							}
+						}
+					}
+				}
+			}
+		}
+		leftoverEquipment = max;
+		return map;
+	}
+
+	public HashMap<Army, HashMap<ProducibleCategory, Integer>> getEquipmentUpgradesByCategory()
+	{
+		HashMap<Army, HashMap<ProducibleCategory, Integer>> map = new HashMap<>();
+		HashMap<Army, HashMap<Producibles, Integer>> all = this.getEquipmentUpgrades();
+		for(Army army : all.keySet())
+		{
+			map.put(army, new HashMap<>());
+			for(Producibles producible : all.get(army).keySet())
+			{
+				map.get(army).computeIfPresent(producible.getProducible().getCategory(), (k, v) -> v = v + all.get(army).get(producible));
+				map.get(army).putIfAbsent(producible.getProducible().getCategory(), all.get(army).get(producible));
 			}
 		}
 		return map;

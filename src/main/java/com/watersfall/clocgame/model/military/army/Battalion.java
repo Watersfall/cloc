@@ -2,6 +2,7 @@ package com.watersfall.clocgame.model.military.army;
 
 import com.watersfall.clocgame.model.UpdatableLongId;
 import com.watersfall.clocgame.model.producible.IArmyPower;
+import com.watersfall.clocgame.model.producible.Producible;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import lombok.Getter;
 
@@ -90,6 +91,71 @@ public class Battalion extends UpdatableLongId
 			map.put(category, amount);
 		}
 		return map;
+	}
+
+	public boolean isValidUpgrade(Producible producible)
+	{
+		Producible highest = this.getHighestTierEquipment(producible.getCategory());
+		if(highest == null)
+		{
+			return false;
+		}
+		else
+		{
+			IArmyPower power1 = (IArmyPower)producible;
+			IArmyPower power2 = (IArmyPower)highest;
+			return power1.getArmyPower() > power2.getArmyPower();
+		}
+	}
+
+	public Producible getHighestTierEquipment(ProducibleCategory category)
+	{
+		Producible producible = null;
+		for(int i = 0; i < this.equipment.size(); i++)
+		{
+			if(equipment.get(i).getEquipment().getProducible().getCategory() == category)
+			{
+				if(producible == null)
+				{
+					producible = equipment.get(i).getEquipment().getProducible();
+				}
+				else
+				{
+					IArmyPower power1 = (IArmyPower)producible;
+					IArmyPower power2 = (IArmyPower)equipment.get(i).getEquipment().getProducible();
+					if(power2.getArmyPower() > power1.getArmyPower())
+					{
+						producible = equipment.get(i).getEquipment().getProducible() ;
+					}
+				}
+			}
+		}
+		return producible;
+	}
+
+	public Producible getLowestTierEquipment(ProducibleCategory category)
+	{
+		Producible producible = null;
+		for(int i = 0; i < this.equipment.size(); i++)
+		{
+			if(equipment.get(i).getEquipment().getProducible().getCategory() == category)
+			{
+				if(producible == null)
+				{
+					producible = equipment.get(i).getEquipment().getProducible();
+				}
+				else
+				{
+					IArmyPower power1 = (IArmyPower)producible;
+					IArmyPower power2 = (IArmyPower)equipment.get(i).getEquipment().getProducible();
+					if(power2.getArmyPower() < power1.getArmyPower())
+					{
+						producible = equipment.get(i).getEquipment().getProducible() ;
+					}
+				}
+			}
+		}
+		return producible;
 	}
 
 	public int getNeededManpower()

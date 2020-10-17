@@ -39,13 +39,18 @@
 						<td>
 							<c:forEach var="equipment" items="${army.maxEquipment.entrySet()}">
 								<a href="#">
+									<c:set var="hasUpgrade" value="false"/>
+									<c:if test="${home.equipmentUpgrades.get(army) != null && home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0) > 0}">
+										+<fmt:formatNumber value="${home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0)}"/> Upgrade,
+										<c:set var="hasUpgrade" value="true"/>
+									</c:if>
 									<c:choose>
-										<c:when test="${home.armyEquipmentChange.get(army) != null}">
-											+<fmt:formatNumber value="${home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0)}"/> per month
+										<c:when test="${home.armyEquipmentChange.get(army) != null && home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0) > 0}">
+											+<fmt:formatNumber value="${home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0)}"/> New
 										</c:when>
-										<c:otherwise>
-											+0 per month
-										</c:otherwise>
+										<c:when test="${!hasUpgrade}">
+											+0 Per Month
+										</c:when>
 									</c:choose>
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 									<br>

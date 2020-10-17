@@ -19,6 +19,7 @@ import com.watersfall.clocgame.model.military.army.Battalion;
 import com.watersfall.clocgame.model.modifier.Modifiers;
 import com.watersfall.clocgame.model.nation.Nation;
 import com.watersfall.clocgame.model.nation.NationStats;
+import com.watersfall.clocgame.model.producible.Producible;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import com.watersfall.clocgame.model.producible.Producibles;
 import com.watersfall.clocgame.schedulers.DayScheduler;
@@ -117,6 +118,41 @@ public class TurnMonth implements Runnable
 
 					for(Army army : nation.getArmies())
 					{
+						if(nation.getEquipmentUpgrades().containsKey(army))
+						{
+							for(Map.Entry<Producibles, Integer> entry : nation.getEquipmentUpgrades().get(army).entrySet())
+							{
+								int gain = entry.getValue();
+								if(entry.getValue() > 0)
+								{
+									nation.getProducibles().setProducible(entry.getKey(), nation.getProducibles().getProducible(entry.getKey()) - gain);
+									for(Battalion battalion : army.getBattalions())
+									{
+										if(battalion.isValidUpgrade(entry.getKey().getProducible()))
+										{
+											Producible lowest = battalion.getLowestTierEquipment(entry.getKey().getProducible().getCategory());
+											for(ArmyEquipment equipment : battalion.getEquipment())
+											{
+												if(equipment.getEquipment().getProducible() == lowest)
+												{
+													if(gain >= equipment.getAmount())
+													{
+														equipment.setField("type", entry.getKey().name());
+														gain -= equipment.getAmount();
+													}
+													else
+													{
+														equipment.setField("amount", equipment.getAmount() - gain);
+														new ArmyDao(connection, true).createEquipment(battalion.getId(), entry.getKey(), gain);
+														gain = 0;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 						if(nation.getArmyEquipmentChange().containsKey(army))
 						{
 							for(Map.Entry<ProducibleCategory, Integer> entry : nation.getArmyEquipmentChange().get(army).entrySet())

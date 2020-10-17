@@ -3,6 +3,7 @@ package com.watersfall.clocgame.model.military.army;
 import com.watersfall.clocgame.model.UpdatableLongId;
 import com.watersfall.clocgame.model.city.City;
 import com.watersfall.clocgame.model.nation.Nation;
+import com.watersfall.clocgame.model.producible.Producible;
 import com.watersfall.clocgame.model.producible.ProducibleCategory;
 import com.watersfall.clocgame.model.producible.Producibles;
 import lombok.Getter;
@@ -179,6 +180,18 @@ public class Army extends UpdatableLongId
 			}
 		}
 		return map;
+	}
+
+	public boolean isValidUpgrade(Producible producible)
+	{
+		for(Battalion battalion : this.battalions)
+		{
+			if(battalion.isValidUpgrade(producible))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public int getNeededManpower()
