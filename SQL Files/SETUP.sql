@@ -54,8 +54,6 @@ CREATE TABLE nation_stats(
 	lost_manpower BIGINT DEFAULT 0,
 	months_in_famine INT DEFAULT 0,
 	war_protection TINYINT DEFAULT 4,
-	army_size INT DEFAULT 20,
-	army_training INT DEFAULT 50,
 	fortification INT DEFAULT 0,
 	casualties BIGINT DEFAULT 0,
 	region ENUM('NORTH_AMERICA', 'SOUTH_AMERICA', 'AFRICA', 'MIDDLE_EAST', 'EUROPE', 'ASIA', 'OCEANIA', 'SIBERIA'),
@@ -347,6 +345,36 @@ CREATE TABLE modifiers (
 	start BIGINT,
 	FOREIGN KEY (user) REFERENCES login (id) ON DELETE CASCADE,
 	FOREIGN KEY (city) REFERENCES cities (id) ON DELETE CASCADE
+);
+
+CREATE TABLE armies (
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+	owner INT,
+	name TEXT,
+	training INT,
+	experience INT,
+	specialization_type ENUM('NONE', 'AMPHIBIOUS', 'URBAN'),
+	specialization_amount INT,
+	location ENUM('NATION', 'CITY'),
+	location_id BIGINT,
+	priority ENUM('HIGH', 'NORMAL', 'LOW'),
+	FOREIGN KEY fk_owner (owner) REFERENCES login (id) ON DELETE CASCADE
+);
+
+CREATE TABLE army_battalions (
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+	owner BIGINT,
+	size INT,
+	type ENUM('INFANTRY', 'ARTILLERY', 'ARMORED'),
+	FOREIGN KEY fk_owner (owner) REFERENCES armies (id) ON DELETE CASCADE
+);
+
+CREATE TABLE army_equipment (
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+	owner BIGINT,
+	type ENUM('MUSKET', 'RIFLED_MUSKET', 'SINGLE_SHOT', 'NEEDLE_NOSE', 'BOLT_ACTION_MANUAL', 'BOLT_ACTION_CLIP', 'STRAIGHT_PULL', 'SEMI_AUTO', 'MACHINE_GUN', 'ARTILLERY', 'TANK', 'BIPLANE_FIGHTERS', 'TRIPLANE_FIGHTERS', 'MONOPLANE_FIGHTERS', 'RECON_BALLOONS', 'RECON_PLANES', 'ZEPPELINS', 'BOMBERS'),
+	amount INT,
+	FOREIGN KEY fk_owner (owner) REFERENCES army_battalions (id) ON DELETE CASCADE
 );
 
 INSERT INTO alignments(id) VALUES ('ENTENTE');
