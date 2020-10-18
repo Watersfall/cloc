@@ -44,6 +44,14 @@ public class City extends UpdatableLongId
 	private @Getter int devastation;
 	private @Getter @Setter Nation nation;
 	private @Getter CityGarrisonLevel garrisonLevel;
+	
+	private CitySize size = null;
+	private LinkedHashMap<TextKey, Double> populationGrowth = null;
+	private Boolean hasStrike = null;
+	private LinkedHashMap<TextKey, Double> coalProduction, ironProduction, oilProduction, steelProduction,
+			nitrogenProduction, researchProduction = null;
+	private LinkedHashMap<TextKey, Long> landUsage = null;
+	private LinkedHashMap<TextKey, Integer> garrisonSize = null;
 
 	public City(ResultSet results) throws SQLException
 	{
@@ -211,24 +219,28 @@ public class City extends UpdatableLongId
 
 	public CitySize getSize()
 	{
-		if(this.population > CitySize.ECUMENOPOLIS.getMinimum())
-			return CitySize.ECUMENOPOLIS;
-		else if(this.population > CitySize.MEGALOPOLIS.getMinimum())
-			return CitySize.MEGALOPOLIS;
-		else if(this.population > CitySize.METROPOLIS.getMinimum())
-			return CitySize.METROPOLIS;
-		else if(this.population > CitySize.LARGE_CITY.getMinimum())
-			return CitySize.LARGE_CITY;
-		else if(this.population > CitySize.CITY.getMinimum())
-			return CitySize.CITY;
-		else if(this.population > CitySize.LARGE_TOWN.getMinimum())
-			return CitySize.LARGE_TOWN;
-		else if(this.population > CitySize.TOWN.getMinimum())
-			return CitySize.TOWN;
-		else if(this.population > CitySize.VILLAGE.getMinimum())
-			return CitySize.VILLAGE;
-		else
-			return CitySize.BRUH_WHAT;
+		if(size == null)
+		{
+			if(this.population > CitySize.ECUMENOPOLIS.getMinimum())
+				size = CitySize.ECUMENOPOLIS;
+			else if(this.population > CitySize.MEGALOPOLIS.getMinimum())
+				size = CitySize.MEGALOPOLIS;
+			else if(this.population > CitySize.METROPOLIS.getMinimum())
+				size = CitySize.METROPOLIS;
+			else if(this.population > CitySize.LARGE_CITY.getMinimum())
+				size = CitySize.LARGE_CITY;
+			else if(this.population > CitySize.CITY.getMinimum())
+				size = CitySize.CITY;
+			else if(this.population > CitySize.LARGE_TOWN.getMinimum())
+				size = CitySize.LARGE_TOWN;
+			else if(this.population > CitySize.TOWN.getMinimum())
+				size = CitySize.TOWN;
+			else if(this.population > CitySize.VILLAGE.getMinimum())
+				size = CitySize.VILLAGE;
+			else
+				return CitySize.BRUH_WHAT;
+		}
+		return size;
 	}
 
 	public int getBuildSlots()
@@ -259,60 +271,63 @@ public class City extends UpdatableLongId
 
 	public LinkedHashMap<TextKey, Double> getPopulationGrowth(Nation nation)
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double base = 0.5;
-		double foodPolicy = 0;
-		double manpowerPolicy = 0;
-		double economyPolicy = 0;
-		double size = 0;
-		double famine = nation.getFamineLevel();
-		if(nation.getPolicy().getFood() == Policy.FREE_FOOD)
+		if(populationGrowth == null)
 		{
-			foodPolicy = 0.15;
+			populationGrowth = new LinkedHashMap<>();
+			double base = 0.5;
+			double foodPolicy = 0;
+			double manpowerPolicy = 0;
+			double economyPolicy = 0;
+			double size = 0;
+			double famine = nation.getFamineLevel();
+			if(nation.getPolicy().getFood() == Policy.FREE_FOOD)
+			{
+				foodPolicy = 0.15;
+			}
+			else if(nation.getPolicy().getFood() == Policy.RATIONING_FOOD)
+			{
+				foodPolicy = -0.25;
+			}
+			if(nation.getPolicy().getManpower() == Policy.DISARMED_MANPOWER)
+			{
+				manpowerPolicy = 0.25;
+			}
+			else if(nation.getPolicy().getManpower() == Policy.VOLUNTEER_MANPOWER)
+			{
+				manpowerPolicy = 0.1;
+			}
+			else if(nation.getPolicy().getManpower() == Policy.MANDATORY_MANPOWER)
+			{
+				manpowerPolicy = -0.1;
+			}
+			else if(nation.getPolicy().getManpower() == Policy.SCRAPING_THE_BARREL_MANPOWER)
+			{
+				manpowerPolicy = -0.25;
+			}
+			if(nation.getPolicy().getEconomy() == Policy.CIVILIAN_ECONOMY)
+			{
+				economyPolicy = 0.15;
+			}
+			else if(nation.getPolicy().getEconomy() == Policy.WAR_ECONOMY)
+			{
+				economyPolicy = -0.15;
+			}
+			size = this.getSize().getPopGrowthBonus();
+			double net = base + foodPolicy + manpowerPolicy + economyPolicy + size;
+			if(famine < 0)
+			{
+				famine = Math.min(-net, famine);
+			}
+			net += famine;
+			populationGrowth.put(TextKey.Population.BASE, base);
+			populationGrowth.put(TextKey.Population.FOOD_POLICY, foodPolicy);
+			populationGrowth.put(TextKey.Population.MANPOWER_POLICY, manpowerPolicy);
+			populationGrowth.put(TextKey.Population.ECONOMY_POLICY, economyPolicy);
+			populationGrowth.put(TextKey.Population.SIZE, size);
+			populationGrowth.put(TextKey.Population.FAMINE, famine);
+			populationGrowth.put(TextKey.Population.NET, net);
 		}
-		else if(nation.getPolicy().getFood() == Policy.RATIONING_FOOD)
-		{
-			foodPolicy = -0.25;
-		}
-		if(nation.getPolicy().getManpower() == Policy.DISARMED_MANPOWER)
-		{
-			manpowerPolicy = 0.25;
-		}
-		else if(nation.getPolicy().getManpower() == Policy.VOLUNTEER_MANPOWER)
-		{
-			manpowerPolicy = 0.1;
-		}
-		else if(nation.getPolicy().getManpower() == Policy.MANDATORY_MANPOWER)
-		{
-			manpowerPolicy = -0.1;
-		}
-		else if(nation.getPolicy().getManpower() == Policy.SCRAPING_THE_BARREL_MANPOWER)
-		{
-			manpowerPolicy = -0.25;
-		}
-		if(nation.getPolicy().getEconomy() == Policy.CIVILIAN_ECONOMY)
-		{
-			economyPolicy = 0.15;
-		}
-		else if(nation.getPolicy().getEconomy() == Policy.WAR_ECONOMY)
-		{
-			economyPolicy = -0.15;
-		}
-		size = this.getSize().getPopGrowthBonus();
-		double net = base + foodPolicy + manpowerPolicy + economyPolicy + size;
-		if(famine < 0)
-		{
-			famine = Math.min(-net, famine);
-		}
-		net += famine;
-		map.put(TextKey.Population.BASE, base);
-		map.put(TextKey.Population.FOOD_POLICY, foodPolicy);
-		map.put(TextKey.Population.MANPOWER_POLICY, manpowerPolicy);
-		map.put(TextKey.Population.ECONOMY_POLICY, economyPolicy);
-		map.put(TextKey.Population.SIZE, size);
-		map.put(TextKey.Population.FAMINE, famine);
-		map.put(TextKey.Population.NET, net);
-		return map;
+		return populationGrowth;
 	}
 
 	/**
@@ -395,18 +410,23 @@ public class City extends UpdatableLongId
 
 	public boolean hasStrike()
 	{
-		for(Modifier modifier : nation.getModifiers())
+		if(hasStrike == null)
 		{
-			if(modifier.getCity() == this.id)
+			for(Modifier modifier : nation.getModifiers())
 			{
-				Modifiers type = modifier.getType();
-				if(type == Modifiers.STRIKE_SENT_ARMY || type == Modifiers.STRIKE_GAVE_IN || type == Modifiers.STRIKE_IGNORED)
+				if(modifier.getCity() == this.id)
 				{
-					return true;
+					Modifiers type = modifier.getType();
+					if(type == Modifiers.STRIKE_SENT_ARMY || type == Modifiers.STRIKE_GAVE_IN || type == Modifiers.STRIKE_IGNORED)
+					{
+						hasStrike = true;
+						break;
+					}
 				}
 			}
+			hasStrike = false;
 		}
-		return false;
+		return hasStrike;
 	}
 
 	public Modifiers getStrikeType()
@@ -487,9 +507,13 @@ public class City extends UpdatableLongId
 	 */
 	public LinkedHashMap<TextKey, Double> getCoalProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double mines = this.getCoalMines() * 10;
-		return doMineOutput(map, mines);
+		if(coalProduction == null)
+		{
+			coalProduction = new LinkedHashMap<>();
+			double mines = this.getCoalMines() * 10;
+			doMineOutput(coalProduction, mines);
+		}
+		return coalProduction;
 	}
 
 	/**
@@ -507,9 +531,13 @@ public class City extends UpdatableLongId
 	 */
 	public LinkedHashMap<TextKey, Double> getIronProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double mines = this.getIronMines() * 10;
-		return doMineOutput(map, mines);
+		if(ironProduction == null)
+		{
+			ironProduction = new LinkedHashMap<>();
+			double mines = this.getIronMines() * 10;
+			doMineOutput(ironProduction, mines);
+		}
+		return ironProduction;
 	}
 
 	/**
@@ -527,9 +555,13 @@ public class City extends UpdatableLongId
 	 */
 	public LinkedHashMap<TextKey, Double> getOilProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double wells = this.getOilWells() * 10;
-		return doMineOutput(map, wells);
+		if(oilProduction == null)
+		{
+			oilProduction = new LinkedHashMap<>();
+			double wells = this.getOilWells() * 10;
+			return doMineOutput(oilProduction, wells);
+		}
+		return oilProduction;
 	}
 
 	/**
@@ -544,9 +576,13 @@ public class City extends UpdatableLongId
 	 */
 	public LinkedHashMap<TextKey, Double> getSteelProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double factories = this.getIndustryCivilian() * 5;
-		return doFactoryOutput(map, factories);
+		if(steelProduction == null)
+		{
+			steelProduction = new LinkedHashMap<>();
+			double factories = this.getIndustryCivilian() * 5;
+			return doFactoryOutput(steelProduction, factories);
+		}
+		return steelProduction;
 	}
 
 	/**
@@ -561,9 +597,13 @@ public class City extends UpdatableLongId
 	 */
 	public LinkedHashMap<TextKey, Double> getNitrogenProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double factories = this.getIndustryNitrogen() * 5;
-		return doFactoryOutput(map, factories);
+		if(nitrogenProduction == null)
+		{
+			nitrogenProduction = new LinkedHashMap<>();
+			double factories = this.getIndustryNitrogen() * 5;
+			return doFactoryOutput(nitrogenProduction, factories);
+		}
+		return nitrogenProduction;
 	}
 
 	/**
@@ -578,21 +618,24 @@ public class City extends UpdatableLongId
 	 */
 	public LinkedHashMap<TextKey, Double> getResearchProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double standard = 2;
-		double universities = this.getUniversities();
-		double total = universities + standard;
-		double devastation2 = -total * (devastation / 100.0);
-		total = total * (1 - (devastation / 100.0));
-		double strike = total * this.getStrikeModifier();
-		double net = total + strike;
-		map.put(TextKey.Resource.DEFAULT, standard);
-		map.put(TextKey.Resource.UNIVERSITIES, universities);
-		map.put(TextKey.Resource.DEVASTATION, devastation2);
-		map.put(TextKey.Resource.STRIKE, strike);
-		map.put(TextKey.Resource.NET, net);
-		map.put(TextKey.Resource.TOTAL_GAIN, total);
-		return map;
+		if(researchProduction == null)
+		{
+			researchProduction = new LinkedHashMap<>();
+			double standard = 2;
+			double universities = this.getUniversities();
+			double total = universities + standard;
+			double devastation2 = -total * (devastation / 100.0);
+			total = total * (1 - (devastation / 100.0));
+			double strike = total * this.getStrikeModifier();
+			double net = total + strike;
+			researchProduction.put(TextKey.Resource.DEFAULT, standard);
+			researchProduction.put(TextKey.Resource.UNIVERSITIES, universities);
+			researchProduction.put(TextKey.Resource.DEVASTATION, devastation2);
+			researchProduction.put(TextKey.Resource.STRIKE, strike);
+			researchProduction.put(TextKey.Resource.NET, net);
+			researchProduction.put(TextKey.Resource.TOTAL_GAIN, total);
+		}
+		return researchProduction;
 	}
 
 	/**
@@ -606,41 +649,47 @@ public class City extends UpdatableLongId
 	 */
 	public LinkedHashMap<TextKey, Long> getLandUsage()
 	{
-		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
-		map.put(TextKey.Land.MINES, City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
-		map.put(TextKey.Land.FACTORIES, City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
-		map.put(TextKey.Land.UNIVERSITIES, City.LAND_UNIVERSITY * (this.universities));
-		return map;
+		if(landUsage == null)
+		{
+			landUsage = new LinkedHashMap<>();
+			landUsage.put(TextKey.Land.MINES, City.LAND_MINE * (this.ironMines + this.coalMines + this.oilWells));
+			landUsage.put(TextKey.Land.FACTORIES, City.LAND_FACTORY * (this.industryNitrogen + this.industryMilitary + this.industryCivilian));
+			landUsage.put(TextKey.Land.UNIVERSITIES, City.LAND_UNIVERSITY * (this.universities));
+		}
+		return landUsage;
 	}
 
 	public LinkedHashMap<TextKey, Integer> getGarrisonSize()
 	{
-		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
-		int base = 2000;
-		int city = this.garrisonLevel.getModifier();
-		int size = (int)(this.getSize().getMinimum() * 0.025);
-		map.put(TextKey.Garrison.BASE, base);
-		map.put(TextKey.Garrison.CITY_GARRISON_POLICY, city);
-		map.put(TextKey.Garrison.CITY_SIZE, size);
-		int initial = city + base + size;
-		switch(nation.getPolicy().getFortification())
+		if(garrisonSize == null)
 		{
-			case UNOCCUPIED_FORTIFICATION:
-				initial *= -0.75;
-				break;
-			case MINIMAL_FUNDING_FORTIFICATION:
-				initial *= -0.5;
-				break;
-			case PARTIAL_FUNDING_FORTIFICATION:
-				initial = 0;
-				break;
-			case FULL_FUNDING_FORTIFICATION:
-				initial *= 0.5;
-				break;
+			garrisonSize = new LinkedHashMap<>();
+			int base = 2000;
+			int city = this.garrisonLevel.getModifier();
+			int size = (int)(this.getSize().getMinimum() * 0.025);
+			garrisonSize.put(TextKey.Garrison.BASE, base);
+			garrisonSize.put(TextKey.Garrison.CITY_GARRISON_POLICY, city);
+			garrisonSize.put(TextKey.Garrison.CITY_SIZE, size);
+			int initial = city + base + size;
+			switch(nation.getPolicy().getFortification())
+			{
+				case UNOCCUPIED_FORTIFICATION:
+					initial *= -0.75;
+					break;
+				case MINIMAL_FUNDING_FORTIFICATION:
+					initial *= -0.5;
+					break;
+				case PARTIAL_FUNDING_FORTIFICATION:
+					initial = 0;
+					break;
+				case FULL_FUNDING_FORTIFICATION:
+					initial *= 0.5;
+					break;
+			}
+			garrisonSize.put(TextKey.Garrison.FORTIFICATION_POLICY, initial);
+			garrisonSize.put(TextKey.Garrison.NET, initial + base + city + size);
 		}
-		map.put(TextKey.Garrison.FORTIFICATION_POLICY, initial);
-		map.put(TextKey.Garrison.NET, initial + base + city + size);
-		return map;
+		return garrisonSize;
 	}
 
 	public String getUrl()
