@@ -26,7 +26,7 @@
 											<br>
 										</c:if>
 										<c:if test="${home.treatyPermissions.manage || home.treatyPermissions.edit || home.treatyPermissions.founder}">
-											<form method="POST" action="/treaty/${treaty.id}" enctype="multipart/form-data">
+											<form method="POST" action="${pageContext.request.contextPath}/treaty/${treaty.id}" enctype="multipart/form-data">
 												<label>
 													Treaty Flag<br>
 													<input name="flag" id="flag" type="file" accept="image/png"/><br>
