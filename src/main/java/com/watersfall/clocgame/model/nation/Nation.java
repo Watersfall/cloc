@@ -61,6 +61,9 @@ public class Nation
 	private @Setter long lastMessage;
 
 	private long landUsage = -1;
+	private Long totalMilitaryFactories, totalFactories, totalPopulation, totalManpower = null;
+	private Integer totalArmySize, fighterChange, bomberChange, reconChange, totalInfrastructure, totalBarracks, totalPorts = null;
+	private Double fighterPower, bomberPower, navalPower, famineLevel = null;
 	private LinkedHashMap<String, LinkedHashMap<TextKey, Double>> allProductions = null;
 	private HashMap<String, Double> totalProductionCosts = null;
 	private LinkedHashMap<TextKey, Double> coalProduction = null;
@@ -69,6 +72,31 @@ public class Nation
 	private LinkedHashMap<TextKey, Double> steelProduction = null;
 	private LinkedHashMap<TextKey, Double> nitrogenProduction = null;
 	private LinkedHashMap<TextKey, Double> researchProduction = null;
+	private LinkedHashMap<TextKey, Double> foodProduction = null;
+	private LinkedHashMap<TextKey, Long> usedManpower = null;
+	private LinkedHashMap<String, Double> allResources = null;
+	private LinkedHashMap<TextKey, Double> baseFoodProduction = null;
+	private HashMap<ProducibleCategory, Long> totalProduciblesByCategory = null;
+	private HashMap<ProducibleCategory, Long> producibleProductionByCategory = null;
+	private HashMap<Producibles, Long> produciblesProduction = null;
+	private LinkedHashMap<Producibles, Integer> activePlanes = null;
+	private LinkedHashMap<TextKey, Integer> maximumFortificationLevelMap = null;
+	private LinkedHashMap<TextKey, Double> fortificationChange = null;
+	private LinkedHashMap<TextKey, Integer> approvalChange = null;
+	private LinkedHashMap<TextKey, Integer> stabilityChange = null;
+	private LinkedHashMap<TextKey, Long> growthChange = null;
+	private LinkedHashMap<TextKey, Double> populationGrowth = null;
+	private LinkedHashMap<String, LinkedHashMap<TextKey, Long>> landUsageMap = null;
+	private HashMap<Alignments, Integer> maxReputation = null;
+	private HashMap<TextKey, Integer> ententeReputation = null;
+	private HashMap<TextKey, Integer> centralPowersReputation = null;
+	private HashMap<Army, HashMap<ProducibleCategory, Integer>> armyEquipmentChange = null;
+	private HashMap<Army, HashMap<Producibles, Integer>> equipmentUpgrades = null;
+	private HashMap<Army, HashMap<ProducibleCategory, Integer>> equipmentUpgradesByCategory = null;
+	private HashMap<Army, Integer> armyManpowerChange = null;
+	private LinkedHashMap<TextKey, Integer> equipmentReinforcementCapacity;
+	private LinkedHashMap<TextKey, Integer> manpowerReinforcementCapacity;
+	private City largestCity = null;
 	private int leftoverEquipment = 0;
 
 	public Nation(int id)
@@ -346,12 +374,16 @@ public class Nation
 	 */
 	public long getTotalMilitaryFactories()
 	{
-		long total = 0;
-		for(City city : cities.values())
+		if(totalMilitaryFactories == null)
 		{
-			total += city.getIndustryMilitary();
+			long total = 0;
+			for(City city : cities.values())
+			{
+				total += city.getIndustryMilitary();
+			}
+			totalMilitaryFactories = total;
 		}
-		return total;
+		return totalMilitaryFactories;
 	}
 
 	/**
@@ -361,32 +393,44 @@ public class Nation
 	 */
 	public long getTotalFactories()
 	{
-		long total = 0;
-		for(City city : cities.values())
+		if(totalFactories == null)
 		{
-			total += city.getIndustryMilitary() + city.getIndustryNitrogen() + city.getIndustryCivilian();
+			long total = 0;
+			for(City city : cities.values())
+			{
+				total += city.getIndustryMilitary() + city.getIndustryNitrogen() + city.getIndustryCivilian();
+			}
+			totalFactories = total;
 		}
-		return total;
+		return totalFactories;
 	}
 
 	public long getTotalPopulation()
 	{
-		long total = 0;
-		for(City city : cities.values())
+		if(totalPopulation == null)
 		{
-			total += city.getPopulation();
+			long total = 0;
+			for(City city : cities.values())
+			{
+				total += city.getPopulation();
+			}
+			totalPopulation = total;
 		}
-		return total;
+		return totalPopulation;
 	}
 
 	public int getArmySize()
 	{
-		int total = 0;
-		for(Army army : this.armies)
+		if(totalArmySize == null)
 		{
-			total += army.getSize();
+			int total = 0;
+			for(Army army : this.armies)
+			{
+				total += army.getSize();
+			}
+			totalArmySize = total;
 		}
-		return total;
+		return totalArmySize;
 	}
 
 	/**
@@ -396,27 +440,31 @@ public class Nation
 	 */
 	public long getTotalManpower()
 	{
-		long lostManpower = stats.getLostManpower();
-		long manpower = this.getTotalPopulation();
-		switch(policy.getManpower())
+		if(totalManpower == null)
 		{
-			case DISARMED_MANPOWER:
-				manpower *= 0.05;
-				break;
-			case VOLUNTEER_MANPOWER:
-				manpower *= 0.10;
-				break;
-			case RECRUITMENT_MANPOWER:
-				manpower *= 0.20;
-				break;
-			case MANDATORY_MANPOWER:
-				manpower *= 0.30;
-				break;
-			case SCRAPING_THE_BARREL_MANPOWER:
-				manpower *= 0.45;
-				break;
+			long lostManpower = stats.getLostManpower();
+			long manpower = this.getTotalPopulation();
+			switch(policy.getManpower())
+			{
+				case DISARMED_MANPOWER:
+					manpower *= 0.05;
+					break;
+				case VOLUNTEER_MANPOWER:
+					manpower *= 0.10;
+					break;
+				case RECRUITMENT_MANPOWER:
+					manpower *= 0.20;
+					break;
+				case MANDATORY_MANPOWER:
+					manpower *= 0.30;
+					break;
+				case SCRAPING_THE_BARREL_MANPOWER:
+					manpower *= 0.45;
+					break;
+			}
+			totalManpower = manpower - lostManpower;
 		}
-		return manpower - lostManpower;
+		return totalManpower;
 	}
 
 	/**
@@ -431,14 +479,17 @@ public class Nation
 	 */
 	public LinkedHashMap<TextKey, Long> getUsedManpower()
 	{
-		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
-		long airforce = stats.getCurrentBombers() + stats.getCurrentFighters() + stats.getCurrentRecon();
-		airforce *= 50;
-		long army = this.getArmySize();
-		map.put(TextKey.Manpower.AIRFORCE, -airforce);
-		map.put(TextKey.Manpower.ARMY, -army);
-		map.put(TextKey.Manpower.NET, -airforce + -army);
-		return map;
+		if(usedManpower == null)
+		{
+			usedManpower = new LinkedHashMap<>();
+			long airforce = stats.getCurrentBombers() + stats.getCurrentFighters() + stats.getCurrentRecon();
+			airforce *= 50;
+			long army = this.getArmySize();
+			usedManpower.put(TextKey.Manpower.AIRFORCE, -airforce);
+			usedManpower.put(TextKey.Manpower.ARMY, -army);
+			usedManpower.put(TextKey.Manpower.NET, -airforce + -army);
+		}
+		return usedManpower;
 	}
 
 	/**
@@ -453,16 +504,19 @@ public class Nation
 
 	public LinkedHashMap<String, Double> getAllResources()
 	{
-		LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-		map.put("Budget", this.stats.getBudget());
-		map.put("Food", this.stats.getFood());
-		map.put("Coal", this.stats.getCoal());
-		map.put("Iron", this.stats.getIron());
-		map.put("Oil", this.stats.getOil());
-		map.put("Steel", this.stats.getSteel());
-		map.put("Nitrogen", this.stats.getNitrogen());
-		map.put("Research", this.stats.getResearch());
-		return map;
+		if(allResources == null)
+		{
+			allResources = new LinkedHashMap<>();
+			allResources.put("Budget", this.stats.getBudget());
+			allResources.put("Food", this.stats.getFood());
+			allResources.put("Coal", this.stats.getCoal());
+			allResources.put("Iron", this.stats.getIron());
+			allResources.put("Oil", this.stats.getOil());
+			allResources.put("Steel", this.stats.getSteel());
+			allResources.put("Nitrogen", this.stats.getNitrogen());
+			allResources.put("Research", this.stats.getResearch());
+		}
+		return allResources;
 	}
 
 	private static void extractionEconBoosts(LinkedHashMap<TextKey, Double> map, Policy policy)
@@ -808,75 +862,78 @@ public class Nation
 	 */
 	public LinkedHashMap<TextKey, Double> getFoodProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get(TextKey.Farming.NET);
-		if(farming < 0)
-			farming = 0;
-		double tech = 0;
-		if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getStats().getNitrogen() >= 0)
+		if(foodProduction == null)
 		{
-			tech = farming * TechnologyAdvancedArtificialFertilizer.FOOD_GAIN;
+			foodProduction = new LinkedHashMap<>();
+			double farming = (this.getFreeLand() / 250.0) * this.getBaseFoodProduction().get(TextKey.Farming.NET);
+			if(farming < 0)
+				farming = 0;
+			double tech = 0;
+			if(this.hasTech(Technologies.ADVANCED_ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getStats().getNitrogen() >= 0)
+			{
+				tech = farming * TechnologyAdvancedArtificialFertilizer.FOOD_GAIN;
+			}
+			else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getStats().getNitrogen() >= 0)
+			{
+				tech = farming * TechnologyArtificialFertilizer.FOOD_GAIN;
+			}
+			else if(this.hasTech(Technologies.BASIC_ARTIFICIAL_FERTILIZER))
+			{
+				tech = farming * TechnologyBasicArtificialFertilizer.FOOD_GAIN;
+			}
+			if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getStats().getSteel() > 0)
+			{
+				tech += farming * TechnologyAdvancedFarmingMachines.FOOD_GAIN;
+			}
+			else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getStats().getSteel() > 0)
+			{
+				tech += farming * TechnologyFarmingMachines.FOOD_GAIN;
+			}
+			if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
+			{
+				tech *= 0.5;
+			}
+			else if(this.getPolicy().getFarmingSubsidies() == Policy.REDUCED_SUBSIDIES_FARMING)
+			{
+				tech *= 0.85;
+			}
+			else if(this.getPolicy().getFarmingSubsidies() == Policy.SUBSTANTIAL_SUBSIDIES_FARMING)
+			{
+				tech *= 1.5;
+			}
+			double consumption = -this.getTotalPopulation() / 2000.0;
+			double economy = 0.0;
+			double food = 0.0;
+			double total = farming;
+			double net = farming + consumption;
+			if(this.policy.getEconomy() == Policy.AGRARIAN_ECONOMY)
+			{
+				economy = farming * 0.15;
+				total += economy;
+			}
+			else if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
+			{
+				economy = -farming * 0.1;
+			}
+			if(this.policy.getFood() == Policy.FREE_FOOD)
+			{
+				food = consumption * 0.35;
+			}
+			else if(this.policy.getFood() == Policy.RATIONING_FOOD)
+			{
+				food = -consumption * 0.35;
+			}
+			net += food + economy + tech;
+			foodProduction.put(TextKey.Resource.FARMING, farming);
+			foodProduction.put(TextKey.Resource.TECHNOLOGY, tech);
+			foodProduction.put(TextKey.Resource.CONSUMPTION, consumption);
+			foodProduction.put(TextKey.Resource.ECONOMY_TYPE, economy);
+			foodProduction.put(TextKey.Resource.FOOD_POLICY, food);
+			foodProduction.put(TextKey.Resource.NET, net);
+			foodProduction.put(TextKey.Resource.TOTAL_GAIN, total);
+			doStabilityResourceEffect(foodProduction);
 		}
-		else if(this.hasTech(Technologies.ARTIFICIAL_FERTILIZER) && this.getTotalNitrogenProduction().get(TextKey.Resource.NET) + this.getStats().getNitrogen() >= 0)
-		{
-			tech = farming * TechnologyArtificialFertilizer.FOOD_GAIN;
-		}
-		else if(this.hasTech(Technologies.BASIC_ARTIFICIAL_FERTILIZER))
-		{
-			tech = farming * TechnologyBasicArtificialFertilizer.FOOD_GAIN;
-		}
-		if(this.hasTech(Technologies.ADVANCED_FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getStats().getSteel() > 0)
-		{
-			tech += farming * TechnologyAdvancedFarmingMachines.FOOD_GAIN;
-		}
-		else if(this.hasTech(Technologies.FARMING_MACHINES) && this.getTotalSteelProduction().get(TextKey.Resource.NET) + this.getStats().getSteel() > 0)
-		{
-			tech += farming * TechnologyFarmingMachines.FOOD_GAIN;
-		}
-		if(this.getPolicy().getFarmingSubsidies() == Policy.NO_SUBSIDIES_FARMING)
-		{
-			tech *= 0.5;
-		}
-		else if(this.getPolicy().getFarmingSubsidies() == Policy.REDUCED_SUBSIDIES_FARMING)
-		{
-			tech *= 0.85;
-		}
-		else if(this.getPolicy().getFarmingSubsidies() == Policy.SUBSTANTIAL_SUBSIDIES_FARMING)
-		{
-			tech *= 1.5;
-		}
-		double consumption = -this.getTotalPopulation() / 2000.0;
-		double economy = 0.0;
-		double food = 0.0;
-		double total = farming;
-		double net = farming + consumption;
-		if(this.policy.getEconomy() == Policy.AGRARIAN_ECONOMY)
-		{
-			economy = farming * 0.15;
-			total += economy;
-		}
-		else if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
-		{
-			economy = -farming * 0.1;
-		}
-		if(this.policy.getFood() == Policy.FREE_FOOD)
-		{
-			food = consumption * 0.35;
-		}
-		else if(this.policy.getFood() == Policy.RATIONING_FOOD)
-		{
-			food = -consumption * 0.35;
-		}
-		net += food + economy + tech;
-		map.put(TextKey.Resource.FARMING, farming);
-		map.put(TextKey.Resource.TECHNOLOGY, tech);
-		map.put(TextKey.Resource.CONSUMPTION, consumption);
-		map.put(TextKey.Resource.ECONOMY_TYPE, economy);
-		map.put(TextKey.Resource.FOOD_POLICY, food);
-		map.put(TextKey.Resource.NET, net);
-		map.put(TextKey.Resource.TOTAL_GAIN, total);
-		doStabilityResourceEffect(map);
-		return map;
+		return foodProduction;
 	}
 
 	/**
@@ -931,22 +988,37 @@ public class Nation
 
 	public LinkedHashMap<TextKey, Double> getBaseFoodProduction()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double base = 1.0;
-		map.put(TextKey.Farming.BASE, base);
-		map.put(TextKey.Resource.TOTAL_GAIN, base);
-		map.put(TextKey.Farming.NET, base);
-		return map;
+		if(baseFoodProduction == null)
+		{
+			baseFoodProduction = new LinkedHashMap<>();
+			double base = 1.0;
+			baseFoodProduction.put(TextKey.Farming.BASE, base);
+			baseFoodProduction.put(TextKey.Resource.TOTAL_GAIN, base);
+			baseFoodProduction.put(TextKey.Farming.NET, base);
+		}
+		return baseFoodProduction;
 	}
 
 	public long getTotalProduciblesByCategory(ProducibleCategory category)
 	{
-		long total = 0;
-		for(Producibles producibles : Producibles.getProduciblesForCategory(category))
+		if(totalProduciblesByCategory == null)
 		{
-			total += this.producibles.getProducible(producibles);
+			totalProduciblesByCategory = new HashMap<>();
 		}
-		return total;
+		if(totalProduciblesByCategory.containsKey(category))
+		{
+			return totalProduciblesByCategory.get(category);
+		}
+		else
+		{
+			long total = 0;
+			for(Producibles producibles : Producibles.getProduciblesForCategory(category))
+			{
+				total += this.producibles.getProducible(producibles);
+			}
+			totalProduciblesByCategory.put(category, total);
+			return total;
+		}
 	}
 
 	public long getTotalProduciblesByCategories(ProducibleCategory... category)
@@ -961,59 +1033,86 @@ public class Nation
 
 	public long getProduciblesProductionByCategory(ProducibleCategory category)
 	{
-		double total = 0;
-		for(Production production : this.production.values())
+		if(producibleProductionByCategory == null)
 		{
-			if(production.getProductionAsTechnology().getTechnology().getProducibleItem().getCategory() == category)
-			{
-				total += production.getMonthlyProduction(this);
-			}
+			producibleProductionByCategory = new HashMap<>();
 		}
-		return (long)total;
+		if(producibleProductionByCategory.containsKey(category))
+		{
+			return producibleProductionByCategory.get(category);
+		}
+		else
+		{
+			double total = 0;
+			for(Production production : this.production.values())
+			{
+				if(production.getProductionAsTechnology().getTechnology().getProducibleItem().getCategory() == category)
+				{
+					total += production.getMonthlyProduction(this);
+				}
+			}
+			producibleProductionByCategory.put(category, (long)total);
+			return (long)total;
+		}
 	}
 
 	public long getProduciblesProduction(Producibles producible)
 	{
-		double total = 0;
-		for(Production production : this.production.values())
+		if(produciblesProduction == null)
 		{
-			if(production.getProductionAsTechnology().getTechnology().getProducibleItem() == producible.getProducible())
-			{
-				total += production.getMonthlyProduction(this);
-			}
+			produciblesProduction = new HashMap<>();
 		}
-		return (long)total;
+		if(produciblesProduction.containsKey(producible))
+		{
+			return produciblesProduction.get(producible);
+		}
+		else
+		{
+			double total = 0;
+			for(Production production : this.production.values())
+			{
+				if(production.getProductionAsTechnology().getTechnology().getProducibleItem() == producible.getProducible())
+				{
+					total += production.getMonthlyProduction(this);
+				}
+			}
+			produciblesProduction.put(producible, (long)total);
+			return (long)total;
+		}
 	}
 	
 	public LinkedHashMap<Producibles, Integer> getActivePlanes(ProducibleCategory category, int allowed)
 	{
-		LinkedHashMap<Producibles, Integer> map = new LinkedHashMap<>();
-		ArrayList<Producibles> list = Producibles.getProduciblesForCategory(category);
-		for(Producibles producible : list)
+		if(activePlanes == null)
 		{
-			if(allowed > 0)
+			activePlanes = new LinkedHashMap<>();
+			ArrayList<Producibles> list = Producibles.getProduciblesForCategory(category);
+			for(Producibles producible : list)
 			{
-				int count = this.getProducibles().getProducible(producible);
-				if(count > 0)
+				if(allowed > 0)
 				{
-					if(count > allowed)
+					int count = this.getProducibles().getProducible(producible);
+					if(count > 0)
 					{
-						map.put(producible, allowed);
-						break;
-					}
-					else
-					{
-						map.put(producible, count);
-						allowed -= count;
+						if(count > allowed)
+						{
+							activePlanes.put(producible, allowed);
+							break;
+						}
+						else
+						{
+							activePlanes.put(producible, count);
+							allowed -= count;
+						}
 					}
 				}
-			}
-			else
-			{
-				break;
+				else
+				{
+					break;
+				}
 			}
 		}
-		return map;
+		return activePlanes;
 	}
 
 	public LinkedHashMap<Producibles, Integer> getActiveFighters()
@@ -1143,38 +1242,41 @@ public class Nation
 
 	public LinkedHashMap<TextKey, Integer> getMaximumFortificationLevelMap()
 	{
-		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
-		int tech = 2000;
-		if(this.hasTech(Technologies.BASIC_TRENCHES))
-			tech += TechnologyTrenches.BONUS * 100;
-		if(this.hasTech(Technologies.BASIC_FORTIFICATIONS))
-			tech += TechnologyFortifications.BONUS * 100;
-		if(this.hasTech(Technologies.ADVANCED_TRENCHES))
-			tech += TechnologyAdvancedTrenches.BONUS * 100;
-		if(this.hasTech(Technologies.ADVANCED_FORTIFICATIONS))
-			tech += TechnologyReinforcedConcrete.BONUS * 100;
-		if(this.hasTech(Technologies.MOBILE_DEFENSE))
-			tech += TechnologyMobileDefense.BONUS * 100;
-		int policy = tech;
-		switch(this.policy.getFortification())
+		if(maximumFortificationLevelMap == null)
 		{
-			case UNOCCUPIED_FORTIFICATION:
-				policy *= 0.15;
-				break;
-			case MINIMAL_FUNDING_FORTIFICATION:
-				policy *= 0.4;
-				break;
-			case PARTIAL_FUNDING_FORTIFICATION:
-				policy *= 0.75;
-				break;
+			maximumFortificationLevelMap = new LinkedHashMap<>();
+			int tech = 2000;
+			if(this.hasTech(Technologies.BASIC_TRENCHES))
+				tech += TechnologyTrenches.BONUS * 100;
+			if(this.hasTech(Technologies.BASIC_FORTIFICATIONS))
+				tech += TechnologyFortifications.BONUS * 100;
+			if(this.hasTech(Technologies.ADVANCED_TRENCHES))
+				tech += TechnologyAdvancedTrenches.BONUS * 100;
+			if(this.hasTech(Technologies.ADVANCED_FORTIFICATIONS))
+				tech += TechnologyReinforcedConcrete.BONUS * 100;
+			if(this.hasTech(Technologies.MOBILE_DEFENSE))
+				tech += TechnologyMobileDefense.BONUS * 100;
+			int policy = tech;
+			switch(this.policy.getFortification())
+			{
+				case UNOCCUPIED_FORTIFICATION:
+					policy *= 0.15;
+					break;
+				case MINIMAL_FUNDING_FORTIFICATION:
+					policy *= 0.4;
+					break;
+				case PARTIAL_FUNDING_FORTIFICATION:
+					policy *= 0.75;
+					break;
+			}
+			policy = tech - policy;
+			policy = -policy;
+			int net = policy + tech;
+			maximumFortificationLevelMap.put(TextKey.Fortification.TECHNOLOGY, tech);
+			maximumFortificationLevelMap.put(TextKey.Fortification.POLICY, policy);
+			maximumFortificationLevelMap.put(TextKey.Fortification.NET, net);
 		}
-		policy = tech - policy;
-		policy = -policy;
-		int net = policy + tech;
-		map.put(TextKey.Fortification.TECHNOLOGY, tech);
-		map.put(TextKey.Fortification.POLICY, policy);
-		map.put(TextKey.Fortification.NET, net);
-		return map;
+		return maximumFortificationLevelMap;
 	}
 
 	/**
@@ -1185,23 +1287,27 @@ public class Nation
 	 */
 	public double getFighterPower(boolean attackingOtherAirforce)
 	{
-		double power = 0;
-		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
+		if(fighterPower == null)
 		{
-			power += (this.producibles.getProducible(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
-		}
-		if(attackingOtherAirforce)
-		{
-			for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
+			double power = 0;
+			for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
 			{
-				power += (this.producibles.getProducible(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower() / 2);
+				power += (this.producibles.getProducible(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
 			}
+			if(attackingOtherAirforce)
+			{
+				for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
+				{
+					power += (this.producibles.getProducible(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower() / 2);
+				}
+			}
+			for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
+			{
+				power += (this.producibles.getProducible(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
+			}
+			fighterPower = power / 10;
 		}
-		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE))
-		{
-			power += (this.producibles.getProducible(producibles) * ((IFighterPower)producibles.getProducible()).getFighterPower());
-		}
-		return power / 10;
+		return fighterPower;
 	}
 
 	/**
@@ -1210,12 +1316,16 @@ public class Nation
 	 */
 	public double getBomberPower()
 	{
-		double power = 0;
-		for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
+		if(bomberPower == null)
 		{
-			power += (this.producibles.getProducible(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower());
+			double power = 0;
+			for(Producibles producibles : Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE))
+			{
+				power += (this.producibles.getProducible(producibles) * ((IBomberPower)producibles.getProducible()).getBomberPower());
+			}
+			bomberPower = power / 10;
 		}
-		return power / 10;
+		return bomberPower;
 	}
 
 	public long getTotalShipCount()
@@ -1229,9 +1339,13 @@ public class Nation
 	 */
 	public double getNavalPower()
 	{
-		double power = getTotalShipCount();
-		power /= 10;
-		return power;
+		if(navalPower == null)
+		{
+			double power = getTotalShipCount();
+			power /= 10;
+			navalPower = power;
+		}
+		return navalPower;
 	}
 
 	/**
@@ -1373,240 +1487,259 @@ public class Nation
 
 	public LinkedHashMap<TextKey, Double> getFortificationChange()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double base = Math.min(
-				this.stats.getFortification() + (0.1 * ((double)this.getMaximumFortificationLevel() / (this.stats.getFortification() / 100.0))),
-				this.getMaximumFortificationLevel()
-		);
-		base -= this.stats.getFortification();
-		if(base > 50)
+		if(fortificationChange == null)
 		{
-			base = 50;
-		}
-		if(base < -100)
-		{
-			base = -100;
-		}
-		double bonus = 0;
-		if(base > 0)
-		{
-			switch(this.policy.getFortification())
+			fortificationChange = new LinkedHashMap<>();
+			double base = Math.min(
+					this.stats.getFortification() + (0.1 * ((double)this.getMaximumFortificationLevel() / (this.stats.getFortification() / 100.0))),
+					this.getMaximumFortificationLevel()
+			);
+			base -= this.stats.getFortification();
+			if(base > 50)
 			{
-				case UNOCCUPIED_FORTIFICATION:
-					bonus = -base * 1.25;
-					break;
-				case MINIMAL_FUNDING_FORTIFICATION:
-					bonus = -base * 0.5;
-					break;
-				case PARTIAL_FUNDING_FORTIFICATION:
-					break;
-				case FULL_FUNDING_FORTIFICATION:
-					bonus = base * 0.25;
-					break;
-				case MAX_FORTIFICATION:
-					bonus = base * 0.5;
+				base = 50;
 			}
-			map.put(TextKey.Fortification.BELOW_MAX, base);
-		}
-		else if(base < 0)
-		{
-			switch(this.policy.getFortification())
+			if(base < -100)
 			{
-				case UNOCCUPIED_FORTIFICATION:
-					bonus = base;
-					break;
-				case MINIMAL_FUNDING_FORTIFICATION:
-					bonus = base * 0.5;
-					break;
-				case PARTIAL_FUNDING_FORTIFICATION:
-					break;
-				case FULL_FUNDING_FORTIFICATION:
-					bonus = -base * 0.25;
-					break;
-				case MAX_FORTIFICATION:
-					bonus = -base * 0.5;
+				base = -100;
 			}
-			map.put(TextKey.Fortification.ABOVE_MAX, base);
+			double bonus = 0;
+			if(base > 0)
+			{
+				switch(this.policy.getFortification())
+				{
+					case UNOCCUPIED_FORTIFICATION:
+						bonus = -base * 1.25;
+						break;
+					case MINIMAL_FUNDING_FORTIFICATION:
+						bonus = -base * 0.5;
+						break;
+					case PARTIAL_FUNDING_FORTIFICATION:
+						break;
+					case FULL_FUNDING_FORTIFICATION:
+						bonus = base * 0.25;
+						break;
+					case MAX_FORTIFICATION:
+						bonus = base * 0.5;
+				}
+				fortificationChange.put(TextKey.Fortification.BELOW_MAX, base);
+			}
+			else if(base < 0)
+			{
+				switch(this.policy.getFortification())
+				{
+					case UNOCCUPIED_FORTIFICATION:
+						bonus = base;
+						break;
+					case MINIMAL_FUNDING_FORTIFICATION:
+						bonus = base * 0.5;
+						break;
+					case PARTIAL_FUNDING_FORTIFICATION:
+						break;
+					case FULL_FUNDING_FORTIFICATION:
+						bonus = -base * 0.25;
+						break;
+					case MAX_FORTIFICATION:
+						bonus = -base * 0.5;
+				}
+				fortificationChange.put(TextKey.Fortification.ABOVE_MAX, base);
+			}
+			double net = base + bonus;
+			fortificationChange.put(TextKey.Fortification.BONUS, bonus);
+			fortificationChange.put(TextKey.Fortification.NET, net);
 		}
-		double net = base + bonus;
-		map.put(TextKey.Fortification.BONUS, bonus);
-		map.put(TextKey.Fortification.NET, net);
-		return map;
+		return fortificationChange;
 	}
 
 	public LinkedHashMap<TextKey, Integer> getApprovalChange()
 	{
-		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
-		int famine = (int)this.getFamineLevel();
-		if(famine < 0)
+		if(approvalChange == null)
 		{
-			map.put(TextKey.Approval.FAMINE, famine);
+			approvalChange = new LinkedHashMap<>();
+			int famine = (int)this.getFamineLevel();
+			if(famine < 0)
+			{
+				approvalChange.put(TextKey.Approval.FAMINE, famine);
+			}
+			approvalChange.put(TextKey.Approval.NET, famine);
 		}
-		map.put(TextKey.Approval.NET, famine);
-		return map;
+		return approvalChange;
 	}
 
 	public LinkedHashMap<TextKey, Integer> getStabilityChange()
 	{
-		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
-		int approval = this.stats.getApproval() / 20 - 2;
-		int famine = (int)this.getFamineLevel();
-		int growth = 0;
-		if(this.getStats().getGrowth() < 0)
+		if(stabilityChange == null)
 		{
-			growth = -1;
+			stabilityChange = new LinkedHashMap<>();
+			int approval = this.stats.getApproval() / 20 - 2;
+			int famine = (int)this.getFamineLevel();
+			int growth = 0;
+			if(this.getStats().getGrowth() < 0)
+			{
+				growth = -1;
+			}
+			if(this.getStats().getGrowth() < -5)
+			{
+				growth = -2;
+			}
+			if(this.getStats().getGrowth() < -10)
+			{
+				growth = -4;
+			}
+			if(this.getStats().getGrowth() < -20)
+			{
+				growth = -6;
+			}
+			if(this.getStats().getGrowth() < -50)
+			{
+				growth = -10;
+			}
+			if(approval < 0)
+			{
+				stabilityChange.put(TextKey.Stability.LOW_APPROVAL, approval);
+			}
+			else
+			{
+				stabilityChange.put(TextKey.Stability.HIGH_APPROVAL, approval);
+			}
+			if(this.getFreeManpower() < 0)
+			{
+				stabilityChange.put(TextKey.Stability.MANPOWER, (int)((double)this.getFreeManpower() / (double)this.getTotalManpower() * Math.sqrt(Math.sqrt(this.getTotalManpower()))));
+			}
+			if(famine < 0)
+			{
+				stabilityChange.put(TextKey.Stability.FAMINE, famine);
+			}
+			stabilityChange.put(TextKey.Stability.GROWTH, growth);
+			stabilityChange.put(TextKey.Stability.NET, approval + famine + growth);
 		}
-		if(this.getStats().getGrowth() < -5)
-		{
-			growth = -2;
-		}
-		if(this.getStats().getGrowth() < -10)
-		{
-			growth = -4;
-		}
-		if(this.getStats().getGrowth() < -20)
-		{
-			growth = -6;
-		}
-		if(this.getStats().getGrowth() < -50)
-		{
-			growth = -10;
-		}
-		if(approval < 0)
-		{
-			map.put(TextKey.Stability.LOW_APPROVAL, approval);
-		}
-		else
-		{
-			map.put(TextKey.Stability.HIGH_APPROVAL, approval);
-		}
-		if(this.getFreeManpower() < 0)
-		{
-			map.put(TextKey.Stability.MANPOWER, (int)((double)this.getFreeManpower() / (double)this.getTotalManpower() * Math.sqrt(Math.sqrt(this.getTotalManpower()))));
-		}
-		if(famine < 0)
-		{
-			map.put(TextKey.Stability.FAMINE, famine);
-		}
-		map.put(TextKey.Stability.GROWTH, growth);
-		map.put(TextKey.Stability.NET, approval + famine + growth);
-		return map;
+		return stabilityChange;
 	}
 
 	public double getFamineLevel()
 	{
-		double food = this.stats.getFood() + this.getFoodProduction().get(TextKey.Resource.NET);
-		if(food > 0)
+		if(famineLevel == null)
 		{
-			return 0;
+			double food = this.stats.getFood() + this.getFoodProduction().get(TextKey.Resource.NET);
+			if(food > 0)
+			{
+				famineLevel = 0D;
+			}
+			else
+			{
+				famineLevel = -Math.sqrt(Math.abs(food)) * (Math.min(1, (this.getStats().getMonthsInFamine() + 1.0) / 10.0));
+			}
 		}
-		else
-		{
-			return -Math.sqrt(Math.abs(food)) * (Math.min(1, (this.getStats().getMonthsInFamine() + 1.0) / 10.0));
-		}
+		return famineLevel;
 	}
 
 	public LinkedHashMap<TextKey, Long> getGrowthChange()
 	{
-		LinkedHashMap<TextKey, Long> map = new LinkedHashMap<>();
-		long factories = this.getTotalFactories();
-		long military = this.getUsedManpower().get(TextKey.Manpower.NET) / 20000;
-		long overMaxManpower = 0;
-		if(this.getFreeManpower() < 0)
+		if(growthChange == null)
 		{
-			overMaxManpower = this.getFreeManpower() / 1000;
+			growthChange = new LinkedHashMap<>();
+			long factories = this.getTotalFactories();
+			long military = this.getUsedManpower().get(TextKey.Manpower.NET) / 20000;
+			long overMaxManpower = 0;
+			if(this.getFreeManpower() < 0)
+			{
+				overMaxManpower = this.getFreeManpower() / 1000;
+			}
+			long conscription = stats.getRecentDeconscription() - stats.getRecentConscription();
+			long fortification = -this.stats.getFortification() / 500;
+			if(conscription > 0)
+			{
+				conscription = (long)((conscription + 1) * 0.75);
+				growthChange.put(TextKey.Growth.DECONSCRIPTION, conscription);
+			}
+			else
+			{
+				conscription = (long)(conscription * 1.15);
+				growthChange.put(TextKey.Growth.CONSCRIPTION, conscription);
+			}
+			switch(this.policy.getFortification())
+			{
+				case UNOCCUPIED_FORTIFICATION:
+					fortification = 0;
+					break;
+				case MINIMAL_FUNDING_FORTIFICATION:
+					fortification *= 0.5;
+					break;
+				case FULL_FUNDING_FORTIFICATION:
+					fortification *= 1.25;
+					break;
+				case MAX_FORTIFICATION:
+					fortification *= 2;
+			}
+			int airforce = this.getFighterChange() + this.getBomberChange() + this.getReconChange();
+			if(airforce > 0)
+			{
+				growthChange.put(TextKey.Growth.AIR_INCREASE, (long)(airforce / 50.0));
+			}
+			long cityGarrison = 0;
+			for(City city : cities.values())
+			{
+				cityGarrison += city.getGarrisonSize().get(TextKey.Garrison.NET);
+			}
+			cityGarrison /= -20000;
+			growthChange.put(TextKey.Growth.FACTORIES, factories);
+			growthChange.put(TextKey.Growth.MILITARY, military);
+			growthChange.put(TextKey.Growth.OVER_MAX_MANPOWER, overMaxManpower);
+			growthChange.put(TextKey.Growth.FORTIFICATION, fortification);
+			growthChange.put(TextKey.Growth.CITY_GARRISON, cityGarrison);
+			growthChange.put(TextKey.Growth.NET, factories + military + conscription + fortification + overMaxManpower + airforce + cityGarrison);
 		}
-		long conscription = stats.getRecentDeconscription() - stats.getRecentConscription();
-		long fortification = -this.stats.getFortification() / 500;
-		if(conscription > 0)
-		{
-			conscription = (long)((conscription + 1) * 0.75);
-			map.put(TextKey.Growth.DECONSCRIPTION, conscription);
-		}
-		else
-		{
-			conscription = (long)(conscription * 1.15);
-			map.put(TextKey.Growth.CONSCRIPTION, conscription);
-		}
-		switch(this.policy.getFortification())
-		{
-			case UNOCCUPIED_FORTIFICATION:
-				fortification = 0;
-				break;
-			case MINIMAL_FUNDING_FORTIFICATION:
-				fortification *= 0.5;
-				break;
-			case FULL_FUNDING_FORTIFICATION:
-				fortification *= 1.25;
-				break;
-			case MAX_FORTIFICATION:
-				fortification *= 2;
-		}
-		int airforce = this.getFighterChange() + this.getBomberChange() + this.getReconChange();
-		if(airforce > 0)
-		{
-			map.put(TextKey.Growth.AIR_INCREASE, (long)(airforce / 50.0));
-		}
-		long cityGarrison = 0;
-		for(City city : cities.values())
-		{
-			cityGarrison += city.getGarrisonSize().get(TextKey.Garrison.NET);
-		}
-		cityGarrison /= -20000;
-		map.put(TextKey.Growth.FACTORIES, factories);
-		map.put(TextKey.Growth.MILITARY, military);
-		map.put(TextKey.Growth.OVER_MAX_MANPOWER, overMaxManpower);
-		map.put(TextKey.Growth.FORTIFICATION, fortification);
-		map.put(TextKey.Growth.CITY_GARRISON, cityGarrison);
-		map.put(TextKey.Growth.NET, factories + military + conscription + fortification + overMaxManpower + airforce + cityGarrison);
-		return map;
+		return growthChange;
 	}
 
 	public LinkedHashMap<TextKey, Double> getPopulationGrowth()
 	{
-		LinkedHashMap<TextKey, Double> map = new LinkedHashMap<>();
-		double base = 2;
-		double foodPolicy = 0;
-		double manpowerPolicy = 0;
-		double economyPolicy = 0;
-		if(this.policy.getFood() == Policy.FREE_FOOD)
+		if(populationGrowth == null)
 		{
-			foodPolicy = 1.5;
+			populationGrowth = new LinkedHashMap<>();
+			double base = 2;
+			double foodPolicy = 0;
+			double manpowerPolicy = 0;
+			double economyPolicy = 0;
+			if(this.policy.getFood() == Policy.FREE_FOOD)
+			{
+				foodPolicy = 1.5;
+			}
+			else if(this.policy.getFood() == Policy.RATIONING_FOOD)
+			{
+				foodPolicy = -2.5;
+			}
+			if(this.policy.getManpower() == Policy.DISARMED_MANPOWER)
+			{
+				manpowerPolicy = 2.5;
+			}
+			else if(this.policy.getManpower() == Policy.VOLUNTEER_MANPOWER)
+			{
+				manpowerPolicy = 1;
+			}
+			else if(this.policy.getManpower() == Policy.MANDATORY_MANPOWER)
+			{
+				manpowerPolicy = -1;
+			}
+			else if(this.policy.getManpower() == Policy.SCRAPING_THE_BARREL_MANPOWER)
+			{
+				manpowerPolicy = -2.5;
+			}
+			if(this.policy.getEconomy() == Policy.CIVILIAN_ECONOMY)
+			{
+				economyPolicy = 1.5;
+			}
+			else if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
+			{
+				economyPolicy = -1.5;
+			}
+			populationGrowth.put(TextKey.Population.BASE, base);
+			populationGrowth.put(TextKey.Population.FOOD_POLICY, foodPolicy);
+			populationGrowth.put(TextKey.Population.MANPOWER_POLICY, manpowerPolicy);
+			populationGrowth.put(TextKey.Population.ECONOMY_POLICY, economyPolicy);
+			populationGrowth.put(TextKey.Population.NET, base + foodPolicy + manpowerPolicy + economyPolicy);
 		}
-		else if(this.policy.getFood() == Policy.RATIONING_FOOD)
-		{
-			foodPolicy = -2.5;
-		}
-		if(this.policy.getManpower() == Policy.DISARMED_MANPOWER)
-		{
-			manpowerPolicy = 2.5;
-		}
-		else if(this.policy.getManpower() == Policy.VOLUNTEER_MANPOWER)
-		{
-			manpowerPolicy = 1;
-		}
-		else if(this.policy.getManpower() == Policy.MANDATORY_MANPOWER)
-		{
-			manpowerPolicy = -1;
-		}
-		else if(this.policy.getManpower() == Policy.SCRAPING_THE_BARREL_MANPOWER)
-		{
-			manpowerPolicy = -2.5;
-		}
-		if(this.policy.getEconomy() == Policy.CIVILIAN_ECONOMY)
-		{
-			economyPolicy = 1.5;
-		}
-		else if(this.policy.getEconomy() == Policy.WAR_ECONOMY)
-		{
-			economyPolicy = -1.5;
-		}
-		map.put(TextKey.Population.BASE, base);
-		map.put(TextKey.Population.FOOD_POLICY, foodPolicy);
-		map.put(TextKey.Population.MANPOWER_POLICY, manpowerPolicy);
-		map.put(TextKey.Population.ECONOMY_POLICY, economyPolicy);
-		map.put(TextKey.Population.NET, base + foodPolicy + manpowerPolicy + economyPolicy);
-		return map;
+		return populationGrowth;
 	}
 
 	public long getRequiredSizeForNextCity()
@@ -1621,27 +1754,34 @@ public class Nation
 
 	public City getLargestCity()
 	{
-		long max = 0;
-		long cityId = 0;
-		for(City city : cities.values())
+		if(largestCity == null)
 		{
-			if(city.getPopulation() > max)
+			long max = 0;
+			long cityId = 0;
+			for(City city : cities.values())
 			{
-				max = city.getPopulation();
-				cityId = city.getId();
+				if(city.getPopulation() > max)
+				{
+					max = city.getPopulation();
+					cityId = city.getId();
+				}
 			}
+			largestCity = cities.get(cityId);
 		}
-		return cities.get(cityId);
+		return largestCity;
 	}
 
 	public LinkedHashMap<String, LinkedHashMap<TextKey, Long>> getLandUsage()
 	{
-		LinkedHashMap<String, LinkedHashMap<TextKey, Long>> map = new LinkedHashMap<>();
-		for(City city : cities.values())
+		if(landUsageMap == null)
 		{
-			map.put(city.getName(), city.getLandUsage());
+			landUsageMap = new LinkedHashMap<>();
+			for(City city : cities.values())
+			{
+				landUsageMap.put(city.getName(), city.getLandUsage());
+			}
 		}
-		return map;
+		return landUsageMap;
 	}
 
 	public String getDisplayString(TextKey key)
@@ -1657,154 +1797,183 @@ public class Nation
 		}
 		else
 		{
-			HashMap<TextKey, Integer> map;
-			if(alignment == Alignments.CENTRAL_POWERS)
+			if(maxReputation == null)
 			{
-				map = getCentralPowersReputation();
+				maxReputation = new HashMap<>();
+			}
+			if(maxReputation.containsKey(alignment))
+			{
+				return maxReputation.get(alignment);
 			}
 			else
 			{
-				map = getEntenteReputation();
+				HashMap<TextKey, Integer> map;
+				if(alignment == Alignments.CENTRAL_POWERS)
+				{
+					map = getCentralPowersReputation();
+				}
+				else
+				{
+					map = getEntenteReputation();
+				}
+				int sum = 0;
+				for(Integer num : map.values())
+				{
+					sum += num;
+				}
+				maxReputation.put(alignment, sum);
+				return sum;
 			}
-			int sum = 0;
-			for(Integer num : map.values())
-			{
-				sum += num;
-			}
-			return sum;
 		}
-
 	}
 
 	public HashMap<TextKey, Integer> getEntenteReputation()
 	{
-		HashMap<TextKey, Integer> map = new HashMap<>();
-		int positiveTrade = 0, negativeTrade = 0;
-		if(this.alignmentTransactions.containsKey(Alignments.ENTENTE))
+		if(ententeReputation == null)
 		{
-			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.ENTENTE))
+			ententeReputation = new HashMap<>();
+			int positiveTrade = 0, negativeTrade = 0;
+			if(this.alignmentTransactions.containsKey(Alignments.ENTENTE))
 			{
-				positiveTrade += 25;
+				for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.ENTENTE))
+				{
+					positiveTrade += 25;
+				}
+			}
+			if(this.alignmentTransactions.containsKey(Alignments.CENTRAL_POWERS))
+			{
+				for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.CENTRAL_POWERS))
+				{
+					negativeTrade -= 50;
+				}
+			}
+			ententeReputation.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
+			ententeReputation.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
+			if(this.stats.getAlignment() == Alignments.ENTENTE)
+			{
+				ententeReputation.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
+			}
+			else if(this.stats.getAlignment() == Alignments.CENTRAL_POWERS)
+			{
+				ententeReputation.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
 			}
 		}
-		if(this.alignmentTransactions.containsKey(Alignments.CENTRAL_POWERS))
-		{
-			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.CENTRAL_POWERS))
-			{
-				negativeTrade -= 50;
-			}
-		}
-		map.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
-		map.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
-		if(this.stats.getAlignment() == Alignments.ENTENTE)
-		{
-			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
-		}
-		else if(this.stats.getAlignment() == Alignments.CENTRAL_POWERS)
-		{
-			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
-		}
-		return map;
+		return ententeReputation;
 	}
 
 	public HashMap<TextKey, Integer> getCentralPowersReputation()
 	{
-		HashMap<TextKey, Integer> map = new HashMap<>();
-		int positiveTrade = 0, negativeTrade = 0;
-		if(this.alignmentTransactions.containsKey(Alignments.CENTRAL_POWERS))
+		if(centralPowersReputation == null)
 		{
-			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.CENTRAL_POWERS))
+			centralPowersReputation = new HashMap<>();
+			int positiveTrade = 0, negativeTrade = 0;
+			if(this.alignmentTransactions.containsKey(Alignments.CENTRAL_POWERS))
 			{
-				positiveTrade += 25;
+				for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.CENTRAL_POWERS))
+				{
+					positiveTrade += 25;
+				}
+			}
+			if(this.alignmentTransactions.containsKey(Alignments.ENTENTE))
+			{
+				for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.ENTENTE))
+				{
+					negativeTrade -= 50;
+				}
+			}
+			centralPowersReputation.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
+			centralPowersReputation.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
+			if(this.stats.getAlignment() == Alignments.ENTENTE)
+			{
+				centralPowersReputation.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
+			}
+			else if(this.stats.getAlignment() == Alignments.CENTRAL_POWERS)
+			{
+				centralPowersReputation.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
 			}
 		}
-		if(this.alignmentTransactions.containsKey(Alignments.ENTENTE))
-		{
-			for(AlignmentTransaction transaction : this.alignmentTransactions.get(Alignments.ENTENTE))
-			{
-				negativeTrade -= 50;
-			}
-		}
-		map.put(TextKey.Alignment.EQUIPMENT_SALES, positiveTrade);
-		map.put(TextKey.Alignment.EQUIPMENT_SALES_NEGATIVE, negativeTrade);
-		if(this.stats.getAlignment() == Alignments.ENTENTE)
-		{
-			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, -100000);
-		}
-		else if(this.stats.getAlignment() == Alignments.CENTRAL_POWERS)
-		{
-			map.put(TextKey.Alignment.OFFICIAL_ALIGNMENT, (int)(positiveTrade * 0.5));
-		}
-		return map;
+		return centralPowersReputation;
 	}
 
 	public int getFighterChange()
 	{
-		int max = this.stats.getMaxFighters();
-		int fighterCount = (int)Math.min(this.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE), this.stats.getCurrentFighters());
-		if(max <= -1)
+		if(fighterChange == null)
 		{
-			max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE);
-		}
-		if(fighterCount >= max)
-		{
-			return max - fighterCount;
-		}
-		else
-		{
-			int increase = (int)(max / 10.0);
-			if(increase + fighterCount > max)
+			int max = this.stats.getMaxFighters();
+			int fighterCount = (int)Math.min(this.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE), this.stats.getCurrentFighters());
+			if(max <= -1)
 			{
-				increase = max - fighterCount;
+				max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE);
 			}
-			return increase;
+			if(fighterCount >= max)
+			{
+				fighterChange = max - fighterCount;
+			}
+			else
+			{
+				int increase = (int)(max / 10.0);
+				if(increase + fighterCount > max)
+				{
+					increase = max - fighterCount;
+				}
+				fighterChange = increase;
+			}
 		}
+		return fighterChange;
 	}
 
 	public int getBomberChange()
 	{
-		int max = this.stats.getMaxBombers();
-		int bomberCount = (int)this.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE);
-		if(max <= -1)
+		if(bomberChange == null)
 		{
-			max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE);
-		}
-		if(bomberCount >= max)
-		{
-			return max - bomberCount;
-		}
-		else
-		{
-			int increase = (int)(max / 10.0);
-			if(increase + bomberCount > max)
+			int max = this.stats.getMaxBombers();
+			int bomberCount = (int)this.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE);
+			if(max <= -1)
 			{
-				increase = max - bomberCount;
+				max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE);
 			}
-			return increase;
+			if(bomberCount >= max)
+			{
+				bomberChange = max - bomberCount;
+			}
+			else
+			{
+				int increase = (int)(max / 10.0);
+				if(increase + bomberCount > max)
+				{
+					increase = max - bomberCount;
+				}
+				bomberChange = increase;
+			}
 		}
+		return bomberChange;
 	}
 
 	public int getReconChange()
 	{
-		int max = this.stats.getMaxRecon();
-		int reconCount = (int)this.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE);
-		if(max <= -1)
+		if(reconChange == null)
 		{
-			max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE);
-		}
-		if(reconCount >= max)
-		{
-			return max - reconCount;
-		}
-		else
-		{
-			int increase = (int)(max / 10.0);
-			if(increase + reconCount > max)
+			int max = this.stats.getMaxRecon();
+			int reconCount = (int)this.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE);
+			if(max <= -1)
 			{
-				increase = max - reconCount;
+				max = (int)this.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE);
 			}
-			return increase;
+			if(reconCount >= max)
+			{
+				reconChange = max - reconCount;
+			}
+			else
+			{
+				int increase = (int)(max / 10.0);
+				if(increase + reconCount > max)
+				{
+					increase = max - reconCount;
+				}
+				reconChange = increase;
+			}
 		}
+		return reconChange;
 	}
 
 	public boolean hasUnreadNews()
@@ -1833,93 +2002,102 @@ public class Nation
 
 	public HashMap<Army, HashMap<ProducibleCategory, Integer>> getArmyEquipmentChange()
 	{
-		int max = leftoverEquipment;
-		HashMap<Army, HashMap<ProducibleCategory, Integer>> map = new HashMap<>();
-		for(ProducibleCategory category : ProducibleCategory.values())
+		if(armyEquipmentChange == null)
 		{
-			for(int i = 0; i < armies.size() && max > 0; i++)
+			int max = leftoverEquipment;
+			armyEquipmentChange = new HashMap<>();
+			for(ProducibleCategory category : ProducibleCategory.values())
 			{
-				Army army = armies.get(i);
-				map.putIfAbsent(army, new HashMap<>());
-				if(army.getNeededEquipment().getOrDefault(category, 0) > 0)
+				for(int i = 0; i < armies.size() && max > 0; i++)
 				{
-					int totalPossibleGain = Math.min(army.getNeededEquipment().get(category), (int)(this.getTotalProduciblesByCategory(category) + this.getProduciblesProductionByCategory(category)));
-					if(totalPossibleGain > 0)
+					Army army = armies.get(i);
+					armyEquipmentChange.putIfAbsent(army, new HashMap<>());
+					if(army.getNeededEquipment().getOrDefault(category, 0) > 0)
 					{
-						if(totalPossibleGain > max)
+						int totalPossibleGain = Math.min(army.getNeededEquipment().get(category), (int)(this.getTotalProduciblesByCategory(category) + this.getProduciblesProductionByCategory(category)));
+						if(totalPossibleGain > 0)
 						{
-							totalPossibleGain = max;
-							max = 0;
+							if(totalPossibleGain > max)
+							{
+								totalPossibleGain = max;
+								max = 0;
+							}
+							max -= totalPossibleGain;
+							armyEquipmentChange.get(army).put(category, totalPossibleGain);
 						}
-						max -= totalPossibleGain;
-						map.get(army).put(category, totalPossibleGain);
 					}
 				}
 			}
 		}
-		return map;
+		return armyEquipmentChange;
 	}
 
 	public HashMap<Army, HashMap<Producibles, Integer>> getEquipmentUpgrades()
 	{
-		int max = this.getEquipmentReinforcementCapacity().get(TextKey.Reinforcement.NET);
-		HashMap<Army, HashMap<Producibles, Integer>> map = new HashMap<>();
-		ArrayList<Producibles> producibles = Producibles.getProduciblesByCategories(ProducibleCategory.INFANTRY_EQUIPMENT, ProducibleCategory.ARTILLERY, ProducibleCategory.TANK);
-		producibles.removeIf((producible) -> this.producibles.getProducible(producible) <= 0);
-		for(Producibles producible : producibles)
+		if(equipmentUpgrades == null)
 		{
-			int amount = Math.min(this.producibles.getProducible(producible), max);
-			for(Army army : this.armies)
+			int max = this.getEquipmentReinforcementCapacity().get(TextKey.Reinforcement.NET);
+			equipmentUpgrades = new HashMap<>();
+			ArrayList<Producibles> producibles = Producibles.getProduciblesByCategories(ProducibleCategory.INFANTRY_EQUIPMENT, ProducibleCategory.ARTILLERY, ProducibleCategory.TANK);
+			producibles.removeIf((producible) -> this.producibles.getProducible(producible) <= 0);
+			for(Producibles producible : producibles)
 			{
-				for(Battalion battalion : army.getBattalions())
+				int amount = Math.min(this.producibles.getProducible(producible), max);
+				for(Army army : this.armies)
 				{
-					if(battalion.isValidUpgrade(producible.getProducible()))
+					for(Battalion battalion : army.getBattalions())
 					{
-						Producible lowest = null;
-						while(amount > 0 && (lowest = battalion.getLowestTierEquipment(producible.getProducible().getCategory())) != producible.getProducible())
+						if(battalion.isValidUpgrade(producible.getProducible()))
 						{
-							for(ArmyEquipment equipment : battalion.getEquipment())
+							Producible lowest = null;
+							while(amount > 0 && (lowest = battalion.getLowestTierEquipment(producible.getProducible().getCategory())) != producible.getProducible())
 							{
-								int gain = 0;
-								if(amount > equipment.getAmount())
+								for(ArmyEquipment equipment : battalion.getEquipment())
 								{
-									amount -= equipment.getAmount();
-									gain = equipment.getAmount();
+									int gain = 0;
+									if(amount > equipment.getAmount())
+									{
+										amount -= equipment.getAmount();
+										gain = equipment.getAmount();
+									}
+									else
+									{
+										gain = amount;
+										amount = 0;
+									}
+									max -= gain;
+									equipmentUpgrades.putIfAbsent(army, new HashMap<>());
+									int finalAmount = gain;
+									equipmentUpgrades.get(army).computeIfPresent(producible, (k, v) -> v = v + finalAmount);
+									equipmentUpgrades.get(army).putIfAbsent(producible, finalAmount);
 								}
-								else
-								{
-									gain = amount;
-									amount = 0;
-								}
-								max -= gain;
-								map.putIfAbsent(army, new HashMap<>());
-								int finalAmount = gain;
-								map.get(army).computeIfPresent(producible, (k, v) -> v = v + finalAmount);
-								map.get(army).putIfAbsent(producible, finalAmount);
 							}
 						}
 					}
 				}
 			}
+			leftoverEquipment = max;
 		}
-		leftoverEquipment = max;
-		return map;
+		return equipmentUpgrades;
 	}
 
 	public HashMap<Army, HashMap<ProducibleCategory, Integer>> getEquipmentUpgradesByCategory()
 	{
-		HashMap<Army, HashMap<ProducibleCategory, Integer>> map = new HashMap<>();
-		HashMap<Army, HashMap<Producibles, Integer>> all = this.getEquipmentUpgrades();
-		for(Army army : all.keySet())
+		if(equipmentUpgradesByCategory == null)
 		{
-			map.put(army, new HashMap<>());
-			for(Producibles producible : all.get(army).keySet())
+			equipmentUpgradesByCategory = new HashMap<>();
+			HashMap<Army, HashMap<Producibles, Integer>> all = this.getEquipmentUpgrades();
+			for(Army army : all.keySet())
 			{
-				map.get(army).computeIfPresent(producible.getProducible().getCategory(), (k, v) -> v = v + all.get(army).get(producible));
-				map.get(army).putIfAbsent(producible.getProducible().getCategory(), all.get(army).get(producible));
+				equipmentUpgradesByCategory.put(army, new HashMap<>());
+				for(Producibles producible : all.get(army).keySet())
+				{
+					equipmentUpgradesByCategory.get(army).computeIfPresent(producible.getProducible().getCategory(), (k, v) -> v = v + all.get(army).get(producible));
+					equipmentUpgradesByCategory.get(army).putIfAbsent(producible.getProducible().getCategory(), all.get(army).get(producible));
+				}
 			}
 		}
-		return map;
+		return equipmentUpgradesByCategory;
 	}
 
 	public int getTotalArmyEquipmentChange(Army army)
@@ -1938,22 +2116,25 @@ public class Nation
 
 	public HashMap<Army, Integer> getArmyManpowerChange()
 	{
-		HashMap<Army, Integer> map = new HashMap<>();
-		int max = getManpowerReinforcementCapacity().get(TextKey.Reinforcement.NET);
-		for(int i = 0; i < armies.size() && max > 0; i++)
+		if(armyManpowerChange == null)
 		{
-			int required = armies.get(i).getNeededManpower();
-			if(required > 0)
+			armyManpowerChange = new HashMap<>();
+			int max = getManpowerReinforcementCapacity().get(TextKey.Reinforcement.NET);
+			for(int i = 0; i < armies.size() && max > 0; i++)
 			{
-				if(required > max)
+				int required = armies.get(i).getNeededManpower();
+				if(required > 0)
 				{
-					required = max;
+					if(required > max)
+					{
+						required = max;
+					}
+					max -= required;
+					armyManpowerChange.put(armies.get(i), required);
 				}
-				max -= required;
-				map.put(armies.get(i), required);
 			}
 		}
-		return map;
+		return armyManpowerChange;
 	}
 
 	public int getMaxArmies()
@@ -1968,72 +2149,91 @@ public class Nation
 
 	public LinkedHashMap<TextKey, Integer> getEquipmentReinforcementCapacity()
 	{
-		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
-		int base = 1000;
-		int infra = this.getTotalInfrastructure() * 250;
-		map.put(TextKey.Reinforcement.BASE, base);
-		map.put(TextKey.Reinforcement.INFRASTRUCTURE, infra);
-		map.put(TextKey.Reinforcement.NET, base + infra);
-		return map;
+		if(equipmentReinforcementCapacity == null)
+		{
+			equipmentReinforcementCapacity = new LinkedHashMap<>();
+			int base = 1000;
+			int infra = this.getTotalInfrastructure() * 250;
+			equipmentReinforcementCapacity.put(TextKey.Reinforcement.BASE, base);
+			equipmentReinforcementCapacity.put(TextKey.Reinforcement.INFRASTRUCTURE, infra);
+			equipmentReinforcementCapacity.put(TextKey.Reinforcement.NET, base + infra);
+			return equipmentReinforcementCapacity;
+		}
+		return equipmentReinforcementCapacity;
 	}
 
 	public LinkedHashMap<TextKey, Integer> getManpowerReinforcementCapacity()
 	{
-		LinkedHashMap<TextKey, Integer> map = new LinkedHashMap<>();
-		int base = 2500;
-		int barracks = this.getTotalBarracks() * 250;
-		int conscription = 0;
-		switch(this.policy.getManpower())
+		if(manpowerReinforcementCapacity == null)
 		{
-			case SCRAPING_THE_BARREL_MANPOWER:
-				conscription = 2500;
-				break;
-			case MANDATORY_MANPOWER:
-				conscription = 1500;
-				break;
-			case RECRUITMENT_MANPOWER:
-				conscription = 500;
-				break;
-			case DISARMED_MANPOWER:
-				conscription = -250;
-				break;
+			manpowerReinforcementCapacity = new LinkedHashMap<>();
+			int base = 2500;
+			int barracks = this.getTotalBarracks() * 250;
+			int conscription = 0;
+			switch(this.policy.getManpower())
+			{
+				case SCRAPING_THE_BARREL_MANPOWER:
+					conscription = 2500;
+					break;
+				case MANDATORY_MANPOWER:
+					conscription = 1500;
+					break;
+				case RECRUITMENT_MANPOWER:
+					conscription = 500;
+					break;
+				case DISARMED_MANPOWER:
+					conscription = -250;
+					break;
+			}
+			int net = base + barracks + conscription;
+			manpowerReinforcementCapacity.put(TextKey.Reinforcement.BASE, base);
+			manpowerReinforcementCapacity.put(TextKey.Reinforcement.BARRACKS, barracks);
+			manpowerReinforcementCapacity.put(TextKey.Reinforcement.CONSCRIPTION_LAW, conscription);
+			manpowerReinforcementCapacity.put(TextKey.Reinforcement.NET, net);
 		}
-		int net = base + barracks + conscription;
-		map.put(TextKey.Reinforcement.BASE, base);
-		map.put(TextKey.Reinforcement.BARRACKS, barracks);
-		map.put(TextKey.Reinforcement.CONSCRIPTION_LAW, conscription);
-		map.put(TextKey.Reinforcement.NET, net);
-		return map;
+		return manpowerReinforcementCapacity;
 	}
 
 	public int getTotalInfrastructure()
 	{
-		int total = 0;
-		for(City city : cities.values())
+		if(totalInfrastructure == null)
 		{
-			total += city.getRailroads();
+			int total = 0;
+			for(City city : cities.values())
+			{
+				total += city.getRailroads();
+			}
+			totalInfrastructure = total;
 		}
-		return total;
+		return totalInfrastructure;
 	}
 
 	public int getTotalBarracks()
 	{
-		int total = 0;
-		for(City city : cities.values())
+		if(totalBarracks == null)
 		{
-			total += city.getBarracks();
+			int total = 0;
+			for(City city : cities.values())
+			{
+				total += city.getBarracks();
+			}
+			totalBarracks = total;
 		}
-		return total;
+		return totalBarracks;
 	}
 
 	public int getTotalPorts()
 	{
-		int total = 0;
-		for(City city : cities.values())
+		if(totalPorts == null)
 		{
-			total += city.getPorts();
+			int total = 0;
+			for(City city : cities.values())
+			{
+				total += city.getPorts();
+			}
+			totalPorts = total;
 		}
-		return total;
+		return totalPorts;
 	}
 
 	public Army getArmy(long id)
