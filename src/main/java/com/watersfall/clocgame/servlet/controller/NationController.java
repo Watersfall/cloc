@@ -5,6 +5,7 @@ import com.watersfall.clocgame.action.NationActions;
 import com.watersfall.clocgame.action.WarActions;
 import com.watersfall.clocgame.dao.NationDao;
 import com.watersfall.clocgame.database.Database;
+import com.watersfall.clocgame.listeners.Startup;
 import com.watersfall.clocgame.model.error.Errors;
 import com.watersfall.clocgame.model.military.army.ArmyLocation;
 import com.watersfall.clocgame.model.military.army.BattlePlan;
@@ -42,7 +43,7 @@ public class NationController extends HttpServlet
 			if(req.getSession().getAttribute("user") != null
 					&& Integer.parseInt(url.get("id")) == Integer.parseInt(req.getSession().getAttribute("user").toString()))
 			{
-				resp.sendRedirect("/main/");
+				resp.sendRedirect(Startup.CONTEXT_PATH + "/main/");
 				return;
 			}
 			else

@@ -81,7 +81,7 @@
                     <configuration>
                         <url>http://localhost:8080/manager/text</url>
                         <server>CLOC_Server</server>
-                        <path>/</path>
+                        <path>/cloc/</path>
                         <contextReloadable>true</contextReloadable>
                         <update>true</update>
                     </configuration>

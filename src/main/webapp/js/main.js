@@ -1,5 +1,8 @@
+const PATH = "/cloc";
+
 function ajax(url, params, callback, method)
 {
+	url = PATH + url;
 	let xhttp = new XMLHttpRequest();
 	if(method === undefined)
 	{
@@ -132,7 +135,7 @@ function decision(decision)
 {
 	if(decision === "FORM_TREATY")
 	{
-		window.location.href = "/createtreaty/";
+		window.location.href = PATH + "/createtreaty/";
 	}
 	else
 	{
@@ -451,7 +454,7 @@ function createTreaty(name)
 		}
 		if(this.readyState === 4 && this.status === 201)
 		{
-			window.location.href = "/treaty/" + this.responseText;
+			window.location.href = PATH + "/treaty/" + this.responseText;
 		}
 	};
 	ajax(url, params, callback);

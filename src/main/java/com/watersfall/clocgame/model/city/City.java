@@ -1,5 +1,6 @@
 package com.watersfall.clocgame.model.city;
 
+import com.watersfall.clocgame.listeners.Startup;
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.UpdatableLongId;
 import com.watersfall.clocgame.model.modifier.Modifier;
@@ -644,6 +645,6 @@ public class City extends UpdatableLongId
 
 	public String getUrl()
 	{
-		return "<a href=\"/cities/" + id + "\"><b>" + this.name + "</b></a>";
+		return "<a href=\"" + Startup.CONTEXT_PATH +  "/cities/" + id + "\"><b>" + this.name + "</b></a>";
 	}
 }

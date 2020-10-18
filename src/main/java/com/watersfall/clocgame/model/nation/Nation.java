@@ -1,6 +1,7 @@
 package com.watersfall.clocgame.model.nation;
 
 import com.watersfall.clocgame.dao.*;
+import com.watersfall.clocgame.listeners.Startup;
 import com.watersfall.clocgame.model.Region;
 import com.watersfall.clocgame.model.TextKey;
 import com.watersfall.clocgame.model.alignment.AlignmentTransaction;
@@ -1358,7 +1359,7 @@ public class Nation
 
 	public String getNationUrl()
 	{
-		return "<a href=\"/nation/" + id + "\"><b>" + this.cosmetic.getNationName() + "</b></a>";
+		return "<a href=\"" + Startup.CONTEXT_PATH + "/nation/" + id + "\"><b>" + this.cosmetic.getNationName() + "</b></a>";
 	}
 
 	/**

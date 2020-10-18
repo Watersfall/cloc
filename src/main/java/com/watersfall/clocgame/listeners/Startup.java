@@ -14,6 +14,8 @@ import java.sql.SQLException;
 
 public class Startup implements ServletContextListener
 {
+	public static String CONTEXT_PATH;
+
 	@Override
 	public void contextDestroyed(ServletContextEvent event)
 	{
@@ -35,6 +37,7 @@ public class Startup implements ServletContextListener
 	public void contextInitialized(ServletContextEvent event)
 	{
 		Connection conn = null;
+		CONTEXT_PATH = event.getServletContext().getContextPath();
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");

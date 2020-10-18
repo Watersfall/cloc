@@ -2,6 +2,7 @@ package com.watersfall.clocgame.model.treaty;
 
 import com.watersfall.clocgame.dao.TreatyDao;
 import com.watersfall.clocgame.exception.TreatyPermissionException;
+import com.watersfall.clocgame.listeners.Startup;
 import com.watersfall.clocgame.model.UpdatableIntId;
 import com.watersfall.clocgame.model.nation.Nation;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class Treaty extends UpdatableIntId
 
 	public String getTreatyUrl()
 	{
-		return "<a href=\"/treaty/" + id + "\"><b>" + this.name + "</b></a>";
+		return "<a href=\"" + Startup.CONTEXT_PATH + "/treaty/" + id + "\"><b>" + this.name + "</b></a>";
 	}
 
 	public void setName(String name) throws SQLException

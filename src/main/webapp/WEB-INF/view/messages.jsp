@@ -26,7 +26,7 @@
 						</div>
 						<div class="left_text">
 							<button onclick="deleteMessage(${message.id})" class="red">Delete</button>
-							<a href="/nation/${message.senderId}" class="button">Reply</a>
+							<a href="${pageContext.request.contextPath}/nation/${message.senderId}" class="button">Reply</a>
 						</div>
 					</div>
 				</c:forEach>
