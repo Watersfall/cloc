@@ -8,7 +8,7 @@
 				<h1><c:out escapeXml="false" value="${nation.cosmetic.nationTitle}"/><br>of<br><c:out escapeXml="false" value="${nation.cosmetic.nationName}"/></h1>
 				<img class="large_flag" src="/user/flag/${nation.cosmetic.flag}" alt="flag"/>
 				<h2><c:out escapeXml="false" value="${nation.cosmetic.leaderTitle} "/><c:out escapeXml="false" value="${nation.cosmetic.username}"/></h2>
-				<cloc:lastlogin time="${nation.lastSeen}"/>
+				<p>${nation.lastOnline}</p>
 			</div>
 		</div>
 	</div>

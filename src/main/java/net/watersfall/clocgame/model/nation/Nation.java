@@ -53,7 +53,6 @@ public class Nation
 	private @Getter @Setter Connection conn;
 	private @Getter @Setter boolean allowWriteAccess;
 	private @Getter @Setter long freeFactories;
-	private @Getter @Setter long lastSeen;
 	private @Getter @Setter ArrayList<Modifier> modifiers;
 	private @Getter @Setter EnumMap<Alignments, ArrayList<AlignmentTransaction>> alignmentTransactions;
 	private @Getter @Setter LinkedHashMap<Integer, Production> production;
@@ -2294,6 +2293,24 @@ public class Nation
 			{
 				army.update(conn);
 			}
+		}
+	}
+
+	public String getLastOnline()
+	{
+		long now = new Date().getTime();
+		long time = (now - this.stats.getLastLogin()) / (1000 * 60 * 60);
+		if(time < 1)
+		{
+			return "Online Now";
+		}
+		else if(time < 2)
+		{
+			return "Last Seen: 1 Hour Ago";
+		}
+		else
+		{
+			return "Last Seen: " + time + " Hours Ago";
 		}
 	}
 

@@ -176,7 +176,6 @@ public class NationDao extends Dao
 		{
 			throw new NationNotFoundException();
 		}
-		//nation.setLastSeen(statsResults.getLong("last_login"));
 		nation.setStats(new NationStats(statsResults));
 		nation.setPolicy(new NationPolicy(id, statsResults));
 		nation.setTech(new NationTech(id, statsResults));
