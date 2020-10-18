@@ -33,7 +33,7 @@
 		<header>
 			<c:if test="${home != null}">
 				<a href="${pageContext.request.contextPath}/main/">
-					<img src="${pageContext.request.contextPath}/user/flag/<c:out escapeXml="false" value="${home.cosmetic.flag}"/>" alt="flag">
+					<img src="/user/flag/<c:out escapeXml="false" value="${home.cosmetic.flag}"/>" alt="flag">
 				</a>
 			</c:if>
 			<a href="#" onclick="toggle('nav')">
