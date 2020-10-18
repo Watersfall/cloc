@@ -575,6 +575,9 @@
 								<div class="subtile">
 									<div class="title">Message From: ${message.senderNation.nationUrl}</div>
 									<div class="description">${message.content}</div>
+									<div class="right_text">
+										<a href="${pageContext.request.contextPath}/nation/${message.senderId}" class="button">Reply</a>
+									</div>
 								</div>
 							</c:forEach>
 							<button onclick="mark('messages');">Mark as Read</button>
