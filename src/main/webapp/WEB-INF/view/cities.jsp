@@ -162,7 +162,7 @@
 								Garrison: <fmt:formatNumber value="${city.garrisonSize.get(garrisonKey)}"/><c:out value=" "/>
 								<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 							</a>
-							<div class="toggleable-default-off dropdown" id="garrison_dropdown">
+							<div class="toggleable-default-off dropdown_2" id="garrison_dropdown">
 								<ul>
 									<c:forEach var="garrison" items="${Util.removeNetAndTotal(city.garrisonSize).entrySet()}">
 										<c:if test="${garrison.value != 0}">

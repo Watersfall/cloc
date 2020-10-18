@@ -328,7 +328,7 @@ main {
 	width: 100%;
 }
 
-.dropdown {
+.dropdown_2 {
 	position: absolute;
 	top: 100%;
 	left: 0;
@@ -337,7 +337,7 @@ main {
 	z-index: 1;
 }
 
-.dropdown ul {
+.dropdown_2 ul {
 	padding: 0.5rem;
 	margin: 0 0 0 1rem;
 }
