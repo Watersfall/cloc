@@ -56,12 +56,28 @@
 							<td>${city.industryCivilian}</td>
 						</tr>
 						<tr>
+							<td colspan="3">Nitrogen Industry</td>
+							<td rowspan="2"><button onclick="cityDecision('${CityDecisions.BUILD_NITROGEN_INDUSTRY}', ${city.id})" class="blue">Build: ${city.factoryCost}</button></td>
+							<td rowspan="2"><button onclick="cityDecision('${CityDecisions.REMOVE_NITROGEN_INDUSTRY}', ${city.id})" class="red">Remove</button></td>
+						</tr>
+						<tr>
+							<td>${city.industryNitrogen}</td>
+						</tr>
+						<tr>
 							<td colspan="3">Military Industry</td>
 							<td rowspan="2"><button onclick="cityDecision('${CityDecisions.BUILD_MILITARY_INDUSTRY}', ${city.id})" class="blue">Build: ${city.factoryCost}</button></td>
 							<td rowspan="2"><button onclick="cityDecision('${CityDecisions.REMOVE_MILITARY_INDUSTRY}', ${city.id})" class="red">Remove</button></td>
 						</tr>
 						<tr>
 							<td>${city.industryMilitary}</td>
+						</tr>
+						<tr>
+							<td colspan="3">Universities</td>
+							<td rowspan="2"><button onclick="cityDecision('${CityDecisions.BUILD_UNIVERSITY}', ${city.id})" class="blue">Build: ${city.universityCost}</button></td>
+							<td rowspan="2"><button onclick="cityDecision('${CityDecisions.REMOVE_UNIVERSITY}', ${city.id})" class="red">Remove</button></td>
+						</tr>
+						<tr>
+							<td>${city.universities}</td>
 						</tr>
 					</table>
 				</c:forEach>
@@ -110,9 +126,17 @@
 					<div class="description left_text">
 						<b>${city.industryCivilian}</b> civilian factor${city.industryCivilian == 1 ? 'y' : 'ies'}
 					</div>
+					<div class="subtitle">Nitrogen Factories</div>
+					<div class="description left_text">
+						<b>${city.industryNitrogen}</b> nitrogen factor${city.industryCivilian == 1 ? 'y' : 'ies'}
+					</div>
 					<div class="subtitle">Military Industry</div>
 					<div class="description left_text">
-						<b>${city.industryMilitary}</b> military factor${city.industryMilitary == 1 ? 'y' : 'ies'}<br>
+						<b>${city.industryMilitary}</b> military factor${city.industryMilitary == 1 ? 'y' : 'ies'}
+					</div>
+					<div class="subtitle">Universities</div>
+					<div class="description left_text">
+						<b>${city.universities}</b> universit${city.industryMilitary == 1 ? 'y' : 'ies'}<br>
 					</div>
 				</div>
 			</div>
@@ -214,11 +238,23 @@
 						<button onclick="cityDecision('${CityDecisions.BUILD_CIVILIAN_INDUSTRY}', ${city.id})" class="blue">Build: ${city.factoryCost}</button>
 						<button onclick="cityDecision('${CityDecisions.REMOVE_CIVILIAN_INDUSTRY}', ${city.id})" class="red">Remove</button>
 					</div>
+					<div class="subtitle">Nitrogen Factories</div>
+					<div class="description left_text">
+						<b>${city.industryNitrogen}</b> nitrogen factor${city.industryNitrogen == 1 ? 'y' : 'ies'} producing <b><fmt:formatNumber value="${city.nitrogenProduction.get(key)}" maxFractionDigits="2"/></b> nitrogen per month<br>
+						<button onclick="cityDecision('${CityDecisions.BUILD_NITROGEN_INDUSTRY}', ${city.id})" class="blue">Build: ${city.factoryCost}</button>
+						<button onclick="cityDecision('${CityDecisions.REMOVE_NITROGEN_INDUSTRY}', ${city.id})" class="red">Remove</button>
+					</div>
 					<div class="subtitle">Military Industry</div>
 					<div class="description left_text">
 						<b>${city.industryMilitary}</b> military factor${city.industryMilitary == 1 ? 'y' : 'ies'}<br>
 						<button onclick="cityDecision('${CityDecisions.BUILD_MILITARY_INDUSTRY}', ${city.id})" class="blue">Build: ${city.factoryCost}</button>
 						<button onclick="cityDecision('${CityDecisions.REMOVE_MILITARY_INDUSTRY}', ${city.id})" class="red">Remove</button>
+					</div>
+					<div class="subtitle">Universities</div>
+					<div class="description left_text">
+						<b>${city.universities}</b> universit${city.universities == 1 ? 'y' : 'ies'} producing <b><fmt:formatNumber value="${city.researchProduction.get(key)}" maxFractionDigits="2"/></b> research per month<br>
+						<button onclick="cityDecision('${CityDecisions.BUILD_UNIVERSITY}', ${city.id})" class="blue">Build: ${city.universityCost}</button>
+						<button onclick="cityDecision('${CityDecisions.REMOVE_UNIVERSITY}', ${city.id})" class="red">Remove</button>
 					</div>
 				</div>
 			</div>
