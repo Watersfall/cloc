@@ -10,7 +10,7 @@
 				</div>
 				<br>
 				<%--@elvariable id="wars" type="java.util.List"--%>
-				<%--@elvariable id="war" type="com.watersfall.clocgame.model.war.War"--%>
+				<%--@elvariable id="war" type="net.watersfall.clocgame.model.war.War"--%>
 				<c:forEach var="war" items="${wars}">
 					<div class="subtitle"><c:out escapeXml="false" value="${war.name}"/></div>
 					<div class="wars">

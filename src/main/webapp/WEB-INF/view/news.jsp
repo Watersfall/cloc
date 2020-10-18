@@ -3,7 +3,7 @@
 		<div class="column">
 			<div class="title">News</div>
 			<%--@elvariable id="news" type="java.util.List"--%>
-			<%--@elvariable id="item" type="com.watersfall.clocgame.model.news.News"--%>
+			<%--@elvariable id="item" type="net.watersfall.clocgame.model.news.News"--%>
 			<c:forEach items="${news}" var="item">
 				<div class="tile left_text">
 					<div class="news">

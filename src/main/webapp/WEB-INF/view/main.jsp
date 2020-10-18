@@ -3,9 +3,9 @@
 <% pageContext.setAttribute("netManpower", TextKey.Manpower.NET); %>
 <% pageContext.setAttribute("netGrowth", TextKey.Growth.NET); %>
 <% pageContext.setAttribute("netFortification", TextKey.Fortification.NET); %>
-<%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
-<%@ page import="com.watersfall.clocgame.model.producible.Producibles" %>
-<%@ page import="com.watersfall.clocgame.util.Util" %>
+<%@ page import="net.watersfall.clocgame.model.producible.ProducibleCategory" %>
+<%@ page import="net.watersfall.clocgame.model.producible.Producibles" %>
+<%@ page import="net.watersfall.clocgame.util.Util" %>
 <%@ include file="includes/top.jsp" %>
 	<c:if test="${home == null}">
 		<p>You have visited this page incorrectly</p>
@@ -482,7 +482,7 @@
 					<div class="tile">
 						<div class="title">Unread News</div>
 						<%--@elvariable id="news" type="java.util.List"--%>
-							<%--@elvariable id="event" type="com.watersfall.clocgame.model.news.News"--%>
+							<%--@elvariable id="event" type="net.watersfall.clocgame.model.news.News"--%>
 						<c:forEach var="event" items="${news}">
 							<div class="subtile">
 								${event.content}
@@ -494,14 +494,14 @@
 					<div class="tile">
 						<div class="title">Events</div>
 						<%--@elvariable id="news" type="java.util.List"--%>
-						<%--@elvariable id="event" type="com.watersfall.clocgame.model.event.Event"--%>
+							<%--@elvariable id="event" type="net.watersfall.clocgame.model.event.Event"--%>
 						<c:forEach var="event" items="${home.events}">
 							<div class="subtile">
 								<div class="${event.event.color} title">${event.event.title}</div>
 								<div class="description">
 									${event.event.getDescription(home, event)}
 								</div>
-								<%--@elvariable id="action" type="com.watersfall.clocgame.model.event.EventActions"--%>
+									<%--@elvariable id="action" type="net.watersfall.clocgame.model.event.EventActions"--%>
 								<c:forEach var="action" items="${event.event.getPossibleResponses(home)}">
 									<div>
 										<div class="subtitle">${action.text}</div>

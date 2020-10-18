@@ -1,7 +1,7 @@
 <%@ include file="includes/top.jsp" %>
-<%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
-<%@ page import="com.watersfall.clocgame.model.producible.Producibles" %>
-<%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%@ page import="net.watersfall.clocgame.model.producible.ProducibleCategory" %>
+<%@ page import="net.watersfall.clocgame.model.producible.Producibles" %>
+<%--@elvariable id="nation" type="net.watersfall.clocgame.model.nation.Nation"--%>
 	<div class="tiling">
 		<div class="column">
 			<div class="tile">

@@ -1,4 +1,4 @@
-<%@ page import="com.watersfall.clocgame.model.TextKey" %>
+<%@ page import="net.watersfall.clocgame.model.TextKey" %>
 <%--suppress ELMethodSignatureInspection (it gets casted ok >:() --%>
 <% pageContext.setAttribute("netKey", TextKey.Resource.NET); %>
 			</main>

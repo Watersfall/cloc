@@ -1,8 +1,8 @@
 <%--@elvariable id="description" type="java.lang.String"--%>
-<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+<%--@elvariable id="home" type="net.watersfall.clocgame.model.nation.Nation"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ page import="com.watersfall.clocgame.model.alignment.Alignments" %>
+<%@ page import="net.watersfall.clocgame.model.alignment.Alignments" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>

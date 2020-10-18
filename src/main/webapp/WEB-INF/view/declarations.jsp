@@ -6,7 +6,7 @@
 		<div class="column">
 			<div class="tile">
 				<%--@elvariable id="declarations" type="java.util.List"--%>
-				<%--@elvariable id="declaration" type="com.watersfall.clocgame.model.message.Declaration"--%>
+				<%--@elvariable id="declaration" type="net.watersfall.clocgame.model.message.Declaration"--%>
 				<c:forEach items="${declarations}" var="declaration">
 					<div class="subtitle">
 						<img src="/user/flag/${declaration.sender.cosmetic.flag}" alt="flag" class="small_flag"/>

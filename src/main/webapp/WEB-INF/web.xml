@@ -5,10 +5,10 @@
 		<session-timeout>0</session-timeout>
 	</session-config>
 	<listener>
-		<listener-class>com.watersfall.clocgame.listeners.Startup</listener-class>
+		<listener-class>net.watersfall.clocgame.listeners.Startup</listener-class>
 	</listener>
 	<listener>
-		<listener-class>com.watersfall.clocgame.listeners.Session</listener-class>
+		<listener-class>net.watersfall.clocgame.listeners.Session</listener-class>
 	</listener>
 	<display-name>To do List</display-name>
 	<welcome-file-list>

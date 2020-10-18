@@ -1,5 +1,5 @@
 <%@ include file="includes/top.jsp" %>
-<%--@elvariable id="treaty" type="com.watersfall.clocgame.model.treaty.Treaty"--%>
+<%--@elvariable id="treaty" type="net.watersfall.clocgame.model.treaty.Treaty"--%>
 	<c:if test="${manage && (!(home.treatyPermissions.manage || home.treatyPermissions.founder || home.treatyPermissions.kick) || (home.treaty.id != treaty.id))}">
 		You do not have permission to do this!
 	</c:if>

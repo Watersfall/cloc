@@ -1,4 +1,4 @@
-<%--@elvariable id="technology" type="com.watersfall.clocgame.model.technology.Technology"--%>
+<%--@elvariable id="technology" type="net.watersfall.clocgame.model.technology.Technology"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
@@ -30,7 +30,7 @@
 						<li>${cost.value}${' '.concat(cost.key)}</li>
 					</c:forEach>
 				</ul>
-				<%--@elvariable id="home" type="com.watersfall.clocgame.model.nation.Nation"--%>
+				<%--@elvariable id="home" type="net.watersfall.clocgame.model.nation.Nation"--%>
 				<c:if test="${technology.isAvailable(home)}">
 					<button onclick="research('${technology.technology.name()}', '${technology.technology.category}');" class="blue">Research</button>
 				</c:if>

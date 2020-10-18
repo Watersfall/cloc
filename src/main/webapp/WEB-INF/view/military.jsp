@@ -1,5 +1,5 @@
 <%@ include file="includes/top.jsp" %>
-<%@ page import="com.watersfall.clocgame.model.producible.ProducibleCategory" %>
+<%@ page import="net.watersfall.clocgame.model.producible.ProducibleCategory" %>
 <% pageContext.setAttribute("net", TextKey.Reinforcement.NET); %>
 <div class="title">Military</div>
 	<div class="tiling">

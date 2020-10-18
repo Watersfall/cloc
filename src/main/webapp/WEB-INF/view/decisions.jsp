@@ -12,8 +12,8 @@
 		<div class="title">${category.name} Decisions</div>
 		<div class="tile">
 			<%--@elvariable id="decisions" type="java.util.List"--%>
-			<%--@elvariable id="decision" type="com.watersfall.clocgame.model.decisions.Decision"--%>
-			<%--@elvariable id="category" type="com.watersfall.clocgame.model.decisions.DecisionCategory"--%>
+			<%--@elvariable id="decision" type="net.watersfall.clocgame.model.decisions.Decision"--%>
+			<%--@elvariable id="category" type="net.watersfall.clocgame.model.decisions.DecisionCategory"--%>
 			<c:forEach var="decision" items="${decisions}">
 				<c:if test="${decision.category == category || category == 'ALL'}">
 					<div class="subtile">

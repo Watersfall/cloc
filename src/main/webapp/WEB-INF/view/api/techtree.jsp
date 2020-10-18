@@ -7,7 +7,7 @@
 <%@ taglib prefix="cloc" tagdir="/WEB-INF/tags" %>
 <div class="tech_tree" id="tech_tree">
 	<%--@elvariable id="techs" type="java.util.List"--%>
-	<%--@elvariable id="tech" type="com.watersfall.clocgame.model.technology.Technologies"--%>
+	<%--@elvariable id="tech" type="net.watersfall.clocgame.model.technology.Technologies"--%>
 	<c:forEach var="tech" items="${techs}">
 		<c:if test="${tech.category == category}">
 			<div onclick="loadTech('${tech.name()}');" class="tech_tile" style="grid-column: ${tech.x}; grid-row: ${tech.y}">

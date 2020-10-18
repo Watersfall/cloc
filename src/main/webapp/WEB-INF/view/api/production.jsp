@@ -1,4 +1,4 @@
-<%--@elvariable id="production" type="com.watersfall.clocgame.model.nation.Production"--%>
+<%--@elvariable id="production" type="net.watersfall.clocgame.model.nation.Production"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>

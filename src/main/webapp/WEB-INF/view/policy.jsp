@@ -1,6 +1,6 @@
 <%@ include file="includes/top.jsp" %>
 	<%--@elvariable id="policies" type="java.util.LinkedHashMap"--%>
-	<%--@elvariable id="policy" type="com.watersfall.clocgame.model.policies.Policy"--%>
+<%--@elvariable id="policy" type="net.watersfall.clocgame.model.policies.Policy"--%>
 	<div class="tiling">
 		<div class="column">
 			<div class="title">Policy</div>

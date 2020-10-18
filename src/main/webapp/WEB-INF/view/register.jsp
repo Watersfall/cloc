@@ -1,5 +1,5 @@
 <%@ include file="includes/top.jsp" %>
-<%@ page import="com.watersfall.clocgame.model.Region" %>
+<%@ page import="net.watersfall.clocgame.model.Region" %>
 <div class="title">Register</div>
 	<div class="tiling">
 		<div class="column">

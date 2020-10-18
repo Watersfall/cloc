@@ -1,9 +1,9 @@
-<%@ page import="com.watersfall.clocgame.model.decisions.CityDecisions" %>
+<%@ page import="net.watersfall.clocgame.model.decisions.CityDecisions" %>
 <%@ include file="includes/top.jsp" %>
-<%--@elvariable id="city" type="com.watersfall.clocgame.model.city.City"--%>
+<%--@elvariable id="city" type="net.watersfall.clocgame.model.city.City"--%>
 <% pageContext.setAttribute("key", TextKey.Resource.TOTAL_GAIN); %>
 <% pageContext.setAttribute("garrisonKey", TextKey.Garrison.NET); %>
-<%@ page import="com.watersfall.clocgame.util.Util" %>
+<%@ page import="net.watersfall.clocgame.util.Util" %>
 <c:if test="${city == null}">
 	<div class="title">Cities</div>
 	<div class="tiling">

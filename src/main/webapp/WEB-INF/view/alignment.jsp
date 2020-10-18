@@ -1,6 +1,6 @@
-<%--@elvariable id="alignment" type="com.watersfall.clocgame.model.alignment.Alignment"--%>
-<%@ page import="com.watersfall.clocgame.model.alignment.Alignment" %>
-<%@ page import="com.watersfall.clocgame.model.map.year1900.Country1900" %>
+<%--@elvariable id="alignment" type="net.watersfall.clocgame.model.alignment.Alignment"--%>
+<%@ page import="net.watersfall.clocgame.model.alignment.Alignment" %>
+<%@ page import="net.watersfall.clocgame.model.map.year1900.Country1900" %>
 <%@ include file="includes/top.jsp" %>
 	<div class="title">${alignment.alignment}</div>
 	<div class="tiling">
@@ -8,7 +8,7 @@
 			<div class="tile">
 				<svg id="world-map" version="1.1" viewBox="30.767 241.59 784.08 458.63" xmlns="http://www.w3.org/2000/svg">
 					<g id="world">
-						<%--@elvariable id="country" type="com.watersfall.clocgame.model.map.Country"--%>
+						<%--@elvariable id="country" type="net.watersfall.clocgame.model.map.Country"--%>
 						<c:forEach var="country" items="${Country1900.values()}">
 							<c:if test="${country.alignment != alignment.alignment && country.alignment != Alignments.NEUTRAL}">
 								<path style="fill: red" id="${country.attributes.get('id')}" transform="${country.attributes.get('transform')}" d="${country.attributes.get('d')}"></path>
@@ -67,7 +67,7 @@
 					</div>
 					<div class="title">Stockpiles</div>
 					<div class="subtile">
-							<%--@elvariable id="item" type="com.watersfall.clocgame.model.producible.Producibles"--%>
+							<%--@elvariable id="item" type="net.watersfall.clocgame.model.producible.Producibles"--%>
 						<c:forEach var="item" items="${Alignment.ALLOWED_PRODUCIBLES}">
 							<div class="title">
 									${item.name()}:

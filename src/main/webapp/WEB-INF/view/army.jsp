@@ -1,7 +1,7 @@
-<%--@elvariable id="army" type="com.watersfall.clocgame.model.military.army.Army"--%>
+<%--@elvariable id="army" type="net.watersfall.clocgame.model.military.army.Army"--%>
 <%@ include file="includes/top.jsp" %>
-<%@ page import="com.watersfall.clocgame.model.military.army.BattalionType" %>
-<%@ page import="com.watersfall.clocgame.model.military.army.Priority" %>
+<%@ page import="net.watersfall.clocgame.model.military.army.BattalionType" %>
+<%@ page import="net.watersfall.clocgame.model.military.army.Priority" %>
 	<div class="title">${army.name}</div>
 	<div class="tiling">
 		<div class="column">

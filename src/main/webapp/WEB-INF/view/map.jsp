@@ -95,7 +95,7 @@
 				</c:if>
 				<c:if test="${region != null}">
 					<%--@elvariable id="nations" type="java.util.List"--%>
-					<%--@elvariable id="nation" type="com.watersfall.clocgame.model.nation.Nation"--%>
+					<%--@elvariable id="nation" type="net.watersfall.clocgame.model.nation.Nation"--%>
 					<c:forEach items="${nations}" var="nation">
 						<div class="rankings">
 							<div class="subtitle">
