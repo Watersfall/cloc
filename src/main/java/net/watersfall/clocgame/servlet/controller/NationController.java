@@ -7,8 +7,6 @@ import net.watersfall.clocgame.dao.NationDao;
 import net.watersfall.clocgame.database.Database;
 import net.watersfall.clocgame.listeners.Startup;
 import net.watersfall.clocgame.model.error.Errors;
-import net.watersfall.clocgame.model.military.army.ArmyLocation;
-import net.watersfall.clocgame.model.military.army.BattlePlan;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.text.Responses;
@@ -114,32 +112,6 @@ public class NationController extends HttpServlet
 				case "peace":
 					response = WarActions.sendPeace(sender, receiver);
 					break;
-				case "land_land":
-					BattlePlan attack = new BattlePlan(sender, sender.getArmies(), ArmyLocation.NATION, receiver);
-					BattlePlan defense = new BattlePlan(receiver, receiver.getArmies(), ArmyLocation.NATION, receiver);
-					response = WarActions.landBattle(attack, defense);
-					break;
-				/*case "navy":
-					response = WarActions.navyBattle(conn, sender, receiver);
-					break;
-				case "air_air":
-					response = WarActions.airBattle(sender, receiver, false);
-					break;
-				case "land_city":
-					response = WarActions.cityBattle(sender, receiver);
-					break;
-				case "navyCity":
-					response = WarActions.navyBombard(conn, sender, receiver);
-					break;
-				case "air_city":
-					response = WarActions.airBombCity(sender, receiver);
-					break;
-				case "land_fortify":
-					response = WarActions.entrench(sender, receiver);
-					break;
-				case "air_land":
-					response = WarActions.airBombTroops(sender, receiver);
-					break;*/
 				case "message":
 					String content = Security.sanitize(req.getParameter("message"));
 					response = NationActions.sendMessage(sender, receiver, content);
