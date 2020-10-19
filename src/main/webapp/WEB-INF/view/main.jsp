@@ -607,8 +607,7 @@
 								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
 								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
 							</div>
-							<button onclick="nation(${defender.id}, 'land_land', 0);">Field Battle</button>
-							<button onclick="nation(${defender.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="window.location = PATH + '/battle/${defender.id}'">Battle</button>
 							<button onclick="nation(${defender.id}, 'land_fortify', 0);">Fortify</button>
 						</div>
 						<div class="subtile">
@@ -654,8 +653,7 @@
 								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
 								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
 							</div>
-							<button onclick="nation(${attacker.id}, 'land_land', 0);">Field Battle</button>
-							<button onclick="nation(${attacker.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="window.location = PATH + '/battle/${attacker.id}'">Battle</button>
 							<button onclick="nation(${attacker.id}, 'land_fortify', 0);">Fortify</button>
 						</div>
 						<div class="subtile">

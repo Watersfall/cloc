@@ -168,8 +168,9 @@ public class Battalion extends UpdatableLongId
 		return this.size > 0;
 	}
 
-	public void damage(double damage)
+	public int damage(double damage)
 	{
+		int original = size;
 		this.setField("size", this.size - (int)(this.getMaxSize() * (damage / 50)));
 		this.size = (int)this.getField("size");
 		if(this.size < 0)
@@ -177,6 +178,7 @@ public class Battalion extends UpdatableLongId
 			this.size = 0;
 			this.setField("size", 0);
 		}
+		return original - size;
 	}
 
 	@Override

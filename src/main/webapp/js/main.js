@@ -520,3 +520,46 @@ function army(id, action, type)
 	}
 	ajax(url, params);
 }
+
+function getEstimatedBattlePlan(id, data)
+{
+	let location = data.split("_")[0];
+	let locationId = data.split("_")[1];
+	let url = "/estimate/" + id + "/" + location + "/" + locationId;
+	let callback = function() {
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("enemy_battle_plan").innerHTML = this.responseText;
+		}
+	};
+	ajax(url, "", callback, "GET");
+}
+
+function battle(id)
+{
+	let url = "/battle/";
+	let params = "defender_id=" + id;
+	let armyList = document.getElementsByName("armies");
+	let targetList = document.getElementsByName("target");
+	let armies = "";
+	let target = "";
+	let targetId = "";
+	for(let i = 0; i < armyList.length; i++)
+	{
+		if(armyList[i].checked)
+		{
+			armies += armyList[i].value + ",";
+		}
+	}
+	armies = armies.substring(0, armies.length - 1);
+	for(let i = 0; i < targetList.length; i++)
+	{
+		if(targetList[i].checked)
+		{
+			target = targetList[i].value.split("_")[0];
+			targetId = targetList[i].value.split("_")[1];
+		}
+	}
+	params += "&attacker_armies=" + armies + "&location_id=" + targetId + "&battle_location=" + target;
+	ajax(url, params);
+}

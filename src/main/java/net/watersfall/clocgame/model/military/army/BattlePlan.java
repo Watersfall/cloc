@@ -46,22 +46,22 @@ public class BattlePlan
 		}
 	}
 
-	public void damage()
+	public int damage()
 	{
 		ArrayList<Army> armies = new ArrayList<>(this.armies);
 		armies.removeIf((army -> !army.canBeDamaged()));
 		if(armies.size() <= 0)
 		{
-			return;
+			return 0;
 		}
 		Army army = armies.get((int)(Math.random() * armies.size()));
 		ArrayList<Battalion> battalions = new ArrayList<>(army.getBattalions());
 		battalions.removeIf((battalion -> !battalion.canBeDamaged()));
 		if(battalions.size() <= 0)
 		{
-			return;
+			return 0;
 		}
 		Battalion battalion = battalions.get((int)(Math.random() * battalions.size()));
-		battalion.damage((Math.random() + 1D) / 2D);
+		return battalion.damage((Math.random() + 1D) / 2D);
 	}
 }

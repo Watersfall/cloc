@@ -12,9 +12,7 @@ import net.watersfall.clocgame.model.city.City;
 import net.watersfall.clocgame.model.decisions.Decision;
 import net.watersfall.clocgame.model.event.Event;
 import net.watersfall.clocgame.model.message.Message;
-import net.watersfall.clocgame.model.military.army.Army;
-import net.watersfall.clocgame.model.military.army.ArmyEquipment;
-import net.watersfall.clocgame.model.military.army.Battalion;
+import net.watersfall.clocgame.model.military.army.*;
 import net.watersfall.clocgame.model.modifier.Modifier;
 import net.watersfall.clocgame.model.news.News;
 import net.watersfall.clocgame.model.policies.Policy;
@@ -2311,6 +2309,49 @@ public class Nation
 		else
 		{
 			return "Last Seen: " + time + " Hours Ago";
+		}
+	}
+
+	public EstimatedBattlePlan generateEstimatedDefensePlan(ArmyLocation location, Nation nation)
+	{
+		return new EstimatedBattlePlan(this, location, nation);
+	}
+
+	public EstimatedBattlePlan generateEstimatedDefensePlan(ArmyLocation location, City city)
+	{
+		return new EstimatedBattlePlan(this, location, city);
+	}
+
+	public BattlePlan generateDefensePlan(BattlePlan attackPlan)
+	{
+		ArrayList<Army> armies = new ArrayList<>();
+		HashMap<Army, Double> chances;
+		if(attackPlan.getBattleLocation() == ArmyLocation.NATION)
+		{
+			chances = generateEstimatedDefensePlan(attackPlan.getBattleLocation(), attackPlan.getLocationNation()).getArmies();
+		}
+		else
+		{
+			chances = generateEstimatedDefensePlan(attackPlan.getBattleLocation(), attackPlan.getLocationCity()).getArmies();
+		}
+		for(Map.Entry<Army, Double> entry : chances.entrySet())
+		{
+			if(entry.getValue() > 0D)
+			{
+				double chance = Math.random();
+				if(chance < entry.getValue())
+				{
+					armies.add(entry.getKey());
+				}
+			}
+		}
+		if(attackPlan.getBattleLocation() == ArmyLocation.NATION)
+		{
+			return new BattlePlan(this, armies, attackPlan.getBattleLocation(), attackPlan.getLocationNation());
+		}
+		else
+		{
+			return new BattlePlan(this, armies, attackPlan.getBattleLocation(), attackPlan.getLocationCity());
 		}
 	}
 

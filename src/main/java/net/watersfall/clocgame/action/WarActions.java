@@ -177,6 +177,8 @@ public class WarActions
 		int defenses = defense.getDefense();
 		int attacks2 = defense.getAttack();
 		int defenses2 = attack.getBreakthrough();
+		int attackCasualties = 0;
+		int defenseCasualties = 0;
 		while(attacks > 0)
 		{
 			attacks -= 1;
@@ -186,12 +188,12 @@ public class WarActions
 				defenses -= 1;
 				if(rand > 0.75)
 				{
-					defense.damage();
+					defenseCasualties += defense.damage();
 				}
 			}
 			else if(rand > 0.4)
 			{
-				defense.damage();
+				defenseCasualties += defense.damage();
 			}
 		}
 		while(attacks2 > 0)
@@ -203,15 +205,15 @@ public class WarActions
 				defenses2 -= 1;
 				if(rand > 0.75)
 				{
-					attack.damage();
+					attackCasualties += attack.damage();
 				}
 			}
 			else if(rand > 0.4)
 			{
-				attack.damage();
+				attackCasualties += attack.damage();
 			}
 		}
-		return "";
+		return "<p>We have lost " + attackCasualties + " soldiers and killed " + defenseCasualties + " enemy soldiers";
 	}
 
 	public static String sendPeace(Nation sender, Nation receiver) throws SQLException

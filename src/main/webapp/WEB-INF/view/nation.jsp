@@ -260,8 +260,7 @@
 								Engage the enemy army with your own, either on the field or in their cities. This is the primary way of winning a war.
 								Alternatively, you can fortify your army to make them more resistant to your enemy's attacks.
 							</div>
-							<button onclick="nation(${nation.id}, 'land_land', 0);">Field Battle</button>
-							<button onclick="nation(${nation.id}, 'land_city', 0);">Siege City</button>
+							<button onclick="window.location = PATH + '/battle/${nation.id}'">Battle</button>
 							<button onclick="nation(${nation.id}, 'land_fortify', 0);">Fortify</button>
 						</div>
 						<div class="subtile">

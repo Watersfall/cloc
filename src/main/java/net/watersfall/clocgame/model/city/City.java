@@ -696,4 +696,18 @@ public class City extends UpdatableLongId
 	{
 		return "<a href=\"" + Startup.CONTEXT_PATH +  "/cities/" + id + "\"><b>" + this.name + "</b></a>";
 	}
+
+	@Override
+	public boolean equals(Object object)
+	{
+		if(object instanceof City)
+		{
+			City city = (City)object;
+			return city.getId() == this.getId();
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
