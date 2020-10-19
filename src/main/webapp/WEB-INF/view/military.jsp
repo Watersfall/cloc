@@ -49,7 +49,7 @@
 				<c:forEach var="army" items="${home.armies}">
 					<div class="subtile">
 						<div class="title">
-							<a href="/army/${army.id}">${army.name}</a>
+							<a href="${pageContext.request.contextPath}/army/${army.id}">${army.name}</a>
 						</div>
 						<table class="nation nation_left full_width">
 							<tr>
