@@ -563,3 +563,32 @@ function battle(id)
 	params += "&attacker_armies=" + armies + "&location_id=" + targetId + "&battle_location=" + target;
 	ajax(url, params);
 }
+
+function editArmyName(id)
+{
+	document.getElementById("army_name_" + id).style.display = "none";
+	toggle("army_name_change_" + id);
+}
+
+function confirmArmyName(id)
+{
+	displayResults();
+	let name = document.getElementById("new_name_" + id).value;
+	let url = "/army/" + id;
+	let param = "action=rename&type=" + name;
+	let callback = function() {
+		if(this.readyState === 4 && this.status === 200)
+		{
+			document.getElementById("army_name_" + id).firstElementChild.innerHTML = "<a>" + name + "</a>";
+			cancelArmyName(id);
+			document.getElementById("results_content").innerHTML = this.responseText;
+		}
+	};
+	ajax(url, param, callback);
+}
+
+function cancelArmyName(id)
+{
+	toggle("army_name_change_" + id);
+	toggle("army_name_" + id);
+}

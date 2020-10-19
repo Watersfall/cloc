@@ -85,6 +85,9 @@ public class ArmyController extends HttpServlet
 				case "set_priority":
 					response = ArmyActions.setPriority(army, Priority.valueOf(req.getParameter("type")));
 					break;
+				case "rename":
+					response = ArmyActions.rename(army, req.getParameter("type"));
+					break;
 				default:
 					response = Responses.genericError();
 			}

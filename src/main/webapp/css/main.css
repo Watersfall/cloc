@@ -448,7 +448,7 @@ main {
 
 .title {
 	background-color: var(--dark-color);
-	color: var(--light-text-color);
+	color: var(--very-light-color);
 	font-size: 2rem;
 	text-align: center;
 }
@@ -856,6 +856,10 @@ button.gold:hover {
 .match_text {
 	max-height: 0.75em;
 	max-width: 0.75em;
+}
+
+.invert_svg {
+	filter: invert(1);
 }
 
 .rankings {

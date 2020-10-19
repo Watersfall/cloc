@@ -2,6 +2,7 @@ package net.watersfall.clocgame.model.military.army;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.watersfall.clocgame.listeners.Startup;
 import net.watersfall.clocgame.model.UpdatableLongId;
 import net.watersfall.clocgame.model.city.City;
 import net.watersfall.clocgame.model.nation.Nation;
@@ -241,6 +242,11 @@ public class Army extends UpdatableLongId
 			}
 		}
 		return null;
+	}
+
+	public String getUrl()
+	{
+		return "<a href=\"" + Startup.CONTEXT_PATH +  "/army/" + id + "\">" + this.name + "</a>";
 	}
 
 	@Override

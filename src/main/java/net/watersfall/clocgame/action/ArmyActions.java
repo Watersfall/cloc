@@ -6,6 +6,7 @@ import net.watersfall.clocgame.model.military.army.BattalionType;
 import net.watersfall.clocgame.model.military.army.Priority;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.text.Responses;
+import net.watersfall.clocgame.util.Security;
 
 import java.sql.SQLException;
 
@@ -65,6 +66,20 @@ public class ArmyActions
 			ArmyDao dao = new ArmyDao(nation.getConn(), true);
 			dao.deleteArmy(army.getId());
 			return Responses.deleted();
+		}
+	}
+
+	public static String rename(Army army, String name)
+	{
+		if(name.length() > 64)
+		{
+			return Responses.tooLong("name", 64);
+		}
+		else
+		{
+			name = Security.sanitize(name);
+			army.setField("name", name);
+			return Responses.updated();
 		}
 	}
 }

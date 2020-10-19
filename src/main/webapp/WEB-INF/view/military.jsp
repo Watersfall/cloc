@@ -49,7 +49,15 @@
 				<c:forEach var="army" items="${home.armies}">
 					<div class="subtile">
 						<div class="title">
-							<a href="${pageContext.request.contextPath}/army/${army.id}">${army.name}</a>
+							<div id="army_name_${army.id}">
+								<c:out escapeXml="false" value="${army.url} "/>
+								<img title="Edit Army Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit" onclick="editArmyName(${army.id})"/>
+							</div>
+							<div class="toggleable-default-off" id="army_name_change_${army.id}">
+								<input id="new_name_${army.id}" style="font-size: inherit" type="text" value="${army.name}"/>
+								<img onclick="confirmArmyName(${army.id});" title="Edit Army Name" class="match_text invert_svg" src="${pageContext.request.contextPath}/images/ui/checkmark.svg" alt="edit"/>
+								<img onclick="cancelArmyName(${army.id});" title="Edit Army Name" class="match_text invert_svg" src="${pageContext.request.contextPath}/images/ui/cancel.svg" alt="edit"/>
+							</div>
 						</div>
 						<table class="nation nation_left full_width">
 							<tr>

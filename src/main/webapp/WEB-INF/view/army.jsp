@@ -2,7 +2,17 @@
 <%@ include file="includes/top.jsp" %>
 <%@ page import="net.watersfall.clocgame.model.military.army.BattalionType" %>
 <%@ page import="net.watersfall.clocgame.model.military.army.Priority" %>
-	<div class="title">${army.name}</div>
+	<div class="title">
+		<div id="army_name_${army.id}">
+			<a><c:out escapeXml="false" value="${army.name} "/></a>
+			<img title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit" onclick="editArmyName(${army.id})"/>
+		</div>
+		<div class="toggleable-default-off" id="army_name_change_${army.id}">
+			<input id="new_name_${army.id}" style="font-size: inherit" type="text" value="${army.name}"/>
+			<img onclick="confirmArmyName(${army.id});" title="Edit Army Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/checkmark.svg" alt="edit"/>
+			<img onclick="cancelArmyName(${army.id});" title="Edit Army Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/cancel.svg" alt="edit"/>
+		</div>
+	</div>
 	<div class="tiling">
 		<div class="column">
 			<div class="tile">
