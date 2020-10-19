@@ -3,6 +3,7 @@ package net.watersfall.clocgame.action;
 import net.watersfall.clocgame.dao.LogDao;
 import net.watersfall.clocgame.dao.NewsDao;
 import net.watersfall.clocgame.model.city.City;
+import net.watersfall.clocgame.model.military.army.ArmyLocation;
 import net.watersfall.clocgame.model.military.army.BattlePlan;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.news.News;
@@ -174,6 +175,7 @@ public class WarActions
 	public static String landBattle(BattlePlan attack, BattlePlan defense)
 	{
 		int attacks = attack.getAttack();
+		int cityDamage = (attacks / 10);
 		int defenses = defense.getDefense();
 		int attacks2 = defense.getAttack();
 		int defenses2 = attack.getBreakthrough();
@@ -212,6 +214,12 @@ public class WarActions
 			{
 				attackCasualties += attack.damage();
 			}
+		}
+		attack.getNation().getStats().setLostManpower(attack.getNation().getStats().getLostManpower() + attackCasualties);
+		defense.getNation().getStats().setLostManpower(defense.getNation().getStats().getLostManpower() + defenseCasualties);
+		if(attack.getBattleLocation() == ArmyLocation.CITY)
+		{
+			attack.getLocationCity().setDevastation(attack.getLocationCity().getDevastation() + cityDamage);
 		}
 		return "<p>We have lost " + attackCasualties + " soldiers and killed " + defenseCasualties + " enemy soldiers";
 	}
