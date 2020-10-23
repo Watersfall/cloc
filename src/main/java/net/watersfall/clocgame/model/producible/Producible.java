@@ -19,6 +19,12 @@ public interface Producible
 	Technology getTechnology();
 
 	/**
+	 * Gets the Producibles enum value for this Producible
+	 * @return the enum value
+	 */
+	Producibles getEnumValue();
+
+	/**
 	 * Gets the production cost of this technology if it is producible, or -1.0 if it is not
 	 * @return The production cost
 	 */

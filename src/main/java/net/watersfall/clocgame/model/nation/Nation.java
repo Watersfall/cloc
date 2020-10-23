@@ -1089,9 +1089,6 @@ public class Nation
 				producibleCategoryProductionMap.putIfAbsent(production.getProduction().getProducible().getCategory(), new LinkedHashMap<>());
 				producibleCategoryProductionMap
 						.get(production.getProduction().getProducible().getCategory())
-						.computeIfPresent(production.getProduction(), (k, v) -> v = v + this.getProduciblesProduction(k));
-				producibleCategoryProductionMap
-						.get(production.getProduction().getProducible().getCategory())
 						.putIfAbsent(production.getProduction(), this.getProduciblesProduction(production.getProduction()));
 			}
 		}

@@ -3,6 +3,7 @@ package net.watersfall.clocgame.model.producible.military.plane.fighter;
 import net.watersfall.clocgame.model.producible.IFighterPower;
 import net.watersfall.clocgame.model.producible.Producible;
 import net.watersfall.clocgame.model.producible.ProducibleCategory;
+import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.model.technology.Technologies;
 import net.watersfall.clocgame.model.technology.Technology;
 
@@ -24,6 +25,12 @@ public class BiplaneFighters implements Producible, IFighterPower
 	public double getProductionICCost()
 	{
 		return 24.0;
+	}
+
+	@Override
+	public Producibles getEnumValue()
+	{
+		return Producibles.BIPLANE_FIGHTERS;
 	}
 
 	@Override

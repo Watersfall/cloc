@@ -3,6 +3,7 @@ package net.watersfall.clocgame.model.producible.military.plane.fighter;
 import net.watersfall.clocgame.model.producible.IFighterPower;
 import net.watersfall.clocgame.model.producible.Producible;
 import net.watersfall.clocgame.model.producible.ProducibleCategory;
+import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.model.technology.Technologies;
 import net.watersfall.clocgame.model.technology.Technology;
 
@@ -18,6 +19,12 @@ public class MonoplaneFighters implements Producible, IFighterPower
 	@Override public Technology getTechnology()
 	{
 		return Technologies.MONOPLANE_FIGHTERS.getTechnology();
+	}
+
+	@Override
+	public Producibles getEnumValue()
+	{
+		return Producibles.MONOPLANE_FIGHTERS;
 	}
 
 	@Override

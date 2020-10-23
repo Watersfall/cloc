@@ -3,6 +3,7 @@ package net.watersfall.clocgame.model.producible.military.plane.recon;
 import net.watersfall.clocgame.model.producible.IReconPower;
 import net.watersfall.clocgame.model.producible.Producible;
 import net.watersfall.clocgame.model.producible.ProducibleCategory;
+import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.model.technology.Technologies;
 import net.watersfall.clocgame.model.technology.Technology;
 
@@ -18,6 +19,12 @@ public class ReconBalloons implements Producible, IReconPower
 	@Override public Technology getTechnology()
 	{
 		return Technologies.RECON_BALLOONS.getTechnology();
+	}
+
+	@Override
+	public Producibles getEnumValue()
+	{
+		return Producibles.RECON_BALLOONS;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package net.watersfall.clocgame.model.producible.army.infantry;
 import net.watersfall.clocgame.model.producible.IArmyPower;
 import net.watersfall.clocgame.model.producible.Producible;
 import net.watersfall.clocgame.model.producible.ProducibleCategory;
+import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.model.technology.Technologies;
 import net.watersfall.clocgame.model.technology.Technology;
 
@@ -20,6 +21,12 @@ public class StraightPull implements Producible, IArmyPower
 	public Technology getTechnology()
 	{
 		return Technologies.STRAIGHT_PULL_RIFLE.getTechnology();
+	}
+
+	@Override
+	public Producibles getEnumValue()
+	{
+		return Producibles.STRAIGHT_PULL;
 	}
 
 	@Override
