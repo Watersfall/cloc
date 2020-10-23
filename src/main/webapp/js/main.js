@@ -327,13 +327,13 @@ function createNewProduction()
 			if(!Number.isNaN(this.responseText))
 			{
 				let id = this.responseText;
-				freeFactories -= 1;
-				setFreeFactories(freeFactories);
 				let url = "/production/" + id;
 				let callback = function()
 				{
 					if(this.readyState === 4 && this.status === 200)
 					{
+						freeFactories -= 1;
+						setFreeFactories(freeFactories);
 						let placeholder = document.createElement("div");
 						placeholder.innerHTML = this.responseText;
 						document.getElementsByClassName("production_list").item(0).appendChild(placeholder.firstChild);
