@@ -34,7 +34,7 @@ public class ProductionActions
 		else
 		{
 			ProductionDao dao = new ProductionDao(nation.getConn(), true);
-			return Integer.toString(dao.createDefaultProduction(nation.getId()));
+			return dao.createDefaultProduction(nation.getId()) + "," + nation.getProduction().size();
 		}
 	}
 

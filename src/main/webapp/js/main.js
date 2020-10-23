@@ -194,9 +194,9 @@ function setFreeFactories(num)
 
 function setFactories(id, amount)
 {
-	FACTORY.src = "/images/production/factory.svg";
+	FACTORY.src = PATH + "/images/production/factory.svg";
 	FACTORY.alt = "factory";
-	BLANK.src = "/images/production/blank.svg";
+	BLANK.src = PATH + "/images/production/blank.svg";
 	BLANK.alt = "blank";
 	let production = document.getElementById("factories_" + id);
 	let currentFactoryCount = 0;
@@ -318,27 +318,26 @@ function deleteProduction(id)
 
 function createNewProduction()
 {
-	displayResults();
 	let url = "/production/0";
 	let params = "action=new";
 	let callback = function()
 	{
 		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("results_content").innerHTML = this.responseText;
 			if(!Number.isNaN(this.responseText))
 			{
-				let id = this.responseText;
+				let id = this.responseText.split(",")[0];
+				let placement = this.responseText.split(",")[1];
 				freeFactories -= 1;
 				setFreeFactories(freeFactories);
-				let url = "/production/" + this.responseText;
+				let url = "/production/" + id;
 				let callback = function()
 				{
 					if(this.readyState === 4 && this.status === 200)
 					{
 						let placeholder = document.createElement("div");
 						placeholder.innerHTML = this.responseText;
-						document.getElementsByClassName("column").item(id % 2).appendChild(placeholder);
+						document.getElementsByClassName("column").item(1 + placement % 2).appendChild(placeholder);
 					}
 				};
 				ajax(url, null, callback, "GET");
