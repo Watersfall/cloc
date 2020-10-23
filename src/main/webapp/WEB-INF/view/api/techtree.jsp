@@ -10,7 +10,7 @@
 	<%--@elvariable id="tech" type="net.watersfall.clocgame.model.technology.Technologies"--%>
 	<c:forEach var="tech" items="${techs}">
 		<c:if test="${tech.category == category}">
-			<div onclick="loadTech('${tech.name()}');" class="tech_tile" style="grid-column: ${tech.x}; grid-row: ${tech.y}">
+			<a href="#tech" onclick="loadTech('${tech.name()}');" class="tech_tile" style="grid-column: ${tech.x}; grid-row: ${tech.y}">
 				<div class="tech_wrapper">
 					<c:choose>
 						<c:when test="${home.hasTech(tech.technology)}">
@@ -43,7 +43,7 @@
 						</c:choose>
 					</c:forEach>
 				</div>
-			</div>
+			</a>
 		</c:if>
 	</c:forEach>
 </div>
