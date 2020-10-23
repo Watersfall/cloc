@@ -91,6 +91,7 @@ public class Nation
 	private HashMap<Army, HashMap<Producibles, Integer>> equipmentUpgrades = null;
 	private HashMap<Army, HashMap<ProducibleCategory, Integer>> equipmentUpgradesByCategory = null;
 	private HashMap<Army, Integer> armyManpowerChange = null;
+	private HashMap<ProducibleCategory, LinkedHashMap<Producibles, Long>> producibleCategoryProductionMap = null;
 	private LinkedHashMap<TextKey, Integer> equipmentReinforcementCapacity;
 	private LinkedHashMap<TextKey, Integer> manpowerReinforcementCapacity;
 	private City largestCity = null;
@@ -1043,7 +1044,7 @@ public class Nation
 			double total = 0;
 			for(Production production : this.production.values())
 			{
-				if(production.getProductionAsTechnology().getTechnology().getProducibleItem().getCategory() == category)
+				if(production.getProduction().getProducible().getCategory() == category)
 				{
 					total += production.getMonthlyProduction(this);
 				}
@@ -1068,7 +1069,7 @@ public class Nation
 			double total = 0;
 			for(Production production : this.production.values())
 			{
-				if(production.getProductionAsTechnology().getTechnology().getProducibleItem() == producible.getProducible())
+				if(production.getProduction() == producible)
 				{
 					total += production.getMonthlyProduction(this);
 				}
@@ -1076,6 +1077,25 @@ public class Nation
 			produciblesProduction.put(producible, (long)total);
 			return (long)total;
 		}
+	}
+
+	public HashMap<ProducibleCategory, LinkedHashMap<Producibles, Long>> getProduciblesProductionMapByCategories()
+	{
+		if(producibleCategoryProductionMap == null)
+		{
+			producibleCategoryProductionMap = new HashMap<>();
+			for(Production production : this.production.values())
+			{
+				producibleCategoryProductionMap.putIfAbsent(production.getProduction().getProducible().getCategory(), new LinkedHashMap<>());
+				producibleCategoryProductionMap
+						.get(production.getProduction().getProducible().getCategory())
+						.computeIfPresent(production.getProduction(), (k, v) -> v = v + this.getProduciblesProduction(k));
+				producibleCategoryProductionMap
+						.get(production.getProduction().getProducible().getCategory())
+						.putIfAbsent(production.getProduction(), this.getProduciblesProduction(production.getProduction()));
+			}
+		}
+		return producibleCategoryProductionMap;
 	}
 	
 	public LinkedHashMap<Producibles, Integer> getActivePlanes(ProducibleCategory category, int allowed)

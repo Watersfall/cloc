@@ -931,6 +931,10 @@ button.gold:hover {
 	padding: 0;
 }
 
+.less_margin {
+	margin: 0;
+}
+
 footer {
 	text-align: center;
 	margin: 0.5rem auto;

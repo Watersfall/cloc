@@ -5,6 +5,7 @@ import net.watersfall.clocgame.action.ProductionActions;
 import net.watersfall.clocgame.dao.NationDao;
 import net.watersfall.clocgame.model.error.Errors;
 import net.watersfall.clocgame.model.nation.Nation;
+import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Executor;
 import net.watersfall.clocgame.util.UserUtils;
@@ -73,7 +74,7 @@ public class ProductionController extends HttpServlet
 				case "update":
 					int factories = Integer.parseInt(req.getParameter("factories"));
 					String newProduction = req.getParameter("production");
-					response = ProductionActions.update(nation, productionId, factories, newProduction);
+					response = ProductionActions.update(nation, productionId, factories, Producibles.valueOf(newProduction));
 					break;
 				default:
 					response = Responses.genericError();

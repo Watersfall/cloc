@@ -3,7 +3,7 @@ package net.watersfall.clocgame.action;
 import net.watersfall.clocgame.dao.ProductionDao;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.nation.Production;
-import net.watersfall.clocgame.model.technology.Technologies;
+import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.text.Responses;
 
 import java.sql.PreparedStatement;
@@ -38,58 +38,50 @@ public class ProductionActions
 		}
 	}
 
-	public static String update(Nation nation, int id, int newFactoryCount, String productionString) throws SQLException, NullPointerException, IllegalArgumentException
+	public static String update(Nation nation, int id, int newFactoryCount, Producibles producible) throws SQLException, NullPointerException, IllegalArgumentException
 	{
-		Technologies newProduction = Technologies.valueOf(productionString);
 		Production production = nation.getProductionById(id);
 		if(newFactoryCount > 15 || newFactoryCount < 0)
 		{
 			throw new IllegalArgumentException();
 		}
-		if(newProduction.getTechnology().isProducible())
+		if(nation.getFreeFactories() >= newFactoryCount - production.getFactories().size())
 		{
-			if(nation.getFreeFactories() >= newFactoryCount - production.getFactories().size())
+			if(producible != production.getProduction())
 			{
-				if(!newProduction.name().equalsIgnoreCase(production.getProduction()))
+				PreparedStatement statement;
+				if(production.getProduction().getProducible().getCategory() == producible.getProducible().getCategory())
 				{
-					PreparedStatement statement;
-					if(production.getProductionAsTechnology().getCategory() == newProduction.getCategory())
-					{
-						statement = nation.getConn().prepareStatement("UPDATE factories " +
-								"SET efficiency=GREATEST(efficiency / 2, 1500) WHERE production_id=?");
-					}
-					else
-					{
-						statement = nation.getConn().prepareStatement("UPDATE factories " +
-								"SET efficiency=1500 WHERE production_id=?");
-					}
-					statement.setInt(1, id);
-					statement.execute();
-					production.setProgress(0);
-					production.setProduction(newProduction.name());
+					statement = nation.getConn().prepareStatement("UPDATE factories " +
+							"SET efficiency=GREATEST(efficiency / 2, 1500) WHERE production_id=?");
 				}
-				if(newFactoryCount != production.getFactories().size())
+				else
 				{
-					ProductionDao dao = new ProductionDao(nation.getConn(), true);
-					if(newFactoryCount > production.getFactories().size())
-					{
-						dao.addFactories(production.getId(), newFactoryCount - production.getFactories().size());
-					}
-					else
-					{
-						dao.removeFactories(production.getId(), production.getFactories().size() - newFactoryCount);
-					}
+					statement = nation.getConn().prepareStatement("UPDATE factories " +
+							"SET efficiency=1500 WHERE production_id=?");
 				}
-				return Responses.updated();
+				statement.setInt(1, id);
+				statement.execute();
+				production.setProgress(0);
+				production.setProduction(producible);
 			}
-			else
+			if(newFactoryCount != production.getFactories().size())
 			{
-				return Responses.noFactories();
+				ProductionDao dao = new ProductionDao(nation.getConn(), true);
+				if(newFactoryCount > production.getFactories().size())
+				{
+					dao.addFactories(production.getId(), newFactoryCount - production.getFactories().size());
+				}
+				else
+				{
+					dao.removeFactories(production.getId(), production.getFactories().size() - newFactoryCount);
+				}
 			}
+			return Responses.updated();
 		}
 		else
 		{
-			throw new IllegalArgumentException();
+			return Responses.noFactories();
 		}
 	}
 }

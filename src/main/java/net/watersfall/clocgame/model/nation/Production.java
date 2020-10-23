@@ -5,7 +5,7 @@ import lombok.Setter;
 import net.watersfall.clocgame.model.UpdatableLongId;
 import net.watersfall.clocgame.model.factory.Factory;
 import net.watersfall.clocgame.model.policies.Policy;
-import net.watersfall.clocgame.model.technology.Technologies;
+import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.util.Time;
 
 import java.util.HashMap;
@@ -15,12 +15,12 @@ public class Production extends UpdatableLongId
 	private static final String TABLE_NAME = "production";
 	private @Getter int owner;
 	private @Getter @Setter HashMap<Integer, Factory> factories;
-	private @Getter String production;
+	private @Getter Producibles production;
 	private @Getter int progress;
 	private HashMap<String, Double> requiredResources;
 	private @Getter HashMap<String, Double> givenResources;
 
-	public Production(int id, int owner, HashMap<Integer, Factory> factories, String production, int progress, HashMap<String, Double> givenResources)
+	public Production(int id, int owner, HashMap<Integer, Factory> factories, Producibles production, int progress, HashMap<String, Double> givenResources)
 	{
 		super(TABLE_NAME, id);
 		this.owner = owner;
@@ -31,7 +31,7 @@ public class Production extends UpdatableLongId
 		this.requiredResources = new HashMap<>();
 	}
 
-	public void setProduction(String production)
+	public void setProduction(Producibles production)
 	{
 		this.production = production;
 		this.setField("production", production);
@@ -50,7 +50,7 @@ public class Production extends UpdatableLongId
 
 	public HashMap<String, Double> getRequiredResources()
 	{
-		this.getProductionAsTechnology().getTechnology().getProducibleItem().getProductionResourceCost().forEach((k, v) -> {
+		this.production.getProducible().getProductionResourceCost().forEach((k, v) -> {
 			this.requiredResources.put(k, (double)(v * this.factories.size()));
 		});
 		return requiredResources;
@@ -105,7 +105,7 @@ public class Production extends UpdatableLongId
 		{
 			return"No&nbsp;progress";
 		}
-		double speed = this.getIc(policy) / getProductionAsTechnology().getTechnology().getProducibleItem().getProductionICCost();
+		double speed = this.getIc(policy) / this.production.getProducible().getProductionICCost();
 		if(speed >= 1)
 		{
 			return String.format("%.2f&nbsp;per&nbsp;day", speed);
@@ -116,7 +116,7 @@ public class Production extends UpdatableLongId
 		}
 		else
 		{
-			double timeRemaining = (getProductionAsTechnology().getTechnology().getProducibleItem().getProductionICCost() - (this.progress / 100.0)) / this.getIc(policy);
+			double timeRemaining = (this.production.getProducible().getProductionICCost() - (this.progress / 100.0)) / this.getIc(policy);
 			if(timeRemaining > 7)
 			{
 				timeRemaining = timeRemaining / 7;
@@ -129,14 +129,9 @@ public class Production extends UpdatableLongId
 		}
 	}
 
-	public Technologies getProductionAsTechnology()
-	{
-		return Technologies.valueOf(this.production);
-	}
-
 	public double getMonthlyProduction(Nation nation)
 	{
 		double ic = this.getIc(nation.getPolicy().getEconomy()) * Time.daysPerMonth[Time.currentMonth];
-		return ic / getProductionAsTechnology().getTechnology().getProducibleItem().getProductionICCost();
+		return ic / this.production.getProducible().getProductionICCost();
 	}
 }

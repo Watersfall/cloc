@@ -12,7 +12,7 @@
 		<select id="select_${production.id}" class="toggleable-default-off">
 			<c:forEach items="${home.tech.researchedTechs}" var="tech">
 				<c:if test="${tech.technology.producible}">
-					<option ${tech.name() == production.production ? 'selected' : ''} value="${tech.name()}">${tech.technology.name}</option>
+					<option ${tech.technology.producibleItem == production.production.producible ? 'selected' : ''} value="${production.production.name()}">${tech.technology.name}</option>
 				</c:if>
 			</c:forEach>
 		</select>
@@ -34,7 +34,7 @@
 			<c:forEach var="resource" items="${production.requiredResources.entrySet()}">
 				<div>
 					<span class="${production.givenResources.get(resource.key) >= resource.value ? '' : 'red_text'}">
-						<img src="/images/ui/${resource.key}.svg" alt="${resource.key}">
+						<img src="${pageContext.request.contextPath}/images/ui/${resource.key}.svg" alt="${resource.key}">
 						${resource.value}
 					</span>
 				</div>
@@ -52,7 +52,7 @@
 	<div class="progress_bar">
 		<span>Progress:</span>
 		<div>
-			<div style="width: ${production.progress / production.productionAsTechnology.technology.producibleItem.productionICCost}%;">
+			<div style="width: ${production.progress / production.production.producible.productionICCost}%;">
 				<span>${production.getProductionString(home.policy.economy)}</span>
 			</div>
 		</div>

@@ -248,7 +248,7 @@ public class NationDao extends Dao
 							productionResults.getInt("production.id"),
 							productionResults.getInt("owner"),
 							null,
-							productionResults.getString("production"),
+							Producibles.valueOf(productionResults.getString("production")),
 							productionResults.getInt("progress"),
 							null));
 					production.get(productionResults.getInt("production.id")).setFactories(factories);
@@ -613,11 +613,10 @@ public class NationDao extends Dao
 				});
 				double productionIc = production.getIc(nation.getPolicy().getEconomy());
 				double ic = productionIc + (production.getProgress() / 100.0);
-				int amount = (int) (ic / production.getProductionAsTechnology().getTechnology().getProducibleItem().getProductionICCost());
-				int leftover = (int) ((ic - (amount * production.getProductionAsTechnology().getTechnology().getProducibleItem().getProductionICCost())) * 100);
+				int amount = (int) (ic / production.getProduction().getProducible().getProductionICCost());
+				int leftover = (int) ((ic - (amount * production.getProduction().getProducible().getProductionICCost())) * 100);
 				production.setProgress(leftover);
-				statement += Producibles.valueOf(production.getProductionAsTechnology().getTechnology().getProducibleItem()).name().toLowerCase() + "="
-						+ Producibles.valueOf(production.getProductionAsTechnology().getTechnology().getProducibleItem()).name().toLowerCase() + "+" + amount + ", ";
+				statement += production.getProduction().name() + "=" + production.getProduction().name() + "+" + amount + ", ";
 			}
 		}
 		if(!statement.isEmpty())
