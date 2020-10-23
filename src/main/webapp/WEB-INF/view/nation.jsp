@@ -241,7 +241,7 @@
 							<button onclick="nationEquipment(${nation.id}, document.getElementById('equipment').value, document.getElementById('send_equipment').value)" class="blue">Send</button>
 						</label>
 					</div>
-					<div class="subtile">
+					<div class="subtile" id="send_message">
 						<label>
 							<div class="title">Send Message</div>
 							<textarea id="message"></textarea>
