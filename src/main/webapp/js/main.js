@@ -275,7 +275,7 @@ function reloadProduction(id)
 		{
 			let placeholder = document.createElement("div");
 			placeholder.innerHTML = this.responseText;
-			element.replaceWith(placeholder);
+			element.replaceWith(placeholder.firstChild);
 		}
 	};
 	ajax(url, null, callback, "GET");
