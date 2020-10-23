@@ -637,6 +637,17 @@ button.gold:hover {
 	margin: -0.125rem 0 0;
 }
 
+.production_list {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.production {
+	flex-wrap: wrap;
+	min-width: calc(50% - 6rem);
+	flex-grow: 1;
+}
+
 .production .contents {
 	display: inline;
 }
@@ -1007,6 +1018,10 @@ footer h3, h4 {
 	#results {
 		top: 3rem;
 		left: 0;
+	}
+
+	.production {
+		min-width: 75%;
 	}
 }
 

@@ -326,8 +326,7 @@ function createNewProduction()
 		{
 			if(!Number.isNaN(this.responseText))
 			{
-				let id = this.responseText.split(",")[0];
-				let placement = this.responseText.split(",")[1];
+				let id = this.responseText;
 				freeFactories -= 1;
 				setFreeFactories(freeFactories);
 				let url = "/production/" + id;
@@ -337,7 +336,7 @@ function createNewProduction()
 					{
 						let placeholder = document.createElement("div");
 						placeholder.innerHTML = this.responseText;
-						document.getElementsByClassName("column").item(1 + placement % 2).appendChild(placeholder);
+						document.getElementsByClassName("production_list").item(0).appendChild(placeholder.firstChild);
 					}
 				};
 				ajax(url, null, callback, "GET");
