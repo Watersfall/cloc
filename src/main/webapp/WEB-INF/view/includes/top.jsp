@@ -148,8 +148,8 @@
 				</ul>
 			</c:if>
 		</nav>
-		<div id="results">
-			<div id="results_content"></div>
+		<div id="results" ${not empty result ? 'style="display:block"' : ''}>
+			<div id="results_content">${result}</div>
 			<button onclick="toggle('results')" class="red">Close</button>
 		</div>
 		<div id="container">

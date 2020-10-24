@@ -3,6 +3,7 @@ package net.watersfall.clocgame.servlet.controller;
 import net.watersfall.clocgame.action.Action;
 import net.watersfall.clocgame.action.SettingsActions;
 import net.watersfall.clocgame.dao.NationDao;
+import net.watersfall.clocgame.listeners.Startup;
 import net.watersfall.clocgame.model.error.Errors;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.text.Responses;
@@ -62,9 +63,13 @@ public class SettingsController extends HttpServlet
 			{
 				case "flag":
 					response = SettingsActions.updateFlag(nation, req.getPart("flag"));
+					req.getSession().setAttribute("message", response);
+					resp.sendRedirect(Startup.CONTEXT_PATH + "/settings/");
 					break;
 				case "portrait":
 					response = SettingsActions.updatePortrait(nation, req.getPart("portrait"));
+					req.getSession().setAttribute("message", response);
+					resp.sendRedirect(Startup.CONTEXT_PATH + "/settings/");
 					break;
 				case "nationTitle":
 					response = SettingsActions.updateNationTitle(nation, Security.sanitize(req.getParameter("value")));

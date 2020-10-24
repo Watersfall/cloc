@@ -5,6 +5,7 @@ import net.watersfall.clocgame.action.TreatyActions;
 import net.watersfall.clocgame.dao.NationDao;
 import net.watersfall.clocgame.dao.TreatyDao;
 import net.watersfall.clocgame.database.Database;
+import net.watersfall.clocgame.listeners.Startup;
 import net.watersfall.clocgame.model.Stats;
 import net.watersfall.clocgame.model.error.Errors;
 import net.watersfall.clocgame.model.nation.Nation;
@@ -86,6 +87,8 @@ public class TreatyController extends HttpServlet
 					break;
 				case "flag":
 					response = TreatyActions.updateFlag(req, member, req.getPart("flag"));
+					req.getSession().setAttribute("message", response);
+					resp.sendRedirect(Startup.CONTEXT_PATH + "/treaty/" + member.getTreaty().getId());
 					break;
 				case "description":
 					response = TreatyActions.updateDescription(member, value);

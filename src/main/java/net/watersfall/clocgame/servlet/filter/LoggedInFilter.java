@@ -49,6 +49,8 @@ public class LoggedInFilter implements Filter
 				HttpSession sess = req.getSession(true);
 				if(sess != null && sess.getAttribute("user") != null)
 				{
+					req.setAttribute("result", sess.getAttribute("message"));
+					sess.removeAttribute("message");
 					int user = UserUtils.getUser(req);
 					NationDao dao = new NationDao(connection, false);
 					req.setAttribute("home", dao.getNationById(user));
