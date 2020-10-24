@@ -71,7 +71,7 @@
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 									<br>
 								</a>
-								<div id="equipment_gain_${army.id}_${equipment.key.name()}" class="dropdown_2 toggleable-default-off">
+								<div id="equipment_gain_${army.id}_${equipment.key.name()}" class="dropdown_2 special-toggle">
 									<c:if test="${hasEquipment}">
 										New:
 										<ul>

@@ -58,15 +58,13 @@ function toggle(id)
 
 function toggleUITab(tab)
 {
-	let tabs = ["budget_production", "food_production", "coal_production", "iron_production", "oil_production",
-		"steel_production", "nitrogen_production", "research_production", "approval_change", "stability_change",
-		"growth_change", "equipment", "bombers", "fighters", "recons", "fortification_change", "equipment_production",
-		"bomber_production", "fighter_production", "recon_production", "garrison_dropdown"];
+	tab = document.getElementById(tab);
+	let tabs = document.getElementsByClassName("special-toggle");
 	for(let i = 0; i < tabs.length; i++)
 	{
 		if(tabs[i] !== tab)
 		{
-			let tab = document.getElementById(tabs[i]);
+			let tab = tabs[i];
 			if(tab != null)
 			{
 				tab.style.display = "";
@@ -75,7 +73,7 @@ function toggleUITab(tab)
 	}
 	if(tab !== null)
 	{
-		toggle(tab);
+		toggle(tab.id);
 	}
 }
 

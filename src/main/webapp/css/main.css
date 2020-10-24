@@ -218,6 +218,8 @@ main {
 	display: none;
 }
 
+.special-toggle {}
+
 .sublist {
 	margin-left: 2em;
 	list-style: none;

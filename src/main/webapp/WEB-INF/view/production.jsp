@@ -20,7 +20,7 @@
 										<fmt:formatNumber value="${home.getProduciblesProductionByCategory(category)}"/> total ${category.name()} per month
 										<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 									</a>
-									<div id="${category}" class="dropdown_2 toggleable-default-off">
+									<div id="${category}" class="dropdown_2 toggleable-default-off special-toggle">
 										<ul>
 											<c:forEach var="equipment" items="${home.produciblesProductionMapByCategories.get(category).entrySet()}">
 												<li>

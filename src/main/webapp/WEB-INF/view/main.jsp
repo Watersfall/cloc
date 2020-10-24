@@ -45,7 +45,7 @@
 									</c:if>
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div id="approval_change" class="dropdown_2_right toggleable-default-off">
+								<div id="approval_change" class="dropdown_2_right toggleable-default-off special-toggle">
 									<cloc:dropdown value="${Util.removeNetAndTotal(home.approvalChange)}"/>
 								</div>
 							</td>
@@ -68,7 +68,7 @@
 									</c:if>
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div id="stability_change" class="dropdown_2_right toggleable-default-off">
+								<div id="stability_change" class="dropdown_2_right toggleable-default-off special-toggle">
 									<cloc:dropdown value="${Util.removeNetAndTotal(home.stabilityChange)}"/>
 								</div>
 							</td>
@@ -121,7 +121,7 @@
 									</c:choose>
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div id="growth_change" class="dropdown_2_right toggleable-default-off">
+								<div id="growth_change" class="dropdown_2_right toggleable-default-off special-toggle">
 									<cloc:dropdown value="${Util.removeNetAndTotal(home.growthChange)}"/>
 								</div>
 							</td>
@@ -182,7 +182,7 @@
 									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.armySize}"/> requested
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_left toggleable-default-off" id="equipment">
+								<div class="dropdown_2_left toggleable-default-off special-toggle" id="equipment">
 									<ul>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}" var="producible">
 											<c:if test="${home.producibles.getProducible(producible) > 0}">
@@ -199,7 +199,7 @@
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_right toggleable-default-off" id="equipment_production">
+								<div class="dropdown_2_right toggleable-default-off special-toggle" id="equipment_production">
 									<ul>
 										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) == 0}">
 											<li>No Change</li>
@@ -237,7 +237,7 @@
 									</c:choose>
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_right toggleable-default-off" id="fortification_change">
+								<div class="dropdown_2_right toggleable-default-off special-toggle" id="fortification_change">
 									<c:set var="fortMap" value="${Util.removeNetAndTotal(home.fortificationChange)}"/>
 									<ul>
 										<c:if test="${fortMap.size() <= 0}">
@@ -276,7 +276,7 @@
 									<fmt:formatNumber value="${home.stats.currentFighters}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE) - home.stats.currentFighters}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_left toggleable-default-off" id="fighters">
+								<div class="dropdown_2_left toggleable-default-off special-toggle" id="fighters">
 									<ul>
 										<c:set var="currentFighters" value="${home.activeFighters}"/>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE)}" var="producible">
@@ -311,7 +311,7 @@
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_right toggleable-default-off" id="fighter_production">
+								<div class="dropdown_2_right toggleable-default-off special-toggle" id="fighter_production">
 									<ul>
 										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE) == 0}">
 											<li>No Change</li>
@@ -338,7 +338,7 @@
 									<fmt:formatNumber value="${home.stats.currentBombers}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE) - home.stats.currentBombers}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_left toggleable-default-off" id="bombers">
+								<div class="dropdown_2_left toggleable-default-off special-toggle" id="bombers">
 									<ul>
 										<c:set var="currentBombers" value="${home.activeBombers}"/>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE)}" var="producible">
@@ -373,7 +373,7 @@
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_right toggleable-default-off" id="bomber_production">
+								<div class="dropdown_2_right toggleable-default-off special-toggle" id="bomber_production">
 									<ul>
 										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE) == 0}">
 											<li>No Change</li>
@@ -400,7 +400,7 @@
 									<fmt:formatNumber value="${home.stats.currentRecon}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE) - home.stats.currentRecon}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_left toggleable-default-off" id="recons">
+								<div class="dropdown_2_left toggleable-default-off special-toggle" id="recons">
 									<ul>
 										<c:set var="currentRecon" value="${home.activeRecon}"/>
 										<c:forEach items="${Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE)}" var="producible">
@@ -435,7 +435,7 @@
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div class="dropdown_2_right toggleable-default-off" id="recon_production">
+								<div class="dropdown_2_right toggleable-default-off special-toggle" id="recon_production">
 									<ul>
 										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE) == 0}">
 											<li>No Change</li>

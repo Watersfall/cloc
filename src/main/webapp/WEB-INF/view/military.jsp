@@ -20,7 +20,7 @@
 									+<fmt:formatNumber value="${home.totalArmyIncrease}"/> Per Turn
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div id="size_changes" class="dropdown_2 toggleable-default-off">
+								<div id="size_changes" class="dropdown_2 toggleable-default-off special-toggle">
 									<ul>
 										<c:if test="${home.armyManpowerChange.size() <= 0}">
 											<li>No Change</li>
@@ -43,7 +43,7 @@
 									<fmt:formatNumber value="${home.manpowerReinforcementCapacity.get(net)}"/> Soldiers
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div id="manpower_reinforcement_capacity" class="dropdown_2 toggleable-default-off">
+								<div id="manpower_reinforcement_capacity" class="dropdown_2 toggleable-default-off special-toggle">
 									<ul>
 										<c:set var="map" value="${Util.removeNetAndTotal(home.manpowerReinforcementCapacity)}"/>
 										<c:if test="${map.size() <= 0}">
@@ -69,7 +69,7 @@
 									<fmt:formatNumber value="${home.equipmentReinforcementCapacity.get(net)}"/> Whatevers
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
-								<div id="equipment_reinforcement_capacity" class="dropdown_2 toggleable-default-off">
+								<div id="equipment_reinforcement_capacity" class="dropdown_2 toggleable-default-off special-toggle">
 									<ul>
 										<c:set var="map" value="${Util.removeNetAndTotal(home.equipmentReinforcementCapacity)}"/>
 										<c:if test="${map.size() <= 0}">
@@ -148,7 +148,7 @@
 											<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 											<br>
 										</a>
-										<div id="equipment_gain_${army.id}_${equipment.key.name()}" class="dropdown_2 toggleable-default-off">
+										<div id="equipment_gain_${army.id}_${equipment.key.name()}" class="dropdown_2 toggleable-default-off special-toggle">
 											<c:if test="${hasEquipment}">
 												New:
 												<ul>
