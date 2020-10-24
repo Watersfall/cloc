@@ -5,7 +5,7 @@
 		<div class="column">
 			<div class="tile">
 				<div class="subtile registration">
-					<form action="${pageContext.request.contextPath}/register/" method="POST">
+					<form id="register" onsubmit="register2(); return false;" method="POST">
 						<label>
 							<div class="title">Username</div>
 							<input type="text" maxlength="32" name="username" placeholder="Username"/>

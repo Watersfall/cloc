@@ -100,6 +100,28 @@ function anyParentIsToggleTab(element)
 	return false;
 }
 
+function register2()
+{
+	displayResults();
+	let form = document.getElementById("register");
+	let url = "/register/";
+	let params = new URLSearchParams(new FormData(form).entries()).toString();
+	let callback = function() {
+		if(this.readyState === 4 && this.status === 200)
+		{
+			if(this.responseText.toLowerCase().indexOf("register") < 0)
+			{
+				document.getElementById("results_content").innerHTML = this.responseText;
+			}
+			else
+			{
+				window.location.href = PATH + "/main/";
+			}
+		}
+	};
+	ajax(url, params, callback);
+}
+
 function login()
 {
 	let user = document.getElementById("username").value;
