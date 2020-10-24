@@ -1,5 +1,6 @@
 <%@ include file="includes/top.jsp" %>
 <%@ page import="net.watersfall.clocgame.model.producible.ProducibleCategory" %>
+<%@ page import="net.watersfall.clocgame.util.Util" %>
 <% pageContext.setAttribute("net", TextKey.Reinforcement.NET); %>
 <div class="title">Military</div>
 	<div class="tiling">
@@ -14,33 +15,75 @@
 						</tr>
 						<tr>
 							<td><fmt:formatNumber value="${home.armySize}"/> Soldiers</td>
-							<td>
-								<a href="#">
-									+0 Per Turn
+							<td class="dropdown_parent">
+								<a href="#" onclick="toggleUITab('size_changes')">
+									+<fmt:formatNumber value="${home.totalArmyIncrease}"/> Per Turn
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
+								<div id="size_changes" class="dropdown_2 toggleable-default-off">
+									<ul>
+										<c:if test="${home.armyManpowerChange.size() <= 0}">
+											<li>No Change</li>
+										</c:if>
+										<c:if test="${home.armyManpowerChange.size() > 0}">
+											<c:forEach items="${home.armyManpowerChange.entrySet()}" var="army">
+												<li>+<fmt:formatNumber value="${army.value}"/> to ${army.key.name}</li>
+											</c:forEach>
+										</c:if>
+									</ul>
+								</div>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="2">Manpower Reinforcement Capacity</td>
 						</tr>
 						<tr>
-							<td colspan="2">
-								<a href="#">
+							<td colspan="2" class="dropdown_parent">
+								<a href="#" onclick="toggleUITab('manpower_reinforcement_capacity')">
 									<fmt:formatNumber value="${home.manpowerReinforcementCapacity.get(net)}"/> Soldiers
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
+								<div id="manpower_reinforcement_capacity" class="dropdown_2 toggleable-default-off">
+									<ul>
+										<c:set var="map" value="${Util.removeNetAndTotal(home.manpowerReinforcementCapacity)}"/>
+										<c:if test="${map.size() <= 0}">
+											<li>No Change</li>
+										</c:if>
+										<c:if test="${map.size() > 0}">
+											<c:forEach items="${map.entrySet()}" var="army">
+												<c:if test="${army.value != 0}">
+													<li>+<fmt:formatNumber value="${army.value}"/>${army.key.text}</li>
+												</c:if>
+											</c:forEach>
+										</c:if>
+									</ul>
+								</div>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="2">Equipment Reinforcement Capacity</td>
 						</tr>
 						<tr>
-							<td colspan="2">
-								<a href="#">
+							<td class="dropdown_parent" colspan="2">
+								<a href="#" onclick="toggleUITab('equipment_reinforcement_capacity')">
 									<fmt:formatNumber value="${home.equipmentReinforcementCapacity.get(net)}"/> Whatevers
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
+								<div id="equipment_reinforcement_capacity" class="dropdown_2 toggleable-default-off">
+									<ul>
+										<c:set var="map" value="${Util.removeNetAndTotal(home.equipmentReinforcementCapacity)}"/>
+										<c:if test="${map.size() <= 0}">
+											<li>No Change</li>
+										</c:if>
+										<c:if test="${map.size() > 0}">
+											<c:forEach items="${map.entrySet()}" var="army">
+												<c:if test="${army.value != 0}">
+													<li>+<fmt:formatNumber value="${army.value}"/>${army.key.text}</li>
+												</c:if>
+											</c:forEach>
+										</c:if>
+									</ul>
+								</div>
 							</td>
 						</tr>
 					</table>
@@ -67,7 +110,7 @@
 								<td><fmt:formatNumber value="${army.size}"/> / <fmt:formatNumber value="${army.maxSize}"/> Soldiers</td>
 								<td>
 									<a href="#">
-										+<fmt:formatNumber value="${home.armyManpowerChange.getOrDefault(army, 0)}"/> Per Month <img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+										+<fmt:formatNumber value="${home.armyManpowerChange.getOrDefault(army, 0)}"/> Per Month
 									</a>
 								</td>
 							</tr>
@@ -80,17 +123,23 @@
 										<fmt:formatNumber value="${army.equipment.getOrDefault(equipment.key, 0)}"/> / <fmt:formatNumber value="${equipment.value}"/>${' '.concat(equipment.key.name())}<br>
 									</c:forEach>
 								</td>
-								<td>
+								<td class="dropdown_parent">
 									<c:forEach var="equipment" items="${army.maxEquipment.entrySet()}">
-										<a href="#">
+										<a href="#" onclick="toggleUITab('equipment_gain_${army.id}_${equipment.key.name()}')">
+											<c:set var="parent" value="${equipment.key}"/>
 											<c:set var="hasUpgrade" value="false"/>
+											<c:set var="hasEquipment" value="false"/>
 											<c:if test="${home.equipmentUpgrades.get(army) != null && home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0) > 0}">
-												+<fmt:formatNumber value="${home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0)}"/> Upgrade,
+												+<fmt:formatNumber value="${home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0)}"/> Upgrade
 												<c:set var="hasUpgrade" value="true"/>
 											</c:if>
 											<c:choose>
 												<c:when test="${home.armyEquipmentChange.get(army) != null && home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0) > 0}">
+													<c:if test="${hasUpgrade}">
+														,
+													</c:if>
 													+<fmt:formatNumber value="${home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0)}"/> New
+													<c:set var="hasEquipment" value="true"/>
 												</c:when>
 												<c:when test="${!hasUpgrade}">
 													+0 Per Month
@@ -99,6 +148,37 @@
 											<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 											<br>
 										</a>
+										<div id="equipment_gain_${army.id}_${equipment.key.name()}" class="dropdown_2 toggleable-default-off">
+											<c:if test="${hasEquipment}">
+												New:
+												<ul>
+													<c:forEach items="${home.armyEquipmentChange.get(army).entrySet()}" var="equipment">
+														<c:if test="${equipment.key == parent}">
+															<li>
+																+${equipment.value} ${equipment.key.name()}
+															</li>
+														</c:if>
+													</c:forEach>
+												</ul>
+											</c:if>
+											<c:if test="${hasUpgrade}">
+												Upgrades:
+												<ul>
+													<c:forEach var="equipment" items="${home.equipmentUpgrades.get(army)}">
+														<c:if test="${equipment.key.producible.category == parent}">
+															<li>
+																+${equipment.value} ${equipment.key.name()}
+															</li>
+														</c:if>
+													</c:forEach>
+												</ul>
+											</c:if>
+											<c:if test="${!hasUpgrade && !hasEquipment}">
+												<ul>
+													<li>No Change</li>
+												</ul>
+											</c:if>
+										</div>
 									</c:forEach>
 								</td>
 							</tr>
@@ -109,7 +189,7 @@
 								<td><fmt:formatNumber value="${army.training / 100}" maxFractionDigits="0"/>%</td>
 								<td>
 									<a href="#">
-										+0 Per Month <img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+										+0 Per Month
 									</a>
 								</td>
 							</tr>
@@ -120,7 +200,7 @@
 								<td><fmt:formatNumber value="${army.experience / 100}" maxFractionDigits="0"/>%</td>
 								<td>
 									<a href="#">
-										+0 Per Month <img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
+										+0 Per Month
 									</a>
 								</td>
 							</tr>

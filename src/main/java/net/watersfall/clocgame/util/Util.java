@@ -260,6 +260,8 @@ public class Util
 		newMap.remove(TextKey.Resource.TOTAL_GAIN);
 		newMap.remove(TextKey.Resource.TOTAL_LOSS);
 		newMap.remove(TextKey.Garrison.NET);
+		newMap.remove(TextKey.Reinforcement.NET);
+		newMap.remove(TextKey.Garrison.NET);
 		return newMap;
 	}
 }

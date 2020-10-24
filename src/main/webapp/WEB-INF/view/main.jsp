@@ -201,13 +201,18 @@
 								</a>
 								<div class="dropdown_2_right toggleable-default-off" id="equipment_production">
 									<ul>
-										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}">
-											<c:if test="${home.getProduciblesProduction(producible) > 0}">
-												<li>
-													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
-												</li>
-											</c:if>
-										</c:forEach>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) == 0}">
+											<li>No Change</li>
+										</c:if>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT) > 0}">
+											<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}">
+												<c:if test="${home.getProduciblesProduction(producible) > 0}">
+													<li>
+														+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+													</li>
+												</c:if>
+											</c:forEach>
+										</c:if>
 									</ul>
 								</div>
 							</td>
@@ -234,11 +239,11 @@
 								</a>
 								<div class="dropdown_2_right toggleable-default-off" id="fortification_change">
 									<c:set var="fortMap" value="${Util.removeNetAndTotal(home.fortificationChange)}"/>
-									<c:if test="${fortMap.size() <= 0}">
-										<p>No change</p>
-									</c:if>
-									<c:if test="${fortMap.size() > 0}">
-										<ul>
+									<ul>
+										<c:if test="${fortMap.size() <= 0}">
+											<li>No change</li>
+										</c:if>
+										<c:if test="${fortMap.size() > 0}">
 											<c:forEach var="entry" items="${fortMap.entrySet()}">
 												<c:choose>
 													<c:when test="${entry.value > 0}">
@@ -249,8 +254,8 @@
 													</c:when>
 												</c:choose>
 											</c:forEach>
-										</ul>
-									</c:if>
+										</c:if>
+									</ul>
 								</div>
 							</td>
 						</tr>
@@ -308,13 +313,18 @@
 								</a>
 								<div class="dropdown_2_right toggleable-default-off" id="fighter_production">
 									<ul>
-										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE)}">
-											<c:if test="${home.getProduciblesProduction(producible) > 0}">
-												<li>
-													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
-												</li>
-											</c:if>
-										</c:forEach>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE) == 0}">
+											<li>No Change</li>
+										</c:if>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE) > 0}">
+											<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.FIGHTER_PLANE)}">
+												<c:if test="${home.getProduciblesProduction(producible) > 0}">
+													<li>
+														+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+													</li>
+												</c:if>
+											</c:forEach>
+										</c:if>
 									</ul>
 								</div>
 							</td>
@@ -365,13 +375,18 @@
 								</a>
 								<div class="dropdown_2_right toggleable-default-off" id="bomber_production">
 									<ul>
-										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE)}">
-											<c:if test="${home.getProduciblesProduction(producible) > 0}">
-												<li>
-													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
-												</li>
-											</c:if>
-										</c:forEach>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE) == 0}">
+											<li>No Change</li>
+										</c:if>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE) > 0}">
+											<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.BOMBER_PLANE)}">
+												<c:if test="${home.getProduciblesProduction(producible) > 0}">
+													<li>
+														+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+													</li>
+												</c:if>
+											</c:forEach>
+										</c:if>
 									</ul>
 								</div>
 							</td>
@@ -422,13 +437,18 @@
 								</a>
 								<div class="dropdown_2_right toggleable-default-off" id="recon_production">
 									<ul>
-										<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE)}">
-											<c:if test="${home.getProduciblesProduction(producible) > 0}">
-												<li>
-													+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
-												</li>
-											</c:if>
-										</c:forEach>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE) == 0}">
+											<li>No Change</li>
+										</c:if>
+										<c:if test="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE) > 0}">
+											<c:forEach var="producible" items="${Producibles.getProduciblesForCategory(ProducibleCategory.RECON_PLANE)}">
+												<c:if test="${home.getProduciblesProduction(producible) > 0}">
+													<li>
+														+<fmt:formatNumber value="${home.getProduciblesProduction(producible)}"/>${' '.concat(producible.name())}
+													</li>
+												</c:if>
+											</c:forEach>
+										</c:if>
 									</ul>
 								</div>
 							</td>

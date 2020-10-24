@@ -1612,7 +1612,7 @@ public class Nation
 			{
 				stabilityChange.put(TextKey.Stability.LOW_APPROVAL, approval);
 			}
-			else
+			else if(approval > 0)
 			{
 				stabilityChange.put(TextKey.Stability.HIGH_APPROVAL, approval);
 			}
@@ -1624,7 +1624,10 @@ public class Nation
 			{
 				stabilityChange.put(TextKey.Stability.FAMINE, famine);
 			}
-			stabilityChange.put(TextKey.Stability.GROWTH, growth);
+			if(growth != 0)
+			{
+				stabilityChange.put(TextKey.Stability.GROWTH, growth);
+			}
 			stabilityChange.put(TextKey.Stability.NET, approval + famine + growth);
 		}
 		return stabilityChange;
@@ -2206,6 +2209,16 @@ public class Nation
 			manpowerReinforcementCapacity.put(TextKey.Reinforcement.NET, net);
 		}
 		return manpowerReinforcementCapacity;
+	}
+
+	public long getTotalArmyIncrease()
+	{
+		int total = 0;
+		for(Integer i : this.getArmyManpowerChange().values())
+		{
+			total += i;
+		}
+		return total;
 	}
 
 	public int getTotalInfrastructure()

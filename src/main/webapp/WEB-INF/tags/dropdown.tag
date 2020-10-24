@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="value" required="true" type="java.util.HashMap" %>
-<c:if test="${value.size() <= 0}">
-	<p>No change</p>
-</c:if>
-<c:if test="${value.size() > 0}">
-	<ul>
+<ul>
+	<c:if test="${value.size() <= 0}">
+		<li>No change</li>
+	</c:if>
+	<c:if test="${value.size() > 0}">
 		<c:forEach var="item" items="${value.entrySet()}">
 			<c:choose>
 				<c:when test="${item.value > 0}">
@@ -17,5 +17,5 @@
 				</c:when>
 			</c:choose>
 		</c:forEach>
-	</ul>
-</c:if>
+	</c:if>
+</ul>
