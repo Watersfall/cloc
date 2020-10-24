@@ -7,16 +7,20 @@
 			<div class="tile">
 				<c:forEach var="category" items="${policies}">
 					<div class="subtile">
-						<div class="title">
-							<label for="${category.key.name()}">${category.key.name}</label>
-							<select onchange="policyDesc('${category.key.name()}')" id="${category.key.name()}">
-								<c:forEach var="policy" items="${category.value}">
-									<option value="${policy.name()}" ${home.policy.getPolicy(policy) == policy ? 'selected' : ''}>
-											${policy.name}
-									</option>
-								</c:forEach>
-							</select>
-							<button onclick="policy('${category.key.name()}')" class="right blue">Apply</button>
+						<div class="title decision">
+							<div class="left_text">
+								<label for="${category.key.name()}">${category.key.name}</label>
+								<select onchange="policyDesc('${category.key.name()}')" id="${category.key.name()}">
+									<c:forEach var="policy" items="${category.value}">
+										<option value="${policy.name()}" ${home.policy.getPolicy(policy) == policy ? 'selected' : ''}>
+												${policy.name}
+										</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="button_right">
+								<button onclick="policy('${category.key.name()}')" class="blue">Apply</button>
+							</div>
 						</div>
 						<div class="left_text">
 							<c:forEach var="policy" items="${category.value}">
