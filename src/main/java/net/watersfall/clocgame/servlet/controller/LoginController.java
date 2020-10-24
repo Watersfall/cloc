@@ -57,6 +57,10 @@ public class LoginController extends HttpServlet
 				{
 					Executor executor = (connection) -> {
 						req.getSession().setAttribute("user", results.getInt("id"));
+						PreparedStatement updateLastLogin = connection.prepareStatement("UPDATE nation_stats SET last_login=? WHERE id=?");
+						updateLastLogin.setLong(1, System.currentTimeMillis());
+						updateLastLogin.setInt(2, results.getInt("id"));
+						updateLastLogin.execute();
 						return null;
 					};
 					Action.doAction(executor);
