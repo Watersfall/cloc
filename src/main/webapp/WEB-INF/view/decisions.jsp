@@ -17,12 +17,16 @@
 			<c:forEach var="decision" items="${decisions}">
 				<c:if test="${decision.category == category || category == 'ALL'}">
 					<div class="subtile">
-						<div class="title button_right">
+						<div class="title decision">
+							<div class="left_text">
 								${decision.name}: ${home.getDecisionCostDisplayString(decision)}
-							<button onclick="decision('${decision.name()}')" class="blue right">${decision.buttonText}</button>
+							</div>
+							<div class="button_right">
+								<button onclick="decision('${decision.name()}')" class="blue">${decision.buttonText}</button>
+							</div>
 						</div>
 						<div class="left_text description">
-								${decision.description}<br>
+							${decision.description}<br>
 						</div>
 					</div>
 				</c:if>

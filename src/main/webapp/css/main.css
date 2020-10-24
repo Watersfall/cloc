@@ -463,6 +463,8 @@ main {
 
 .button_right {
 	padding-bottom: 0.25rem;
+	align-self: flex-end;
+	margin-left: auto;
 }
 
 .button_right button {
@@ -956,6 +958,11 @@ footer {
 
 footer h3, h4 {
 	margin: 0.25rem;
+}
+
+.decision {
+	display: flex;
+	align-items: center;
 }
 
 @media screen and (max-width: 60rem) {
