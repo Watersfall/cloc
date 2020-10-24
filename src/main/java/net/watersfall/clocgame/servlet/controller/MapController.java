@@ -54,7 +54,7 @@ public class MapController extends HttpServlet
 			else
 			{
 				//TODO clean this up
-				HashMap<String, HashMap<String, Double>> map = new HashMap<>();
+				HashMap<Region, HashMap<String, Double>> map = new HashMap<>();
 				for(Region region : Region.values())
 				{
 					PreparedStatement armies = connection.prepareStatement("SELECT SUM(army_battalions.size), \n" +
@@ -74,7 +74,7 @@ public class MapController extends HttpServlet
 					HashMap<String, Double> temp = new HashMap<>();
 					temp.put("gdp", results.getDouble(2));
 					temp.put("army", results.getDouble(1));
-					map.put(region.getName(), temp);
+					map.put(region, temp);
 				}
 				req.setAttribute("regions", map);
 			}

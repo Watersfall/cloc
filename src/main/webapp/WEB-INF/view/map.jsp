@@ -79,7 +79,9 @@
 					</svg>
 					<div class="rankings">
 						<c:forEach var="region" items="${regions.entrySet()}">
-							<div class="subtitle">${region.key}</div>
+							<div class="subtitle">
+								<a href="${pageContext.request.contextPath}/map/region/${region.key.name()}">${region.key.name}</a>
+							</div>
 							<table>
 								<tr>
 									<td>Total GDP</td>
