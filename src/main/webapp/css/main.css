@@ -88,6 +88,10 @@ nav {
 	scrollbar-width: none;
 }
 
+nav .magic {
+	visibility: hidden;
+}
+
 nav::-webkit-scrollbar {
 	display: none;
 }
@@ -981,7 +985,6 @@ footer h3, h4 {
 		display: none;
 		width: 100%;
 		padding-top: 3rem;
-		padding-bottom: 3.5rem;
 		height: auto;
 	}
 
