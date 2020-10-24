@@ -21,4 +21,16 @@ public class ArmyEquipment extends UpdatableLongId
 		this.amount = results.getInt("army_equipment.amount");
 		this.equipment = Producibles.valueOf(results.getString("army_equipment.type"));
 	}
+
+	public void setAmount(int amount)
+	{
+		this.amount = amount;
+		this.setField("amount", amount);
+	}
+
+	public void setEquipment(Producibles equipment)
+	{
+		this.equipment = equipment;
+		this.setField("equipment", equipment.name());
+	}
 }

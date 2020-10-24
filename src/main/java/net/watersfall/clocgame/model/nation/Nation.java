@@ -2031,7 +2031,7 @@ public class Nation
 					armyEquipmentChange.putIfAbsent(army, new HashMap<>());
 					if(army.getNeededEquipment().getOrDefault(category, 0) > 0)
 					{
-						int totalPossibleGain = Math.min(army.getNeededEquipment().get(category), (int)(this.getTotalProduciblesByCategory(category) + this.getProduciblesProductionByCategory(category)));
+						int totalPossibleGain = Math.min(army.getNeededEquipment().get(category), (int)(this.getTotalProduciblesByCategory(category)));
 						if(totalPossibleGain > 0)
 						{
 							if(totalPossibleGain > max)

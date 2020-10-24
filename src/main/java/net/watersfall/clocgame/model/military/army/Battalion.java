@@ -181,6 +181,12 @@ public class Battalion extends UpdatableLongId
 		return original - size;
 	}
 
+	public void setSize(int size)
+	{
+		this.size = size;
+		this.setField("size", size);
+	}
+
 	@Override
 	public void update(Connection conn) throws SQLException
 	{

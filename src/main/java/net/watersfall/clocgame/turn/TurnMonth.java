@@ -116,6 +116,8 @@ public class TurnMonth implements Runnable
 						}
 					}
 
+					nation.getEquipmentUpgrades();
+					nation.getArmyEquipmentChange();
 					for(Army army : nation.getArmies())
 					{
 						if(nation.getEquipmentUpgrades().containsKey(army))
@@ -137,12 +139,12 @@ public class TurnMonth implements Runnable
 												{
 													if(gain >= equipment.getAmount())
 													{
-														equipment.setField("type", entry.getKey().name());
+														equipment.setEquipment(entry.getKey());
 														gain -= equipment.getAmount();
 													}
-													else
+													else if(gain > 0)
 													{
-														equipment.setField("amount", equipment.getAmount() - gain);
+														equipment.setAmount(equipment.getAmount() - gain);
 														new ArmyDao(connection, true).createEquipment(battalion.getId(), entry.getKey(), gain);
 														gain = 0;
 													}
@@ -181,7 +183,7 @@ public class TurnMonth implements Runnable
 												}
 												if(equipment != null)
 												{
-													equipment.setField("amount", equipment.getAmount() + g);
+													equipment.setAmount(equipment.getAmount() + g);
 												}
 												else
 												{
