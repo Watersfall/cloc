@@ -1,10 +1,12 @@
 package net.watersfall.clocgame.action;
 
 import net.watersfall.clocgame.model.SpamAction;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.nation.NationCosmetic;
 import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Util;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.Part;
@@ -162,68 +164,86 @@ public class SettingsActions
 	{
 		String check = checkNationTitle(title);
 		NationCosmetic cosmetic = nation.getCosmetic();
+		JSONObject object = new JSONObject();
 		if(check != null)
 		{
-			return check;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), check);
 		}
 		else
 		{
 			cosmetic.setNationTitle(title);
-			return Responses.updated("Nation Title");
+			object.put(JsonFields.SUCCESS.name(), true);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated("Nation Title"));
 		}
+		return object.toString();
 	}
 
 	public static String updateLeaderTitle(Nation nation, String title) throws SQLException
 	{
 		String check = checkLeaderTitle(title);
 		NationCosmetic cosmetic = nation.getCosmetic();
+		JSONObject object = new JSONObject();
 		if(check != null)
 		{
-			return check;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), check);
 		}
 		else
 		{
 			cosmetic.setLeaderTitle(title);
-			return Responses.updated("Leader Title");
+			object.put(JsonFields.SUCCESS.name(), true);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated("Leader Title"));
 		}
+		return object.toString();
 	}
 
 	public static String updateDescription(Nation nation, String description) throws SQLException
 	{
 		String check = checkDescription(description);
 		NationCosmetic cosmetic = nation.getCosmetic();
+		JSONObject object = new JSONObject();
 		if(check != null)
 		{
-			return check;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), check);
 		}
 		else
 		{
 			cosmetic.setDescription(description);
-			return Responses.updated("Description");
+			object.put(JsonFields.SUCCESS.name(), true);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated("Description"));
 		}
+		return object.toString();
 	}
 
 	public static String updateAll(Nation nation, String nationTitle, String leaderTitle, String description) throws SQLException
 	{
 		String checkNationTitle = checkNationTitle(nationTitle);
 		NationCosmetic cosmetic = nation.getCosmetic();
+		JSONObject object = new JSONObject();
 		if(checkNationTitle != null)
 		{
-			return checkNationTitle;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), checkNationTitle);
 		}
 		String checkLeaderTitle = checkLeaderTitle(leaderTitle);
 		if(checkLeaderTitle != null)
 		{
-			return checkLeaderTitle;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), checkLeaderTitle);
 		}
 		String checkDescription = checkDescription(description);
 		if(checkDescription != null)
 		{
-			return checkDescription;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), checkDescription);
 		}
 		cosmetic.setNationTitle(nationTitle);
 		cosmetic.setLeaderTitle(leaderTitle);
 		cosmetic.setDescription(description);
-		return Responses.updated();
+		object.put(JsonFields.SUCCESS.name(), false);
+		object.put(JsonFields.MESSAGE.name(), Responses.updated());
+		return object.toString();
 	}
 }

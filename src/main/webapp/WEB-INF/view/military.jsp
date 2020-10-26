@@ -93,7 +93,7 @@
 					<div class="subtile">
 						<div class="title">
 							<div id="army_name_${army.id}">
-								<c:out escapeXml="false" value="${army.url} "/>
+								<a><c:out escapeXml="false" value="${army.url} "/></a>
 								<img title="Edit Army Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit" onclick="editArmyName(${army.id})"/>
 							</div>
 							<div class="toggleable-default-off" id="army_name_change_${army.id}">

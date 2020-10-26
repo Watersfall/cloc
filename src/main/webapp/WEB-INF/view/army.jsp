@@ -1,10 +1,11 @@
 <%--@elvariable id="army" type="net.watersfall.clocgame.model.military.army.Army"--%>
 <%@ include file="includes/top.jsp" %>
+<%@ page import="net.watersfall.clocgame.model.json.JsonFields" %>
 <%@ page import="net.watersfall.clocgame.model.military.army.BattalionType" %>
 <%@ page import="net.watersfall.clocgame.model.military.army.Priority" %>
 	<div class="title">
 		<div id="army_name_${army.id}">
-			<a><c:out escapeXml="false" value="${army.name} "/></a>
+			<a id="${JsonFields.ARMY_NAME}_${army.id}"><c:out escapeXml="false" value="${army.name} "/></a>
 			<img title="Edit City Name" class="match_text" src="${pageContext.request.contextPath}/images/ui/edit.svg" alt="edit" onclick="editArmyName(${army.id})"/>
 		</div>
 		<div class="toggleable-default-off" id="army_name_change_${army.id}">

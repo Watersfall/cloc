@@ -5,10 +5,12 @@ import net.watersfall.clocgame.dao.NationDao;
 import net.watersfall.clocgame.dao.NewsDao;
 import net.watersfall.clocgame.exception.NationNotFoundException;
 import net.watersfall.clocgame.model.SpamAction;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.news.News;
 import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Util;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -48,25 +50,33 @@ public class TreatyActions
 
 	public static String acceptInvite(Nation nation, int treaty) throws SQLException
 	{
-		return nation.joinTreaty(treaty);
+		JSONObject object = new JSONObject();
+		object.put(JsonFields.MESSAGE.name(), nation.joinTreaty(treaty));
+		return object.toString();
 	}
 
 	public static String rejectInvite(Nation nation, int treaty) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(nation.getInvites().contains(treaty))
 		{
 			new InviteDao(nation.getConn(), true).deleteInvite(nation.getId(), treaty);
-			return Responses.inviteRejected();
+			object.put(JsonFields.SUCCESS.name(), true);
+			object.put(JsonFields.MESSAGE.name(), Responses.deleted());
 		}
 		else
 		{
-			return Responses.noInvite();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noInvite());
 		}
+		return object.toString();
 	}
 
 	public static String resign(Nation nation) throws SQLException
 	{
-		return nation.leaveTreaty();
+		JSONObject object = new JSONObject();
+		object.put(JsonFields.MESSAGE.name(), nation.leaveTreaty());
+		return object.toString();
 	}
 
 	private static String check(Nation member, String string, int length)
@@ -120,40 +130,50 @@ public class TreatyActions
 
 	public static String updateName(Nation member, String name) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		String check = check(member, name, 32);
 		if(check != null)
 		{
-			return check;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), check);
 		}
 		else
 		{
 			member.getTreaty().setName(name);
-			return Responses.updated("Name");
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated("Name"));
 		}
+		return object.toString();
 	}
 
 	public static String updateDescription(Nation member, String description) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		String check = check(member, description, 65535);
 		if(check != null)
 		{
-			return check;
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), check);
 		}
 		else
 		{
 			member.getTreaty().setDescription(description);
-			return Responses.updated("Description");
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated("Description"));
 		}
+		return object.toString();
 	}
 
 	public static String invite(Nation member, String name) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		Nation nation;
 		try
 		{
 			if(Util.checkSpamAndInsertIfNot(SpamAction.SEND_INVITE, member.getId(), member.getConn()))
 			{
-				return Responses.noSpam();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.noSpam());
 			}
 			else if(member.getTreatyPermissions().isInvite() || member.getTreatyPermissions().isManage()
 					|| member.getTreatyPermissions().isFounder())
@@ -163,11 +183,13 @@ public class TreatyActions
 				nation = dao.getNationByName(name);
 				if(nation == null)
 				{
-					return Responses.noNation();
+					object.put(JsonFields.SUCCESS.name(), false);
+					object.put(JsonFields.MESSAGE.name(), Responses.noNation());
 				}
 				else if(nation.getInvites().contains(member.getTreaty().getId()))
 				{
-					return Responses.alreadyInvited();
+					object.put(JsonFields.SUCCESS.name(), false);
+					object.put(JsonFields.MESSAGE.name(), Responses.alreadyInvited());
 				}
 				else
 				{
@@ -176,47 +198,59 @@ public class TreatyActions
 					String message = News.createMessage(News.ID_TREATY_INVITE, member.getNationUrl(),
 							member.getTreaty().getTreatyUrl());
 					newsDao.createNews(member.getId(), nation.getId(), message);
-					return Responses.invited();
+					object.put(JsonFields.SUCCESS.name(), false);
+					object.put(JsonFields.MESSAGE.name(), Responses.invited());
 				}
 			}
 			else
 			{
-				return Responses.noPermission();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.noPermission());
 			}
 		}
 		catch(NationNotFoundException e)
 		{
-			return Responses.noNation();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noNation());
 		}
+		return object.toString();
 	}
 
 	public static String kick(Nation member, Nation personToKick) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(member.getTreaty().getId() != personToKick.getTreaty().getId())
 		{
-			return Responses.notYourTreaty();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.notYourTreaty());
 		}
 		else if(!(member.getTreatyPermissions().isKick() || member.getTreatyPermissions().isManage()
 				|| member.getTreatyPermissions().isFounder()))
 		{
-			return Responses.noPermission();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noPermission());
 		}
 		else if(!canInteractWith(member, personToKick))
 		{
-			return Responses.noPermission();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noPermission());
 		}
 		else
 		{
 			personToKick.leaveTreaty();
-			return Responses.kicked();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.kicked());
 		}
+		return object.toString();
 	}
 
 	public static String toggleEdit(Nation member, int id) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(!member.getTreatyPermissions().isFounder())
 		{
-			return Responses.noPermission();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noPermission());
 		}
 		else
 		{
@@ -224,15 +258,19 @@ public class TreatyActions
 			Nation personToToggle = dao.getCosmeticNationById(id);
 			personToToggle.getTreatyPermissions().setEdit(!personToToggle.getTreatyPermissions().isEdit());
 			dao.saveNation(personToToggle);
-			return Responses.updated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated());
 		}
+		return object.toString();
 	}
 
 	public static String toggleInvite(Nation member, int id) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(!member.getTreatyPermissions().isFounder())
 		{
-			return Responses.noPermission();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noPermission());
 		}
 		else
 		{
@@ -240,15 +278,19 @@ public class TreatyActions
 			Nation personToToggle = dao.getCosmeticNationById(id);
 			personToToggle.getTreatyPermissions().setInvite(!personToToggle.getTreatyPermissions().isInvite());
 			dao.saveNation(personToToggle);
-			return Responses.updated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated());
 		}
+		return object.toString();
 	}
 
 	public static String toggleKick(Nation member, int id) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(!member.getTreatyPermissions().isFounder())
 		{
-			return Responses.noPermission();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noPermission());
 		}
 		else
 		{
@@ -256,15 +298,19 @@ public class TreatyActions
 			Nation personToToggle = dao.getCosmeticNationById(id);
 			personToToggle.getTreatyPermissions().setKick(!personToToggle.getTreatyPermissions().isKick());
 			dao.saveNation(personToToggle);
-			return Responses.updated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated());
 		}
+		return object.toString();
 	}
 
 	public static String toggleManage(Nation member, int id) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(!member.getTreatyPermissions().isFounder())
 		{
-			return Responses.noPermission();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noPermission());
 		}
 		else
 		{
@@ -272,7 +318,9 @@ public class TreatyActions
 			Nation personToToggle = dao.getCosmeticNationById(id);
 			personToToggle.getTreatyPermissions().setManage(!personToToggle.getTreatyPermissions().isManage());
 			dao.saveNation(personToToggle);
-			return Responses.updated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.updated());
 		}
+		return object.toString();
 	}
 }

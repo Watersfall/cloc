@@ -3,6 +3,7 @@ package net.watersfall.clocgame.action;
 import net.watersfall.clocgame.dao.LogDao;
 import net.watersfall.clocgame.dao.NewsDao;
 import net.watersfall.clocgame.model.city.City;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.military.army.ArmyLocation;
 import net.watersfall.clocgame.model.military.army.BattlePlan;
 import net.watersfall.clocgame.model.nation.Nation;
@@ -12,6 +13,7 @@ import net.watersfall.clocgame.model.producible.ProducibleCategory;
 import net.watersfall.clocgame.model.producible.Producibles;
 import net.watersfall.clocgame.model.war.LogType;
 import net.watersfall.clocgame.text.Responses;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -94,23 +96,28 @@ public class WarActions
 
 	public static String airBattle(Nation attacker, Nation defender, boolean interception) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		LogDao dao = new LogDao(attacker.getConn(), true);
 		NewsDao newsDao = new NewsDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
-			return Responses.noWar();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noWar());
 		}
 		else if(dao.checkLog(attacker.getId(), LogType.AIR))
 		{
-			return Responses.alreadyAttacked();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.alreadyAttacked());
 		}
 		else if(attacker.getFighterPower(true) == 0)
 		{
-			return Responses.attackerNoAirforce();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.attackerNoAirforce());
 		}
 		else if(defender.getFighterPower(false) == 0)
 		{
-			return Responses.defenderNoAirforce();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.defenderNoAirforce());
 		}
 		else
 		{
@@ -123,30 +130,37 @@ public class WarActions
 			newsDao.createNews(attacker.getId(), defender.getId(), message);
 			if(interception)
 			{
-				return Responses.airBattleInterception(totalAttackerLosses, totalDefenderLosses);
+				object.put(JsonFields.SUCCESS.name(), true);
+				object.put(JsonFields.MESSAGE.name(), Responses.airBattleInterception(totalAttackerLosses, totalDefenderLosses));
 			}
 			else
 			{
-				return Responses.airBattle(totalAttackerLosses, totalDefenderLosses);
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.airBattle(totalAttackerLosses, totalDefenderLosses));
 			}
 		}
+		return object.toString();
 	}
 
 	public static String airBombCity(Nation attacker, Nation defender) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		LogDao dao = new LogDao(attacker.getConn(), true);
 		NewsDao newsDao = new NewsDao(attacker.getConn(), true);
 		if(!attacker.isAtWarWith(defender))
 		{
-			return Responses.noWar();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noWar());
 		}
 		else if(dao.checkLog(attacker.getId(), LogType.AIR))
 		{
-			return Responses.alreadyAttacked();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.alreadyAttacked());
 		}
 		else if(attacker.getFighterPower(false) == 0 || attacker.getBomberPower() == 0)
 		{
-			return Responses.attackerNoAirforce();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.attackerNoAirforce());
 		}
 		else
 		{
@@ -154,26 +168,31 @@ public class WarActions
 			collection.removeIf(city -> city.getDevastation() >= 100);
 			if(collection.isEmpty())
 			{
-				return Responses.defenderAlreadyDevastated();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.defenderAlreadyDevastated());
 			}
 			else
 			{
 				if(checkInterception(attacker, defender))
 				{
-					return airBattle(attacker, defender, true);
+					object.put(JsonFields.SUCCESS.name(), true);
+					object.put(JsonFields.MESSAGE.name(), airBattle(attacker, defender, true));
 				}
 				City city = (City)collection.toArray()[(int)(Math.random() * collection.size())];
 				int damage = Math.max(1, (int)Math.sqrt(attacker.getBomberPower()));
 				city.setDevastation(city.getDevastation() + damage);
 				String message = News.createMessage(News.ID_AIR_BOMBARD, attacker.getNationUrl(), city.getName());
 				newsDao.createNews(attacker.getId(), defender.getId(), message);
-				return Responses.bombard();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.bombard());
 			}
 		}
+		return object.toString();
 	}
 
 	public static String landBattle(BattlePlan attack, BattlePlan defense)
 	{
+		JSONObject object = new JSONObject();
 		int attacks = attack.getAttack();
 		int cityDamage = (attacks / 10);
 		int defenses = defense.getDefense();
@@ -221,18 +240,24 @@ public class WarActions
 		{
 			attack.getLocationCity().setDevastation(attack.getLocationCity().getDevastation() + cityDamage);
 		}
-		return "<p>We have lost " + attackCasualties + " soldiers and killed " + defenseCasualties + " enemy soldiers";
+		object.put(JsonFields.SUCCESS.name(), true);
+		object.put(JsonFields.MESSAGE.name(), "<p>We have lost " + attackCasualties + " soldiers and killed " + defenseCasualties + " enemy soldiers</p>");
+		return object.toString();
 	}
 
 	public static String sendPeace(Nation sender, Nation receiver) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(!sender.isAtWarWith(receiver))
 		{
-			return Responses.noWar();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noWar());
 		}
 		else
 		{
-			return sender.sendPeace(receiver);
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), sender.sendPeace(receiver));
 		}
+		return object.toString();
 	}
 }

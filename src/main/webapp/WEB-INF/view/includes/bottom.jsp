@@ -15,38 +15,38 @@
 					<ul>
 						<c:forEach items="${home.allResources.entrySet()}" var="entry">
 							<li>
-								<c:set var="resource" value="${fn:toLowerCase(entry.key)}"/>
-								<a href="javascript:void(0);" id="${entry.key}" onclick="toggleUITab('${resource}_production')">
-									<img src="${pageContext.request.contextPath}/images/ui/${resource}.svg" alt="${resource}"/>
-									<cloc:formatNumber value="${entry.value}"/>
+								<c:set var="resource" value="${fn:toUpperCase(entry.key)}"/>
+								<a href="javascript:void(0);" onclick="toggleUITab('${resource}_CHANGE')">
+									<img src="${pageContext.request.contextPath}/images/ui/${resource.toLowerCase()}.svg" alt="${resource}"/>
+									<span id="${resource}_SHORT"><cloc:formatNumber value="${entry.value}"/></span>
 								</a>
-								<div class="dropdown toggleable-default-off special-toggle" id="${resource}_production">
-									<span><fmt:formatNumber value="${entry.value}" maxFractionDigits="2"/> <c:out escapeXml="false" value=" ${entry.key}"/></span><br>
+								<div class="dropdown toggleable-default-off special-toggle" id="${resource}_CHANGE">
+									<span id="${resource}"><fmt:formatNumber value="${entry.value}" maxFractionDigits="2"/> <c:out escapeXml="false" value=" ${entry.key}"/></span><br>
 									<c:set var="net" value="${home.allTotalProductions.get(entry.key).get(netKey)}"/>
 									<c:if test="${net > 0}">
-										<span class="positive">+<fmt:formatNumber value="${net}" maxFractionDigits="2"/>${' '}${netKey.text}</span>
+										<span id="${resource}_CHANGE_${netKey.name()}" class="positive">+<fmt:formatNumber value="${net}" maxFractionDigits="2"/>${' '}${netKey.text}</span>
 									</c:if>
 									<c:if test="${net < 0}">
-										<span class="negative"><fmt:formatNumber value="${net}" maxFractionDigits="2"/>${' '}${netKey.text}</span>
+										<span id="${resource}_CHANGE_${netKey.name()}" class="negative"><fmt:formatNumber value="${net}" maxFractionDigits="2"/>${' '}${netKey.text}</span>
 									</c:if>
 									<c:if test="${net == 0}">
-										<span>0${' '}${netKey.text}</span>
+										<span id="${resource}_CHANGE_${netKey.name()}">0${' '}${netKey.text}</span>
 									</c:if>
 									<ul>
 										<c:forEach var="production" items="${home.allTotalProductions.get(entry.key).entrySet()}">
 											<c:if test="${production.key != 'NET' && production.key != 'TOTAL_GAIN'}">
 												<c:if test="${production.value > 0}">
 													<li>
-													<span class="positive">
-														+<fmt:formatNumber value="${production.value}" maxFractionDigits="2"/>${production.key.text}
-													</span>
+														<span id="${resource}_CHANGE_${production.key.name()}" class="positive">
+															+<fmt:formatNumber value="${production.value}" maxFractionDigits="2"/>${production.key.text}
+														</span>
 													</li>
 												</c:if>
 												<c:if test="${production.value < 0}">
 													<li>
-													<span class="negative">
-														<fmt:formatNumber value="${production.value}" maxFractionDigits="2"/>${production.key.text}
-													</span>
+														<span id="${resource}_CHANGE_${production.key.name()}" class="negative">
+															<fmt:formatNumber value="${production.value}" maxFractionDigits="2"/>${production.key.text}
+														</span>
 													</li>
 												</c:if>
 											</c:if>

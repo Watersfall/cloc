@@ -19,7 +19,7 @@
 					<div class="subtile">
 						<div class="title decision">
 							<div class="left_text">
-								${decision.name}: ${home.getDecisionCostDisplayString(decision)}
+								${decision.name}: <span id="DECISION_COST_${decision.name()}">${home.getDecisionCostDisplayString(decision)}</span>
 							</div>
 							<div class="button_right">
 								<button onclick="decision('${decision.name()}')" class="blue">${decision.buttonText}</button>

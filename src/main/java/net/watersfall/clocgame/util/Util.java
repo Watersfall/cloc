@@ -74,7 +74,7 @@ public class Util
 
 	public static String formatNumber(double number)
 	{
-		DecimalFormat df = new DecimalFormat("#.##");
+		DecimalFormat df = new DecimalFormat("#,###.##");
 		return df.format(number);
 	}
 
@@ -244,6 +244,32 @@ public class Util
 			}
 		}
 		return underscore.toString();
+	}
+
+	public static String formatDisplayNumber(double number)
+	{
+		String formatted = Long.toString((long)number);
+		if(formatted.length() > 15)
+		{
+			formatted = ">999T";
+		}
+		else if(formatted.length() > 12)
+		{
+			formatted = formatNumber(number / 1e12) + "T";
+		}
+		else if(formatted.length() > 9)
+		{
+			formatted = formatNumber(number / 1e9) + "B";
+		}
+		else if(formatted.length() > 6)
+		{
+			formatted = formatNumber(number / 1e6) + "M";
+		}
+		else if(formatted.length() > 3)
+		{
+			formatted = formatNumber(number / 1e3) + "K";
+		}
+		return formatted;
 	}
 
 	public static <K extends TextKey, V> HashMap<? extends TextKey, V> removeNetAndTotal(HashMap<? extends TextKey, V> map)

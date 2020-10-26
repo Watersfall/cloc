@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.watersfall.clocgame.listeners.Startup;
 import net.watersfall.clocgame.model.UpdatableLongId;
 import net.watersfall.clocgame.model.city.City;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.producible.Producible;
 import net.watersfall.clocgame.model.producible.ProducibleCategory;
@@ -246,7 +247,7 @@ public class Army extends UpdatableLongId
 
 	public String getUrl()
 	{
-		return "<a href=\"" + Startup.CONTEXT_PATH +  "/army/" + id + "\">" + this.name + "</a>";
+		return "<a id=\"" + JsonFields.ARMY_NAME.name() + "_" + this.id + "\" href=\"" + Startup.CONTEXT_PATH +  "/army/" + id + "\">" + this.name + "</a>";
 	}
 
 	@Override

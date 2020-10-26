@@ -5,6 +5,7 @@ import net.watersfall.clocgame.action.WarActions;
 import net.watersfall.clocgame.dao.NationDao;
 import net.watersfall.clocgame.database.Database;
 import net.watersfall.clocgame.model.error.Errors;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.military.army.Army;
 import net.watersfall.clocgame.model.military.army.ArmyLocation;
 import net.watersfall.clocgame.model.military.army.BattlePlan;
@@ -13,6 +14,7 @@ import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Executor;
 import net.watersfall.clocgame.util.UserUtils;
 import net.watersfall.clocgame.util.Util;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -70,9 +72,20 @@ public class BattlePlannerServlet extends HttpServlet
 			{
 				throw new IllegalArgumentException();
 			}
+			else if(!attacker.isAtWarWith(defender))
+			{
+
+				JSONObject object = new JSONObject();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.genericError());
+				return object.toString();
+			}
 			else if(armies.length == 0)
 			{
-				return Responses.notEnough();
+				JSONObject object = new JSONObject();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.notEnough());
+				return object.toString();
 			}
 			else
 			{

@@ -349,6 +349,33 @@ public class City extends UpdatableLongId
 	}
 
 	/**
+	 * Generates a HashMap of the factory cost in this city with values:
+	 * <ul>
+	 *     <li>coal</li>
+	 *     <li>iron</li>
+	 *     <li>steel</li>
+	 * </ul>
+	 * @return A HashMap of the costs
+	 */
+	public HashMap<String, Integer> getFactoryCost(boolean special)
+	{
+		HashMap<String, Integer> map = new HashMap<>();
+		if(special)
+		{
+			map.put("coal", (int)(50 * (1.0 + (this.getFactoryCount() + 1) / 5.0)));
+			map.put("iron", (int)(50 * (1.0 + (this.getFactoryCount() + 1) / 5.0)));
+			map.put("steel", (int)(5 * (1.0 + (this.getFactoryCount() + 1) / 5.0)));
+		}
+		else
+		{
+			map.put("coal", (int)(50 * (1.0 + (this.getFactoryCount() - 1) / 5.0)));
+			map.put("iron", (int)(50 * (1.0 + (this.getFactoryCount() - 1) / 5.0)));
+			map.put("steel", (int)(5 * (1.0 + (this.getFactoryCount() - 1) / 5.0)));
+		}
+		return map;
+	}
+
+	/**
 	 * Generates a HashMap of the university cost in this city with values:
 	 * <ul>
 	 *     <li>coal</li>
@@ -363,6 +390,33 @@ public class City extends UpdatableLongId
 		map.put("coal", (int)(100 * (1.0 + this.getFactoryCount() / 5.0)));
 		map.put("iron", (int)(100 * (1.0 + this.getFactoryCount() / 5.0)));
 		map.put("steel", (int)(10 * (1.0 + this.getFactoryCount() / 5.0)));
+		return map;
+	}
+
+	/**
+	 * Generates a HashMap of the university cost in this city with values:
+	 * <ul>
+	 *     <li>coal</li>
+	 *     <li>iron</li>
+	 *     <li>steel</li>
+	 * </ul>
+	 * @return A HashMap of the costs
+	 */
+	public HashMap<String, Integer> getUniversityCost(boolean special)
+	{
+		HashMap<String, Integer> map = new HashMap<>();
+		if(special)
+		{
+			map.put("coal", (int)(100 * (1.0 + (this.getFactoryCount() + 1) / 5.0)));
+			map.put("iron", (int)(100 * (1.0 + (this.getFactoryCount() + 1) / 5.0)));
+			map.put("steel", (int)(10 * (1.0 + (this.getFactoryCount() + 1) / 5.0)));
+		}
+		else
+		{
+			map.put("coal", (int)(100 * (1.0 + (this.getFactoryCount() - 1) / 5.0)));
+			map.put("iron", (int)(100 * (1.0 + (this.getFactoryCount() - 1) / 5.0)));
+			map.put("steel", (int)(10 * (1.0 + (this.getFactoryCount() - 1) / 5.0)));
+		}
 		return map;
 	}
 

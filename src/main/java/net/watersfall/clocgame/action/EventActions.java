@@ -3,9 +3,11 @@ package net.watersfall.clocgame.action;
 import net.watersfall.clocgame.dao.EventDao;
 import net.watersfall.clocgame.dao.ModifierDao;
 import net.watersfall.clocgame.model.event.Event;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.modifier.Modifiers;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.text.Responses;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 
@@ -16,9 +18,11 @@ public class EventActions
 	{
 		public static String giveIn(Nation nation, Event event) throws SQLException
 		{
+			JSONObject object = new JSONObject();
 			if(event.getOwner() != nation.getId())
 			{
-				return Responses.noEvent();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.noEvent());
 			}
 			else
 			{
@@ -26,15 +30,19 @@ public class EventActions
 				eventDao.deleteEventById(event.getId());
 				ModifierDao modifierDao = new ModifierDao(nation.getConn(), true);
 				modifierDao.createModifier(nation.getId(), event.getCityId(), Modifiers.STRIKE_GAVE_IN);
-				return Responses.strikeGiveIn();
+				object.put(JsonFields.SUCCESS.name(), true);
+				object.put(JsonFields.MESSAGE.name(), Responses.strikeGiveIn());
 			}
+			return object.toString();
 		}
 
 		public static String ignore(Nation nation, Event event) throws SQLException
 		{
+			JSONObject object = new JSONObject();
 			if(event.getOwner() != nation.getId())
 			{
-				return Responses.noEvent();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.noEvent());
 			}
 			else
 			{
@@ -42,8 +50,10 @@ public class EventActions
 				eventDao.deleteEventById(event.getId());
 				ModifierDao modifierDao = new ModifierDao(nation.getConn(), true);
 				modifierDao.createModifier(nation.getId(), event.getCityId(), Modifiers.STRIKE_IGNORED);
-				return Responses.strikeIgnore();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.strikeIgnore());
 			}
+			return object.toString();
 		}
 
 		public static String sendArmy(Nation nation, Event event) throws SQLException

@@ -3,9 +3,11 @@ package net.watersfall.clocgame.servlet.controller;
 import net.watersfall.clocgame.action.Action;
 import net.watersfall.clocgame.dao.NationDao;
 import net.watersfall.clocgame.model.Region;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Executor;
 import net.watersfall.clocgame.util.Security;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,6 +33,7 @@ public class RegisterController extends HttpServlet
 	{
 		PrintWriter writer = resp.getWriter();
 		Executor executor = (conn) -> {
+			JSONObject object = new JSONObject();
 			String username = Security.sanitize(req.getParameter("username"));
 			String nation = Security.sanitize(req.getParameter("nation"));
 			String capital = Security.sanitize(req.getParameter("capital"));
@@ -40,7 +43,9 @@ public class RegisterController extends HttpServlet
 			String econString = Security.sanitize(req.getParameter("economy"));
 			if(username.isEmpty() || nation.isEmpty() || capital.isEmpty() || password.isEmpty() || regionString.isEmpty() || govString.isEmpty() || econString.isEmpty())
 			{
-				return Responses.nullFields();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.nullFields());
+				return object.toString();
 			}
 			int gov = Integer.parseInt(govString);
 			int econ = Integer.parseInt(econString);
@@ -54,15 +59,21 @@ public class RegisterController extends HttpServlet
 			}
 			if(username.length() > 32)
 			{
-				return Responses.tooLong("Username", 32);
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.tooLong("Username", 32));
+				return object.toString();
 			}
 			else if(nation.length() > 32)
 			{
-				return Responses.tooLong("Nation name", 32);
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.tooLong("Nation Name", 32));
+				return object.toString();
 			}
 			else if(capital.length() > 32)
 			{
-				return Responses.tooLong("Nation name", 32);
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.tooLong("Capital Name", 32));
+				return object.toString();
 			}
 			Region region = Region.valueOf(regionString);
 			//TODO clean this up
@@ -72,13 +83,17 @@ public class RegisterController extends HttpServlet
 			ResultSet checkResults = check.executeQuery();
 			if(checkResults.first())
 			{
-				return Responses.nameTaken();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.nameTaken());
+				return object.toString();
 			}
 			else
 			{
 				int id = new NationDao(conn, true).createNation(username, password, nation, capital, gov, econ, region, req.getRemoteAddr());
 				req.getSession().setAttribute("user", id);
-				return Responses.registered();
+				object.put(JsonFields.SUCCESS.name(), true);
+				object.put(JsonFields.MESSAGE.name(), Responses.registered());
+				return object.toString();
 			}
 		};
 		writer.append(Action.doAction(executor));

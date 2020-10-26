@@ -4,8 +4,10 @@ import net.watersfall.clocgame.database.Database;
 import net.watersfall.clocgame.exception.CityNotFoundException;
 import net.watersfall.clocgame.exception.NationNotFoundException;
 import net.watersfall.clocgame.exception.NotLoggedInException;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Executor;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -16,6 +18,7 @@ public class Action
 {
 	public static String doAction(Executor exec)
 	{
+		JSONObject object = new JSONObject();
 		Connection conn = null;
 		try
 		{
@@ -35,24 +38,28 @@ public class Action
 			{
 				//Ignore
 			}
-			return Responses.genericException(e);
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.genericException(e));
 		}
 		catch(NotLoggedInException e)
 		{
-			return Responses.noLogin();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noLogin());
 		}
 		catch(NullPointerException | IllegalArgumentException | IOException | ServletException e)
 		{
-			e.printStackTrace();
-			return Responses.genericError();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.genericError());
 		}
 		catch(NationNotFoundException e)
 		{
-			return Responses.noNation();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noNation());
 		}
 		catch(CityNotFoundException e)
 		{
-			return Responses.noCity();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noCity());
 		}
 		finally
 		{
@@ -65,6 +72,6 @@ public class Action
 				//Ignore
 			}
 		}
-
+		return object.toString();
 	}
 }

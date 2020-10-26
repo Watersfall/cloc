@@ -25,8 +25,8 @@ function ajax(url, params, callback, method)
 		{
 			if(xhttp.readyState === 4 && xhttp.status === 200)
 			{
-				document.getElementById("results_content").innerHTML = xhttp.responseText;
-				return xhttp.responseText;
+				console.log(this.responseText);
+				updateFromJson(JSON.parse(this.responseText));
 			}
 		};
 	}
@@ -36,10 +36,22 @@ function ajax(url, params, callback, method)
 	}
 }
 
+function updateFromJson(json)
+{
+	for (const [key, value] of Object.entries(json))
+	{
+		let element = document.getElementById(key);
+		if(element != null)
+		{
+			element.innerHTML = value.toString();
+		}
+	}
+}
+
 function displayResults()
 {
 	document.getElementById('results').style.display = "block";
-	document.getElementById("results_content").innerHTML = "<p>Loading...</p>";
+	document.getElementById("MESSAGE").innerHTML = "<p>Loading...</p>";
 }
 
 
@@ -107,9 +119,10 @@ function register2()
 	let callback = function() {
 		if(this.readyState === 4 && this.status === 200)
 		{
-			if(this.responseText.toLowerCase().indexOf("register") < 0)
+			let json = JSON.parse(this.responseText);
+			if(json.SUCCESS === false)
 			{
-				document.getElementById("results_content").innerHTML = this.responseText;
+				updateFromJson(JSON.parse(this.responseText));
 			}
 			else
 			{
@@ -275,7 +288,7 @@ function updateProduction(id)
 		displayResults();
 		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("results_content").innerHTML = this.responseText;
+			updateFromJson(JSON.parse(this.responseText));
 			if(this.responseText.indexOf("Updated") !== -1)
 			{
 				reloadProduction(id);
@@ -324,7 +337,7 @@ function deleteProduction(id)
 	{
 		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("results_content").innerHTML = this.responseText;
+			updateFromJson(JSON.parse(this.responseText));
 			if(this.responseText.indexOf("Deleted") !== -1)
 			{
 				freeFactories += factories;
@@ -387,7 +400,7 @@ function research(tech, category)
 	let callback = function() {
 		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("results_content").innerHTML = this.responseText;
+			updateFromJson(JSON.parse(this.responseText));
 			if(this.responseText.indexOf("Researched") >= 0)
 			{
 				let url = "/techtree/" + category;
@@ -502,7 +515,7 @@ function confirmCityName(id)
 		if(this.readyState === 4 && this.status === 200)
 		{
 			cancelCityName(id);
-			document.getElementById("results_content").innerHTML = this.responseText;
+			updateFromJson(JSON.parse(this.responseText));
 		}
 	};
 	ajax(url, param, callback);
@@ -597,9 +610,9 @@ function confirmArmyName(id)
 	let callback = function() {
 		if(this.readyState === 4 && this.status === 200)
 		{
-			document.getElementById("army_name_" + id).firstElementChild.innerHTML = "<a>" + name + "</a>";
 			cancelArmyName(id);
-			document.getElementById("results_content").innerHTML = this.responseText;
+			console.log(this.responseText);
+			updateFromJson(JSON.parse(this.responseText));
 		}
 	};
 	ajax(url, param, callback);

@@ -1,9 +1,11 @@
 package net.watersfall.clocgame.action;
 
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.technology.Technologies;
 import net.watersfall.clocgame.model.technology.Technology;
 import net.watersfall.clocgame.text.Responses;
+import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -19,6 +21,7 @@ public class ResearchActions
 	 */
 	private static String checkCosts(Nation nation, Technology tech)
 	{
+		JSONObject object = new JSONObject();
 		try
 		{
 			for(HashMap.Entry<String, Integer> entry : tech.getCosts().entrySet())
@@ -28,14 +31,18 @@ public class ResearchActions
 				double amount = (double)method.invoke(nation.getStats());
 				if(amount < entry.getValue())
 				{
-					return Responses.no(entry.getKey());
+					object.put(JsonFields.SUCCESS.name(), false);
+					object.put(JsonFields.MESSAGE.name(), Responses.no(entry.getKey()));
+					return object.toString();
 				}
 			}
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return Responses.genericException(e);
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.genericException(e));
+			return object.toString();
 		}
 		return null;
 	}
@@ -64,7 +71,10 @@ public class ResearchActions
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return Responses.genericException(e);
+			JSONObject object = new JSONObject();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.genericException(e));
+			return object.toString();
 		}
 		return null;
 	}
@@ -78,9 +88,11 @@ public class ResearchActions
 	 */
 	public static String doResearch(Nation nation, Technologies tech) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(!tech.getTechnology().isAvailable(nation))
 		{
-			return Responses.missingPrerequisite();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.missingPrerequisite());
 		}
 		String costs = checkCosts(nation, tech.getTechnology());
 		if(costs != null)
@@ -89,7 +101,8 @@ public class ResearchActions
 		}
 		else if(nation.getTech().getResearchedTechs().contains(tech))
 		{
-			return Responses.alreadyHaveTech();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.alreadyHaveTech());
 		}
 		else
 		{
@@ -101,13 +114,15 @@ public class ResearchActions
 			if((int)(Math.random() * 100) <= tech.getTechnology().getSuccessChance(nation))
 			{
 				nation.getTech().setTechnology(tech, nation.getTech().getTechnology(tech) + 1);
-				response = Responses.researchSucceeded();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.researchSucceeded());
 			}
 			else
 			{
-				response = Responses.researchFailed();
+				object.put(JsonFields.SUCCESS.name(), false);
+				object.put(JsonFields.MESSAGE.name(), Responses.researchFailed());
 			}
-			return response;
 		}
+		return object.toString();
 	}
 }

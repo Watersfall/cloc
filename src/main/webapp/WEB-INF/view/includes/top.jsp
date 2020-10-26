@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <head>
 	<title>&ltCLOC - Online Nation Sim</title>
-	<c:set value="23" var="version"/>
+	<c:set value="24" var="version"/>
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css?v=${version}">
 	<script src="${pageContext.request.contextPath}/js/main.js?v=${version}"></script>
 	<meta name="description" content="${description}">
@@ -152,7 +152,7 @@
 			</c:if>
 		</nav>
 		<div id="results" ${not empty result ? 'style="display:block"' : ''}>
-			<div id="results_content">${result}</div>
+			<div id="MESSAGE">${result}</div>
 			<button onclick="toggle('results')" class="red">Close</button>
 		</div>
 		<div id="container">

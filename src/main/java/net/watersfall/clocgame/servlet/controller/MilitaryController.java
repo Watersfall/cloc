@@ -3,11 +3,13 @@ package net.watersfall.clocgame.servlet.controller;
 import net.watersfall.clocgame.action.Action;
 import net.watersfall.clocgame.dao.NationDao;
 import net.watersfall.clocgame.model.error.Errors;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.producible.ProducibleCategory;
 import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Executor;
 import net.watersfall.clocgame.util.UserUtils;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -59,8 +61,11 @@ public class MilitaryController extends HttpServlet
 				default:
 					response = Responses.genericError();
 			}
+			JSONObject object = new JSONObject();
+			object.put(JsonFields.SUCCESS.name(), true);
+			object.put(JsonFields.MESSAGE.name(), response);
 			dao.saveNation(nation);
-			return response;
+			return object.toString();
 		});
 		resp.getWriter().append(Action.doAction(executor));
 	}

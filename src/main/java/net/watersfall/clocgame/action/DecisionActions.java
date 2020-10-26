@@ -5,9 +5,12 @@ import net.watersfall.clocgame.exception.NationNotFoundException;
 import net.watersfall.clocgame.exception.NotLoggedInException;
 import net.watersfall.clocgame.model.alignment.Alignments;
 import net.watersfall.clocgame.model.decisions.Decision;
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.nation.NationStats;
 import net.watersfall.clocgame.text.Responses;
+import net.watersfall.clocgame.util.Util;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 
@@ -19,17 +22,21 @@ public class DecisionActions
 	public static String arrest(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.INCREASE_ARREST_QUOTAS);
+		JSONObject object = new JSONObject();
 		if(nation.getStats().getBudget() < cost)
 		{
-			return Responses.noMoney();
+			object.put(JsonFields.MESSAGE.name(), Responses.noMoney());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getGovernment() < 5)
 		{
-			return Responses.noCriminals();
+			object.put(JsonFields.MESSAGE.name(), Responses.noCriminals());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getApproval() < 5)
 		{
-			return Responses.hated();
+			object.put(JsonFields.MESSAGE.name(), Responses.hated());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else
 		{
@@ -37,24 +44,32 @@ public class DecisionActions
 			nation.getStats().setApproval(nation.getStats().getApproval() - 5);
 			nation.getStats().setGovernment(nation.getStats().getGovernment() - 5);
 			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
-			return Responses.arrest();
+			object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.BUDGET.name(), Util.formatNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.MESSAGE.name(), Responses.arrest());
+			object.put(JsonFields.SUCCESS.name(), true);
 		}
+		return object.toString();
 	}
 
 	public static String free(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.PARDON_CRIMINALS);
+		JSONObject object = new JSONObject();
 		if(nation.getStats().getBudget() < cost)
 		{
-			return Responses.noMoney();
+			object.put(JsonFields.MESSAGE.name(), Responses.noMoney());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getGovernment() > 95)
 		{
-			return Responses.noPrisoners();
+			object.put(JsonFields.MESSAGE.name(), Responses.noPrisoners());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getStability() < 5)
 		{
-			return Responses.unstable();
+			object.put(JsonFields.MESSAGE.name(), Responses.unstable());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else
 		{
@@ -62,66 +77,96 @@ public class DecisionActions
 			nation.getStats().setApproval(nation.getStats().getApproval() + 5);
 			nation.getStats().setGovernment(nation.getStats().getGovernment() + 5);
 			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
-			return Responses.free();
+			object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.BUDGET.name(), Util.formatNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.MESSAGE.name(), Responses.free());
+			object.put(JsonFields.SUCCESS.name(), true);
 		}
+		return object.toString();
 	}
 
 	public static String landClearance(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.LAND_CLEARANCE);
+		JSONObject object = new JSONObject();
 		if(nation.getStats().getBudget() < cost)
 		{
-			return Responses.noMoney();
+			object.put(JsonFields.MESSAGE.name(), Responses.noMoney());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else
 		{
 			int gain = (int)(Math.random() * 2500) + 500;
 			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
 			nation.getStats().setLand(nation.getStats().getLand() + gain);
-			return Responses.landClearance(gain);
+			object.put(JsonFields.DECISION_COST.name() + "_" + Decision.LAND_CLEARANCE.name(), nation.getDecisionCostDisplayString(Decision.LAND_CLEARANCE));
+			object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.BUDGET.name(), Util.formatNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.MESSAGE.name(), Responses.landClearance(gain));
+			object.put(JsonFields.SUCCESS.name(), true);
 		}
+		return object.toString();
 	}
 
 	public static String propaganda(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.PROPAGANDA);
+		JSONObject object = new JSONObject();
 		if(nation.getStats().getBudget() < cost)
 		{
-			return Responses.noMoney();
+			object.put(JsonFields.MESSAGE.name(), Responses.noMoney());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getApproval() > 99)
 		{
-			return Responses.propagandaMaxApproval();
+			object.put(JsonFields.MESSAGE.name(), Responses.propagandaMaxApproval());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else
 		{
 			nation.getStats().setApproval(nation.getStats().getApproval() + 10);
 			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
-			return Responses.propaganda();
+			object.put(JsonFields.DECISION_COST.name() + "_" + Decision.PROPAGANDA.name(), nation.getDecisionCostDisplayString(Decision.PROPAGANDA));
+			object.put(JsonFields.DECISION_COST.name() + "_" + Decision.WAR_PROPAGANDA.name(), nation.getDecisionCostDisplayString(Decision.WAR_PROPAGANDA));
+			object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.BUDGET.name(), Util.formatNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.MESSAGE.name(), Responses.propaganda());
+			object.put(JsonFields.SUCCESS.name(), true);
 		}
+		return object.toString();
 	}
 
 	public static String warPropaganda(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.WAR_PROPAGANDA);
+		JSONObject object = new JSONObject();
 		if(nation.getOffensive() == null && nation.getDefensive() == null)
 		{
-			return Responses.propagandaNoWar();
+			object.put(JsonFields.MESSAGE.name(), Responses.noWar());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getBudget() < cost)
 		{
-			return Responses.noMoney();
+			object.put(JsonFields.MESSAGE.name(), Responses.noMoney());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getApproval() > 99)
 		{
-			return Responses.propagandaMaxApproval();
+			object.put(JsonFields.MESSAGE.name(), Responses.propagandaMaxApproval());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else
 		{
 			nation.getStats().setApproval(nation.getStats().getApproval() + 10);
 			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
-			return Responses.propaganda();
+			object.put(JsonFields.DECISION_COST.name() + "_" + Decision.WAR_PROPAGANDA.name(), nation.getDecisionCostDisplayString(Decision.WAR_PROPAGANDA));
+			object.put(JsonFields.DECISION_COST.name() + "_" + Decision.PROPAGANDA.name(), nation.getDecisionCostDisplayString(Decision.PROPAGANDA));
+			object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.BUDGET.name(), Util.formatNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.MESSAGE.name(), Responses.propaganda());
+			object.put(JsonFields.SUCCESS.name(), true);
 		}
+		return object.toString();
 	}
 	//</editor-fold>
 
@@ -131,7 +176,12 @@ public class DecisionActions
 		NationStats economy = nation.getStats();
 		economy.setBudget(economy.getBudget() + 1000);
 		economy.setEconomic(economy.getEconomic() + 5);
-		return Responses.freeMoneyCapitalist();
+		JSONObject object = new JSONObject();
+		object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(economy.getBudget()));
+		object.put(JsonFields.BUDGET.name(), Util.formatNumber(economy.getBudget()));
+		object.put(JsonFields.MESSAGE.name(), Responses.freeMoneyCapitalist());
+		object.put(JsonFields.SUCCESS.name(), true);
+		return object.toString();
 	}
 
 	public static String freeMoneyCommunist(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
@@ -139,7 +189,12 @@ public class DecisionActions
 		NationStats economy = nation.getStats();
 		economy.setBudget(economy.getBudget() + 1000);
 		economy.setEconomic(economy.getEconomic() - 5);
-		return Responses.freeMoneyCommunist();
+		JSONObject object = new JSONObject();
+		object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(economy.getBudget()));
+		object.put(JsonFields.BUDGET.name(), Util.formatNumber(economy.getBudget()));
+		object.put(JsonFields.MESSAGE.name(), Responses.freeMoneyCommunist());
+		object.put(JsonFields.SUCCESS.name(), true);
+		return object.toString();
 	}
 	//</editor-fold>
 
@@ -147,21 +202,26 @@ public class DecisionActions
 	private static String align(Nation nation, Alignments align) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException
 	{
 		long cost = nation.getDecisionCost(Decision.ALIGN_NEUTRAL);
+		JSONObject object = new JSONObject();
 		if(nation.getStats().getBudget() < cost)
 		{
-			return Responses.noMoney();
+			object.put(JsonFields.MESSAGE.name(), Responses.noMoney());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(nation.getStats().getAlignment() == align)
 		{
-			return Responses.alreadyYourAlignment();
+			object.put(JsonFields.MESSAGE.name(), Responses.alreadyYourAlignment());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(align != Alignments.NEUTRAL && nation.getStats().getReputation(align) < 1000)
 		{
-			return Responses.notEnough();
+			object.put(JsonFields.MESSAGE.name(), Responses.notEnough());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else if(Alignments.opposites(nation.getStats().getAlignment(), align))
 		{
-			return Responses.alreadyYourAlignment();
+			object.put(JsonFields.MESSAGE.name(), Responses.alreadyYourAlignment());
+			object.put(JsonFields.SUCCESS.name(), false);
 		}
 		else
 		{
@@ -180,8 +240,12 @@ public class DecisionActions
 			}
 			nation.getStats().setAlignment(align);
 			nation.getStats().setBudget(nation.getStats().getBudget() - cost);
-			return Responses.align(align);
+			object.put(JsonFields.BUDGET_SHORT.name(), Util.formatDisplayNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.BUDGET.name(), Util.formatNumber(nation.getStats().getBudget()));
+			object.put(JsonFields.MESSAGE.name(), Responses.align(align));
+			object.put(JsonFields.SUCCESS.name(), true);
 		}
+		return object.toString();
 	}
 
 	public static String alignEntente(Nation nation) throws SQLException, NationNotFoundException, NullPointerException, NotLoggedInException

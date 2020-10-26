@@ -59,6 +59,12 @@
             <artifactId>spring-security-crypto</artifactId>
             <version>5.2.1.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20200518</version>
+        </dependency>
+
     </dependencies>
     <build>
         <pluginManagement>

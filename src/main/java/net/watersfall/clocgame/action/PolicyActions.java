@@ -1,9 +1,11 @@
 package net.watersfall.clocgame.action;
 
+import net.watersfall.clocgame.model.json.JsonFields;
 import net.watersfall.clocgame.model.nation.Nation;
 import net.watersfall.clocgame.model.policies.Policy;
 import net.watersfall.clocgame.text.Responses;
 import net.watersfall.clocgame.util.Time;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 
@@ -18,13 +20,16 @@ public class PolicyActions
 	 */
 	public static String economy(Nation nation, Policy policy) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(nation.getPolicy().getEconomy() == policy)
 		{
-			return Responses.policySame();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policySame());
 		}
 		else if(nation.getPolicy().getChangeEconomy() + 1 > Time.month)
 		{
-			return Responses.noChange();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noChange());
 		}
 		else if(policy == Policy.WAR_ECONOMY && !nation.isAtWar())
 		{
@@ -33,8 +38,10 @@ public class PolicyActions
 		else
 		{
 			nation.getPolicy().setEconomy(policy);
-			return Responses.policyUpdated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policyUpdated());
 		}
+		return object.toString();
 	}
 
 	/**
@@ -46,13 +53,16 @@ public class PolicyActions
 	 */
 	public static String manpower(Nation nation, Policy policy) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(nation.getPolicy().getManpower() == policy)
 		{
-			return Responses.policySame();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policySame());
 		}
 		else if(nation.getPolicy().getChangeManpower() + 1 > Time.month)
 		{
-			return Responses.noChange();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noChange());
 		}
 		else if(policy == Policy.SCRAPING_THE_BARREL_MANPOWER && !nation.isAtWar())
 		{
@@ -61,8 +71,10 @@ public class PolicyActions
 		else
 		{
 			nation.getPolicy().setManpower(policy);
-			return Responses.policyUpdated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policyUpdated());
 		}
+		return object.toString();
 	}
 
 	/**
@@ -74,52 +86,67 @@ public class PolicyActions
 	 */
 	public static String food(Nation nation, Policy policy) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(nation.getPolicy().getFood() == policy)
 		{
-			return Responses.policySame();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policySame());
 		}
 		else if(nation.getPolicy().getChangeFood() + 1 > Time.month)
 		{
-			return Responses.noChange();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noChange());
 		}
 		else
 		{
 			nation.getPolicy().setFood(policy);
-			return Responses.policyUpdated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policyUpdated());
 		}
+		return object.toString();
 	}
 
 	public static String fortification(Nation nation, Policy policy) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(nation.getPolicy().getFortification() == policy)
 		{
-			return Responses.policySame();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policySame());
 		}
 		else if(nation.getPolicy().getChangeFortification() + 1 > Time.month)
 		{
-			return Responses.noChange();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noChange());
 		}
 		else
 		{
 			nation.getPolicy().setFortification(policy);
-			return Responses.policyUpdated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policyUpdated());
 		}
+		return object.toString();
 	}
 
 	public static String farmSubsidization(Nation nation, Policy policy) throws SQLException
 	{
+		JSONObject object = new JSONObject();
 		if(nation.getPolicy().getFarmingSubsidies() == policy)
 		{
-			return Responses.policySame();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policySame());
 		}
 		else if(nation.getPolicy().getChangeFarmingSubsidies() + 1 > Time.month)
 		{
-			return Responses.noChange();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.noChange());
 		}
 		else
 		{
 			nation.getPolicy().setFarmingSubsidies(policy);
-			return Responses.policyUpdated();
+			object.put(JsonFields.SUCCESS.name(), false);
+			object.put(JsonFields.MESSAGE.name(), Responses.policyUpdated());
 		}
+		return object.toString();
 	}
 }
