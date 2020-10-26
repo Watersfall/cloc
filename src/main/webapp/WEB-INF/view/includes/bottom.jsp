@@ -16,7 +16,7 @@
 						<c:forEach items="${home.allResources.entrySet()}" var="entry">
 							<li>
 								<c:set var="resource" value="${fn:toLowerCase(entry.key)}"/>
-								<a href="#" id="${entry.key}" onclick="toggleUITab('${resource}_production')">
+								<a href="javascript:void(0);" id="${entry.key}" onclick="toggleUITab('${resource}_production')">
 									<img src="${pageContext.request.contextPath}/images/ui/${resource}.svg" alt="${resource}"/>
 									<cloc:formatNumber value="${entry.value}"/>
 								</a>

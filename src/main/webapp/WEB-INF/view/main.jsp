@@ -33,7 +33,7 @@
 						<tr>
 							<td>${home.stats.approval}%</td>
 							<td class="dropdown_parent" onclick="toggleUITab('approval_change')">
-								<a href="#">
+								<a href="javascript:void(0);">
 									<c:if test="${home.approvalChange.get(netApproval) > 0}">
 										+<fmt:formatNumber value="${home.approvalChange.get(netApproval)}"/> per month
 									</c:if>
@@ -56,7 +56,7 @@
 						<tr>
 							<td>${home.stats.stability}%</td>
 							<td class="dropdown_parent" onclick="toggleUITab('stability_change')">
-								<a href="#" >
+								<a href="javascript:void(0);" >
 									<c:if test="${home.stabilityChange.get(netStability) > 0}">
 										+<fmt:formatNumber value="${home.stabilityChange.get(netStability)}"/> per month
 									</c:if>
@@ -107,7 +107,7 @@
 						<tr>
 							<td><fmt:formatNumber value="${home.stats.growth}"/> Million per month</td>
 							<td class="dropdown_parent" onclick="toggleUITab('growth_change')">
-								<a href="#">
+								<a href="javascript:void(0);">
 									<c:choose>
 										<c:when test="${home.growthChange.get(netGrowth) > 0}">
 											+<fmt:formatNumber value="${home.growthChange.get(netGrowth)}"/> per month
@@ -178,7 +178,7 @@
 						</tr>
 						<tr>
 							<td class="dropdown_parent" onclick="toggleUITab('equipment')">
-								<a href="#">
+								<a href="javascript:void(0);">
 									<fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> / <fmt:formatNumber value="${home.armySize}"/> requested
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -195,7 +195,7 @@
 								</div>
 							</td>
 							<td class="dropdown_parent" onclick="toggleUITab('equipment_production')">
-								<a href="#">
+								<a href="javascript:void(0);">
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.INFANTRY_EQUIPMENT)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -223,7 +223,7 @@
 						<tr>
 							<td>${home.stats.fortification / 100}%</td>
 							<td class="dropdown_parent" onclick="toggleUITab('fortification_change')">
-								<a href="#">
+								<a href="javascript:void(0);">
 									<c:choose>
 										<c:when test="${home.fortificationChange.get(netFortification) > 0}">
 											+<fmt:formatNumber maxFractionDigits="2" value="${home.fortificationChange.get(netFortification) / 100}"/>% per month
@@ -272,7 +272,7 @@
 						</tr>
 						<tr>
 							<td onclick="toggleUITab('fighters')" class="dropdown_parent">
-								<a href="#">
+								<a href="javascript:void(0);">
 									<fmt:formatNumber value="${home.stats.currentFighters}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.FIGHTER_PLANE) - home.stats.currentFighters}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -307,7 +307,7 @@
 								</div>
 							</td>
 							<td onclick="toggleUITab('fighter_production')" class="dropdown_parent">
-								<a href="#">
+								<a href="javascript:void(0);">
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.FIGHTER_PLANE)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -334,7 +334,7 @@
 						</tr>
 						<tr>
 							<td onclick="toggleUITab('bombers')" class="dropdown_parent">
-								<a href="#">
+								<a href="javascript:void(0);">
 									<fmt:formatNumber value="${home.stats.currentBombers}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.BOMBER_PLANE) - home.stats.currentBombers}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -369,7 +369,7 @@
 								</div>
 							</td>
 							<td onclick="toggleUITab('bomber_production')" class="dropdown_parent">
-								<a href="#">
+								<a href="javascript:void(0);">
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.BOMBER_PLANE)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -396,7 +396,7 @@
 						</tr>
 						<tr>
 							<td onclick="toggleUITab('recons')" class="dropdown_parent">
-								<a href="#">
+								<a href="javascript:void(0);">
 									<fmt:formatNumber value="${home.stats.currentRecon}"/> Active / <fmt:formatNumber value="${home.getTotalProduciblesByCategory(ProducibleCategory.RECON_PLANE) - home.stats.currentRecon}"/> Reserve
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -431,7 +431,7 @@
 								</div>
 							</td>
 							<td onclick="toggleUITab('recon_production')" class="dropdown_parent">
-								<a href="#">
+								<a href="javascript:void(0);">
 									+<fmt:formatNumber value="${home.getProduciblesProductionByCategory(ProducibleCategory.RECON_PLANE)}"/> per month
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>

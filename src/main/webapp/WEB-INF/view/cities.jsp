@@ -182,7 +182,7 @@
 							${city.freeSlots} Free Build Slots (out of ${city.buildSlots} total)<br>
 						Population: <fmt:formatNumber value="${city.population}"/><br>
 						<div class="dropdown_parent">
-							<a href="#" onclick="toggleUITab('garrison_dropdown')">
+							<a href="javascript:void(0);" onclick="toggleUITab('garrison_dropdown')">
 								Garrison: <fmt:formatNumber value="${city.garrisonSize.get(garrisonKey)}"/><c:out value=" "/>
 								<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 							</a>

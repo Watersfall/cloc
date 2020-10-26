@@ -16,7 +16,7 @@
 						<tr>
 							<td><fmt:formatNumber value="${home.armySize}"/> Soldiers</td>
 							<td class="dropdown_parent">
-								<a href="#" onclick="toggleUITab('size_changes')">
+								<a href="javascript:void(0);" onclick="toggleUITab('size_changes')">
 									+<fmt:formatNumber value="${home.totalArmyIncrease}"/> Per Turn
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -39,7 +39,7 @@
 						</tr>
 						<tr>
 							<td colspan="2" class="dropdown_parent">
-								<a href="#" onclick="toggleUITab('manpower_reinforcement_capacity')">
+								<a href="javascript:void(0);" onclick="toggleUITab('manpower_reinforcement_capacity')">
 									<fmt:formatNumber value="${home.manpowerReinforcementCapacity.get(net)}"/> Soldiers
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -65,7 +65,7 @@
 						</tr>
 						<tr>
 							<td class="dropdown_parent" colspan="2">
-								<a href="#" onclick="toggleUITab('equipment_reinforcement_capacity')">
+								<a href="javascript:void(0);" onclick="toggleUITab('equipment_reinforcement_capacity')">
 									<fmt:formatNumber value="${home.equipmentReinforcementCapacity.get(net)}"/> Whatevers
 									<img class="match_text" src="${pageContext.request.contextPath}/images/ui/arrow-down.svg" alt="dropdown"/>
 								</a>
@@ -109,7 +109,7 @@
 							<tr>
 								<td><fmt:formatNumber value="${army.size}"/> / <fmt:formatNumber value="${army.maxSize}"/> Soldiers</td>
 								<td>
-									<a href="#">
+									<a href="javascript:void(0);">
 										+<fmt:formatNumber value="${home.armyManpowerChange.getOrDefault(army, 0)}"/> Per Month
 									</a>
 								</td>
@@ -125,7 +125,7 @@
 								</td>
 								<td class="dropdown_parent">
 									<c:forEach var="equipment" items="${army.maxEquipment.entrySet()}">
-										<a href="#" onclick="toggleUITab('equipment_gain_${army.id}_${equipment.key.name()}')">
+										<a href="javascript:void(0);" onclick="toggleUITab('equipment_gain_${army.id}_${equipment.key.name()}')">
 											<c:set var="parent" value="${equipment.key}"/>
 											<c:set var="hasUpgrade" value="false"/>
 											<c:set var="hasEquipment" value="false"/>
@@ -188,7 +188,7 @@
 							<tr>
 								<td><fmt:formatNumber value="${army.training / 100}" maxFractionDigits="0"/>%</td>
 								<td>
-									<a href="#">
+									<a href="javascript:void(0);">
 										+0 Per Month
 									</a>
 								</td>
@@ -199,7 +199,7 @@
 							<tr>
 								<td><fmt:formatNumber value="${army.experience / 100}" maxFractionDigits="0"/>%</td>
 								<td>
-									<a href="#">
+									<a href="javascript:void(0);">
 										+0 Per Month
 									</a>
 								</td>

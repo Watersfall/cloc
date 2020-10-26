@@ -24,7 +24,7 @@
 					<tr>
 						<td><fmt:formatNumber value="${army.size}"/> / <fmt:formatNumber value="${army.maxSize}"/> Soldiers</td>
 						<td>
-							<a href="#">
+							<a href="javascript:void(0);">
 								+<fmt:formatNumber value="${home.armyManpowerChange.getOrDefault(army, 0)}"/> Per Month
 							</a>
 						</td>
@@ -48,7 +48,7 @@
 						</td>
 						<td class="dropdown_parent">
 							<c:forEach var="equipment" items="${army.maxEquipment.entrySet()}">
-								<a href="#" onclick="toggleUITab('equipment_gain_${army.id}_${equipment.key.name()}')">
+								<a href="javascript:void(0);" onclick="toggleUITab('equipment_gain_${army.id}_${equipment.key.name()}')">
 									<c:set var="parent" value="${equipment.key}"/>
 									<c:set var="hasUpgrade" value="false"/>
 									<c:set var="hasEquipment" value="false"/>
@@ -111,7 +111,7 @@
 					<tr>
 						<td><fmt:formatNumber value="${army.training / 100}" maxFractionDigits="0"/>%</td>
 						<td>
-							<a href="#">
+							<a href="javascript:void(0);">
 								+0 Per Month
 							</a>
 						</td>
@@ -122,7 +122,7 @@
 					<tr>
 						<td><fmt:formatNumber value="${army.experience / 100}" maxFractionDigits="0"/>%</td>
 						<td>
-							<a href="#">
+							<a href="javascript:void(0);">
 								+0 Per Month
 							</a>
 						</td>

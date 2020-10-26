@@ -36,7 +36,7 @@
 					<img src="/user/flag/<c:out escapeXml="false" value="${home.cosmetic.flag}"/>" alt="flag">
 				</a>
 			</c:if>
-			<a href="#" onclick="toggle('nav')">
+			<a href="javascript:void(0);" onclick="toggle('nav')">
 				<p>&#9776;</p>
 			</a>
 		</header>
@@ -53,7 +53,7 @@
 						<a href="${pageContext.request.contextPath}/news/">News</a>
 					</li>
 					<li>
-						<a href="#" onclick="toggle('nation_sublist')">Nation</a>
+						<a href="javascript:void(0);" onclick="toggle('nation_sublist')">Nation</a>
 						<ul id="nation_sublist" class="toggleable-default-off sublist">
 							<li>
 								<a href="${pageContext.request.contextPath}/policy/">Policy</a>
@@ -79,7 +79,7 @@
 						<a href="${pageContext.request.contextPath}/cities/">Cities</a>
 					</li>
 					<li>
-						<a href="#" onclick="toggle('realpolitik_sublist')">Realpolitik</a>
+						<a href="javascript:void(0);" onclick="toggle('realpolitik_sublist')">Realpolitik</a>
 						<ul id="realpolitik_sublist" class="toggleable-default-off sublist">
 							<li>
 								<a href="${pageContext.request.contextPath}/rankings/">World Rankings</a>
@@ -96,7 +96,7 @@
 						</ul>
 					</li>
 					<li>
-						<a href="#" onclick="toggle('treaties_sublist');">Treaties</a>
+						<a href="javascript:void(0);" onclick="toggle('treaties_sublist');">Treaties</a>
 						<ul id="treaties_sublist" class="toggleable-default-off sublist">
 							<c:if test="${home.treaty != null}">
 								<li>
@@ -109,7 +109,7 @@
 						</ul>
 					</li>
 					<li class="magic">
-						<a href="#">Magic</a>
+						<a href="javascript:void(0);">Magic</a>
 					</li>
 				</ul>
 				<div class="nav-bottom">
