@@ -247,7 +247,7 @@
 					</div>
 					<div class="subtitle">Military Industry</div>
 					<div class="description left_text">
-						<b id="${JsonFields.CITY_NITROGEN_INDUSTRY}_${city.id}">${city.industryMilitary}</b> military factor${city.industryMilitary == 1 ? 'y' : 'ies'}<br>
+						<b id="${JsonFields.CITY_MILITARY_INDUSTRY}_${city.id}">${city.industryMilitary}</b> military factor${city.industryMilitary == 1 ? 'y' : 'ies'}<br>
 						<button onclick="cityDecision('${CityDecisions.BUILD_MILITARY_INDUSTRY}', ${city.id})" class="blue">Build: <span id="${JsonFields.CITY_MILITARY_INDUSTRY_COST}_${city.id}">${city.factoryCost}</span></button>
 						<button onclick="cityDecision('${CityDecisions.REMOVE_MILITARY_INDUSTRY}', ${city.id})" class="red">Remove</button>
 					</div>
