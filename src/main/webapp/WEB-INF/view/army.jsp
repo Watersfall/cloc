@@ -23,10 +23,10 @@
 						<td colspan="2">Size</td>
 					</tr>
 					<tr>
-						<td><fmt:formatNumber value="${army.size}"/> / <fmt:formatNumber value="${army.maxSize}"/> Soldiers</td>
+						<td><span id="${JsonFields.ARMY_SIZE}"><fmt:formatNumber value="${army.size}"/></span> / <span id="${JsonFields.ARMY_MAX_SIZE}"><fmt:formatNumber value="${army.maxSize}"/></span> Soldiers</td>
 						<td>
 							<a href="javascript:void(0);">
-								+<fmt:formatNumber value="${home.armyManpowerChange.getOrDefault(army, 0)}"/> Per Month
+								+<span id="${JsonFields.ARMY_SIZE_CHANGE}"><fmt:formatNumber value="${home.armyManpowerChange.getOrDefault(army, 0)}"/></span> Per Month
 							</a>
 						</td>
 					</tr>
@@ -36,7 +36,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">${army.priority.name()}</td>
+						<td colspan="2" id="${JsonFields.ARMY_PRIORITY}">${army.priority.name()}</td>
 					</tr>
 					<tr>
 						<td colspan="2">Equipment</td>
@@ -44,7 +44,7 @@
 					<tr>
 						<td>
 							<c:forEach var="equipment" items="${army.maxEquipment.entrySet()}">
-								<fmt:formatNumber value="${army.equipment.getOrDefault(equipment.key, 0)}"/> / <fmt:formatNumber value="${equipment.value}"/>${' '.concat(equipment.key.name())}<br>
+								<span id="${JsonFields.ARMY_EQUIPMENT}_${equipment.key.name()}"><fmt:formatNumber value="${army.equipment.getOrDefault(equipment.key, 0)}"/></span> / <span id="${JsonFields.ARMY_EQUIPMENT_TOTAL}_${equipment.key.name()}"><fmt:formatNumber value="${equipment.value}"/></span>${' '.concat(equipment.key.name())}<br>
 							</c:forEach>
 						</td>
 						<td class="dropdown_parent">
@@ -54,7 +54,7 @@
 									<c:set var="hasUpgrade" value="false"/>
 									<c:set var="hasEquipment" value="false"/>
 									<c:if test="${home.equipmentUpgrades.get(army) != null && home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0) > 0}">
-										+<fmt:formatNumber value="${home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0)}"/> Upgrade
+										+<span id="${JsonFields.ARMY_EQUIPMENT_UPGRADE}_${equipment.key.name()}"><fmt:formatNumber value="${home.equipmentUpgradesByCategory.get(army).getOrDefault(equipment.key, 0)}"/></span> Upgrade
 										<c:set var="hasUpgrade" value="true"/>
 									</c:if>
 									<c:choose>
@@ -62,7 +62,7 @@
 											<c:if test="${hasUpgrade}">
 												,
 											</c:if>
-											+<fmt:formatNumber value="${home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0)}"/> New
+											+<span id="${JsonFields.ARMY_EQUIPMENT_CHANGE}_${equipment.key.name()}"><fmt:formatNumber value="${home.armyEquipmentChange.get(army).getOrDefault(equipment.key, 0)}"/></span> New
 											<c:set var="hasEquipment" value="true"/>
 										</c:when>
 										<c:when test="${!hasUpgrade}">
@@ -199,37 +199,39 @@
 		<div class="column">
 			<div class="tile">
 				<div class="title">Battalions</div>
-				<c:forEach var="battalion" items="${army.battalions}">
-					<div class="subtile">
-						<div class="title">${battalion.type}</div>
-						<table class="nation nation_left left_text full_width">
-							<tr>
-								<td colspan="2">Size</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<fmt:formatNumber value="${battalion.size}"/> / <fmt:formatNumber value="${battalion.maxSize}"/> Soldiers
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">Equipment</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<c:forEach items="${battalion.equipment}" var="equipment">
-										<fmt:formatNumber value="${equipment.amount}"/> ${' '.concat(equipment.equipment)}<br>
-									</c:forEach>
-								</td>
-							</tr>
-						</table>
-						<div class="right_text">
-							<button onclick="army(${army.id}, 'delete_battalion', ${battalion.id})" class="red">Delete</button>
+				<div id="battalions">
+					<c:forEach var="battalion" items="${army.battalions}">
+						<div class="subtile" id="battalion_${battalion.id}">
+							<div class="title">${battalion.type}</div>
+							<table class="nation nation_left left_text full_width">
+								<tr>
+									<td colspan="2">Size</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<fmt:formatNumber value="${battalion.size}"/> / <fmt:formatNumber value="${battalion.maxSize}"/> Soldiers
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">Equipment</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<c:forEach items="${battalion.equipment}" var="equipment">
+											<fmt:formatNumber value="${equipment.amount}"/> ${' '.concat(equipment.equipment)}<br>
+										</c:forEach>
+									</td>
+								</tr>
+							</table>
+							<div class="right_text">
+								<button onclick="deleteBattalion(${army.id}, ${battalion.id})" class="red">Delete</button>
+							</div>
 						</div>
-					</div>
-				</c:forEach>
-				<button onclick="army(${army.id}, 'create_battalion', '${BattalionType.INFANTRY.name()}')" class="blue">Add Infantry Battalion</button>
-				<button onclick="army(${army.id}, 'create_battalion', '${BattalionType.ARTILLERY.name()}')" class="blue">Add Artillery Battalion</button>
-				<button onclick="army(${army.id}, 'create_battalion', '${BattalionType.ARMORED.name()}')" class="blue">Add Armored Battalion</button>
+					</c:forEach>
+				</div>
+				<button onclick="createBattalion(${army.id}, '${BattalionType.INFANTRY.name()}')" class="blue">Add Infantry Battalion</button>
+				<button onclick="createBattalion(${army.id}, '${BattalionType.ARTILLERY.name()}')" class="blue">Add Artillery Battalion</button>
+				<button onclick="createBattalion(${army.id}, '${BattalionType.ARMORED.name()}')" class="blue">Add Armored Battalion</button>
 			</div>
 		</div>
 	</div>

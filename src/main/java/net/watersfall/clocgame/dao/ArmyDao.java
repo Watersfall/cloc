@@ -34,13 +34,16 @@ public class ArmyDao extends Dao
 		statement.execute();
 	}
 
-	public void createBattalion(long owner, BattalionType type) throws SQLException
+	public long createBattalion(long owner, BattalionType type) throws SQLException
 	{
-		PreparedStatement statement = connection.prepareStatement(CREATE_BATTALION);
+		PreparedStatement statement = connection.prepareStatement(CREATE_BATTALION, Statement.RETURN_GENERATED_KEYS);
 		statement.setLong(1, owner);
 		statement.setInt(2, 0);
 		statement.setString(3, type.name());
 		statement.execute();
+		ResultSet results = statement.getGeneratedKeys();
+		results.first();
+		return results.getLong(1);
 	}
 
 	public void deleteBattalion(long id) throws SQLException
@@ -50,7 +53,7 @@ public class ArmyDao extends Dao
 		statement.execute();
 	}
 
-	public void createArmy(int owner) throws SQLException
+	public long createArmy(int owner) throws SQLException
 	{
 		PreparedStatement statement = connection.prepareStatement(CREATE_ARMY, Statement.RETURN_GENERATED_KEYS);
 		statement.setInt(1, owner);
@@ -63,6 +66,7 @@ public class ArmyDao extends Dao
 		ResultSet results = statement.getGeneratedKeys();
 		results.first();
 		createBattalion(results.getLong(1), BattalionType.INFANTRY);
+		return results.getLong(1);
 	}
 
 	public void deleteArmy(long id) throws SQLException

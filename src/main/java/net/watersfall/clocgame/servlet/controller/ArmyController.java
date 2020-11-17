@@ -77,13 +77,13 @@ public class ArmyController extends HttpServlet
 					response = ArmyActions.deleteArmy(nation, army);
 					break;
 				case "delete_battalion":
-					response = ArmyActions.removeBattalion(new ArmyDao(connection, true), army, Long.parseLong(req.getParameter("type")));
+					response = ArmyActions.removeBattalion(nation, new ArmyDao(connection, true), army, Long.parseLong(req.getParameter("type")));
 					break;
 				case "create_battalion":
-					response = ArmyActions.addBattalion(new ArmyDao(connection, true), army, BattalionType.valueOf(req.getParameter("type")));
+					response = ArmyActions.addBattalion(nation, new ArmyDao(connection, true), army, BattalionType.valueOf(req.getParameter("type")));
 					break;
 				case "set_priority":
-					response = ArmyActions.setPriority(army, Priority.valueOf(req.getParameter("type")));
+					response = ArmyActions.setPriority(nation, army, Priority.valueOf(req.getParameter("type")));
 					break;
 				case "rename":
 					response = ArmyActions.rename(army, req.getParameter("type"));

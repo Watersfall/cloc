@@ -38,6 +38,25 @@ function ajax(url, params, callback, method)
 
 function updateFromJson(json)
 {
+	if(json.CREATE !== undefined && json.create !== null)
+	{
+		let create = json.CREATE;
+		for (const [key, value] of Object.entries(create))
+		{
+			let element = document.getElementById(value.ID.toString());
+			if(element !== null)
+			{
+				element.innerText = value.CONTENT.toString();
+			}
+			else
+			{
+				let element = document.createElement(value.TYPE.toString());
+				element.id = value.ID.toString();
+				element.innerHTML = value.CONTENT.toString();
+				document.getElementById(key).appendChild(element);
+			}
+		}
+	}
 	for (const [key, value] of Object.entries(json))
 	{
 		let element = document.getElementById(key);
@@ -550,6 +569,138 @@ function army(id, action, type)
 		params += "&type=" + type;
 	}
 	ajax(url, params);
+}
+
+function createArmy()
+{
+	let url = "/army/0";
+	let params = "action=create_army";
+	let callback = function() {
+		displayResults();
+		if(this.readyState === 4 && this.status === 200)
+		{
+			let json = JSON.parse(this.responseText);
+			updateFromJson(json);
+			if(json.SUCCESS === true)
+			{
+				let url = "/api/army/" + json.ARMY_ID;
+				let params = "";
+				let callback = function() {
+					if(this.readyState === 4 && this.status === 200)
+					{
+						let element = document.createElement("div");
+						element.classList.add("subtile");
+						element.id = "army_" + json.ARMY_ID;
+						element.innerHTML = this.responseText;
+						document.getElementById("armies").appendChild(element);
+					}
+				};
+				ajax(url, params, callback, "GET");
+			}
+		}
+	};
+	ajax(url, params, callback);
+}
+
+function deleteArmy(id)
+{
+	let url = "/army/" + id;
+	let params = "action=delete_army";
+	let callback = function() {
+		displayResults();
+		if(this.readyState === 4 && this.status === 200)
+		{
+			let json = JSON.parse(this.responseText);
+			updateFromJson(json);
+			if(json.SUCCESS === true)
+			{
+				document.getElementById("army_" + id).remove();
+			}
+		}
+	};
+	ajax(url, params, callback);
+}
+
+function createBattalion(id, type)
+{
+	let url = "/army/" + id;
+	let params = "action=create_battalion&type=" + type;
+	let callback = function() {
+		displayResults();
+		if(this.readyState === 4 && this.status === 200)
+		{
+			console.log(this.responseText);
+			let json = JSON.parse(this.responseText);
+			updateFromJson(json);
+			if(json.SUCCESS === true)
+			{
+				let element = document.createElement("div");
+				element.classList.add("subtile");
+				element.id = "battalion_" + json.BATTALION_ID;
+				let title = document.createElement("div");
+				title.classList.add("title");
+				title.innerText = json.BATTALION_TYPE;
+				let table = document.createElement("table");
+				table.classList.add("nation");
+				table.classList.add("nation_left");
+				table.classList.add("left_text");
+				table.classList.add("full_width");
+				let t1 = document.createElement("tr");
+				let t11 = document.createElement("td");
+				t11.colSpan = 2;
+				t11.innerText = "Size";
+				let t2 = document.createElement("tr");
+				let t21 = document.createElement("td");
+				t21.colSpan = 2;
+				t21.innerHTML = "0 / " + json.BATTALION_MAX_SIZE + " Soldiers";
+				let t3 = document.createElement("tr");
+				let t31 = document.createElement("td");
+				t31.colSpan = 2;
+				t31.innerText = "Equipment";
+				let t4 = document.createElement("tr");
+				let t41 = document.createElement("td");
+				let deleteDiv = document.createElement("div");
+				deleteDiv.classList.add("right_text");
+				let deleteButton = document.createElement("button");
+				deleteButton.classList.add("red");
+				deleteButton.innerText = "Delete";
+				deleteButton.setAttribute("onclick", "deleteBattalion(" + json.ARMY_ID + ", " + json.BATTALION_ID + ");");
+				t4.appendChild(t41);
+				t3.appendChild(t31);
+				t2.appendChild(t21);
+				t1.appendChild(t11);
+				table.appendChild(t1);
+				table.appendChild(t2);
+				table.appendChild(t3);
+				table.appendChild(t4);
+				deleteDiv.appendChild(deleteButton);
+				element.appendChild(title);
+				element.appendChild(table);
+				element.appendChild(deleteDiv);
+				document.getElementById("battalions").appendChild(element);
+			}
+		}
+	};
+	ajax(url, params, callback);
+}
+
+function deleteBattalion(army, id)
+{
+	let url = "/army/" + army;
+	let param = "action=delete_battalion&type=" + id;
+	let callback = function() {
+		displayResults();
+		if(this.readyState === 4 && this.status === 200)
+		{
+			let json = JSON.parse(this.responseText);
+			updateFromJson(json);
+			if(json.SUCCESS === true)
+			{
+				document.getElementById("battalion_" + id).remove();
+			}
+		}
+	};
+	ajax(url, param, callback);
 }
 
 function getEstimatedBattlePlan(id, data)

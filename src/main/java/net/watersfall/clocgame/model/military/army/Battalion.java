@@ -19,6 +19,11 @@ public class Battalion extends UpdatableLongId
 	private @Getter BattalionType type;
 	private @Getter ArrayList<ArmyEquipment> equipment;
 
+	public static Battalion getDefaultBattalion(long id, long owner, BattalionType type)
+	{
+		return new Battalion(id, owner, type);
+	}
+
 	public Battalion(ResultSet results) throws SQLException
 	{
 		super("army_battalions", results.getLong("army_battalions.id"));
@@ -27,6 +32,16 @@ public class Battalion extends UpdatableLongId
 		this.size = results.getInt("army_battalions.size");
 		this.type = BattalionType.valueOf(results.getString("army_battalions.type"));
 		this.equipment = new ArrayList<>();
+	}
+
+	private Battalion(long id, long owner, BattalionType type)
+	{
+		super("army_battalions", id);
+		this.id = id;
+		this.owner = owner;
+		this.type = type;
+		this.equipment = new ArrayList<>();
+		this.size = 0;
 	}
 
 	public int getMaxSize()
