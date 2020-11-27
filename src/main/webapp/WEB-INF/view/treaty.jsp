@@ -7,6 +7,14 @@
 		<div class="tiling">
 			<div class="column">
 				<div class="tile">
+					<c:if test="${home.invites.contains(treaty.id)}">
+						<div class="subtile centered">
+							You have been invited to this alliance!
+							<br>
+							<button onclick="updateTreaty('accept', ${treaty.id});" class="blue">Accept</button>
+							<button onclick="updateTreaty('decline', ${treaty.id});" class="red">Reject</button>
+						</div>
+					</c:if>
 					<div class="title"><c:out escapeXml="false" value="${treaty.name}"/></div><br>
 					<img class="large_flag" src="/user/treaty/${treaty.flag}" alt="flag"/><br>
 					<div class="description"><c:out escapeXml="false" value="${treaty.description}"/></div>
